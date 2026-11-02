@@ -1,4 +1,3 @@
-# Graphene Platform
 
 Multi-tenant financial services platform. Monorepo managed by [moon](https://moonrepo.dev) (v2) and [proto](https://moonrepo.dev/proto).
 
