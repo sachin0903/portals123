@@ -1,0 +1,34 @@
+STATEMENT_PACKAGE_ID|STATEMENT_PACKAGE_NAME|STATEMENT_PACAKGE_DESCRIPTION|FIRM_ID|PROCESSING_GROUP|STATEMENT_PACKAGE_TYPE|STMT_RECURRENCE_FREQUENCY|STATEMENT_PACKAGE_PURPOSE|DEFAULT_EVENT_INST_STATUS|STATEMENT_PACKAGE_STATUS|DEFAULT_LAG_DAYS|DEFAULT_LAG_DAYS_BUS_FLAG|DEFAULT_RECURRENCE_DAY|DEFAULT_RECURENCE_MONTH|APPROVAL_REQUIRED_FLG
+8757097|Change Notification letter package|Change Notification letter default Package|3114|CHANGE_NOTIFICATION_LETTER_PG|15|1|1|1|1|0|0|1|0|N
+8757097|Change Notification letter package|Change Notification letter default Package|3108|CHANGE_NOTIFICATION_LETTER_PG|15|1|1|1|1|0|0|1|0|N
+8757097|Change Notification letter package|Change Notification letter default Package|3102|CHANGE_NOTIFICATION_LETTER_PG|15|1|1|1|1|0|0|1|0|N
+8757097|Change Notification letter package|Change Notification letter default Package|3106|CHANGE_NOTIFICATION_LETTER_PG|15|1|1|1|1|0|0|1|0|N
+8757097|Change Notification letter package|Change Notification letter default Package|3110|CHANGE_NOTIFICATION_LETTER_PG|15|1|1|1|1|0|0|1|0|N
+8757097|Change Notification letter package|Change Notification letter default Package|3112|CHANGE_NOTIFICATION_LETTER_PG|15|1|1|1|1|0|0|1|0|N
+8757108|Select Discretionary - Quarterly Stmt Package|Select - Discretionary  Quarterly Stmt Package|3106||1|3|1|1|1|9|N|1|1|Y
+8756987|Blackfinch Growth Qtrly Stmts with Costs & Charges|Blackfinch - Growth Quarterly Statement Package with Costs & Charges|3102||1|3|1|1|1|9|N|1|1|Y
+8756988|Blackfinch Mixed Qtrly Stmts with Costs & Charges|Blackfinch - Mixed Quarterly Statement Package with Costs & Charges|3102||1|3|1|1|1|9|N|1|1|Y
+8756989|Blackfinch - Tax Reporting|Blackfinch - Tax Reporting|3102||7|5|1|1|1|8|Y|6|4|N
+8757117|MPS - Quarterly Stmt Package|MPS - Quarterly Stmt Package|3106||1|3|1|1|1|9|N|1|1|Y
+8756514|F27455_OOB|F27455 Out of Balance|3114||10|2|1|1|1|0|Y|1|0|N
+8756514|F27455_OOB|F27455 Out of Balance|3108||10|2|1|1|1|0|Y|1|0|N
+8756514|F27455_OOB|F27455 Out of Balance|3102||10|2|1|1|1|0|Y|1|0|N
+8756514|F27455_OOB|F27455 Out of Balance|3106||10|2|1|1|1|0|Y|1|0|N
+8756514|F27455_OOB|F27455 Out of Balance|3110||10|2|1|1|1|0|Y|1|0|N
+8756514|F27455_OOB|F27455 Out of Balance|3112||10|2|1|1|1|0|Y|1|0|N
+8756957|Address Change Notification|Client Notice letter Default Package|3114|CLIENT_NOTICE_PG|13|1|1|1|1|0|0|1|0|N
+8756957|Address Change Notification|Client Notice letter Default Package|3108|CLIENT_NOTICE_PG|13|1|1|1|1|0|0|1|0|N
+8756957|Address Change Notification|Client Notice letter Default Package|3102|CLIENT_NOTICE_PG|13|1|1|1|1|0|0|1|0|N
+8756957|Address Change Notification|Client Notice letter Default Package|3106|CLIENT_NOTICE_PG|13|1|1|1|1|0|0|1|0|N
+8756957|Address Change Notification|Client Notice letter Default Package|3110|CLIENT_NOTICE_PG|13|1|1|1|1|0|0|1|0|N
+8756957|Address Change Notification|Client Notice letter Default Package|3112|CLIENT_NOTICE_PG|13|1|1|1|1|0|0|1|0|N
+4|Marlborough - Advisory - Quarterly Stmt Package|Marlborough - Advisory - Quarterly Stmt Package|3106||1|3|1|1|1|9|N|1|1|Y
+2|Blackfinch Income Qtrly Stmts with Costs & Charges|Blackfinch - Income - Quarterly Statement Package with Costs & Charges|3102||1|3|1|1|1|9|N|1|1|Y
+3|Blackfinch - Annual Costs & Charges Statement|Blackfinch - Annual Costs & Charges Statement Standalone|3102||14|5|1|1|1|9|N|1|1|Y
+5|Marlborough - Discretionary - Quarterly Stmt Pkg|Marlborough - Discretionary  Quarterly Stmt Package|3106||1|3|1|1|1|9|N|1|1|Y
+6|Select - Costs & Charges Statement|Select- Costs & Charges Statement|3106||14|5|1|1|1|9|N|1|1|Y
+7|Select - Contract Note Package|Select - Contract Note Package|3106||2|1|1|1|1|0|N|0|0|N
+8|Marlborough - Tax Report|Marlborough - Tax Report|3106||7|5|1|1|1|8|Y|1|1|N
+20|Alpha - Quarterly Statement Package|Alpha - Quarterly Statement Package|3108||1|3|1|1|1|9|N|1|1|N
+8757107|Select Advisory Quarterly Stmt Package|Select - Advisory - Quarterly Stmt Package|3106||1|3|1|1|1|9|N|1|1|Y
+Total Number of Records: |32

@@ -1,0 +1,15 @@
+[
+  {
+    "id": "user-cfd55311",
+    "name": "Sachin",
+    "slackUserId": "sachin123",
+    "platform": "slack",
+    "agents": [
+      "Advisor Agent",
+      "Portfolio Agent"
+    ],
+    "role": "admin",
+    "status": "active",
+    "createdAt": "2026-08-20"
+  }
+]

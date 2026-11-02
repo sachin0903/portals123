@@ -1,0 +1,1907 @@
+ENTITY_IDENTIFIER|CONTACT_TYPE|CONTACT_IDENTIFIER|ADDRESS_TYPE|PRIMARY_ADDRESS_FLAG|ADDRESS_LINE_1|ADDRESS_LINE_2|ADDRESS_LINE_3|ADDRESS_LINE_4|ADDRESS_LINE_5|ADDRESS_CITY|ADDRESS_POLITICAL_SUBDIVISION|ADDRESS_COUNTRY_CODE|ADDRESS_POSTAL_CODE|PHONE_NUMBER_TYPE|PRIMARY_PHONE_FLAG|PHONE_DESCRIPTION|PHONE_NUMBER_COUNTRY_CODE|PHONE_NUMBER_AREA_CODE|PHONE_LOCAL_NUMBER|PHONE_NUMBER|EMAIL_TYPE|PRIMARY_EMAIL_FLAG|EMAIL_DESCRIPTION|EMAIL_ADDRESS|ENTITY_STATUS|ADDRESS_STATUS|PHONE_STATUS|EMAIL_STATUS
+54360670|Address|118978146|19|Y|Solway House Business Park|Kingstown||||Carlisle||GB|CA6 4BY||||||||||||1|1||
+57817502|Email|101427788|||||||||||||||||||25|Y|l.campin@blackfinch.com|l.campin@blackfinch.com|1|||1
+57817502|Phone|95627206||||||||||||25|N|Other|GB||07712588184|+4407712588184|||||1||1|
+57817525|Email|101427811|||||||||||||||||||25|Y|c.swanepoel@blackfinch.com|c.swanepoel@blackfinch.com|1|||1
+57820278|Email|101428068|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57821590|Email|101428585|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57821591|Email|101428586|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57821596|Email|101428587|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57821597|Email|101428588|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57821598|Email|101428589|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57821599|Email|101428590|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57821600|Email|101428591|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57821601|Email|101428592|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57821606|Email|101428595|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57821612|Email|101428596|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57821629|Address|123828579|23|Y|1350-1360 Montpellier Court|Gloucester Business Park||||Gloucester||GB|GL3 4AH||||||||||||1|1||
+57821629|Email|101428599|||||||||||||||||||23|Y|Home|j.aston@blackfinch.com|1|||1
+57822354|Email|101428650|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822380|Email|101428654|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822385|Email|101428660|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822386|Email|101428659|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822387|Email|101428656|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822388|Email|101428657|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822390|Email|101428663|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822391|Email|101428664|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822393|Email|101428666|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822396|Email|101428671|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822399|Email|101428673|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822403|Email|101428677|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822406|Email|101428680|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822407|Email|101428681|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822408|Email|101428682|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822411|Email|101428685|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822415|Email|101428689|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822416|Email|101428690|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822417|Email|101428692|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822418|Email|101428691|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822421|Email|101428695|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822425|Email|101428699|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822426|Email|101428700|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822427|Email|101428701|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822429|Email|101428703|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822434|Email|101428708|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822436|Email|101428710|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822439|Email|101428713|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822441|Email|101428715|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822442|Email|101428717|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822443|Email|101428716|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822444|Email|101428719|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822447|Email|101428721|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822448|Email|101428722|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822450|Email|101428724|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822452|Email|101428726|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822458|Email|101428732|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822460|Email|101428734|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822462|Email|101428736|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822465|Email|101428739|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822466|Email|101428740|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822478|Email|101428753|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822479|Email|101428752|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822481|Email|101428755|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822483|Email|101428757|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822488|Email|101428762|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822490|Email|101428764|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822492|Email|101428766|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822495|Email|101428769|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822497|Email|101428771|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822498|Email|101428772|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822500|Email|101428775|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822505|Email|101428779|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822508|Email|101428782|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822509|Email|101428783|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822515|Email|101428789|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822520|Email|101428794|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822522|Email|101428796|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822524|Email|101428798|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822525|Email|101428799|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822527|Email|101428801|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822528|Email|101428803|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822529|Email|101428802|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822530|Email|101428804|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822532|Email|101428806|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822533|Email|101428807|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822534|Email|101428808|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822535|Email|101428809|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822537|Email|101428811|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822540|Email|101428816|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822541|Email|101428815|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822543|Email|101428817|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822545|Email|101428819|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822546|Email|101428820|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822550|Email|101428825|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822551|Email|101428824|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822555|Email|101428830|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822557|Email|101428831|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822559|Email|101428834|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822560|Email|101428833|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822561|Email|101428835|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822564|Email|101428838|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822565|Email|101428839|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822566|Email|101428840|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822568|Email|101428842|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822570|Email|101428844|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822573|Email|101428847|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822574|Email|101428848|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822575|Email|101428849|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822583|Email|101428857|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822584|Email|101428858|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822585|Email|101428860|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822590|Email|101428864|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822598|Email|101428872|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822603|Email|101428877|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822607|Email|101428881|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822611|Email|101428885|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822612|Email|101428886|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822613|Email|101428887|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822614|Email|101428888|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822615|Email|101428889|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822616|Email|101428890|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822619|Email|101428893|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822620|Email|101428894|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822621|Email|101428895|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822622|Email|101428896|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822629|Email|101428903|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822630|Email|101428904|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822631|Email|101428905|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822632|Email|101428906|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822634|Email|101428908|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822636|Email|101428910|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822638|Email|101428912|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822641|Email|101428915|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822642|Email|101428916|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822643|Email|101428917|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822645|Email|101428918|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822647|Email|101428922|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822648|Email|101428921|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822651|Email|101428925|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822657|Email|101428931|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822659|Email|101428933|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822660|Email|101428934|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822661|Email|101428935|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822663|Email|101428937|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822664|Email|101428938|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822665|Email|101428939|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822667|Email|101428942|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822668|Email|101428941|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822670|Email|101428944|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822671|Email|101428945|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822672|Email|101428946|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822673|Email|101428947|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822676|Email|101428950|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822682|Email|101428956|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822685|Email|101428959|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822687|Email|101428961|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822689|Email|101428963|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822690|Email|101428964|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822693|Email|101428967|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822694|Email|101428968|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822696|Email|101428970|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822699|Email|101428973|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822700|Email|101428975|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822703|Email|101428977|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822706|Email|101428980|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822707|Email|101428981|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822708|Email|101428982|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822709|Email|101428983|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822711|Email|101428985|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822719|Email|101428993|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822720|Email|101428994|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822729|Email|101429003|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822731|Email|101429005|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822735|Email|101429009|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822746|Email|101429020|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822751|Email|101429024|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822762|Email|101429036|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822763|Email|101429037|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822764|Email|101429038|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822765|Email|101429039|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822766|Email|101429040|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822769|Email|101429043|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822772|Email|101429046|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822774|Email|101429048|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822776|Email|101429050|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822778|Email|101429052|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822779|Email|101429053|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822781|Email|101429054|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822785|Email|101429059|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822787|Email|101429061|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822790|Email|101429064|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822792|Email|101429066|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822793|Email|101429067|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822797|Email|101429071|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822800|Email|101429074|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822803|Email|101429077|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822805|Email|101429079|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822806|Email|101429080|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822808|Email|101429082|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822811|Email|101429085|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822813|Email|101429088|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822814|Email|101429087|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822817|Email|101429091|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822824|Email|101429098|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822825|Email|101429099|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822826|Email|101429100|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822829|Email|101429103|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822831|Email|101429105|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822833|Email|101429107|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822835|Email|101429109|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822839|Email|101429113|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57822840|Email|101429114|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57823005|Address|123828980|24|Y|1350-1360 Montpellier Court|||||Gloucester||GB|||||||||||||1|1||
+57823005|Email|101429297|||||||||||||||||||25|Y|a.brooksbank@blackfinch.com|a.brooksbank@blackfinch.com|1|||1
+57823005|Email|101429435|||||||||||||||||||24|N||a.brooksbank@blackfinch.com|1|||1
+57823936|Address|123828798|19|Y|1350-1360 Montpellier Court|Brockworth||||Gloucester|GLS|GB|GL3 4AH||||||||||||1|1||
+57825305|Address|123828981|24|Y|N/A|||||N/A||GB|||||||||||||1|1||
+57825305|Email|101429296|||||||||||||||||||25|Y|d.butters@blackfinch.com|d.butters@blackfinch.com|1|||1
+57825305|Email|101429428|||||||||||||||||||24|N||d.butters@blackfinch.com|1|||1
+57825307|Address|123828982|24|Y|N/A|||||N/A||GB|||||||||||||1|1||
+57825307|Email|101429295|||||||||||||||||||25|Y|w.readshaw@blackfinch.com|w.readshaw@blackfinch.com|1|||1
+57825307|Email|101429436|||||||||||||||||||24|N||w.readshaw@blackfinch.com|1|||1
+57825312|Address|123828984|24|Y|N/A|||||N/A||GB|||||||||||||1|1||
+57825312|Email|101429294|||||||||||||||||||25|Y|j.arthur@blackfinch.com|j.arthur@blackfinch.com|1|||1
+57825312|Email|101429429|||||||||||||||||||24|N||j.arthur@blackfinch.com|1|||1
+57825314|Address|123828985|24|Y|N/A|||||N/A||GB|||||||||||||1|1||
+57825314|Email|101429437|||||||||||||||||||24|N||m.khan@blackfinch.com|1|||1
+57825314|Email|101429299|||||||||||||||||||25|Y|m.khan@blackfinch.com|m.khan@blackfinch.com|1|||1
+57825319|Address|123828987|24|Y|N/A|||||N/A||GB|||||||||||||1|1||
+57825319|Email|101429432|||||||||||||||||||24|N||t.jaffrey@blackfinch.com|1|||1
+57825319|Email|101429298|||||||||||||||||||25|Y|t.jaffrey@blackfinch.com|t.jaffrey@blackfinch.com|1|||1
+57825320|Address|123828988|24|Y|N/A|||||N/A||GB|||||||||||||1|1||
+57825320|Email|101429433|||||||||||||||||||24|Y||v.keen@blackfinch.com|1|||1
+57825322|Address|123828989|24|Y|N/A|||||N/A||GB|||||||||||||1|1||
+57825322|Email|101429292|||||||||||||||||||25|Y|e.price@blackfinch.com|e.price@blackfinch.com|1|||1
+57825325|Address|123828990|24|Y|N/A|||||N/A||GB|||||||||||||1|1||
+57825325|Email|101429293|||||||||||||||||||25|Y|j.kent@blackfinch.com|j.kent@blackfinch.com|1|||1
+57825328|Address|123828991|24|Y|N/A|||||N/A||GB|||||||||||||1|1||
+57825328|Email|101429434|||||||||||||||||||24|Y||p.devine@blackfinch.com|1|||1
+57829507|Address|123829159|19|Y|Fernwood House|Clayton Road|Jesmond|||Newcastle-upon-Tyne||GB|NE2 1TL||||||||||||1|1||
+57829507|Email|101429525|||||||||||||||||||19|Y||accounts@lowes.co.uk|1|||1
+57831241|Address|123829343|19|Y|10-11 Austin Friars|||||London||GB|EC2N 2HG||||||||||||1|1||
+57831241|Email|101429527|||||||||||||||||||19|Y||kwwpbusinesssupport@kingswood-group.com|1|||1
+57831345|Address|123829361|19|Y|10 Grosvenor Park Road|||||Chester||GB|CH1 1QQ||||||||||||1|1||
+57831345|Email|101429797|||||||||||||||||||19|Y||advice@cestrianifa.co.uk|1|||1
+57831346|Address|123829362|19|Y|1A Tower Square|||||Leeds||GB|LS1 4DL||||||||||||1|1||
+57831346|Email|101429838|||||||||||||||||||19|Y||beth.breakspear@theprogenygroup.com|1|||1
+57831347|Address|123829363|19|Y|56 New Writtle Street|||||Chelmsford||GB|CM2 0SE||||||||||||1|1||
+57831347|Email|101429803|||||||||||||||||||19|Y||michaila@csbfa.co.uk|1|||1
+57831350|Address|123829364|19|Y|1 Bell Yard|||||London||GB|WC2A 2JR||||||||||||1|1||
+57831350|Email|101429804|||||||||||||||||||19|Y||paul.woollett@evanshart.co.uk|1|||1
+57831351|Address|123829365|19|Y|179-181 Bramley Road|||||London||GB|N14 4XA||||||||||||1|1||
+57831351|Email|101429810|||||||||||||||||||19|Y||diana@cedarhfs.co.uk|1|||1
+57831352|Address|123829366|19|Y|Room 244|Regus Stuart House|St Johns Street|||Peterborough||GB|PE1 5DD||||||||||||1|1||
+57831352|Email|101429847|||||||||||||||||||19|Y||helen@aureafp.co.uk|1|||1
+57831353|Address|123829367|19|Y|6 Station Road|Gerrards Cross||||Buckinghamshire||GB|SL9 8EL||||||||||||1|1||
+57831353|Email|101429848|||||||||||||||||||19|Y||accounts@chalfontinvestments.co.uk|1|||1
+57831355|Address|123829368|19|Y|Meridians House|Meridians Cross, 7 Ocean Way||||Southampton||GB|SO14 3TJ||||||||||||1|1||
+57831356|Address|123829369|19|Y|2 Digby Road|Leighton Buzzard||||Bedfordshire||GB|LU7 1BX||||||||||||1|1||
+57831356|Email|101429850|||||||||||||||||||19|Y||craigshackcloth@outlook.com|1|||1
+57831364|Address|123829372|19|Y|3 New Road|||||Kendal||GB|LA9 4AY||||||||||||1|1||
+57831365|Address|123829373|19|Y|Bath Street|||||Cheddar||GB|BS27 3AA||||||||||||1|1||
+57831365|Email|101429852|||||||||||||||||||19|Y||jackie@meldonandco.uk|1|||1
+57831370|Address|123829374|19|Y|Graylaw House|20-22 Watling Street||||Canterbury||GB|CT1 2UA||||||||||||1|1||
+57831370|Email|101429853|||||||||||||||||||19|Y||fp@cravenstreetwealth.com|1|||1
+57831379|Address|123829375|19|Y|3rd Floor Fitzroy House|Crown Street||||Ipswich||GB|IP1 3LG||||||||||||1|1||
+57831379|Email|101429856|||||||||||||||||||19|Y||statements-o@amberriverea.com|1|||1
+57831380|Address|123829376|19|Y|Victoria House|13 Victoria Street||||Aberdeen||GB|AB10 1XB||||||||||||1|1||
+57831380|Email|101429857|||||||||||||||||||19|Y||rhiannon@asfs-ltd.co.uk|1|||1
+57831382|Address|123829377|19|Y|1 Oak Court|North Leigh Business Park|Nursery Road|||North Leigh||GB|OX29 6SW||||||||||||1|1||
+57831382|Email|101429858|||||||||||||||||||19|Y||clientrelations@mathewscomfort.co.uk|1|||1
+57831383|Address|123829378|19|Y|5 Harbour Buildings|Waterfront West|Dudley Road|||Brierley Hill||GB|DY5 1LN||||||||||||1|1||
+57831383|Email|101429883|||||||||||||||||||19|Y||c.timmins@timminswhittaker.co.uk|1|||1
+57831385|Address|123829379|19|Y|5 Sycamore Court|Birmingham Road|Allesley|||Coventry||GB|CV5 9BA||||||||||||1|1||
+57831385|Email|101429820|||||||||||||||||||19|Y||paul@corrigans.org.uk|1|||1
+57831387|Address|123829380|19|Y|Lockgates House|Rushmills|Bedford Road|||Northampton||GB|NN4 7YB||||||||||||1|1||
+57831387|Email|101429823|||||||||||||||||||19|Y||accounts@caves.co.uk|1|||1
+57831394|Address|123829381|19|Y|Premier House|Argyle Way||||Stevenage||GB|SG1 2AD||||||||||||1|1||
+57831394|Email|101429894|||||||||||||||||||19|Y||emardell@richmondhousewm.co.uk|1|||1
+57831398|Address|123829382|19|Y|Cameron House|33 Church Street||||Leatherhead||GB|KT22 8EQ||||||||||||1|1||
+57831398|Email|101429887|||||||||||||||||||19|Y||rsangha@cleigh.com|1|||1
+57831410|Address|123829385|19|Y|35 North Street|||||Bourne||GB|PE10 9AE||||||||||||1|1||
+57831410|Email|101429886|||||||||||||||||||19|Y||general@riverglenifa.co.uk|1|||1
+57831411|Address|123829386|19|Y|Lakeside 500|Old Chapel Way|Broadland Business Park|||Norwich||GB|NR7 0WG||||||||||||1|1||
+57831411|Email|101429885|||||||||||||||||||19|Y||christine.banks@lffp.co.uk|1|||1
+57831413|Address|123829387|19|Y|27 Parolles Road|||||London||GB|N19 3RE||||||||||||1|1||
+57831413|Email|101429798|||||||||||||||||||19|Y||jess@bloomfinancialconsulting.co.uk|1|||1
+57831414|Address|123829388|19|Y|Sterling House|Concept Court|Shearway Business Park|||Folkestone||GB|CT19 4RG||||||||||||1|1||
+57831414|Email|101429861|||||||||||||||||||19|Y||accounts@financial-advice.co.uk|1|||1
+57831416|Address|123829389|19|Y|No. 5 The Heights|Wellington Way||||Weybridge||GB|KT13 0TT||||||||||||1|1||
+57831416|Email|101429799|||||||||||||||||||19|Y||james@pyrfordfp.com|1|||1
+57831422|Address|123829391|19|Y|77 Pasture Road|Letchworth Garden Ci||||Hertfordshire||GB|SG6 3LS||||||||||||1|1||
+57831422|Email|101429800|||||||||||||||||||19|Y||jas.ahuja@londonfinancialconsultants.co.uk|1|||1
+57831423|Address|123829392|19|Y|6 Gorse Road|Woodford Halse||||Daventry||GB|NN11 3QN||||||||||||1|1||
+57831423|Email|101429836|||||||||||||||||||19|Y||info@blackthorn-fs.co.uk|1|||1
+57831424|Address|123829393|19|Y|Wittas House|Two Rivers Industrial Estate|Station Lane|Witney||Oxon||GB|OX28 4BH||||||||||||1|1||
+57831424|Email|101429837|||||||||||||||||||19|Y||simon@responsiblewealth.co.uk|1|||1
+57831425|Address|123829394|19|Y|1 Burgh Road|Aylsham||||Norwich||GB|NR11 6AJ||||||||||||1|1||
+57831425|Email|101429868|||||||||||||||||||19|Y||support@smithifa.co.uk|1|||1
+57831571|Address|123829410|19|Y|Homecroft House|58 Station Road West||||Surrey||GB|RH8 9EU||||||||||||1|1||
+57831571|Email|101429825|||||||||||||||||||19|Y||kim@hcwealth.co.uk|1|||1
+57831603|Address|123829413|19|Y|15 Bridge Road|Wellington||||Telford||GB|TF1 1EB||||||||||||1|1||
+57831603|Email|101429869|||||||||||||||||||19|Y||accounts@belmorefp.uk|1|||1
+57831605|Address|123829414|19|Y|Cherry Tree|Back Lane|Cross in Hand|||Heathfield||GB|TN21 0QH||||||||||||1|1||
+57831605|Email|101429890|||||||||||||||||||19|Y||accounts@plan100.co.uk|1|||1
+57831607|Address|123829415|19|Y|38 Foregate Street|||||Worcester||GB|WR1 1EE||||||||||||1|1||
+57831607|Email|101429891|||||||||||||||||||19|Y||jane@evacapital.co.uk|1|||1
+57831611|Address|123829419|19|Y|1 The Sanctuary|||||London||GB|SW1P 3JT||||||||||||1|1||
+57831611|Email|101429801|||||||||||||||||||19|Y||spatel@thomsontyndall.com|1|||1
+57831613|Address|123829420|19|Y|Goodwood House|Blackbrook Park Avenue||||Taunton||GB|TA1 2PX||||||||||||1|1||
+57831614|Address|123829421|19|Y|Enterprise House|Ocean Way||||Southampton||GB|SO14 3XB||||||||||||1|1||
+57831614|Email|101429845|||||||||||||||||||19|Y||accounts@forestfp.co.uk|1|||1
+57831620|Address|123829423|19|Y|Atelius House|2 Smith Way|Grove Park|Enderby||Leicester||GB|LE19 1SX||||||||||||1|1||
+57831620|Email|101429802|||||||||||||||||||19|Y||neil@wkmwealth.co.uk|1|||1
+57831622|Address|123829424|19|Y|c/o Edward Boyle and Robert Spence both of Interpath|10 Fleet Place||||London||GB|EC4M 7RB||||||||||||1|1||
+57831622|Email|101429916|||||||||||||||||||19|Y||commissions@tenetgroup.co.uk|1|||1
+57831623|Address|123829425|19|Y|Marie House|5 Baker Street||||Weybridge||GB|KT13 8AE||||||||||||1|1||
+57831623|Email|101429841|||||||||||||||||||19|Y||caroline@bromwichfinancial.co.uk|1|||1
+57831626|Address|123829426|19|Y|21/23 Brenkley Way|Blezard Business Park|Seaton Burn|||Newcastle upon Tyne||GB|NE13 6DS||||||||||||1|1||
+57831626|Email|101429842|||||||||||||||||||19|Y||remuneration@pfgl.co.uk|1|||1
+57831627|Address|123829427|19|Y|12-16 Albyn Place|||||Aberdeen||GB|AB10 1PS||||||||||||1|1||
+57831629|Address|123829428|19|Y|Old Forge House|21 Stortford Road||||Dunmow||GB|CM6 1DA||||||||||||1|1||
+57831629|Email|101429878|||||||||||||||||||19|Y||info@hr-ifa.co.uk|1|||1
+57831633|Address|123829429|19|Y|Greenfields Farm|Lytchett Matravers||||Poole||GB|BH16 6BU||||||||||||1|1||
+57831633|Email|101429844|||||||||||||||||||19|Y||admin@greenfields.biz|1|||1
+57831644|Address|123829432|19|Y|Marlow House|Lloyds Avenue||||London||GB|EC3N 3AA||||||||||||1|1||
+57831644|Email|101429807|||||||||||||||||||19|Y||accounts@helmgodfrey.com|1|||1
+57831650|Address|123829434|19|Y|2/2A Throgmorton Avenue|||||London||GB|EC2N 2DG||||||||||||1|1||
+57831650|Email|101429880|||||||||||||||||||19|Y||finance@latheandco.co.uk|1|||1
+57831663|Address|123829437|19|Y|Lyndhurst House|High Street||||Harpenden||GB|AL5 2RT||||||||||||1|1||
+57831663|Email|101429942|||||||||||||||||||19|Y||commissions@lyndhurstfm.co.uk|1|||1
+57831668|Address|123829438|19|Y|Penguin House|Raleigh Walk|Brigantine Place|||Cardiff||GB|CF10 4LN||||||||||||1|1||
+57831668|Email|101429881|||||||||||||||||||19|Y||liza@penguinwealth.com|1|||1
+57831675|Address|123829440|19|Y|The Lodge|Braeside Equestrian Centre|Nelson Park Road|St. Margarets-at-Cliffe||Dover||GB|CT15 6HL||||||||||||1|1||
+57831675|Email|101429809|||||||||||||||||||19|Y||accounts@mayfield.uk.com|1|||1
+57831681|Address|123829443|19|Y|3 Whittle Court|Seebeck Place|Knowlhill|||Milton Keynes||GB|MK5 8FT||||||||||||1|1||
+57831681|Email|101429937|||||||||||||||||||19|Y||commission.team@pfgl.co.uk|1|||1
+57831683|Address|123829444|19|Y|Suite 311|3rd Floor|Eagle Tower|Montpellier Drive||Cheltenham||GB|GL50 1TA||||||||||||1|1||
+57831683|Email|101429882|||||||||||||||||||19|Y||iain.smith@wealthharbour.co.uk|1|||1
+57831688|Address|123829445|19|Y|20 Vicarage Road|||||Woking||GB|GU22 9BH||||||||||||1|1||
+57831688|Email|101429941|||||||||||||||||||19|Y||alastair@ifadirect.co.uk|1|||1
+57831689|Address|123829446|19|Y|1st Floor|Clockhouse Court|5-7 London Road|||St. Albans|HFS|GB|AL1 1LA||||||||||||1|1||
+57831689|Email|101429818|||||||||||||||||||19|Y||ar@hoxtoncapital.com|1|||1
+57831694|Address|123829447|19|Y|9 Woodborough Road|||||Winscombe||GB|BS25 1AB||||||||||||1|1||
+57831694|Email|101429895|||||||||||||||||||19|Y||jayne@churchillinvestments.co.uk|1|||1
+57831695|Address|123829448|19|Y|E5 Grange Court|Pinsley Road||||Leominster||GB|HR6 8NL||||||||||||1|1||
+57831695|Email|101429884|||||||||||||||||||19|Y||admin@mayfairprivatewealth.co.uk|1|||1
+57831704|Address|123829449|19|Y|Senator House|85 Queen Victoria Street||||London||GB|EC4V 4AB||||||||||||1|1||
+57831704|Email|101429812|||||||||||||||||||19|Y||qfpstatements@quilter.com|1|||1
+57831705|Address|123829450|19|Y|Ilkley Hall|Ilkley Hall Park||||Ilkley||GB|LS29 9LD||||||||||||1|1||
+57831705|Email|101429821|||||||||||||||||||19|Y||james@hfwealth.co.uk|1|||1
+57831706|Address|123829451|19|Y|Prudence House|Ashleigh Way|Langage Business Park|Plympton||Plymouth||GB|PL7 5JX||||||||||||1|1||
+57831706|Email|101429897|||||||||||||||||||19|Y||commission@tfagroup.co.uk|1|||1
+57831710|Address|123829453|19|Y|Morfe House|Belle Vue Road||||Shrewsbury||GB|SY3 7LU||||||||||||1|1||
+57831710|Email|101429814|||||||||||||||||||19|Y||pi.accounts@pifinancial.co.uk|1|||1
+57831711|Address|123829454|19|Y|Collingwood Buildings|38 Collingwood Street||||Newcastle upon Tyne||AE|NE1 1JF||||||||||||1|1||
+57831711|Email|101429822|||||||||||||||||||19|Y||peter.rutherford@rutherfordhughes.com|1|||1
+57831718|Address|123829457|19|Y|8 Camberwell Way|Doxford International Business Park||||Sunderland||GB|SR3 3XN||||||||||||1|1||
+57831718|Email|101429835|||||||||||||||||||19|Y||fci@fairstone.co.uk|1|||1
+57831720|Address|123829459|19|Y|No.1 Bath Quays|1 Foundry Lane||||Bath||GB|BA2 3GZ||||||||||||1|1||
+57831720|Email|101429889|||||||||||||||||||19|Y||finance@fidelius.co.uk|1|||1
+57831723|Address|123829460|19|Y|Premier House|1-5 Argyle Way||||Stevenage||GB|SG1 2AD||||||||||||1|1||
+57831723|Email|101429917|||||||||||||||||||19|Y||selina@carneliancapital.co.uk|1|||1
+57831726|Address|123829461|19|Y|7a Alkmaar Way|Norwich International Business Park||||Norwich||GB|NR6 6BF||||||||||||1|1||
+57831726|Email|101429827|||||||||||||||||||19|Y||sharon.rose@rgwifa.co.uk|1|||1
+57831730|Address|123829462|19|Y|Dunraven House|Meadow Court|41 High St|||Witney||GB|OX28 6ER||||||||||||1|1||
+57831730|Email|101429904|||||||||||||||||||19|Y||denise.watkins@phoenix-wm.co.uk|1|||1
+57831738|Address|123829464|19|Y|42 Icknield Close|||||Didcot||GB|OX11 7AU||||||||||||1|1||
+57831738|Email|101429828|||||||||||||||||||19|Y||pat@geoffmasonassociates.co.uk|1|||1
+57831739|Address|123829465|19|Y|The Sanctuary|Salisbury Road|Plaitford|||Romsey||GB|SO51 6EE||||||||||||1|1||
+57831739|Email|101429824|||||||||||||||||||22|Y||simon.lipscombe@sanctuarywealthplanning.co.uk|1|||1
+57831744|Address|123829466|19|Y|Sovereign Place|20 The Point||||Market Harborough||GB|LE16 7QU||||||||||||1|1||
+57831744|Email|101429906|||||||||||||||||||19|Y||accounts1@radiantfinancial.co.uk|1|||1
+57831745|Address|123829467|19|Y|Boston House|214 High Street|Boston Spa|||Leeds||GB|LS23 6AD||||||||||||1|1||
+57831745|Email|101429914|||||||||||||||||||19|Y||info@berryandoak.com|1|||1
+57831746|Address|123829468|19|Y|Johnstone House|52-54 Rose Street||||Aberdeen||GB|AB10 1HA||||||||||||1|1||
+57831746|Email|101429862|||||||||||||||||||19|Y||lcfadmin@ledinghamchalmers.com|1|||1
+57831747|Address|123829469|19|Y|Cordes House|Factory Road||||Newport||GB|NP20 5FA||||||||||||1|1||
+57831747|Email|101429907|||||||||||||||||||19|Y||elaine@chapelwood-financial.com|1|||1
+57831751|Address|123829470|19|Y|235 The Broadway|||||London||GB|SW19 1SD||||||||||||1|1||
+57831751|Email|101429879|||||||||||||||||||19|Y||info@mfs-group.co.uk|1|||1
+57831753|Address|123829471|19|Y|Letchworth Lodge|Dunbar Street||||Lossiemouth|MRY|GB|IV31 6AN||||||||||||1|1||
+57831753|Email|101429888|||||||||||||||||||19|Y||joe@calainvestments.co.uk|1|||1
+57831755|Address|123829472|19|Y|Bridgefoot House|159 High Street||||Huntingdon||GB|PE29 3TF||||||||||||1|1||
+57831755|Email|101429826|||||||||||||||||||19|Y||david@emetfs.com|1|||1
+57831756|Address|123829473|19|Y|45 Gresham Street|||||London||GB|EC2V 7BG||||||||||||1|1||
+57831756|Email|101429854|||||||||||||||||||19|Y||revenuequeries@tilney.co.uk|1|||1
+57831757|Address|123829474|19|Y|Tees House|95 London Road||||Bishop's Stortford||GB|CM23 3GW||||||||||||1|1||
+57831757|Email|101429832|||||||||||||||||||19|Y||claire.evenden@teeslaw.com|1|||1
+57831767|Address|123829476|19|Y|Trenant Farm|Egloshayle||||Wadebridge||GB|PL27 6HH||||||||||||1|1||
+57831768|Address|123829477|19|Y|Quay House|7 The Quay||||Poole||GB|BH15 1HA||||||||||||1|1||
+57831774|Address|123829478|19|Y|10 Abbey Park Place|Dunfermline||||Dunfermline|FIF|GB|KY12 7NZ||||||||||||1|1||
+57831774|Email|101429840|||||||||||||||||||19|Y||rhona.jamieson@condieswealth.co.uk|1|||1
+57831775|Address|123829479|19|Y|Senator House|85 Queen Victoria Street||||London||GB|EC4V 4AB||||||||||||1|1||
+57831775|Email|101429912|||||||||||||||||||19|Y||qfpstatements@quilter.com|1|||1
+57831776|Address|123829480|19|Y|36 Conalan Avenue|||||Sheffield||GB|S17 4PG||||||||||||1|1||
+57831776|Email|101429843|||||||||||||||||||19|Y||paul@metrofs.co.uk|1|||1
+57831783|Address|123829482|19|Y|Unit 4|Venture Drive|Kingshill Park|Arnhall Business Park||Westhill||GB|AB32 6FL||||||||||||1|1||
+57831783|Email|101429913|||||||||||||||||||19|Y||commission@acumenfp.com|1|||1
+57831786|Address|123829483|19|Y|25c North St|||||Bishop's Stortford||GB|CM23 2LD||||||||||||1|1||
+57831786|Email|101429931|||||||||||||||||||19|Y||annette@enableflp.co.uk|1|||1
+57831787|Address|123829484|19|Y|The Lightwell|61-63 Brown Street||||Manchester||GB|M2 2JG||||||||||||1|1||
+57831794|Address|123829486|19|Y|Kingsley Close|Lee Mill||||Ivybridge||GB|PL21 9GD||||||||||||1|1||
+57831794|Email|101429919|||||||||||||||||||19|Y||georgina.chapman@swlaw.co.uk|1|||1
+57831802|Address|123829487|19|Y|5-7 Court Road|Bridgend||||Pen-y-bont ar Ogwr||GB|CF31 1BE||||||||||||1|1||
+57831802|Email|101429806|||||||||||||||||||19|Y||helen.edwards@aevitas.life|1|||1
+57831804|Address|123829489|19|Y|Ivy Lodge|Toothill Road||||Loughborough||GB|LE11 1PN||||||||||||1|1||
+57831804|Email|101429872|||||||||||||||||||19|Y||liam@cambournefp.co.uk|1|||1
+57831810|Address|123829491|19|Y|4 Broad Street|||||Stamford||GB|PE9 1PB||||||||||||1|1||
+57831810|Email|101429920|||||||||||||||||||19|Y||sarah@landmarkgroup.org.uk|1|||1
+57831816|Address|123829494|19|Y|73 Tiverton Road|||||Potters Bar||GB|EN6 5HX||||||||||||1|1||
+57831816|Email|101429808|||||||||||||||||||19|Y||andrew@affinity4advice.co.uk|1|||1
+57831821|Address|123829496|19|Y|Marlborough House|102-110 High Street||||Shoreham-by-Sea||GB|BN43 5DB||||||||||||1|1||
+57831821|Email|101429921|||||||||||||||||||19|Y||finance@pembrokefs.co.uk|1|||1
+57831824|Address|123829497|19|Y|4 Clifton Court|||||Cambridge||GB|CB1 7BN||||||||||||1|1||
+57831824|Email|101429918|||||||||||||||||||19|Y||admin@dartingtonwm.com|1|||1
+57831825|Address|123829498|19|Y|The Apex|Brest Road|Derriford Business Park|Derriford||Plymouth||GB|PL6 5FL||||||||||||1|1||
+57831841|Address|123829499|19|Y|Lancaster House|Ackhurst Business Park|Foxhole Road|||Chorley||GB|PR7 1NY||||||||||||1|1||
+57831841|Email|101429873|||||||||||||||||||19|Y||commission.team@pfgl.co.uk|1|||1
+57831847|Address|123829500|19|Y|6 Market Place|||||Kettering||GB|NN16 0AL||||||||||||1|1||
+57831847|Email|101429899|||||||||||||||||||19|Y||clare@atawny.co.uk|1|||1
+57831852|Address|123829502|19|Y|28 King Street|||||Carmarthen||GB|SA31 1BS||||||||||||1|1||
+57831852|Email|101429871|||||||||||||||||||19|Y||enquiries@wheelerwicks.co.uk|1|||1
+57831853|Address|123829503|19|Y|3 Parsonage Drive|Cofton Hackett||||Birmingham||GB|B45 8AS||||||||||||1|1||
+57831853|Email|101429813|||||||||||||||||||19|Y||accounts@whateleywm.co.uk|1|||1
+57831854|Address|123829504|19|Y|Dedham Hall Business Centre|Brook Street|Dedham|||Colchester||GB|CO7 6AD||||||||||||1|1||
+57831854|Email|101429900|||||||||||||||||||19|Y||sarahh@fiduciawealth.co.uk|1|||1
+57831855|Address|123829505|19|Y|1a Castleview Road|||||Belfast||GB|BT5 7AX||||||||||||1|1||
+57831860|Address|123829506|19|Y|7 Sansome Place|||||Worcester||GB|WR1 1UG||||||||||||1|1||
+57831860|Email|101429870|||||||||||||||||||19|Y||office@face-uk.com|1|||1
+57831864|Address|123829507|19|Y|750 Mandarin Court|||||Warrington||GB|WA1 1GG||||||||||||1|1||
+57831864|Email|101429924|||||||||||||||||||19|Y||income@corbelpartners.co.uk|1|||1
+57831865|Address|123829508|19|Y|1st Floor|22-24 High Street||||Newport||GB|TF10 7AN||||||||||||1|1||
+57831865|Email|101429898|||||||||||||||||||19|Y||tcd@langhamfinancial.co.uk|1|||1
+57831876|Address|123829509|19|Y|Kilworthy Park|||||Tavistock||GB|PL19 0BZ||||||||||||1|1||
+57831876|Email|101429893|||||||||||||||||||19|Y||alison@westcountryfinancial.co.uk|1|||1
+57832034|Address|123829527|19|Y|Wiston House|1 Wiston Avenue||||Worthing||GB|BN14 7QL||||||||||||1|1||
+57832034|Email|101429896|||||||||||||||||||19|Y||mark@hodsons.net|1|||1
+57832038|Address|123829528|19|Y|Lake View House|Wilton Drive||||Warwick||GB|CV34 6RG||||||||||||1|1||
+57832038|Email|101429905|||||||||||||||||||19|Y||enquiries@klofinancialservices.com|1|||1
+57832039|Address|123829529|19|Y|13-19 Derby Road|||||Nottingham||GB|NG1 5AA||||||||||||1|1||
+57832039|Email|101429863|||||||||||||||||||19|Y||income@wrensterling.com|1|||1
+57832045|Address|123829530|19|Y|53 Middlewich Road|||||Sandbach||GB|CW11 1HU||||||||||||1|1||
+57832048|Address|123829531|19|Y|Curzon House|3 Bramble Street||||Derby||GB|DE1 1HU||||||||||||1|1||
+57832048|Email|101429908|||||||||||||||||||19|Y||life@sherwininsurance.co.uk|1|||1
+57832051|Address|123829532|19|Y|5 High Street|Sawtry||||Huntingdon||GB|PE28 5SR||||||||||||1|1||
+57832051|Email|101429864|||||||||||||||||||19|Y||richard@rmifinance.co.uk|1|||1
+57832066|Address|123829536|19|Y|Unit 5|Whitestone Business Park|Whitestone|||Hereford||GB|HR1 3SE||||||||||||1|1||
+57832066|Email|101429925|||||||||||||||||||19|Y||ellie@padstone-fm.co.uk|1|||1
+57832068|Address|123829537|19|Y|Unit 1d|Rossett Business Village|Llyndir Lane|Rossett||Wrexham||GB|LL12 0AY||||||||||||1|1||
+57832068|Email|101429926|||||||||||||||||||19|Y||admin@cumminsifa.com|1|||1
+57832069|Address|123829538|19|Y|Banbury Business Park|Ground Floor|Unit 15 Somerville Court|Adderbury||Banbury||GB|OX17 3SN||||||||||||1|1||
+57832069|Email|101429833|||||||||||||||||||19|Y||lawrence.newell@cherwellfs.co.uk|1|||1
+57832071|Address|123829539|19|Y|MPA House|98 High Street||||Henley in Arden||GB|B95 5BY||||||||||||1|1||
+57832071|Email|101429903|||||||||||||||||||19|Y||a.byrne@mpafm.co.uk|1|||1
+57832073|Address|123829540|19|Y|12/13 The Crescent|||||Wisbech||GB|PE13 1EH||||||||||||1|1||
+57832073|Email|101429866|||||||||||||||||||19|Y||sara@whitingandpartnerswm.co.uk|1|||1
+57832075|Address|123829541|19|Y|Foxley House|Lonsdale Road||||Newton Abbot||GB|TQ12 1DT||||||||||||1|1||
+57832075|Email|101429929|||||||||||||||||||19|Y||john@thomasandgentry.co.uk|1|||1
+57832077|Address|123829542|19|Y|16 Carron Street|||||Nairn||GB|IV12 5SJ||||||||||||1|1||
+57832077|Email|101429932|||||||||||||||||||19|Y||439179@tpstatements.com|1|||1
+57832078|Address|123829543|19|Y|Senator House|85 Queen Victoria Street||||London||GB|EC4V 4AB||||||||||||1|1||
+57832078|Email|101429934|||||||||||||||||||19|Y||qfpstatements@quilter.com|1|||1
+57832080|Address|123829544|19|Y|St. Clements House|61 Trent Boulevard|West Bridgford|||Nottingham||GB|NG2 5BE||||||||||||1|1||
+57832080|Email|101429935|||||||||||||||||||19|Y||jess@hensonaslam.co.uk|1|||1
+57832092|Address|123829546|19|Y|88/89 Whiting Street|||||Bury St. Edmunds|SFK|GB|IP33 1NX||||||||||||1|1||
+57832092|Email|101429865|||||||||||||||||||19|Y||624006@tpstatements.com|1|||1
+57832093|Address|123829547|19|Y|45 Southgate Street|||||Winchester||GB|SO23 9EH||||||||||||1|1||
+57832093|Email|101429936|||||||||||||||||||19|Y||accounts@collingbourne.com|1|||1
+57832095|Address|123829548|19|Y|Unit 5|Pride Point|Ashcroft Road|||Kirkby||GB|L33 7TW||||||||||||1|1||
+57832095|Email|101429876|||||||||||||||||||19|Y||charlotteennis@pandbifa.co.uk|1|||1
+57832096|Address|123829549|19|Y|Floor 4|1 Angel Court||||London||GB|EC2R 7HJ||||||||||||1|1||
+57832096|Email|101429967|||||||||||||||||||19|Y||rrider@partnerswealthmanagement.co.uk|1|||1
+57832097|Address|123829550|19|Y|Suite 7-8, Wensum Mount Business Centre|Low Road|Hellesdon|||Norwich||GB|NR6 5AQ||||||||||||1|1||
+57832097|Email|101429834|||||||||||||||||||19|Y||warren@brunswickim.com|1|||1
+57832098|Address|123829551|19|Y|15 Queens Road|||||Evesham||GB|WR11 4JN||||||||||||1|1||
+57832098|Email|101430011|||||||||||||||||||19|Y||david@wealth-group.co.uk|1|||1
+57832099|Address|123829552|19|Y|Kinetic Business Centre|Theobald Street||||Borehamwood||GB|WD6 4PJ||||||||||||1|1||
+57832100|Address|123829553|19|Y|M C F Complex|60 New Road||||Kidderminster||GB|DY10 1AQ||||||||||||1|1||
+57832100|Email|101429968|||||||||||||||||||19|Y||info@eastmillsltd.co.uk|1|||1
+57832105|Address|123829555|19|Y|13 Roman Way Business Centre|Berry Hill Industrial Estate||||Droitwich||GB|WR9 9AJ||||||||||||1|1||
+57832105|Email|101429966|||||||||||||||||||19|Y||accounts@prosserknowles.co.uk|1|||1
+57832129|Address|123829558|19|Y|E F X House|1 Boycott Avenue||||Oldbrook||GB|MK6 2RW||||||||||||1|1||
+57832129|Email|101429976|||||||||||||||||||19|Y||commissions@gracechurchwm.com|1|||1
+57832163|Address|123829563|19|Y|11 Waterside Court|Albany Street||||Newport||GB|NP20 5NT||||||||||||1|1||
+57832163|Email|101429978|||||||||||||||||||19|Y||fees@anglo-celtic.co.uk|1|||1
+57832167|Address|123829564|19|Y|Crofton House|Unit C, Fareham Heights|Standard Way|||Fareham||GB|PO16 8XT||||||||||||1|1||
+57832167|Email|101429977|||||||||||||||||||19|Y||beveley@newcoz.co.uk|1|||1
+57832170|Address|123829565|19|Y|Brookdale Centre|Manchester Road||||Knutsford||GB|WA16 0SR||||||||||||1|1||
+57832170|Email|101429875|||||||||||||||||||19|Y||memberpayments@adviserservices.co.uk|1|||1
+57832179|Address|123829566|19|Y|20 Old Bailey|||||London||GB|EC4M 7AN||||||||||||1|1||
+57832179|Email|101429877|||||||||||||||||||19|Y||louise.hamer@evowealth.co.uk|1|||1
+57832181|Address|123829567|19|Y|Unit 1 Elevation House|Marlin Office Village, 1250 Chester Road|Castle Vale|||Birmingham||GB|B35 7AZ||||||||||||1|1||
+57832181|Email|101429969|||||||||||||||||||19|Y||accounts@elevation-group.co.uk|1|||1
+57832185|Address|123829568|19|Y|High House|Harlington Road||||Hillingdon||GB|UB8 3HX||||||||||||1|1||
+57832185|Email|101429970|||||||||||||||||||19|Y||kg@ifa-affinity.co.uk|1|||1
+57832189|Address|123829569|19|Y|English Mutual House|22, The Tything||||Worcester||GB|WR1 1HD||||||||||||1|1||
+57832189|Email|101429910|||||||||||||||||||19|Y||fees@bespoke-advice.com|1|||1
+57832190|Address|123829570|19|Y|14 Fore Street|||||Ivybridge||GB|PL21 9AB||||||||||||1|1||
+57832190|Email|101429971|||||||||||||||||||19|Y||jchudley@manningandco.co.uk|1|||1
+57832193|Address|123829571|19|Y|Pioneer House|Chivers Way|Histon|||Cambridge||GB|CB24 9NL||||||||||||1|1||
+57832193|Email|101429892|||||||||||||||||||22|Y||emma@granitecoast.co.uk|1|||1
+57832196|Address|123829572|19|Y|St. Marys Court|The Broadway||||Amersham||GB|HP7 0UT||||||||||||1|1||
+57832196|Email|101429909|||||||||||||||||||19|Y||jon.elkins.cfp@gmail.com|1|||1
+57832215|Address|123829575|19|Y|Henver House|60B Wood Lane||||Sonning Common|RDG|GB|RG4 9SL||||||||||||1|1||
+57832215|Email|101429867|||||||||||||||||||19|Y||paul@box-financial-planning.co.uk|1|||1
+57832227|Address|123829578|19|Y|Lakeside Offices|The Old Cattle Market|Coronation Park|||Helston||GB|TR13 0SR||||||||||||1|1||
+57832227|Email|101429911|||||||||||||||||||19|Y||andrew.steward@afwm.co.uk|1|||1
+57832390|Address|123829606|19|Y|Unit 1-1A|Park Lane Business Centre|Park Lane|Langham||Colchester||GB|CO4 5WR||||||||||||1|1||
+57832390|Email|101429874|||||||||||||||||||19|Y||rachel@ashworthfp.co.uk|1|||1
+57832400|Address|123829609|19|Y|2 Grove Park Court|||||Harrogate||GB|HG1 4DP||||||||||||1|1||
+57832400|Email|101429923|||||||||||||||||||19|Y||accounts@oculuswealth.com|1|||1
+57832410|Address|123829610|19|Y|Lodge Park Business Centre, Lodge Lane|Langham||||Colchester||GB|CO4 5NE||||||||||||1|1||
+57832410|Email|101429901|||||||||||||||||||19|Y||accounts@eafp.co.uk|1|||1
+57832412|Address|123829611|19|Y|8 Hozier Street|||||Coatbridge||GB|ML5 4DB||||||||||||1|1||
+57832412|Email|101429902|||||||||||||||||||19|Y||info@mkmfinancialmanagement.co.uk|1|||1
+57832414|Address|123829612|19|Y|4 Highcliffe Court|Greenfold Lane||||Wetherby||GB|LS22 6RG||||||||||||1|1||
+57832414|Email|101429928|||||||||||||||||||19|Y||admin@jhfol.co.uk|1|||1
+57832416|Address|123829613|19|Y|The Hub|East Gateway|Beancross Road|||Grangemouth||GB|FK3 8WH||||||||||||1|1||
+57832416|Email|101429927|||||||||||||||||||19|Y||info@antonineim.co.uk|1|||1
+57832419|Address|123829614|19|Y|62 Mill Street|||||Ottery St. Mary||GB|EX11 1AF||||||||||||1|1||
+57833285|Address|123829715|19|Y|Insight House|7a Alkmaar Way|Norwich International Business Park|||Norwich||GB|NR6 6BF||||||||||||1|1||
+57833285|Email|101429972|||||||||||||||||||19|Y||sharon.rose@insightifa.com|1|||1
+57833290|Address|123829717|19|Y|114-116 Fore Street|||||Hertford||GB|SG14 1AJ||||||||||||1|1||
+57833290|Email|101429979|||||||||||||||||||19|Y||commissions@mwafinancial.co.uk|1|||1
+57833292|Address|123829719|19|Y|2 Ensign House|Longbridge Road||||Plymouth||GB|PL6 8LR||||||||||||1|1||
+57833292|Email|101429990|||||||||||||||||||19|Y||jayne@inspire-wealth.co.uk|1|||1
+57833297|Address|123829720|19|Y|3rd Floor Bridgewater Place|Water Lane||||Leeds||GB|LS11 5BZ||||||||||||1|1||
+57833297|Email|101429960|||||||||||||||||||19|Y||commissions@2plan.com|1|||1
+57833298|Address|123829721|19|Y|5A Valley Industries|Cuckoo Lane||||Tonbridge||GB|TN11 0AG||||||||||||1|1||
+57833298|Email|101429974|||||||||||||||||||19|Y||kirsty@courtneyhavers.co.uk|1|||1
+57833299|Address|123829722|19|Y|Brookdale Centre|Manchester Road||||Knutsford||GB|WA16 0SR||||||||||||1|1||
+57833299|Email|101429989|||||||||||||||||||19|Y||adviserpay@sense-network.co.uk|1|||1
+57833305|Address|123829723|19|Y|1.03 - 1.04 Floor One|7 Stratford Place||||London||GB|W1C 1AY||||||||||||1|1||
+57833305|Email|101429975|||||||||||||||||||19|Y||sue.johns@iwpuk.co.uk|1|||1
+57833307|Address|123829724|19|Y|Victoria House|2 Grove Road||||Fareham||GB|PO16 7TE||||||||||||1|1||
+57833307|Email|101429961|||||||||||||||||||19|Y||gwyneth@davidwinterifa.co.uk|1|||1
+57833308|Address|123829725|19|Y|3 Greenfield Crescent|||||Birmingham||GB|B15 3BE||||||||||||1|1||
+57833308|Email|101429980|||||||||||||||||||19|Y||nicky@wealthwide.co.uk|1|||1
+57833309|Address|123829726|19|Y|10 Hookway|||||Crediton||GB|EX17 3PU||||||||||||1|1||
+57833309|Email|101429962|||||||||||||||||||19|Y||sue@roseifa.co.uk|1|||1
+57833310|Address|123829727|19|Y|Henderson Business Centre|Ivy Road||||Norwich||GB|NR5 8BF||||||||||||1|1||
+57833310|Email|101429963|||||||||||||||||||19|Y||info@viawealth.co.uk|1|||1
+57833312|Address|123829728|19|Y|17 Eaton Village|||||Abingdon||GB|OX13 5PR||||||||||||1|1||
+57833312|Email|101429964|||||||||||||||||||19|Y||bgfp2011@hotmail.co.uk|1|||1
+57833463|Address|123829742|19|Y|15 Frederick Road|Edgbaston||||Birmingham||GB|B15 1JD||||||||||||1|1||
+57833463|Email|101429965|||||||||||||||||||19|Y||kay@wealth-solutions.co.uk|1|||1
+57833471|Address|123829744|19|Y|Park House|48-50 Manchester Road|Haslingden|||Rossendale||GB|BB4 5ST||||||||||||1|1||
+57833471|Email|101429997|||||||||||||||||||19|Y||claire.smith@sbartonfs.co.uk|1|||1
+57833476|Address|123829745|19|Y|53a John Street|||||Porthcawl||GB|CF36 3AY||||||||||||1|1||
+57833476|Email|101429999|||||||||||||||||||19|Y||485852@tpstatements.com|1|||1
+57833481|Address|123829746|19|Y|Vision House Unit 6a|Falmouth Business Park|Bickland Water Road|||Falmouth||GB|TR11 4SZ||||||||||||1|1||
+57833481|Email|101429998|||||||||||||||||||19|Y||finance@visionifp.co.uk|1|||1
+57833485|Address|123829748|19|Y|Amelia House|Crescent Road||||Worthing||GB|BN11 1RL||||||||||||1|1||
+57833485|Email|101430000|||||||||||||||||||19|Y||jamesmcadams@coolebeviswm.com|1|||1
+57833488|Address|123829749|19|Y|167 Fleet Street|||||London||GB|EC4A 2EA||||||||||||1|1||
+57833488|Email|101430001|||||||||||||||||||19|Y||payenq@westminster-wealth.com|1|||1
+57833490|Address|123829750|19|Y|Office Suite 02 Ground Floor|South Annexe|Pera Business Park|Nottingham Road||Melton Mowbray||GB|LE13 0PB||||||||||||1|1||
+57833490|Email|101430002|||||||||||||||||||19|Y||rachelc@keightleypattisonifa.co.uk|1|||1
+57833491|Address|123829751|19|Y|Senator House|85 Queen Victoria Street||||London||GB|EC4V 4AB||||||||||||1|1||
+57833491|Email|101430014|||||||||||||||||||19|Y||qfppayments@quilter.com|1|||1
+57833755|Address|123829776|19|Y|15 Weavers Ring|Angmering||||Littlehampton||GB|BN16 4AJ||||||||||||1|1||
+57833755|Email|101430013|||||||||||||||||||19|Y||robb@astuteip.co.uk|1|||1
+57833756|Address|123829777|19|Y|4 Woodside Place|||||Glasgow||GB|G3 7QF||||||||||||1|1||
+57833756|Email|101429987|||||||||||||||||||19|Y||info@rosemountasset.co.uk|1|||1
+57833758|Address|123829778|19|Y|5 Charlotte Street|||||Perth||GB|PH1 5LW||||||||||||1|1||
+57833758|Email|101429988|||||||||||||||||||19|Y||sarah@oakbankfs.com|1|||1
+57833762|Address|123829779|19|Y|Obsidian House|Hints Road|Mile Oak|||Tamworth||GB|B78 3PQ||||||||||||1|1||
+57833762|Email|101430012|||||||||||||||||||19|Y||enquiries@obsidian-financial.com|1|||1
+57833763|Address|123829780|19|Y|Centurion House|136-142 London Road||||St. Albans||GB|AL1 1PQ||||||||||||1|1||
+57833763|Email|101430009|||||||||||||||||||19|Y||beverley@kdw.co.uk|1|||1
+57833765|Address|123829781|19|Y|Channel Court|8 Hill Road||||Clevedon||GB|BS21 7NE||||||||||||1|1||
+57833765|Email|101429991|||||||||||||||||||19|Y||tracey.bloyce@centurioncfp.co.uk|1|||1
+57833766|Address|123829782|19|Y|Atlantic House|Parkhouse||||Carlisle||GB|CA3 0LJ||||||||||||1|1||
+57833766|Email|101429992|||||||||||||||||||19|Y||commissions@trulyonline.co.uk|1|||1
+57833767|Address|123829783|19|Y|92 Lichfield Street|||||Tamworth||GB|B79 7QF||||||||||||1|1||
+57833767|Email|101429993|||||||||||||||||||19|Y||lynne@wealthwise.co.uk|1|||1
+57833770|Address|123829784|19|Y|2 Hartdene House|Bridge Road||||Bagshot||GB|GU19 5AT||||||||||||1|1||
+57833770|Email|101429930|||||||||||||||||||19|Y||berenice.goodall@hcwm.co.uk|1|||1
+57833771|Address|123829785|19|Y|9 Warbler Close|||||Ruddington||GB|NG11 6RT||||||||||||1|1||
+57833771|Email|101429933|||||||||||||||||||19|Y||592550@tpstatements.com|1|||1
+57833779|Address|123829786|19|Y|The Stables|55 Market Road||||Carluke||GB|ML8 4BE||||||||||||1|1||
+57833779|Email|101429943|||||||||||||||||||19|Y||jan@ardmorefinancial.co.uk|1|||1
+57833782|Address|123829787|19|Y|16 Brenkley Way, Blezard Business Park|Seaton Burn|||| Newcastle upon Tyne||GB|NE13 6DS||||||||||||1|1||
+57833782|Email|101429939|||||||||||||||||||19|Y||emma.hutchinson@tieronecapital.co.uk|1|||1
+57833785|Address|123829789|19|Y|7 Heol y Deri|||||Cardiff||GB|CF14 6HA||||||||||||1|1||
+57833785|Email|101429994|||||||||||||||||||19|Y||mel@amgwealthsolutions.co.uk|1|||1
+57833786|Address|123829790|19|Y|1 The Cornerstone|Market Place||||Kegworth||GB|DE74 2EE||||||||||||1|1||
+57833786|Email|101430003|||||||||||||||||||19|Y||ttp.agency@tavistockinvestmentsplc.com|1|||1
+57833787|Address|123829791|19|Y|The Apex|Brest Road|Derriford Business Park|Derriford||Plymouth||GB|PL6 5FL||||||||||||1|1||
+57833787|Email|101429815|||||||||||||||||||19|Y||revenueteam@successionwealth.co.uk|1|||1
+57833789|Address|123829792|19|Y|Suite 2|First Floor Hamilton Court House|1-3 Alum Chine Road|||Bournemouth||GB|BH4 8DT||||||||||||1|1||
+57833789|Email|101429981|||||||||||||||||||19|Y||joanna.robertson@ssfs.co.uk|1|||1
+57833790|Address|123829793|19|Y|Runnymede Malthouse|Malthouse Lane||||Egham||GB|TW20 9BD||||||||||||1|1||
+57833790|Email|101429938|||||||||||||||||||19|Y||ros@focusfp.co.uk|1|||1
+57833791|Address|123829794|19|Y|3 Westbury Mews|Westbury-on-Trym||||Bristol||GB|BS9 3QA||||||||||||1|1||
+57833793|Address|123829795|19|Y|910 The Crescent|Colchester Business Park||||Colchester||GB|CO4 9YQ||||||||||||1|1||
+57833793|Email|101430004|||||||||||||||||||19|Y||jayne.bolton@amberriverea.com|1|||1
+57833795|Address|123829796|19|Y|3000 Manchester Business Park|Aviator Way||||Manchester||GB|M22 5TG||||||||||||1|1||
+57833795|Email|101430005|||||||||||||||||||19|Y||526157@tpstatements.com|1|||1
+57833796|Address|123829797|19|Y|8 Wicker Hill|||||Trowbridge||GB|BA14 8JU||||||||||||1|1||
+57833796|Email|101429945|||||||||||||||||||19|Y||finance@montgomerycharles.co.uk|1|||1
+57833797|Address|123829798|19|Y|Exchange Tower|19 Canning Street||||Edinburgh||GB|EH3 8EH||||||||||||1|1||
+57833797|Email|101430006|||||||||||||||||||19|Y||celliot@wavertonwealth.co.uk|1|||1
+57833799|Address|123829799|19|Y|1 Coleshill Street|||||Sutton Coldfield||GB|B72 1SD||||||||||||1|1||
+57833799|Email|101429982|||||||||||||||||||19|Y||info@opus-ifp.com|1|||1
+57833800|Address|123829800|19|Y|1st Floor, Clockhouse Court 5-7|London Road||||St. Albans||GB|AL1 1LA||||||||||||1|1||
+57833800|Email|101429816|||||||||||||||||||19|Y||antony@dfmadvice.co.uk|1|||1
+57833802|Address|123829801|19|Y|Newburn House|Gateway West||||Newburn Riverside||GB|NE15 8NX||||||||||||1|1||
+57833802|Email|101429983|||||||||||||||||||19|Y||commissionadmin@tpllp.com|1|||1
+57833803|Address|123829802|19|Y|Brennan House|Farnborough Aerospace Centre||||Farnborough||GB|GU14 6XR||||||||||||1|1||
+57833803|Email|101429817|||||||||||||||||||19|Y||income@beaufortgroup.co.uk|1|||1
+57833804|Address|123829803|19|Y|Lark Rise|Beech Grove|Fulbrook|||Burford||GB|OX18 4DE||||||||||||1|1||
+57833813|Address|123829804|19|Y|5th Floor|30 Market Street||||Huddersfield||GB|HD1 2HG||||||||||||1|1||
+57833814|Address|123829807|19|Y|2nd Floor|Vista Building|St David's Park|||Ewloe||GB|CH5 3DT||||||||||||1|1||
+57833814|Email|101429984|||||||||||||||||||19|Y||finance@astutepwltd.co.uk|1|||1
+57833815|Address|123829808|19|Y|26 South St. Marys Gate|||||Grimsby||GB|DN31 1LW||||||||||||1|1||
+57833815|Email|101429985|||||||||||||||||||19|Y||c.wijayaratna@fbwealth.co.uk|1|||1
+57833817|Address|123829809|19|Y|4 Rubislaw Terrace|||||Aberdeen||GB|AB10 1XE||||||||||||1|1||
+57833821|Address|123829810|19|Y|James Watson House|Montgomery Way||||Rosehill||GB|CA1 2UU||||||||||||1|1||
+57833823|Address|123829811|19|Y|Reading Bridge House|George Street||||Reading||GB|RG1 8LS||||||||||||1|1||
+57833823|Email|101429839|||||||||||||||||||19|Y||finance.admin@ascotlloyd.co.uk|1|||1
+57833824|Address|123829812|19|Y|2, Balmakeith Business Park|||||Nairn||GB|IV12 5QR||||||||||||1|1||
+57833825|Address|123829813|19|Y|Flat 13|Linemans View|Broad Reach Mews|||Shoreham-By-Sea||GB|BN43 5EH||||||||||||1|1||
+57833825|Email|101429986|||||||||||||||||||19|Y||info@prestigewp.co.uk|1|||1
+57833826|Address|123829814|19|Y|North Wood Place|Octagon Business Park|Little Plumstead|||Norwich||GB|NR13 5FH||||||||||||1|1||
+57833826|Email|101430007|||||||||||||||||||19|Y||accounts@fs-ifa.com|1|||1
+57833828|Address|123829815|19|Y|207 Ashley Road|Hale||||Altrincham||GB|WA15 9SQ||||||||||||1|1||
+57833828|Email|101429996|||||||||||||||||||19|Y||p.mehta@halewm.co.uk|1|||1
+57833829|Address|123829816|19|Y|The Estate Yard|East Shalford Lane||||Guildford||GB|GU4 8AE||||||||||||1|1||
+57833829|Email|101430008|||||||||||||||||||19|Y||commissions@hardingfinancial.co.uk|1|||1
+57833831|Address|123829817|19|Y|Albury Lodge|The Street|Albury|||Guildford||GB|GU5 9AE||||||||||||1|1||
+57833831|Email|101429995|||||||||||||||||||19|Y||admin@efp.london|1|||1
+57833832|Address|123829818|19|Y|The Middle Barn|Bryants Farm|Kiln Road|Dunsden||Reading||GB|RG4 9PB||||||||||||1|1||
+57833832|Email|101430010|||||||||||||||||||19|Y||agencies.ftv@finli.co.uk|1|||1
+57859829|Address|123835267|23|Y|50 Grenfell Park|Parkgate|Neston|||Cheshire||GB|CH64 6TT||||||||||||1|1||
+57859829|Email|101431959|||||||||||||||||||23|Y|Home|roochove@hotmail.com|1|||1
+57859829|Phone|95627258||||||||||||25|N|Other|GB||07951775515|+4407951775515|||||1||1|
+57860850|Address|123835411|23|Y|28 Peverel Road|Crawley||||Ifield||GB|RH11 0TH||||||||||||1|1||
+57860850|Email|101432073|||||||||||||||||||23|Y|Home|vivien1947@yahoo.co.uk|1|||1
+57861012|Email|101432110|||||||||||||||||||24|Y||jon.watts@mayfield.uk.com|1|||1
+57862550|Address|123835587|23|Y|Apartment 8 The Revue,|2 Orchard Road|Malvern|||Worcestershire||GB|WR14 3DT||||||||||||1|1||
+57862550|Email|101432227|||||||||||||||||||23|Y|Home|mikeolathome@me.com|1|||1
+57864286|Email|101432363|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57864485|Email|101432377|||||||||||||||||||24|Y||colin@geminifp.co.uk|1|||1
+57864485|Phone|95682159||||||||||||25|N|Other|GB||07796142979|+4407796142979|||||1||1|
+57865339|Address|123835906|23|Y|8 Reedsholme Close|Crawshawbooth||||Rossendale||GB|BB4 8NA||||||||||||1|1||
+57865339|Email|101432442|||||||||||||||||||23|Y|Home|caroleclegg4@gmail.com|1|||1
+57940749|Address|123881344|23|Y|3 Batchwood Drive|St Albans||||Herts||GB|AL3 5RZ||||||||||||1|1||
+57940749|Email|101637474|||||||||||||||||||23|Y|Home|liz@atkins33.com|1|||1
+57940921|Email|101642482|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+57972833|Address|123911194|23|Y|21 All Saints Road|||||Weston-Super-Mare|NSM|GB|BS23 2NW||||||||||||1|1||
+57972833|Email|101707505|||||||||||||||||||23|Y|Home|peter.sykes33@ntlworld.com|1|||1
+57972833|Phone|95191966||||||||||||23|Y||GB||07968968454|+44  07968968454|||||1||1|
+57976886|Email|101747485|||||||||||||||||||25|Y|steve.barton@sbartonfs.co.uk|steve.barton@sbartonfs.co.uk|1|||1
+57976917|Address|123921122|19|Y|Tubwell Farm, Tubwell Lane|||||Crowborough|ESX|GB|TN6 3RQ||||||||||||1|1||
+57977904|Address|123921228|23|Y|14 Lonsdale Avenue|Cliftonville||||Margate||GB|CT9 3BT||||||||||||1|1||
+57977904|Email|101757475|||||||||||||||||||23|Y|Home|keith.elliott14@hotmail.co.uk|1|||1
+57977904|Phone|95221979||||||||||||23|Y||GB||07976280213|+44  07976280213|||||1||1|
+57977921|Address|123921229|23|Y|14 Lonsdale Avenue|Cliftonville||||Margate||GB|CT9 3BT||||||||||||1|1||
+57977921|Email|101757476|||||||||||||||||||23|Y|Home|sylv.elliott@hotmail.co.uk|1|||1
+57977921|Phone|95221980||||||||||||23|Y||GB||01304853355|+44  01304853355|||||1||1|
+57994507|Address|123946049|19|Y|The Lypiatts|15 Lansdown Road||||Cheltenham||GB|GL50 2JA||||||||||||1|1||
+57997572|Address|123981016|23|Y|Knightley Barn|Banbury Road||||Litchborough||GB|NN12 8JF||||||||||||1|1||
+57997572|Email|101852520|||||||||||||||||||23|Y|Home|bramble46@googlemail.com|1|||1
+58012495|Email|101897536|||||||||||||||||||25|Y|jim@thomsongray.co.uk|jim@thomsongray.co.uk|1|||1
+58012512|Email|101897546|||||||||||||||||||25|Y|Edward.Kennedy@marlboroughgroup.com|Edward.Kennedy@marlboroughgroup.com|1|||1
+58012512|Phone|95326977||||||||||||24|N||GB||07947114544|+44 07947114544|||||1||1|
+58012512|Phone|95301983||||||||||||24|Y||GB|| 07947114544|+44  07947114544|||||1||1|
+58012645|Address|124030966|19|Y|4 Duncan Close|Moulton Park||||Northampton|NTH|GB|NN3 6WL||||||||||||1|1||
+58016832|Address|124045977|23|Y|9 Goldings Road|||||Loughton||GB|IG10 2QR||||||||||||1|1||
+58016832|Email|101907491|||||||||||||||||||23|Y|eddie.kennedy55@yahoo.co.uk|eddie.kennedy55@yahoo.co.uk|1|||1
+58016832|Phone|95321964||||||||||||23|Y|TELEPHONE|GB||7947114544|+44 7947114544|||||1||1|
+58017883|Address|124071010|23|Y|Premier Barton Farm|Higher Ashton||||Exeter|DEV|GB|EX6 7QR||||||||||||1|1||
+58017883|Email|101922547|||||||||||||||||||23|Y||devonshirepropertylimited@gmail.com|1|||1
+58017883|Phone|95326972||||||||||||23|Y||GB||7976613580|+44 7976613580|||||1||1|
+58018229|Address|124071050|24|Y|4 Duncan Close,|Red House Square|Moulton Park|||Northampton|NTH|GB|NN3 6WL||||||||||||1|1||
+58018229|Email|101927478|||||||||||||||||||24|Y||jim@thomsongray.co.uk|1|||1
+58020009|Email|101927561|||||||||||||||||||25|Y|nick.lawson@casfin.co.uk|nick.lawson@casfin.co.uk|1|||1
+58020487|Address|124081006|23|Y|The Paddocks Main Street|Glapthorn||||Peterborough|CAM|GB|PE8 5BE||||||||||||1|1||
+58020487|Email|101942506|||||||||||||||||||23|Y|Home|pennyreading28@gmail.com|1|||1
+58020487|Phone|95331967||||||||||||23|Y||GB||01832274277|+44  01832274277|||||1||1|
+58020597|Address|124081016|24|Y|8 Castlegate|||||Grantharn|LIN|GB|NG31 6SE||||||||||||1|1||
+58020597|Email|101942532|||||||||||||||||||24|Y||nick.lawson@casfin.co.uk|1|||1
+58020669|Email|101942541|||||||||||||||||||25|Y|gjp@marslandnash.com|gjp@marslandnash.com|1|||1
+58020669|Phone|95331971||||||||||||23|Y|TELEPHONE|GB||7736947581|+44 7736947581|||||1||1|
+58020669|Phone|95367027||||||||||||23|N|TELEPHONE|GB||7736947581|+44 7736947581|||||1||1|
+58026028|Email|101957478|||||||||||||||||||24|Y||simon.hayes@casfin.co.uk|1|||1
+58026078|Email|101957491|||||||||||||||||||25|Y|emmahopkins1512@gmail.com|emmahopkins1512@gmail.com|1|||1
+58026078|Phone|95341962||||||||||||23|Y|TELEPHONE|GB||7587103910|+44 7587103910 |||||1||1|
+58027579|Email|101967544|||||||||||||||||||25|Y|simon@howardfinancialservices.co.uk|simon@howardfinancialservices.co.uk|1|||1
+58027579|Phone|95346966||||||||||||24|Y||GB||7879335139|+44 7879335139|||||1||1|
+58027687|Address|124105963|19|Y|8 Castlegate|||||Grantham|LIN|GB|NG31 6SE||||||||||||1|1||
+58027687|Email|101972490|||||||||||||||||||19|Y||lisa.ozenbrook-turner@duncantoplis.co.uk|1|||1
+58027986|Address|124106002|19|Y|69b Church Road|||||Exeter||GB|EX2 8SW||||||||||||1|1||
+58031015|Address|124130967|19|Y|59 Chorley New Road|||||Bolton||GB|BL1 4QP||||||||||||1|1||
+58041537|Email|102032475|||||||||||||||||||25|Y|james@thomsongray.co.uk|james@thomsongray.co.uk|1|||1
+58041649|Address|124165967|23|Y|4 Park View Close|Moulton||||Northampton||GB|NN3 7AU||||||||||||1|1||
+58041649|Email|102037474|||||||||||||||||||23|Y|Home|robinunwin@aol.com|1|||1
+58041649|Phone|95376986||||||||||||23|Y||GB||07766652123|+44  07766652123|||||1||1|
+58041753|Address|124165984|24|Y|4 Duncan Close|Redhouse Square|Moulton Park|||Northampton||GB|NN3 6WL||||||||||||1|1||
+58041753|Email|102037491|||||||||||||||||||25|Y|james@thomsongray.co.uk|james@thomsongray.co.uk|1|||1
+58041753|Email|102042539|||||||||||||||||||24|N||james@thomsongray.co.uk|1|||1
+58043020|Email|102042545|||||||||||||||||||25|Y|irons@onekc.co.uk|irons@onekc.co.uk|1|||1
+58043020|Phone|95377029||||||||||||24|Y||GB||07958505758|+44 07958505758|||||1||1|
+58046033|Address|124195965|19|Y|Eton house|||||Harrogate|DUR2|GB|HG1 1HF||||||||||||1|1||
+58046033|Address|124241093|22|N|Woodlands Hall|Butsfield Lane|||Knitsley|Consett||GB|DH8 9EY||||||||||||1|1||
+58046033|Email|102062487|||||||||||||||||||19|Y|Office|charlesedmundpickles@gmail.com|1|||1
+58046033|Phone|95381954||||||||||||22|Y||GB||7793771783|+44 7793771783|||||1||1|
+58046063|Address|124195968|23|Y|Woodlands Hall, Knitsley|||||Consett||GB|DH8 9EY||||||||||||1|1||
+58046063|Email|102087529|||||||||||||||||||25|Y|charlesedmundpickles@gmail.com|charlesedmundpickles@gmail.com|1|||1
+58046063|Phone|95401989||||||||||||23|Y|MOBILE|GB|779|3771783|+44 779 3771783 |||||1||1|
+58046071|Address|124195971|23|Y|Woodlands Hall, Knitsley|||||Consett||GB|DH8 9EY||||||||||||1|1||
+58046071|Email|102087530|||||||||||||||||||25|Y|lina.pickles@gmail.com|lina.pickles@gmail.com|1|||1
+58046071|Phone|95401990||||||||||||23|Y|MOBILE|GB|779|3771783|+44 779 3771783 |||||1||1|
+58066371|Address|124236019|19|Y|1 Knightsbridge Green|||||London||GB|||||||||||||1|1||
+58066393|Address|124236024|23|Y|35 Victor Road|||||Berkshire||GB|SL4 3JS||||||||||||1|1||
+58066393|Email|102127516|||||||||||||||||||23|Y|Home|alex_john_anderson@yahoo.co.uk|1|||1
+58066393|Phone|95406972||||||||||||23|Y||GB||7445636626|+44 7445636626|||||1||1|
+58068907|Address|124236076|23|Y|35 Victor Road|||||Berkshire||GB|SL4 3JS||||||||||||1|1||
+58068907|Email|102132490|||||||||||||||||||23|Y|Home|deborah_t_burton@yahoo.com|1|||1
+58068907|Phone|95406974||||||||||||23|Y||GB||7976748849|+44  7976748849|||||1||1|
+58070363|Email|102147520|||||||||||||||||||25|Y|daniel.barnes@cannizarowealth.com|daniel.barnes@cannizarowealth.com|1|||1
+58070363|Phone|95411962||||||||||||24|Y||GB||7801993244|+44 7801993244|||||1||1|
+58091831|Email|102242561|||||||||||||||||||25|Y|sue.allen@chesterrose.co.uk|sue.allen@chesterrose.co.uk|1|||1
+58091831|Phone|95427019||||||||||||24|Y||GB||7775864737|+44 7775864737|||||1||1|
+58091836|Email|102242562|||||||||||||||||||25|Y|michelle.bugeja-robinson@chesterrose.co.uk|michelle.bugeja-robinson@chesterrose.co.uk|1|||1
+58091836|Phone|95427020||||||||||||24|Y||GB||7581302418|+44 7581302418|||||1||1|
+58101319|Address|124261045|23|Y|Burntwood Hall|Reading Road||||Reading||GB|RG8 0LL||||||||||||1|1||
+58101319|Email|102257528|||||||||||||||||||23|Y|Home|dominic@dominicbarton.com|1|||1
+58101319|Phone|95441967||||||||||||23|Y||GB||7979530422|+44 7979530422|||||1||1|
+58107666|Address|124261656|23|Y|Test|||||Edinburgh||GB|||||||||||||1|1||
+58127653|Address|124267224|23|Y|9 Birches Close|||||Epsom|SRY|GB|KT18 5JG||||||||||||1|1||
+58127653|Email|102362609|||||||||||||||||||23|Y|Home|RMLH@hotmail.co.uk|1|||1
+58130777|Address|124272022|24|Y|3 Fore Street|Polruan||||Fowey|CON|GB|PL23 1PQ||||||||||||1|1||
+58130777|Email|102367517|||||||||||||||||||25|Y|malcolm@ethicalinvestments-sw.co.uk|malcolm@ethicalinvestments-sw.co.uk|1|||1
+58130777|Email|102372497|||||||||||||||||||24|N||malcolm@ethicalinvestments-sw.co.uk|1|||1
+58136168|Address|124277080|23|Y|Woodland Hall|Woodland|Broughton In Furness|||Cumbria||GB|LA20 6DF||||||||||||1|1||
+58136168|Email|102377510|||||||||||||||||||23|Y|Home|graham.servante@icloud.com|1|||1
+58136168|Phone|95477022||||||||||||23|N|MOBILE|GB||7809701036 |+44 7809701036  |||||1||1|
+58136168|Phone|95476975||||||||||||23|Y||GB|44|7809701036|+44 44 7809701036|||||1||1|
+58136467|Address|124277119|23|Y|Woodland Hall|Woodland|Broughton In Furness|||Cumbria||GB|LA20 6DF||||||||||||1|1||
+58136467|Email|102377536|||||||||||||||||||23|Y|Home|k.servante27@gmail.com|1|||1
+58136467|Phone|95476981||||||||||||23|Y||GB|44|7967481642|+44 44 7967481642|||||1||1|
+58136467|Phone|95477023||||||||||||23|N|MOBILE|GB||7967481642 |+44 7967481642  |||||1||1|
+58144231|Email|102397503|||||||||||||||||||25|Y|lance.lipset@mai.capital|lance.lipset@mai.capital|1|||1
+58144231|Phone|95482038||||||||||||23|Y|MOBILE|US||9086309237|+1 9086309237 |||||1||1|
+58154029|Address|124278609|23|Y|1 Knightsbridge Green|||||London||GB|SW1X 7QA||||||||||||1|1||
+58154029|Email|102417591|||||||||||||||||||24|Y||irons@onekc.co.uk|1|||1
+58154029|Phone|95482155||||||||||||24|Y||GB||2034180257|+44 2034180257|||||1||1|
+58173250|Address|124282182|19|Y|7-9 The Avenue|Eastbourne||||East Sussex||GB|BN21 3YA||||||||||||1|1||
+58173250|Email|102447588|||||||||||||||||||19|Y|Office|robert.oretti@bupadentalcare.co.uk|1|||1
+58173250|Phone|95491993||||||||||||19|Y||GB||7850747519|+44  7850747519|||||1||1|
+58182736|Address|124282252|23|Y|74 Andover Road|Newbury||||Berkshire||GB|RG14 6JR||||||||||||1|1||
+58183301|Email|102457502|||||||||||||||||||25|Y|robert.oretti@bupadentalcare.co.uk|robert.oretti@bupadentalcare.co.uk|1|||1
+58183301|Phone|95501995||||||||||||23|Y|MOBILE|GB||7850747519|+44 7850747519 |||||1||1|
+58203896|Address|124283857|23|Y|34 Drybridge Hill|||||Woodbridge|SFK|GB|IP12 4HB||||||||||||1|1||
+58203896|Email|102487661|||||||||||||||||||23|Y|Home|munromad@yahoo.com|1|||1
+58205227|Email|102487780|||||||||||||||||||25|Y|info@eastmillsltd.co.uk|info@eastmillsltd.co.uk|1|||1
+58213412|Address|124285032|19|Y|John Smith Business Park|||||Kirkcaldy||GB|KY2 6HD||||||||||||1|1||
+58213726|Address|124285083|19|Y|53 Bartholomew Street|||||Newbury|BER|GB|RG14 5QA||||||||||||1|1||
+58227463|Email|102497475|||||||||||||||||||25|Y|valerie.downs@mai.capital|valerie.downs@mai.capital|1|||1
+58227463|Phone|95517180||||||||||||23|Y|MOBILE|US||973-452-1020|+1 973-452-1020|||||1||1|
+58239496|Email|102498076|||||||||||||||||||25|Y|andy@grapheneplatforms.com|andy@grapheneplatforms.com|1|||1
+58239513|Email|102498081|||||||||||||||||||25|Y|selkington@harvestassociates.co.uk|selkington@harvestassociates.co.uk|1|||1
+58239513|Phone|95517360||||||||||||24|Y||GB||07711108631|+44 07711108631|||||1||1|
+58241358|Address|124295090|23|Y|1350-1360 Montpellier Court|Gloucester Business Park||||Gloucester||GB|GL3 4AH||||||||||||1|1||
+58241358|Email|102507613|||||||||||||||||||23|Y|Home|r.sumner@blackfinch.com|1|||1
+58242023|Address|124295159|23|Y|1350-1360 Montpellier Court|Gloucester Business Park||||Gloucester||GB|GL3 4AH||||||||||||1|1||
+58242023|Email|102507649|||||||||||||||||||23|Y|Home|D.frazer-holland@blackfinch.com|1|||1
+58245651|Address|124295560|19|Y|Moorgate House|King Street||||Newton Abbot|DEV|GB|TQ12 2LG||||||||||||1|1||
+58245651|Email|102507934|||||||||||||||||||19|Y|Office|PAULHUNT1971@ME.COM|1|||1
+58245651|Phone|95527164||||||||||||19|Y||GB||7772770263|+44  7772770263|||||1||1|
+58246000|Address|124298560|23|Y|The Linhay House|Broadhempston||||Totnes||GB|TQ9 6BJ||||||||||||1|1||
+58246000|Phone|95532127||||||||||||24|Y|MOBILE|GB||7772770263|+44 7772770263 |||||1||1|
+58246008|Address|124298562|23|Y|The Linhay House|Broadhempston||||Totnes||GB|TQ9 6BJ||||||||||||1|1||
+58246008|Email|102508086|||||||||||||||||||25|Y|maphunt@btinternet.com|maphunt@btinternet.com|1|||1
+58246008|Phone|95532128||||||||||||24|Y|MOBILE|GB||7929341531|+44 7929341531 |||||1||1|
+58247818|Address|124298737|19|Y|Tower 42|25 Old Broad Street|20th Floor|||London||GB|EC2N 1HQ||||||||||||1|1||
+58247818|Email|102508087|||||||||||||||||||19|Y|Office|w.schmidt@southcapitaldobrasil.com.br|1|||1
+58247818|Phone|95532129||||||||||||19|Y||GB|55|119641112836|+44 55 119641112836|||||1||1|
+58248806|Email|102508150|||||||||||||||||||24|Y||w.schmidt@southcapitaldobrasil.com.br|1|||1
+58248806|Phone|95537108||||||||||||24|Y||BR|11|96411128|+55 11 96411128|||||1||1|
+58250001|Email|102508259|||||||||||||||||||25|Y|enquiries@blackfinch.com|enquiries@blackfinch.com|1|||1
+58250603|Address|124299047|23|Y|Broadfields|Oak Lane|Whitstone|||Holsworthy||GB|EX22 6TH||||||||||||1|1||
+58250603|Email|102508305|||||||||||||||||||23|Y|jeannebarrett@hotmail.com|jeannebarrett@hotmail.com|1|||1
+58250606|Address|124299048|23|Y|Springhill|Earlswood||||Chepstow||GB|NP16 6AR||||||||||||1|1||
+58250606|Email|102508306|||||||||||||||||||23|Y|yroberton@btinternet.com|yroberton@btinternet.com|1|||1
+58250606|Phone|95627282||||||||||||25|N|Other|GB||7770371693|+447770371693|||||1||1|
+58250611|Address|124299049|23|Y|14 Hartley Park Gardens|||||Plymouth||GB|PL3 5HU||||||||||||1|1||
+58250611|Email|102508307|||||||||||||||||||23|Y|kategillett14@gmail.com|kategillett14@gmail.com|1|||1
+58250614|Address|124299050|23|Y|5 Wild Hatch|||||London||GB|NW11 7LD||||||||||||1|1||
+58250614|Email|102508308|||||||||||||||||||23|Y|alan.gubbay@talktalk.net|alan.gubbay@talktalk.net|1|||1
+58250617|Address|124299051|23|Y|Lynric Farm|Bluestone Lane||||Mawdesley||GB|L40 2RJ||||||||||||1|1||
+58250617|Email|102508309|||||||||||||||||||23|Y|alan.birch@outlook.com|alan.birch@outlook.com|1|||1
+58250620|Address|124299052|23|Y|Handlow House|Churcham||||Gloucester||GB|GL2 8BB||||||||||||1|1||
+58250620|Email|102508310|||||||||||||||||||23|Y|mail@alankeddie11.plus.com|mail@alankeddie11.plus.com|1|||1
+58250623|Address|124299053|23|Y|Chaseford Lodge|72 Church Lane|Dore|||Sheffield||GB|S17 3GT||||||||||||1|1||
+58250623|Email|102508311|||||||||||||||||||23|Y|alansheehan1@hotmail.com|alansheehan1@hotmail.com|1|||1
+58250626|Address|124299054|23|Y|Rose Cottage|Trelights||||Port Issac||GB|PL29 3TQ||||||||||||1|1||
+58250626|Email|102508312|||||||||||||||||||23|Y|alandem09@btinternet.com|alandem09@btinternet.com|1|||1
+58250626|Phone|95627301||||||||||||25|N|Other|GB||07532382632|+4407532382632|||||1||1|
+58250629|Address|124299055|23|Y|Post Office Cottage|Calverleigh||||Tiverton||GB|EX16 8BD||||||||||||1|1||
+58250629|Email|102508313|||||||||||||||||||23|Y|fitzhughalexandra@gmail.com|fitzhughalexandra@gmail.com|1|||1
+58250629|Phone|95657108||||||||||||25|N|Other|GB||07951960261|+4407951960261|||||1||1|
+58250632|Address|124299056|23|Y|Garden Flat|1 Claremont Crescent||||Weston Super Mare||GB|BS23 2ED||||||||||||1|1||
+58250632|Email|102508314|||||||||||||||||||23|Y|helen.roy@virgin.net|helen.roy@virgin.net|1|||1
+58250637|Address|124299057|23|Y|Beacon Downe|Church Hill|Pinhoe|||Exeter||GB|EX4 9JB||||||||||||1|1||
+58250640|Address|124299058|23|Y|Craigallian|11 Viewfield Street||||Nairn||GB|IV12 4HW||||||||||||1|1||
+58250643|Address|124299059|23|Y|6 Cairnhill Rise|05-02 Cairnhill Astoria||||Singapore||GB|229741||||||||||||1|1||
+58250643|Email|102508315|||||||||||||||||||23|Y|alistairaduffield@gmail.com|alistairaduffield@gmail.com|1|||1
+58250646|Address|124299060|23|Y|30 Bailey Close|||||Windsor||GB|SL4 3RD||||||||||||1|1||
+58250646|Email|102508316|||||||||||||||||||23|Y|get.andrea@hotmail.co.uk|get.andrea@hotmail.co.uk|1|||1
+58250649|Address|124299061|23|Y|Woodbine Cottage|||||Whitbourne||GB|WR6 5RT||||||||||||1|1||
+58250649|Email|102508317|||||||||||||||||||23|Y|batty.ab@gmail.com|batty.ab@gmail.com|1|||1
+58250652|Address|124299062|23|Y|Sanderling|Rock Road|St Minver|||Wadebridge||GB|PL27 6PP||||||||||||1|1||
+58250652|Email|102508318|||||||||||||||||||23|Y|menwinnion@aol.com|menwinnion@aol.com|1|||1
+58250655|Address|124299063|23|Y|27 Meadow View Road|Plympton||||Plymouth||GB|PL7 4JT||||||||||||1|1||
+58250655|Email|102508319|||||||||||||||||||23|Y|andrew.jepson44@btinternet.com|andrew.jepson44@btinternet.com|1|||1
+58250655|Phone|95627228||||||||||||25|N|Other|GB||01752331510|+4401752331510|||||1||1|
+58250658|Address|124299064|23|Y|219 Reading Road|||||Wokingham||GB|RG41 1LJ||||||||||||1|1||
+58250658|Email|102508320|||||||||||||||||||23|Y|andrew@bowyer.myzen.co.uk|andrew@bowyer.myzen.co.uk|1|||1
+58250661|Address|124299065|23|Y|44 Reckitt Road|||||London||GB|W4 2BT||||||||||||1|1||
+58250661|Email|102508321|||||||||||||||||||23|Y|angie44@talktalk.net|angie44@talktalk.net|1|||1
+58250664|Address|124299066|23|Y|Willow Green|Hendall Hill||||Tunbridge Wells||GB|TN3 9NS||||||||||||1|1||
+58250664|Email|102508322|||||||||||||||||||23|Y|lizholmes_76@hotmail.com|lizholmes_76@hotmail.com|1|||1
+58250667|Address|124299067|23|Y|Providence Barn|Beckbury||||Shifnal||GB|TF11 9DG||||||||||||1|1||
+58250667|Email|102508323|||||||||||||||||||23|Y|david@adfield.co.uk|david@adfield.co.uk|1|||1
+58250672|Address|124299068|23|Y|Brookside Court|Clyst St. George||||Exeter||GB|EX3 0NT||||||||||||1|1||
+58250672|Email|102508324|||||||||||||||||||23|Y|philip@courtbrook.co.uk|philip@courtbrook.co.uk|1|||1
+58250675|Address|124299069|23|Y|9 The Links|||||Walton-On-Thames||GB|KT12 1HD||||||||||||1|1||
+58250675|Email|102508325|||||||||||||||||||23|Y|ann.farmer@hotmail.co.uk|ann.farmer@hotmail.co.uk|1|||1
+58250678|Address|124299070|23|Y|The Hatchings|Caroline Court||||Marlow||GB|SL7 3HF||||||||||||1|1||
+58250678|Email|102508326|||||||||||||||||||23|Y|ann.southon@hotmail.com|ann.southon@hotmail.com|1|||1
+58250681|Address|124299071|23|Y|17 West Common Close|||||Gerrards Cross||GB|SL9 7QR||||||||||||1|1||
+58250681|Email|102508327|||||||||||||||||||23|Y|ann.m.arthur@gmail.com|ann.m.arthur@gmail.com|1|||1
+58250684|Address|124299072|23|Y|Hinter Barton|Lower Ebford|Barton Ebford|||Exeter||GB|EX3 0RA||||||||||||1|1||
+58250684|Email|102508328|||||||||||||||||||23|Y|jralsmith@hotmail.co.uk|jralsmith@hotmail.co.uk|1|||1
+58250684|Phone|95632112||||||||||||25|N|Other|GB||07483853172|+4407483853172|||||1||1|
+58250687|Address|124299073|23|Y|10 Weston Court|Burbo Bank Road South|Blundellsands|||Liverpool||GB|L23 6SR||||||||||||1|1||
+58250687|Email|102508329|||||||||||||||||||23|Y|anna.miller2011@btinternet.com|anna.miller2011@btinternet.com|1|||1
+58250690|Address|124299074|23|Y|25 Dubford Terrace|Bridge Of Don||||Aberdeen||GB|AB23 8GE||||||||||||1|1||
+58250690|Email|102508330|||||||||||||||||||23|Y|annecowie1303@yahoo.co.uk|annecowie1303@yahoo.co.uk|1|||1
+58250695|Address|124299075|23|Y|4 Treefields|||||Brixham||GB|TQ5 8PA||||||||||||1|1||
+58250695|Email|102508331|||||||||||||||||||23|Y|dykefamily@btinternet.com|dykefamily@btinternet.com|1|||1
+58250698|Address|124299076|23|Y|C/O Norbridge Farm|Norbridge|Bosbury|||Ledbury||GB|HR8 1JX||||||||||||1|1||
+58250698|Email|102508332|||||||||||||||||||23|Y|zena@jh-landscapes.co.uk|zena@jh-landscapes.co.uk|1|||1
+58250701|Address|124299077|23|Y|8 Howecroft Gardens|||||Bristol||GB|BS9 1HN||||||||||||1|1||
+58250704|Address|124299078|23|Y|3 St Annes Road|||||Hitchin|HRT|GB|SG5 1QB||||||||||||1|1||
+58250707|Address|124299079|23|Y|11Ty Brith Gardens|||||Usk||GB|NP15 1BY||||||||||||1|1||
+58250710|Address|124299080|23|Y|2 Meadow Farm Drive|Intwood Road||||Norwich||GB|NR4 6TR||||||||||||1|1||
+58250713|Address|124299081|23|Y|The Mews|Norton Road||||Stourbridge||GB|DY8 2RX||||||||||||1|1||
+58250716|Address|124299082|23|Y|Cottonwood House|Banbury Rd||||Bloxham||GB|OX15 4PD||||||||||||1|1||
+58250716|Email|102508333|||||||||||||||||||23|Y|tony@keepers-cottage.net|tony@keepers-cottage.net|1|||1
+58250719|Address|124299083|23|Y|11 Cleeve Cloud Lane|Prestbury||||Cheltenham||GB|GL52 5SE||||||||||||1|1||
+58250719|Email|102508334|||||||||||||||||||23|Y|ajscriv@live.co.uk|ajscriv@live.co.uk|1|||1
+58250719|Phone|95647116||||||||||||25|N|Other|GB||07766666066|+4407766666066|||||1||1|
+58250722|Address|124299084|23|Y|Wickham|Old Coach Road|Cross|||Axbridge||GB|BS26 2EG||||||||||||1|1||
+58250722|Email|102508335|||||||||||||||||||23|Y|tony.pinnington@btopenworld.com|tony.pinnington@btopenworld.com|1|||1
+58250722|Phone|95672154||||||||||||23|Y|MOBILE|GB||07718809150|+44 07718809150|||||1||1|
+58250722|Phone|95757157||||||||||||23|N|MOBILE|GB|7718|809150|+44 7718 809150 |||||1||1|
+58250725|Address|124299085|23|Y|North Foreland Court|North Foreland Avenue||||Broadstairs||GB|CT10 3QR||||||||||||1|1||
+58250725|Email|102508336|||||||||||||||||||23|Y|tony.perks@btinternet.com|tony.perks@btinternet.com|1|||1
+58250725|Phone|95627217||||||||||||25|N|Other|GB||07977222276|+4407977222276|||||1||1|
+58250728|Address|124299086|23|Y|7 The Green|Dalston||||Carlisle||GB|CA5 7QB||||||||||||1|1||
+58250731|Address|124299087|23|Y|Rannieston Park House|||||Ellon||GB|AB41 8NB||||||||||||1|1||
+58250731|Email|102508337|||||||||||||||||||23|Y|vangoghiii@icloud.com|vangoghiii@icloud.com|1|||1
+58250734|Address|124299088|23|Y|9 Riverside Park|Port Elphinstone||||Inverurie||GB|AB51 3SB||||||||||||1|1||
+58250737|Address|124299089|23|Y|Wellside Well Lane|Constantine||||Falmouth||GB|TR11 5AD||||||||||||1|1||
+58250740|Address|124299090|23|Y|Cottonwood House|Banbury Rd||||Bloxham||GB|OX15 4PD||||||||||||1|1||
+58250743|Address|124299091|23|Y|13 Harbury Dell|||||Luton||GB|LU3 3XH||||||||||||1|1||
+58250743|Email|102508338|||||||||||||||||||23|Y|babs.arnold@outlook.com|babs.arnold@outlook.com|1|||1
+58250746|Address|124299092|23|Y|Yewlands|19C Heath Road||||Little Heath||GB|EN6 1LJ||||||||||||1|1||
+58250746|Email|102508339|||||||||||||||||||23|Y|barbara.garner2@gmail.com|barbara.garner2@gmail.com|1|||1
+58250751|Address|124299093|23|Y|2 College Avenue|||||Maidenhead||GB|SL6 6AJ||||||||||||1|1||
+58250751|Email|102508340|||||||||||||||||||23|Y|barbara.close@btinternet.com|barbara.close@btinternet.com|1|||1
+58250751|Phone|95642112||||||||||||25|N|Other|GB||7920112330|+447920112330|||||1||1|
+58250754|Address|124299094|23|Y|32 The Croft|||||Bourne||GB|PE10 9GX||||||||||||1|1||
+58250754|Email|102508341|||||||||||||||||||23|Y|boarlow@outlook.com|boarlow@outlook.com|1|||1
+58250757|Address|124299095|23|Y|Lindisfarne|8 The Meadows|Flackwell Heath|||High Wycombe||GB|HP10 9LX||||||||||||1|1||
+58250757|Email|102508342|||||||||||||||||||23|Y|betty@netrowland.com|betty@netrowland.com|1|||1
+58250760|Address|124299096|23|Y|20 Bryants Acre|Wendover||||Aylesbury||GB|HP22 6JZ||||||||||||1|1||
+58250760|Email|102508343|||||||||||||||||||23|Y|horn20@ntlworld.com|horn20@ntlworld.com|1|||1
+58250763|Address|124299097|23|Y|19 Gloucester Road|||||Whitstable||GB|CT5 2DS||||||||||||1|1||
+58250763|Email|102508344|||||||||||||||||||23|Y|berimart@gmail.com|berimart@gmail.com|1|||1
+58250766|Address|124299098|23|Y|Maybury House|Helford||||Near Helston||GB|TR12 6JX||||||||||||1|1||
+58250766|Email|102508345|||||||||||||||||||23|Y|emma1@me.com|emma1@me.com|1|||1
+58250769|Address|124299099|23|Y|Dragon House|Pinley Green||||Claverdon||GB|CV35 8LU||||||||||||1|1||
+58250769|Email|102508346|||||||||||||||||||23|Y|bernie.waldron@gmail.com|bernie.waldron@gmail.com|1|||1
+58250772|Address|124299100|23|Y|1 The Scarletts|60 Whitefield Road||||New Milton||GB|BH25 6FA||||||||||||1|1||
+58250775|Address|124299101|23|Y|Corner Oaks|46 Tidcombe Lane||||Tiverton||GB|EX16 4EQ||||||||||||1|1||
+58250775|Email|102508347|||||||||||||||||||23|Y|beverly@therandells.co.uk|beverly@therandells.co.uk|1|||1
+58250775|Phone|95627276||||||||||||25|N|Other|GB||07977207317|+4407977207317|||||1||1|
+58250778|Address|124299102|23|Y|Green Acre|Water Lane|East Barsham|||Fakenham||GB|NR21 0LF||||||||||||1|1||
+58250778|Email|102508348|||||||||||||||||||23|Y|w.wharton@outlook.com|w.wharton@outlook.com|1|||1
+58250778|Phone|95712169||||||||||||25|N|Other|GB||07407073247|+4407407073247|||||1||1|
+58250781|Address|124299103|23|Y|44 The Gateway|||||Dover||GB|CT16 1LG||||||||||||1|1||
+58250781|Email|102508349|||||||||||||||||||23|Y|brendasemail@btinternet.com|brendasemail@btinternet.com|1|||1
+58250786|Address|124299104|23|Y|Perrymans Farm|Perrymans Lane||||Burwash||GB|TN19 7DN||||||||||||1|1||
+58250790|Address|124299105|23|Y|116 Green Lane|||||Walsall||GB|WS4 1RR||||||||||||1|1||
+58250790|Email|102508350|||||||||||||||||||23|Y|briansmith46@blueyonder.co.uk|briansmith46@blueyonder.co.uk|1|||1
+58250793|Address|124299106|23|Y|21 Renacres Lane|Halsall||||Ormskirk||GB|L39 8SE||||||||||||1|1||
+58250793|Email|102508351|||||||||||||||||||23|Y|bhmartin1@icloud.com|bhmartin1@icloud.com|1|||1
+58250798|Address|124299107|23|Y|Flat 24 Regency House|269 Regents Park Road|Finchley|||London||GB|N3 3JZ||||||||||||1|1||
+58250798|Email|102508352|||||||||||||||||||23|Y|brian.judith@tiscali.co.uk|brian.judith@tiscali.co.uk|1|||1
+58250801|Address|124299108|23|Y|Acorn Cottage|Abingdon Road||||Tubney||GB|OX13 5QQ||||||||||||1|1||
+58250801|Email|102508353|||||||||||||||||||23|Y|mikehinkins58@gmail.com|mikehinkins58@gmail.com|1|||1
+58250804|Address|124299109|23|Y|5 Gower Court|Audley Chalfont Dene|Rickmansworth Lane|||Chalfont St Peter||GB|SL9 0DF||||||||||||1|1||
+58250807|Address|124299110|23|Y|32 Beech Avenue|||||Chichester||GB|PO19 3DR||||||||||||1|1||
+58250807|Email|102508354|||||||||||||||||||23|Y|bhbrechin@gmail.com|bhbrechin@gmail.com|1|||1
+58250812|Address|124299111|23|Y|North Foreland Court|North Foreland Avenue||||Broadstairs||GB|CT10 3QR||||||||||||1|1||
+58250812|Email|102508355|||||||||||||||||||23|Y|carolperks@btinternet.com|carolperks@btinternet.com|1|||1
+58250815|Address|124299112|23|Y|174 Manor Hall Road|Southwick||||Brighton||GB|BN42 4NP||||||||||||1|1||
+58250818|Address|124299113|23|Y|Coveside|East Portlemouth||||Salcombe||GB|TQ8 8PA||||||||||||1|1||
+58250823|Address|124299114|23|Y|Flat 31|Webb Corbett House||||Tutbury||GB|DE13 9DH||||||||||||1|1||
+58250826|Address|124299115|23|Y|37 Penywaun|Efail Isaf||||Pontypridd||GB|CF83 1AY||||||||||||1|1||
+58250826|Email|102508356|||||||||||||||||||23|Y|carole_barwood@hotmail.com|carole_barwood@hotmail.com|1|||1
+58250829|Address|124299116|23|Y|11 Church Street|||||Padstow||GB|PL28 8BG||||||||||||1|1||
+58250829|Email|102508357|||||||||||||||||||23|Y|clmwhite@btinternet.com|clmwhite@btinternet.com|1|||1
+58250834|Address|124299117|23|Y|Heatherdene|Broadway|Woodbury|||Exeter||GB|EX5 1NR||||||||||||1|1||
+58250834|Email|102508358|||||||||||||||||||23|Y|c.d.keep183@btinternet.com|c.d.keep183@btinternet.com|1|||1
+58250834|Phone|95672184||||||||||||25|N|Other|GB||07849268922|+4407849268922|||||1||1|
+58250837|Address|124299118|23|Y|67B Gloucester Road|||||Hampton||GB|TW12 2UQ||||||||||||1|1||
+58250837|Email|102508359|||||||||||||||||||23|Y|carolstokes26@gmail.com|carolstokes26@gmail.com|1|||1
+58250837|Phone|95627257||||||||||||25|N|Other|GB||07732989113|+4407732989113|||||1||1|
+58250840|Address|124299119|23|Y|14 Hartley Park Gardens|||||Plymouth||GB|PL3 5HU||||||||||||1|1||
+58250840|Email|102508360|||||||||||||||||||23|Y|kategillett14@gmail.com|kategillett14@gmail.com|1|||1
+58250843|Address|124299120|23|Y|Standon Lodge|Standon||||Ware||GB|SG11 1NT||||||||||||1|1||
+58250846|Address|124299121|23|Y|Woodside House|Woodside Drive||||Sutton Coldfield||GB|B74 3BB||||||||||||1|1||
+58250846|Email|102508361|||||||||||||||||||23|Y|chandrika2@btinternet.com|chandrika2@btinternet.com|1|||1
+58250846|Phone|95627300||||||||||||25|N|Other|GB||7919561300|+447919561300|||||1||1|
+58250849|Address|124299122|23|Y|Boulters Barn House|Churchill Road||||Chipping Norton||GB|OX7 5UT||||||||||||1|1||
+58250849|Email|102508362|||||||||||||||||||23|Y|cgmccartan@btinternet.com|cgmccartan@btinternet.com|1|||1
+58250852|Address|124299123|23|Y|31 Eastwick Crescent|Mill End||||Rickmansworth||GB|WD3 8YH||||||||||||1|1||
+58250852|Email|102508363|||||||||||||||||||23|Y|chrisdonnelly01@gmail.com|chrisdonnelly01@gmail.com|1|||1
+58250852|Phone|95627279||||||||||||25|N|Other|GB||07982134288|+4407982134288|||||1||1|
+58250857|Address|124299124|23|Y|1 Hollybush Close|Church Village||||Pontypridd||GB|CF38 1PR||||||||||||1|1||
+58250857|Email|102508364|||||||||||||||||||23|Y|colinajones@btinternet.com|colinajones@btinternet.com|1|||1
+58250860|Address|124299125|23|Y|11 Bayham Road|||||Bristol||GB|BS4 2DY||||||||||||1|1||
+58250860|Email|102508365|||||||||||||||||||23|Y|1953cmd@gmail.com|1953cmd@gmail.com|1|||1
+58250865|Address|124299126|23|Y|89 Foundry House|Walton Well Road||||Oxford||GB|OX2 6AQ||||||||||||1|1||
+58250865|Email|102508366|||||||||||||||||||23|Y|christine@davidmills.co.uk|christine@davidmills.co.uk|1|||1
+58250868|Address|124299127|23|Y|16 Cliffe Road|||||Little Neston||GB|CH64 4AJ||||||||||||1|1||
+58250868|Email|102508367|||||||||||||||||||23|Y|christine.lawley@uwclub.net|christine.lawley@uwclub.net|1|||1
+58250871|Address|124299128|23|Y|Moorlands|Lake Lane|Dousland|||Yelverton||GB|PL20 6LZ||||||||||||1|1||
+58250871|Email|102508368|||||||||||||||||||23|Y|cgibson120@btinternet.com|cgibson120@btinternet.com|1|||1
+58250874|Address|124299129|23|Y|Lockner Hill|Lockner Holt|Chilworth|||Guildford||GB|GU4 8RG||||||||||||1|1||
+58250874|Email|102508369|||||||||||||||||||23|Y|johnslater@email.com|johnslater@email.com|1|||1
+58250877|Address|124299130|23|Y|3 St Annes Road|||||Hitchin|HRT|GB|SG5 1QB||||||||||||1|1||
+58250877|Email|102508370|||||||||||||||||||23|Y|candablackman@btinternet.com|candablackman@btinternet.com|1|||1
+58250880|Address|124299131|23|Y|75 Sisters Avenue|||||London||GB|SW11 5SW||||||||||||1|1||
+58250883|Address|124299132|23|Y|19 Garnier Drive|Bishopstoke Park||||Eastleigh||GB|SO50 6HE||||||||||||1|1||
+58250883|Email|102508371|||||||||||||||||||23|Y|chd1934@icloud.com|chd1934@icloud.com|1|||1
+58250886|Address|124299133|23|Y|1 The Cedars|||||Nantwich||GB|CW5 5GZ||||||||||||1|1||
+58250886|Email|102508372|||||||||||||||||||23|Y|lowec83@gmail.com|lowec83@gmail.com|1|||1
+58250886|Phone|95627236||||||||||||25|N|Other|GB||07577390821|+4407577390821|||||1||1|
+58250889|Address|124299134|23|Y|Kingsbridge|5 Coppice Close|Fremington|||Barnstaple||GB|EX31 2QE||||||||||||1|1||
+58250889|Email|102508373|||||||||||||||||||23|Y|chrismerriman@btinternet.com|chrismerriman@btinternet.com|1|||1
+58250892|Address|124299135|23|Y|14 Nuthurst Road|West Heath||||Birmingham||GB|B31 4SR||||||||||||1|1||
+58250892|Email|102508374|||||||||||||||||||23|Y|chris.x.davis@aol.co.uk|chris.x.davis@aol.co.uk|1|||1
+58250892|Phone|95627255||||||||||||25|N|Other|GB||07929308118|+4407929308118|||||1||1|
+58250895|Address|124299136|23|Y|12 Water Street|Chesterton||||Cambridge||GB|CB4 1PA||||||||||||1|1||
+58250895|Email|102508375|||||||||||||||||||23|Y|clivebrown21@virginmedia.com|clivebrown21@virginmedia.com|1|||1
+58250895|Phone|95627235||||||||||||25|N|Other|GB||7798670223|+447798670223|||||1||1|
+58250898|Address|124299137|23|Y|64 Balliol Avenue|||||London||GB|E4 6LY||||||||||||1|1||
+58250898|Email|102508376|||||||||||||||||||23|Y|colinhorton@cehorton.net|colinhorton@cehorton.net|1|||1
+58250901|Address|124299138|23|Y|28 Granby Road|||||Edinburgh||GB|EH16 5NL||||||||||||1|1||
+58250901|Email|102508377|||||||||||||||||||23|Y|cmackenzie@doctors.org.uk|cmackenzie@doctors.org.uk|1|||1
+58250901|Phone|95627268||||||||||||25|N|Other|GB||07742616324|+4407742616324|||||1||1|
+58250904|Address|124299139|23|Y|The Cedars|Tattenhall Road|Newton By Tattenhall|||Chester||GB|CH3 9NA||||||||||||1|1||
+58250904|Email|102508378|||||||||||||||||||23|Y|colintarrant22@gmail.com|colintarrant22@gmail.com|1|||1
+58250907|Address|124299140|23|Y|Rusmar|Red Lane|Rosudgeon|||Penzance||GB|TR20 9PU||||||||||||1|1||
+58250907|Email|102508379|||||||||||||||||||23|Y|corab_2@hotmail.com|corab_2@hotmail.com|1|||1
+58250910|Address|124299141|23|Y|100 Crawley Road|||||Witney||GB|OX28 1HU||||||||||||1|1||
+58250913|Address|124299142|23|Y|9 Larch Avenue|||||Wokingham||GB|RG41 1EJ||||||||||||1|1||
+58250913|Email|102508380|||||||||||||||||||23|Y|dohcook@gmail.com|dohcook@gmail.com|1|||1
+58250916|Address|124299143|23|Y|11 Oakfield Avenue|Atherton||||Manchester||GB|M46 0FJ||||||||||||1|1||
+58250919|Address|124299144|23|Y|79 Chiltern Avenue|||||Northampton||GB|NN5 6AU||||||||||||1|1||
+58250919|Email|102508381|||||||||||||||||||23|Y|thelee79@ntlworld.com|thelee79@ntlworld.com|1|||1
+58250922|Address|124299145|23|Y|14 Honeysuckle Close|||||Plymouth||GB|PL6 7TE||||||||||||1|1||
+58250922|Email|102508382|||||||||||||||||||23|Y|dave.blagdon@virginmedia.com|dave.blagdon@virginmedia.com|1|||1
+58250922|Phone|95632118||||||||||||25|N|Other|GB||07548208264|+4407548208264|||||1||1|
+58250925|Address|124299146|23|Y|9 Heron Close|Stughton||||Guildford||GB|GU2 9PH||||||||||||1|1||
+58250932|Address|124299147|23|Y|Church Farm|Church Lane|Old Marston|||Oxford||GB|OX3 0PT||||||||||||1|1||
+58250932|Email|102508383|||||||||||||||||||23|Y|davidbullock46@gmail.com|davidbullock46@gmail.com|1|||1
+58250935|Address|124299148|23|Y|Davenham Nursing Home|148 Graham Road||||Malvern||GB|WR14 2HY||||||||||||1|1||
+58250935|Email|102508384|||||||||||||||||||23|Y|davidchaundy@hotmail.com|davidchaundy@hotmail.com|1|||1
+58250938|Address|124299149|23|Y|Corner Oaks|46 Tidcombe Lane||||Tiverton||GB|EX16 4EQ||||||||||||1|1||
+58250938|Email|102508385|||||||||||||||||||23|Y|david@therandells.co.uk|david@therandells.co.uk|1|||1
+58250938|Phone|95627273||||||||||||25|N|Other|GB||07977207317|+4407977207317|||||1||1|
+58250941|Address|124299150|23|Y|Drift Wood|First Drift|Wothorpe|||Stamford||GB|PE9 3JL||||||||||||1|1||
+58250941|Email|102508386|||||||||||||||||||23|Y|dj.callear@btinternet.com|dj.callear@btinternet.com|1|||1
+58250944|Address|124299151|23|Y|140 Hamstead Road|Great Barr||||Birmingham||GB|B43 5BJ||||||||||||1|1||
+58250944|Email|102508387|||||||||||||||||||23|Y|lloydd.140@gmail.com|lloydd.140@gmail.com|1|||1
+58250947|Address|124299152|23|Y|23 Church Leat|Downton||||Salisbury||GB|SP5 3PD||||||||||||1|1||
+58250950|Address|124299153|23|Y|16 Howard Avenue|Whitehall||||Bristol||GB|BS5 7BB||||||||||||1|1||
+58250953|Address|124299154|23|Y|3 St Marys Glebe|Edlesborough||||Dunstable||GB|LU6 2RB||||||||||||1|1||
+58250956|Address|124299155|23|Y|Friezland Gorse Way|Hartley||||Longfield||GB|DA3 8AF||||||||||||1|1||
+58250956|Email|102508388|||||||||||||||||||23|Y|djjcrebel@gmail.com|djjcrebel@gmail.com|1|||1
+58250956|Phone|95627249||||||||||||25|N|Other|GB||07948099459|+4407948099459|||||1||1|
+58250959|Address|124299156|23|Y|16A Fitzjohns Avenue|||||London||GB|NW3 5NA||||||||||||1|1||
+58250959|Email|102508389|||||||||||||||||||23|Y|lawun22@gmail.com|lawun22@gmail.com|1|||1
+58250962|Address|124299157|23|Y|Garrow Cottage|Western Lane|East Harptree|||Bristol||GB|BS40 6DJ||||||||||||1|1||
+58250962|Email|102508390|||||||||||||||||||23|Y|palmerldavid@aol.com|palmerldavid@aol.com|1|||1
+58250965|Address|124299158|23|Y|The Anchorage|St Donats||||Llantwit Major||GB|CF61 1ZB||||||||||||1|1||
+58250968|Address|124299159|23|Y|Flat 31|Webb Corbett House||||Tutbury||GB|DE13 9DH||||||||||||1|1||
+58250971|Address|124299160|23|Y|37 Penywaun|Efail Isaf||||Pontypridd||GB|CF38 1AY||||||||||||1|1||
+58250971|Email|102508391|||||||||||||||||||23|Y|d_barwood@hotmail.com|d_barwood@hotmail.com|1|||1
+58250974|Address|124299161|23|Y|7 Trelyn|Rock||||Wadebridge||GB|PL27 6LZ||||||||||||1|1||
+58250974|Email|102508392|||||||||||||||||||23|Y|debgalbraith49@gmail.com|debgalbraith49@gmail.com|1|||1
+58250977|Address|124299162|23|Y|89 Brookside|||||East Barnet||GB|EN4 8TS||||||||||||1|1||
+58250977|Email|102508393|||||||||||||||||||23|Y|dennis.carter911@gmail.com|dennis.carter911@gmail.com|1|||1
+58250980|Address|124299163|23|Y|47 Heritage Gate|||||Haverfordwest||GB|SA61 2RF||||||||||||1|1||
+58250983|Address|124299164|23|Y|Mallard House|1 Nesbitt Close|Weston Close|||Northampton||GB|NN3 3DQ||||||||||||1|1||
+58250983|Email|102508394|||||||||||||||||||23|Y|pyke33@outlook.com|pyke33@outlook.com|1|||1
+58250988|Address|124299165|23|Y|Dornekka|La Vague|Feock|||Truro||GB|TR3 6RQ||||||||||||1|1||
+58250988|Email|102508395|||||||||||||||||||23|Y|wallisdiana42@gmail.com|wallisdiana42@gmail.com|1|||1
+58250991|Address|124299166|23|Y|93 Chertsey Lane|||||Staines||GB|TW18 3LQ||||||||||||1|1||
+58250994|Address|124299167|23|Y|8 Vicarage Lane|Mettingham||||Bungay||GB|NR35 1TE||||||||||||1|1||
+58250997|Address|124299168|23|Y|Home Farm|Coytrahen||||Bridgend||GB|CF32 8YS||||||||||||1|1||
+58251000|Address|124299169|23|Y|31 Church Street|||||Netherseal||GB|DE12 8DF||||||||||||1|1||
+58251000|Email|102508396|||||||||||||||||||23|Y|dgreeny@btinternet.com|dgreeny@btinternet.com|1|||1
+58251003|Address|124299170|23|Y|Japonica Cottage|Whitings Lane||||Walford||GB|HR9 5QS||||||||||||1|1||
+58251006|Address|124299171|23|Y|18 Wistaria Lane|||||Yateley||GB|GU46 6HY||||||||||||1|1||
+58251009|Address|124299172|23|Y|Redburn|River Lane|Syston|||Grantham||GB|NG32 2DG||||||||||||1|1||
+58251009|Email|102508397|||||||||||||||||||23|Y|adtelford@icloud.com|adtelford@icloud.com|1|||1
+58251012|Address|124299173|23|Y|6 Mitchell Avenue|||||Newcastle Upon Tyne||GB|NE2 3LA||||||||||||1|1||
+58251012|Email|102508398|||||||||||||||||||23|Y|doug51260@yahoo.co.uk|doug51260@yahoo.co.uk|1|||1
+58251012|Phone|95627254||||||||||||25|N|Other|GB||7768650469|+447768650469|||||1||1|
+58251015|Address|124299174|23|Y|Acrefield|Mathon Road|Colwall|||Malvern||GB|WR13 6ER||||||||||||1|1||
+58251018|Address|124299175|23|Y|15 Byeways Close|Fremington||||North Devon||GB|EX31 2PL||||||||||||1|1||
+58251018|Email|102508399|||||||||||||||||||23|Y|junelott2@gmail.com|junelott2@gmail.com|1|||1
+58251018|Phone|95627289||||||||||||25|N|Other|GB||07954809543|+4407954809543|||||1||1|
+58251021|Address|124299176|23|Y|Aspens|Quakers Close|Hartley|||Kent||GB|DA3 7EA||||||||||||1|1||
+58251021|Email|102508400|||||||||||||||||||23|Y|elainakaravidas@gmail.com|elainakaravidas@gmail.com|1|||1
+58251024|Address|124299177|23|Y|Petice|4 St Peters Street||||Caxton||GB|CB23 3PJ||||||||||||1|1||
+58251024|Email|102508401|||||||||||||||||||23|Y|icenimason25@gmail.com|icenimason25@gmail.com|1|||1
+58251027|Address|124299178|23|Y|Homer Cottage|Ipsden||||Wallingford||GB|OX10 6QS||||||||||||1|1||
+58251027|Email|102508402|||||||||||||||||||23|Y|frances.hives@gmail.com|frances.hives@gmail.com|1|||1
+58251030|Address|124299179|23|Y|26 Common Lane|Waverton||||Chester||GB|CH3 7QT||||||||||||1|1||
+58251033|Address|124299180|23|Y|16 Alric Avenue|||||New Malden||GB|KT3 4JN||||||||||||1|1||
+58251033|Email|102508403|||||||||||||||||||23|Y|eshparker@gmail.com|eshparker@gmail.com|1|||1
+58251033|Phone|95627293||||||||||||25|N|Other|GB||07973673209|+4407973673209|||||1||1|
+58251036|Address|124299181|23|Y|Spinney Farm|Manor Farm Lane|Michelmersh|||Romsey||GB|SO51 0NT||||||||||||1|1||
+58251039|Address|124299182|23|Y|Woodside|Cinderhill|North Chailey|||Lewes||GB|BN8 4HP||||||||||||1|1||
+58251039|Email|102508404|||||||||||||||||||23|Y|mumfordeliz@gmail.com|mumfordeliz@gmail.com|1|||1
+58251039|Phone|95627242||||||||||||25|N|Other|GB||07727907404|+4407727907404|||||1||1|
+58251042|Address|124299183|23|Y|Furnace Place|Killinghurst Lane||||Haslemere||GB|GU27 2EJ||||||||||||1|1||
+58251042|Email|102508405|||||||||||||||||||23|Y|lizgoodwin2211@gmail.com|lizgoodwin2211@gmail.com|1|||1
+58251042|Phone|95667130||||||||||||25|N|Other|GB||07796447135|+4407796447135|||||1||1|
+58251045|Address|124299184|23|Y|38 Spicer Road|||||Exeter||GB|EX1 1TA||||||||||||1|1||
+58251045|Email|102508406|||||||||||||||||||23|Y|elizabethorme@gmail.com|elizabethorme@gmail.com|1|||1
+58251048|Address|124299185|23|Y|185 High Street|Codicote||||Hitchin||GB|SG4 8UD||||||||||||1|1||
+58251051|Address|124299186|23|Y|10 Parklands|Corntown||||Bridgend||GB|CF35 5BE||||||||||||1|1||
+58251051|Email|102508407|||||||||||||||||||23|Y|eifionaj@yahoo.co.uk|eifionaj@yahoo.co.uk|1|||1
+58251054|Address|124299187|23|Y|Rose Barn|Stibb||||Bude||GB|EX23 9HW||||||||||||1|1||
+58251054|Email|102508408|||||||||||||||||||23|Y|elizabethwicks@mac.com|elizabethwicks@mac.com|1|||1
+58251057|Address|124299188|23|Y|Kingsley Close|Lee Mill||||Ivybridge||GB|PL21 9GD||||||||||||1|1||
+58251057|Email|102508409|||||||||||||||||||23|Y|eric.cowsill@icloud.com|eric.cowsill@icloud.com|1|||1
+58251060|Address|124299189|23|Y|Lavender House|2 Kays Close|Melbourn|||Royston||GB|SG8 6EJ||||||||||||1|1||
+58251063|Address|124299190|23|Y|Rock Close|Nadder Lane||||Devon||GB|EX36 4HH||||||||||||1|1||
+58251066|Address|124299191|23|Y|Smelters Rest|Quay Road|Devoran|||Truro||GB|TR3 6PW||||||||||||1|1||
+58251069|Address|124299192|23|Y|2 Hove Villas|Haven Road||||Exeter||GB|EX2 8BP||||||||||||1|1||
+58251069|Email|102508410|||||||||||||||||||23|Y|garyhunter6969@hotmail.co.uk|garyhunter6969@hotmail.co.uk|1|||1
+58251072|Address|124299193|23|Y|70B Reigate Road|||||Epsom||GB|KT17 3DT||||||||||||1|1||
+58251072|Email|102508411|||||||||||||||||||23|Y|geoffharris1952@gmail.com|geoffharris1952@gmail.com|1|||1
+58251075|Address|124299194|23|Y|117 Downs Court Road|||||Purley||GB|CR8 1BH||||||||||||1|1||
+58251078|Address|124299195|23|Y|Yew Tree Cottage|Tree Corner||||Aveton Gifford||GB|TQ7 4LD||||||||||||1|1||
+58251078|Email|102508412|||||||||||||||||||23|Y|georgeasb@gmail.com|georgeasb@gmail.com|1|||1
+58251081|Address|124299196|23|Y|Townsend|||||Upper Wardington||GB|OX17 1ST||||||||||||1|1||
+58251084|Address|124299197|23|Y|Rokeby|Badgeworth Lane||||Cheltenham||GB|GL51 4UQ||||||||||||1|1||
+58251084|Email|102508413|||||||||||||||||||23|Y|georyan@blueyonder.co.uk|georyan@blueyonder.co.uk|1|||1
+58251087|Address|124299198|23|Y|The Old Cow House|Main Street||||Thorganby||GB|YO19 6DA||||||||||||1|1||
+58251087|Email|102508414|||||||||||||||||||23|Y|nigel.patrick1@btinternet.com|nigel.patrick1@btinternet.com|1|||1
+58251090|Address|124299199|23|Y|3 Whitehouse Gardens|||||Petersfield||GB|GU32 2EL||||||||||||1|1||
+58251090|Email|102508415|||||||||||||||||||23|Y|gerry.conran@me.com|gerry.conran@me.com|1|||1
+58251090|Phone|95627234||||||||||||25|N|Other|GB||07484326735|+4407484326735|||||1||1|
+58251095|Address|124299200|23|Y|The Stables|Gosforth Park Steading|Sandy Lane|||Newcastle Upon Tyne||GB|NE3 5EL||||||||||||1|1||
+58251098|Address|124299201|23|Y|Regions|Bury Green||||Little Hadham||GB|SG11 2EY||||||||||||1|1||
+58251101|Address|124299202|23|Y|323 Lode Lane|||||Solihull||GB|B91 2HQ||||||||||||1|1||
+58251101|Email|102508416|||||||||||||||||||23|Y|glenys.brown@blueyonder.co.uk|glenys.brown@blueyonder.co.uk|1|||1
+58251104|Address|124299203|23|Y|Apartment 15|Bron Y Glyn House|18 Bridgeman Road|||Penarth||GB|CF64 3AW||||||||||||1|1||
+58251104|Email|102508417|||||||||||||||||||23|Y|glynthomas500@googlemail.com|glynthomas500@googlemail.com|1|||1
+58251107|Address|124299204|23|Y|Granish Farm|||||Aviemore||GB|PH22 1QD||||||||||||1|1||
+58251107|Email|102508418|||||||||||||||||||23|Y|allan@allanmunro.co.uk|allan@allanmunro.co.uk|1|||1
+58251110|Address|124299205|23|Y|Dell Cottage|12 Passage Lane||||Warsash||GB|SO31 9FW||||||||||||1|1||
+58251110|Email|102508419|||||||||||||||||||23|Y|graham_moody@hotmail.com|graham_moody@hotmail.com|1|||1
+58251113|Address|124299206|23|Y|West View Cottage|Newton Hill||||Newton Ferrers||GB|PL8 1AA||||||||||||1|1||
+58251113|Email|102508420|||||||||||||||||||23|Y|hoggtouzac@aol.com|hoggtouzac@aol.com|1|||1
+58251118|Address|124299207|23|Y|Laburnum Cottage|New Brookend||||Berkeley||GB|GL13 9SF||||||||||||1|1||
+58251121|Address|124299208|23|Y|West Marches|Launchycroft||||Lyme Regis||GB|DT7 3NF||||||||||||1|1||
+58251121|Email|102508421|||||||||||||||||||23|Y|hayley.kinlan@gmail.com|hayley.kinlan@gmail.com|1|||1
+58251125|Address|124299209|23|Y|76 Hadrian Avenue|||||Dunstable||GB|LU5 4SP||||||||||||1|1||
+58251128|Address|124299210|23|Y|Deerfoot|76 Lower Street||||Horning||GB|NR12 8PF||||||||||||1|1||
+58251128|Email|102508422|||||||||||||||||||23|Y|hazel.funnell@me.com|hazel.funnell@me.com|1|||1
+58251131|Address|124299211|23|Y|111 Prospect Lane|||||Solihull||GB|B91 1HT||||||||||||1|1||
+58251131|Email|102508423|||||||||||||||||||23|Y|bourkestores@hotmail.co.uk|bourkestores@hotmail.co.uk|1|||1
+58251134|Address|124299212|23|Y|31 Aitken Street|||||Airdrie||GB|ML6 6LT||||||||||||1|1||
+58251137|Address|124299213|23|Y|White Lodge|Livermere Road|Great Barton|||Bury St. Edmunds||GB|IP31 2QE||||||||||||1|1||
+58251142|Address|124299214|23|Y|Lowena|Chapel Park||||Launceston||GB|PL15 7BU||||||||||||1|1||
+58251145|Address|124299215|23|Y|Flat 7|Heathfielde|Lyttelton Road|||London||GB|N2 0EE||||||||||||1|1||
+58251145|Email|102508424|||||||||||||||||||23|Y|hilaryrosenblatt@yahoo.co.uk|hilaryrosenblatt@yahoo.co.uk|1|||1
+58251148|Address|124299216|23|Y|The Croft|Church Lane|Westerfield|||Ipswich||GB|IP6 9BE||||||||||||1|1||
+58251151|Address|124299217|23|Y|27 Shaftesbury Avenue|||||Whitley Bay||GB|NE26 3TD||||||||||||1|1||
+58251151|Email|102508425|||||||||||||||||||23|Y|howard@wbayn.uk|howard@wbayn.uk|1|||1
+58251154|Address|124299218|23|Y|Neuadda Barn|Rhiwderin||||Newport||GB|NP10 8RP||||||||||||1|1||
+58251154|Email|102508426|||||||||||||||||||23|Y|ihoppe@braithwaite.co.uk|ihoppe@braithwaite.co.uk|1|||1
+58251154|Phone|95627222||||||||||||25|N|Other|GB||7866496657|+447866496657|||||1||1|
+58251157|Address|124299219|23|Y|Acorn Cottage|Abingdon Road||||Tubney||GB|OX13 5QQ||||||||||||1|1||
+58251157|Email|102508427|||||||||||||||||||23|Y|jackyhinkins@gmail.com|jackyhinkins@gmail.com|1|||1
+58251160|Address|124299220|23|Y|11 Pilley Lane|||||Cheltenham||GB|GL53 9EP||||||||||||1|1||
+58251160|Email|102508428|||||||||||||||||||23|Y|tungate70@aol.com|tungate70@aol.com|1|||1
+58251163|Address|124299221|23|Y|Apartment 15|Bron Y Glyn House|18 Bridgeman Road|||Penarth||GB|CF64 3AW||||||||||||1|1||
+58251163|Email|102508429|||||||||||||||||||23|Y|lizthomas100@googlemail.com|lizthomas100@googlemail.com|1|||1
+58251166|Address|124299222|23|Y|34 Amberley Road|Rustington||||Littlehampton||GB|BN16 2EF||||||||||||1|1||
+58251169|Address|124299223|23|Y|The Oaks|Dark Lane||||Hollywood||GB|B47 5BX||||||||||||1|1||
+58251169|Email|102508430|||||||||||||||||||23|Y|meryllyons@yahoo.co.uk|meryllyons@yahoo.co.uk|1|||1
+58251172|Address|124299224|23|Y|Greathouse Farm|Lynwick Street||||Rudgewick||GB|RH12 3DJ||||||||||||1|1||
+58251172|Email|102508431|||||||||||||||||||23|Y|shaun@lawson-partners.com|shaun@lawson-partners.com|1|||1
+58251175|Address|124299225|23|Y|26 South Street|Osney Island||||Oxford||GB|OX2 OBE||||||||||||1|1||
+58251175|Email|102508432|||||||||||||||||||23|Y|janebuekett@yahoo.co.uk|janebuekett@yahoo.co.uk|1|||1
+58251178|Address|124299226|23|Y|140 Hamstead Road|Great Barr||||Birmingham||GB|B43 5BJ||||||||||||1|1||
+58251178|Email|102508433|||||||||||||||||||23|Y|jan.lloyd140@gmail.com|jan.lloyd140@gmail.com|1|||1
+58251181|Address|124299227|23|Y|49 Danemore|Beachy Path||||Tenterden||GB|TN30 6RS||||||||||||1|1||
+58251184|Address|124299228|23|Y|Kingsbridge|5 Coppice Close|Fremington|||Barnstaple||GB|EX31 2QE||||||||||||1|1||
+58251187|Address|124299229|23|Y|32 West Meads|Onslow Village||||Guildford||GB|GU2 7ST||||||||||||1|1||
+58251187|Email|102508434|||||||||||||||||||23|Y|janet.paterson@ntlworld.com|janet.paterson@ntlworld.com|1|||1
+58251190|Address|124299230|23|Y|Briar Bank|Exhall||||Alcester||GB|B49 6EB||||||||||||1|1||
+58251193|Address|124299231|23|Y|White Lodge|Livermere Road|Great Barton|||Bury St Edmunds||GB|IP31 2QE||||||||||||1|1||
+58251198|Address|124299232|23|Y|Rokeby|Badgeworth Lane||||Cheltenham||GB|GL51 4UQ||||||||||||1|1||
+58251198|Email|102508435|||||||||||||||||||23|Y|jeanryan962@gmail.com|jeanryan962@gmail.com|1|||1
+58251201|Address|124299233|23|Y|Broadfields|Oak Lane|Whitstone|||Holsworthy||GB|EX22 6TH||||||||||||1|1||
+58251201|Email|102508436|||||||||||||||||||23|Y|jeannebarrett@hotmail.com|jeannebarrett@hotmail.com|1|||1
+58251204|Address|124299234|23|Y|The Old Tallett|Thorverton||||Exeter||GB|EX5 5JP||||||||||||1|1||
+58251207|Address|124299235|23|Y|45 Yew Tree Lane|||||Wolverhampton||GB|WV6 8UG||||||||||||1|1||
+58251207|Email|102508437|||||||||||||||||||23|Y|slcrichards@gmail.com|slcrichards@gmail.com|1|||1
+58251207|Phone|95627225||||||||||||25|N|Other|GB||07836273079|+4407836273079|||||1||1|
+58251210|Address|124299236|23|Y|19 Dunblane Drive|||||Peterborough||GB|PE2 6SW||||||||||||1|1||
+58251210|Email|102508438|||||||||||||||||||23|Y|jennifer.sneden311@btinternet.com|jennifer.sneden311@btinternet.com|1|||1
+58251213|Address|124299237|23|Y|8 Rochester Terrace|||||London||GB|NW1 9JN||||||||||||1|1||
+58251216|Address|124299238|23|Y|Flaxfield House|3 Northcote Fold|Linton|||Wetherby||GB|LS22 4UZ||||||||||||1|1||
+58251216|Email|102508439|||||||||||||||||||23|Y|jenniferjbrook@gmail.com|jenniferjbrook@gmail.com|1|||1
+58251219|Address|124299239|23|Y|413 Topsham Road|||||Exeter||GB|EX2 7AB||||||||||||1|1||
+58251219|Email|102508440|||||||||||||||||||23|Y|jenpaddon@hotmail.com|jenpaddon@hotmail.com|1|||1
+58251222|Address|124299240|23|Y|Trevine|38 Churchtown Road|Gerrans|||Truro||GB|TR2 5DY||||||||||||1|1||
+58251222|Email|102508441|||||||||||||||||||23|Y|jenny@keymer.org.uk|jenny@keymer.org.uk|1|||1
+58251225|Address|124299241|23|Y|14 Honeysuckle Close|||||Plymouth||GB|PL6 7TE||||||||||||1|1||
+58251225|Email|102508442|||||||||||||||||||23|Y|dave.blagdon@virginmedia.com|dave.blagdon@virginmedia.com|1|||1
+58251228|Address|124299242|23|Y|Woodpeckers|||||Over Stratton||GB|TA13 5LF||||||||||||1|1||
+58251231|Address|124299243|23|Y|Elmleaze Farm|Westonbirt||||Tetbury||GB|GL8 8QE||||||||||||1|1||
+58251234|Address|124299244|23|Y|Durdon Farm|Northlew||||Okehampton||GB|EX20 3PU||||||||||||1|1||
+58251237|Address|124299245|23|Y|13 West Street|Hambledon||||Waterlooville||GB|PO7 4SN||||||||||||1|1||
+58251237|Email|102508443|||||||||||||||||||23|Y|jowalker@doctors.org.uk|jowalker@doctors.org.uk|1|||1
+58251242|Address|124299246|23|Y|Wren Cottage|Cross Hill Road||||Adderbury||GB|OX17 3EG||||||||||||1|1||
+58251242|Email|102508444|||||||||||||||||||23|Y|joannamdyson@gmail.com|joannamdyson@gmail.com|1|||1
+58251242|Phone|95797165||||||||||||25|N|Other|GB||07720805265|+4407720805265|||||1||1|
+58251245|Address|124299247|23|Y|Fir Cones|Westcott Street||||Dorking||GB|RH4 3NX||||||||||||1|1||
+58251245|Email|102508445|||||||||||||||||||23|Y|johnclear1938@gmail.com|johnclear1938@gmail.com|1|||1
+58251248|Address|124299248|23|Y|52 Ellesmere Crescent|||||Brackley||GB|NN13 6BS||||||||||||1|1||
+58251248|Email|102508446|||||||||||||||||||23|Y|brackleyproof@gmail.com|brackleyproof@gmail.com|1|||1
+58251251|Address|124299249|23|Y|Mill House|Springs Bank|Bagnall|||Stoke-On-Trent||GB|ST9 9JR||||||||||||1|1||
+58251251|Email|102508447|||||||||||||||||||23|Y|jemp0354@gmail.com|jemp0354@gmail.com|1|||1
+58251251|Phone|95757156||||||||||||25|N|Other|GB||07850854453|+4407850854453|||||1||1|
+58251254|Address|124299250|23|Y|Lodge Cottage|Muddyford Lane|Redlynch|||Salisbury||GB|SP5 2JP||||||||||||1|1||
+58251254|Email|102508448|||||||||||||||||||23|Y|christinabundy1@gmail.com|christinabundy1@gmail.com|1|||1
+58251257|Address|124299251|23|Y|61 Bluecoat Rise|||||Sheffield||GB|S11 9DW||||||||||||1|1||
+58251257|Email|102508449|||||||||||||||||||23|Y|cripps@uwclub.net|cripps@uwclub.net|1|||1
+58251260|Address|124299252|23|Y|5 Lowlands Crescent|Great Kingshill||||High Wycombe||GB|HP15 6EG||||||||||||1|1||
+58251260|Email|102508450|||||||||||||||||||23|Y|johnerutter@icloud.com|johnerutter@icloud.com|1|||1
+58251263|Address|124299253|23|Y|Rose Barn|Stibb||||Bude||GB|EX23 9HN||||||||||||1|1||
+58251263|Email|102508451|||||||||||||||||||23|Y|jfcwicks@mac.com|jfcwicks@mac.com|1|||1
+58251263|Phone|95627220||||||||||||25|N|Other|GB||07525299956|+4407525299956|||||1||1|
+58251266|Address|124299254|23|Y|Homer Cottage|Ipsden||||Wallingford||GB|OX10 6QS||||||||||||1|1||
+58251266|Email|102508452|||||||||||||||||||23|Y|john.hives@googlemail.com|john.hives@googlemail.com|1|||1
+58251269|Address|124299255|23|Y|15 Riverside Drive|||||Stonehaven||GB|AB39 2GP||||||||||||1|1||
+58251269|Email|102508453|||||||||||||||||||23|Y|johnpaterson@btinternet.com|johnpaterson@btinternet.com|1|||1
+58251272|Address|124299256|23|Y|Home Farm|Coytrahen||||Bridgend||GB|CF32 8YS||||||||||||1|1||
+58251275|Address|124299257|23|Y|Jasmine Cottage|Moor End||||Kelfield||GB|YO19 6RJ||||||||||||1|1||
+58251275|Email|102508454|||||||||||||||||||23|Y|jackie.barbery@hotmail.co.uk|jackie.barbery@hotmail.co.uk|1|||1
+58251278|Address|124299258|23|Y|Hinter Barton|Lower Ebford|Barton Ebford|||Exeter||GB|EX3 0RA||||||||||||1|1||
+58251278|Email|102508455|||||||||||||||||||23|Y|jralsmith@hotmail.co.uk|jralsmith@hotmail.co.uk|1|||1
+58251278|Phone|95632108||||||||||||25|N|Other|GB||07483853172|+4407483853172|||||1||1|
+58251281|Address|124299259|23|Y|9 Burnham Road|||||Knaphill||GB|GU21 2AE||||||||||||1|1||
+58251284|Address|124299260|23|Y|Woodlands|The Avenue|South Nutfield|||Redhill||GB|RH1 5RY||||||||||||1|1||
+58251284|Email|102508456|||||||||||||||||||23|Y|jwc58@btinternet.com|jwc58@btinternet.com|1|||1
+58251287|Address|124299261|23|Y|21 Felbrigg Lane|Ingleby Barwick||||Stockton-On-Tees||GB|TS17 0XT||||||||||||1|1||
+58251287|Email|102508457|||||||||||||||||||23|Y|jbrennand@btinternet.com|jbrennand@btinternet.com|1|||1
+58251290|Address|124299262|23|Y|4 Beccles Road|||||Worthing||GB|BN11 4AJ||||||||||||1|1||
+58251293|Address|124299263|23|Y|Broadacre|||||Babcary||GB|TA11 7ED||||||||||||1|1||
+58251296|Address|124299264|23|Y|61 Langdon Avenue|Bedgrove||||Aylesbury||GB|HP21 9UW||||||||||||1|1||
+58251299|Address|124299265|23|Y|Red House|14 Larkhill||||Wantage||GB|OX12 8HW||||||||||||1|1||
+58251299|Email|102508458|||||||||||||||||||23|Y|jmhumberstone@btopenworld.com|jmhumberstone@btopenworld.com|1|||1
+58251302|Address|124299266|23|Y|10 Paddock Fields|Old Basing||||Basingstoke||GB|RG24 7DB||||||||||||1|1||
+58251302|Email|102508459|||||||||||||||||||23|Y|judithdpten@gmail.com|judithdpten@gmail.com|1|||1
+58251305|Address|124299267|23|Y|32 Onslow Road|||||Luton||GB|LU4 4AJ||||||||||||1|1||
+58251308|Address|124299268|23|Y|Penhall|Castle Road||||Penzance||GB|TR18 2AX||||||||||||1|1||
+58251308|Email|102508460|||||||||||||||||||23|Y|julieblewett@yahoo.co.uk|julieblewett@yahoo.co.uk|1|||1
+58251308|Phone|95777185||||||||||||25|N|Other|GB||07805510657|+4407805510657|||||1||1|
+58251311|Address|124299269|23|Y|85 Bath Road|||||Cheltenham||GB|GL53 7LH||||||||||||1|1||
+58251311|Email|102508461|||||||||||||||||||23|Y|katy.stears@blueyonder.co.uk|katy.stears@blueyonder.co.uk|1|||1
+58251314|Address|124299270|23|Y|79 Chiltern Avenue|||||Northampton||GB|NN5 6AU||||||||||||1|1||
+58251314|Email|102508462|||||||||||||||||||23|Y|thelee79@ntlworld.com|thelee79@ntlworld.com|1|||1
+58251317|Address|124299271|23|Y|Manor Cottage|||||Henton Wells||GB|BA5 1PD||||||||||||1|1||
+58251317|Email|102508463|||||||||||||||||||23|Y|mansfield@outlook.com|mansfield@outlook.com|1|||1
+58251320|Address|124299272|23|Y|Upper Spilsby|Daisymount|Exeter Road|||Ottery St Mary||GB|EX11 1LE||||||||||||1|1||
+58251320|Email|102508464|||||||||||||||||||23|Y|keithjrichardson@yahoo.co.uk|keithjrichardson@yahoo.co.uk|1|||1
+58251323|Address|124299273|23|Y|14 Lonsdale Avenue|Cliftonville||||Margate||GB|CT9 3BT||||||||||||1|1||
+58251323|Email|102508465|||||||||||||||||||23|Y|keith.elliott14@hotmail.co.uk|keith.elliott14@hotmail.co.uk|1|||1
+58251326|Address|124299274|23|Y|Buttonwood House|The Drive|Maresfield Park|||Maresfield||GB|TN22 2HA||||||||||||1|1||
+58251326|Email|102508466|||||||||||||||||||23|Y|keith_bentley@me.com|keith_bentley@me.com|1|||1
+58251329|Address|124299275|23|Y|58 Balmore Drive|Caversham||||Reading||GB|RG4 8NN||||||||||||1|1||
+58251329|Email|102508467|||||||||||||||||||23|Y|mandkseal@virginmedia.com|mandkseal@virginmedia.com|1|||1
+58251332|Address|124299276|23|Y|Loughrigg 30 Downs Road|South Wonston||||Winchester||GB|SO21 3EU||||||||||||1|1||
+58251332|Email|102508468|||||||||||||||||||23|Y|keith.vincent@uwclub.net|keith.vincent@uwclub.net|1|||1
+58251335|Address|124299277|23|Y|99 Oxlease Meadows|||||Romsey||GB|SO51 7AB||||||||||||1|1||
+58251335|Email|102508469|||||||||||||||||||23|Y|keithsharrison61@gmail.com|keithsharrison61@gmail.com|1|||1
+58251338|Address|124299278|23|Y|108 Laburnum Crescent|Allestree||||Derby||GB|DE22 2GS||||||||||||1|1||
+58251338|Email|102508470|||||||||||||||||||23|Y|kev.steele2855@gmail.com|kev.steele2855@gmail.com|1|||1
+58251341|Address|124299279|23|Y|The Bungalow|Walmley Ash Lane||||Minworth||GB|B76 9BX||||||||||||1|1||
+58251341|Email|102508471|||||||||||||||||||23|Y|kumundini.khare@nhs.net|kumundini.khare@nhs.net|1|||1
+58251344|Address|124299280|23|Y|Deerfoot|76 Lower Street||||Horning||GB|NR12 8PF||||||||||||1|1||
+58251347|Address|124299281|23|Y|7 Seamer Road|Hilton||||Yarm||GB|TS15 9JH||||||||||||1|1||
+58251347|Email|102508472|||||||||||||||||||23|Y|landmhicks6@aol.com|landmhicks6@aol.com|1|||1
+58251350|Address|124299282|23|Y|Loughrigg 30 Downs Road|South Wonston||||Winchester||GB|SO21 3EU||||||||||||1|1||
+58251355|Address|124299283|23|Y|98 Sweetbrier Lane|||||Exeter||GB|EX1 3AR||||||||||||1|1||
+58251358|Address|124299284|23|Y|62 Lower Ham Road|||||Kingston||GB|KT2 5AW||||||||||||1|1||
+58251358|Email|102508473|||||||||||||||||||23|Y|g.cushing@btinternet.com|g.cushing@btinternet.com|1|||1
+58251363|Address|124299285|23|Y|32 Beech Avenue|||||Chichester||GB|PO19 3DR||||||||||||1|1||
+58251363|Email|102508474|||||||||||||||||||23|Y|lsbrechin@gmail.com|lsbrechin@gmail.com|1|||1
+58251368|Address|124299286|23|Y|18 Barnwell Crescent|Wormwell||||Barnsley||GB|S73 8EB||||||||||||1|1||
+58251371|Address|124299287|23|Y|7 Dixon Close|||||Aylesbury||GB|HP21 8FU||||||||||||1|1||
+58251371|Email|102508475|||||||||||||||||||23|Y|malgorzata.lancaster@ntlworld.com|malgorzata.lancaster@ntlworld.com|1|||1
+58251374|Address|124299288|23|Y|26 Livesey Close|||||Kingston-Upon-Thames||GB|KT1 3GD||||||||||||1|1||
+58251374|Email|102508476|||||||||||||||||||23|Y|mmcatherinetan@gmail.com|mmcatherinetan@gmail.com|1|||1
+58251377|Address|124299289|23|Y|43 Nursery Road|Taplow||||Slough||GB|SL6 0JX||||||||||||1|1||
+58251380|Address|124299290|23|Y|30 Link Road|Canford Cliffs||||Poole||GB|BH14 9QS||||||||||||1|1||
+58251383|Address|124299291|23|Y|Bozdown|Culver Lane|Rattery|||South Brent||GB|TQ10 9LJ||||||||||||1|1||
+58251383|Email|102508477|||||||||||||||||||23|Y|mbozdown@yahoo.com|mbozdown@yahoo.com|1|||1
+58251386|Address|124299292|23|Y|58 Balmore Drive|Caversham||||Reading||GB|RG4 8NN||||||||||||1|1||
+58251386|Email|102508478|||||||||||||||||||23|Y|mandkseal@virginmedia.com|mandkseal@virginmedia.com|1|||1
+58251389|Address|124299293|23|Y|55B Dudsbury Road|West Parley||||Ferndown||GB|BH22 8RD||||||||||||1|1||
+58251389|Email|102508479|||||||||||||||||||23|Y|margaretgermain49@btinternet.com|margaretgermain49@btinternet.com|1|||1
+58251394|Address|124299294|23|Y|Caryes|Aylesbeare||||Exeter||GB|EX5 2BU||||||||||||1|1||
+58251397|Address|124299295|23|Y|The Nurseries|||||Duns Tew||GB|OX25 6JR||||||||||||1|1||
+58251397|Email|102508480|||||||||||||||||||23|Y|margaret.goundrey@btinternet.com|margaret.goundrey@btinternet.com|1|||1
+58251397|Phone|95672148||||||||||||25|N|Other|GB||07778141807|+4407778141807|||||1||1|
+58251400|Address|124299296|23|Y|Marvid|Dunheved Road||||Launceston||GB|PL15 9JE||||||||||||1|1||
+58251403|Address|124299297|23|Y|9 Hollingworth Way|||||Westerham||GB|TN16 1BS||||||||||||1|1||
+58251408|Address|124299298|23|Y|22 Marsworth Avenue|||||Pinner||GB|HA5 4UB||||||||||||1|1||
+58251408|Email|102508481|||||||||||||||||||23|Y|margaretmbailey@hotmail.com|margaretmbailey@hotmail.com|1|||1
+58251411|Address|124299299|23|Y|15A Cunningham Hill Road|||||St Albans||GB|AL1 5BX||||||||||||1|1||
+58251414|Address|124299300|23|Y|Moorhaven|25 Arkley Lane|Arkley|||Barnet||GB|EN5 3JR||||||||||||1|1||
+58251417|Address|124299301|23|Y|144 Northwood Road|Harefield||||Uxbridge||GB|UB9 6PS||||||||||||1|1||
+58251420|Address|124299302|23|Y|19 Garnier Drive|Bishopstoke Park||||Eastleigh||GB|SO50 6HE||||||||||||1|1||
+58251420|Email|102508482|||||||||||||||||||23|Y|medams36@yahoo.com|medams36@yahoo.com|1|||1
+58251423|Address|124299303|23|Y|The Old School|||||Fyfield||GB|OX13 5LR||||||||||||1|1||
+58251423|Email|102508483|||||||||||||||||||23|Y|markwbaker@aol.com|markwbaker@aol.com|1|||1
+58251423|Phone|95627296||||||||||||25|N|Other|GB||07836749441|+4407836749441|||||1||1|
+58251426|Address|124299304|23|Y|51 Coaching Walk|||||Northampton||GB|NN3 3EU||||||||||||1|1||
+58251426|Email|102508484|||||||||||||||||||23|Y|mlandbsmith@aol.co.uk|mlandbsmith@aol.co.uk|1|||1
+58251429|Address|124299305|23|Y|7 Seamer Road|Hilton||||Yarm||GB|TS15 9JH||||||||||||1|1||
+58251429|Email|102508485|||||||||||||||||||23|Y|landmhicks6@aol.com|landmhicks6@aol.com|1|||1
+58251432|Address|124299306|23|Y|2 Old Library Mews|||||Norwich||GB|NR1 1ET||||||||||||1|1||
+58251432|Email|102508486|||||||||||||||||||23|Y|mcaroline.ball@gmail.com|mcaroline.ball@gmail.com|1|||1
+58251435|Address|124299307|23|Y|11 Homefield Road|Chiswick||||London||GB|W4 2LN||||||||||||1|1||
+58251438|Address|124299308|23|Y|9 Burnham Road|||||Knaphill||GB|GU21 2AE||||||||||||1|1||
+58251441|Address|124299309|23|Y|66 Southfield Road|||||Oxford||GB|OX4 1PA||||||||||||1|1||
+58251444|Address|124299310|23|Y|New House Farm|Canworthy Water||||Launceston||GB|PL15 8UW||||||||||||1|1||
+58251447|Address|124299311|23|Y|The Leas|Higher Sea Lane||||Charmouth||GB|DT6 6BB||||||||||||1|1||
+58251447|Email|102508487|||||||||||||||||||23|Y|shewamelan@aol.com|shewamelan@aol.com|1|||1
+58251447|Phone|95627229||||||||||||25|N|Other|GB||07887367647|+4407887367647|||||1||1|
+58251450|Address|124299312|23|Y|The Old School|||||Fyfield||GB|OX13 5LR||||||||||||1|1||
+58251450|Email|102508488|||||||||||||||||||23|Y|merielwb@aol.com|merielwb@aol.com|1|||1
+58251453|Address|124299313|23|Y|The Oaks|Dark Lane||||Hollywood||GB|B47 5BX||||||||||||1|1||
+58251453|Email|102508489|||||||||||||||||||23|Y|meryllyons@yahoo.co.uk|meryllyons@yahoo.co.uk|1|||1
+58251456|Address|124299314|23|Y|3 Vicarage Way|||||Gerrards Cross||GB|SL9 8AR||||||||||||1|1||
+58251459|Address|124299315|23|Y|20 George Close|Capel-Le-Ferne||||Folkestone||GB|CT18 7UB||||||||||||1|1||
+58251459|Email|102508490|||||||||||||||||||23|Y|mick.kedwell@talktalk.net|mick.kedwell@talktalk.net|1|||1
+58251462|Address|124299316|23|Y|Failte Blath|Woodside||||Blairgowrie||GB|PH13 9NQ||||||||||||1|1||
+58251462|Email|102508491|||||||||||||||||||23|Y|masr1937@gmail.com|masr1937@gmail.com|1|||1
+58251465|Address|124299317|23|Y|Acorn Cottage|Abingdon Road||||Tubney||GB|OX13 5QQ||||||||||||1|1||
+58251465|Email|102508492|||||||||||||||||||23|Y|jandmhinkins@aol.com|jandmhinkins@aol.com|1|||1
+58251468|Address|124299318|23|Y|The Mount|Cross Lanes||||Oscroft||GB|CH3 8NG||||||||||||1|1||
+58251468|Email|102508493|||||||||||||||||||23|Y|mikejlloyd@gmail.com|mikejlloyd@gmail.com|1|||1
+58251471|Address|124299319|23|Y|Maybury House|Helford||||Near Helston||GB|TR12 6JX||||||||||||1|1||
+58251471|Email|102508494|||||||||||||||||||23|Y|emma1@me.com|emma1@me.com|1|||1
+58251474|Address|124299320|23|Y|Elmleaze Farm|Westonbirt||||Tetbury||GB|GL8 8QE||||||||||||1|1||
+58251477|Address|124299321|23|Y|5 Partridge Avenue|||||Yateley||GB|GU46 6PB||||||||||||1|1||
+58251477|Email|102508495|||||||||||||||||||23|Y|michellebrookerjones@gmail.com|michellebrookerjones@gmail.com|1|||1
+58251477|Phone|95627290||||||||||||25|N|Other|GB||07748413032|+4407748413032|||||1||1|
+58251480|Address|124299322|23|Y|Heathfields|Monktonhill Road||||Troon||GB|KA10 7EW||||||||||||1|1||
+58251480|Email|102508496|||||||||||||||||||23|Y|dmlsingapore@gmail.com|dmlsingapore@gmail.com|1|||1
+58251483|Address|124299323|23|Y|Gatchell House|Toadpit Lane|West Hill|||Ottery St Mary||GB|EX11 1TR||||||||||||1|1||
+58251483|Email|102508497|||||||||||||||||||23|Y|devonbees@gmail.com|devonbees@gmail.com|1|||1
+58251486|Address|124299324|23|Y|6 Giles Gate|Prestwood||||Great Missenden||GB|HP16 0PH||||||||||||1|1||
+58251486|Email|102508498|||||||||||||||||||23|Y|stooks.longdale@gmail.com|stooks.longdale@gmail.com|1|||1
+58251489|Address|124299325|23|Y|16 Cortmalaw Gate|||||Glasgow||GB|G33 1TH||||||||||||1|1||
+58251492|Address|124299326|23|Y|1 Myton Gardens|||||Warwick||GB|CV34 6BH||||||||||||1|1||
+58251492|Email|102508499|||||||||||||||||||23|Y|macdonald.n@sky.com|macdonald.n@sky.com|1|||1
+58251495|Address|124299327|23|Y|48 Cheney Hill|||||Heacham||GB|PE31 7BS||||||||||||1|1||
+58251495|Email|102508500|||||||||||||||||||23|Y|lindacawthorne@btinternet.com|lindacawthorne@btinternet.com|1|||1
+58251498|Address|124299328|23|Y|Post Office Cottage|Calverleigh||||Tiverton||GB|EX16 8BD||||||||||||1|1||
+58251498|Email|102508501|||||||||||||||||||23|Y|nickfitzhugh3@googlemail.com|nickfitzhugh3@googlemail.com|1|||1
+58251498|Phone|95632111||||||||||||25|N|Other|GB||7951960261|+447951960261|||||1||1|
+58251501|Address|124299329|23|Y|42 Treskerby|||||Redruth||GB|TR16 5AG||||||||||||1|1||
+58251501|Email|102508502|||||||||||||||||||23|Y|applepye3@hotmail.co.uk|applepye3@hotmail.co.uk|1|||1
+58251504|Address|124299330|23|Y|23 Mill Road|Great Gransden||||Sandy||GB|SG19 3AG||||||||||||1|1||
+58251504|Email|102508503|||||||||||||||||||23|Y|nigel.lodge23@gmail.com|nigel.lodge23@gmail.com|1|||1
+58251508|Address|124299331|23|Y|3 The Maltings|Bellamour Way|Colton|||Rugeley||GB|WS15 3NA||||||||||||1|1||
+58251508|Email|102508504|||||||||||||||||||23|Y|allanbrenda64@gmail.com|allanbrenda64@gmail.com|1|||1
+58251511|Address|124299332|23|Y|2 Shotwick Park|Saughall||||Chester||GB|CH1 6GA||||||||||||1|1||
+58251511|Email|102508505|||||||||||||||||||23|Y|pam@shennan.co.uk|pam@shennan.co.uk|1|||1
+58251514|Address|124299333|23|Y|8 Avondale|||||Maidenhead||GB|SL6 6SE||||||||||||1|1||
+58251517|Address|124299334|23|Y|Cooks Green Farm|Holland Road|Little Clacton|||Clacton||GB|CO16 9QH||||||||||||1|1||
+58251520|Address|124299335|23|Y|2 St Marys Close|Mursley||||Milton Keynes||GB|MK17 0HP||||||||||||1|1||
+58251523|Address|124299336|23|Y|46 Cambridge Road|Owlsmoor||||Sandhurst||GB|GU47 0SZ||||||||||||1|1||
+58251523|Email|102508506|||||||||||||||||||23|Y|c.pwinyard@btinternet.com|c.pwinyard@btinternet.com|1|||1
+58251526|Address|124299337|23|Y|Home Farm|Springhill Lane||||Penn||GB|WV4 4UF||||||||||||1|1||
+58251526|Email|102508507|||||||||||||||||||23|Y|patearp1@yahoo.co.uk|patearp1@yahoo.co.uk|1|||1
+58251529|Address|124299338|23|Y|27 Shaftesbury Avenue|||||Whitley Bay||GB|NE26 3TD||||||||||||1|1||
+58251529|Email|102508508|||||||||||||||||||23|Y|patricia@wbayn.uk|patricia@wbayn.uk|1|||1
+58251532|Address|124299339|23|Y|The Willows|Trewiston Lane|St. Minver|||Wadebridge||GB|PL27 6PZ||||||||||||1|1||
+58251532|Email|102508509|||||||||||||||||||23|Y|reillypa@icloud.com|reillypa@icloud.com|1|||1
+58251535|Address|124299340|23|Y|48 Castle Street|||||Farnham||GB|GU9 7JQ||||||||||||1|1||
+58251535|Email|102508510|||||||||||||||||||23|Y|clairelaughton@icloud.com|clairelaughton@icloud.com|1|||1
+58251538|Address|124299341|23|Y|2 Daymerslea Close|Walford Road||||Ross On Wye||GB|HR9 5PG||||||||||||1|1||
+58251541|Address|124299342|23|Y|13 Southbourne Mansions|South Parade||||Bath||GB|BA2 4AD||||||||||||1|1||
+58251541|Email|102508511|||||||||||||||||||23|Y|pe_jessop@yahoo.com|pe_jessop@yahoo.com|1|||1
+58251544|Address|124299343|23|Y|Lowena|Chapel Park||||Launceston||GB|PL15 7BU||||||||||||1|1||
+58251547|Address|124299344|23|Y|Rydal|Coronation Road||||Stroud||GB|GL5 3SL||||||||||||1|1||
+58251550|Address|124299345|23|Y|111 Prospect Lane|||||Solihull||GB|B91 1HT||||||||||||1|1||
+58251550|Email|102508512|||||||||||||||||||23|Y|bourkestores@hotmail.co.uk|bourkestores@hotmail.co.uk|1|||1
+58251553|Address|124299346|23|Y|16 William Peck Road|Spixworth||||Norwich||GB|NR10 3QB||||||||||||1|1||
+58251553|Email|102508513|||||||||||||||||||23|Y|pfespencer@yahoo.co.uk|pfespencer@yahoo.co.uk|1|||1
+58251556|Address|124299347|23|Y|23 Aspen Gardens|||||Ashford||GB|TW15 1ED||||||||||||1|1||
+58251559|Address|124299348|23|Y|Mansmire|Galphay||||Ripon||GB|HG4 3NJ||||||||||||1|1||
+58251562|Address|124299349|23|Y|16 William Peck Road|Spixworth||||Norwich||GB|NR10 3QB||||||||||||1|1||
+58251565|Address|124299350|23|Y|15 Bodmin Road|||||Reading||GB|RG5 3RZ||||||||||||1|1||
+58251565|Email|102508514|||||||||||||||||||23|Y|paulinebneedham@yahoo.co.uk|paulinebneedham@yahoo.co.uk|1|||1
+58251568|Address|124299351|23|Y|Weald Heights Care Home|Bourchier Close||||Sevenoaks||GB|TN13 1PD||||||||||||1|1||
+58251568|Email|102508515|||||||||||||||||||23|Y|pahenley@hotmail.co.uk|pahenley@hotmail.co.uk|1|||1
+58251571|Address|124299352|23|Y|5 Lowlands Crescent|Great Kingshill||||High Wycombe||GB|HP15 6EG||||||||||||1|1||
+58251574|Address|124299353|23|Y|Neuadda Barn|Rhiwderin||||Newport||GB|NP10 8RP||||||||||||1|1||
+58251574|Email|102508516|||||||||||||||||||23|Y|penny.hoppe@live.com|penny.hoppe@live.com|1|||1
+58251577|Address|124299354|23|Y|20 Bryants Acre|Wendover||||Aylesbury||GB|HP22 6JZ||||||||||||1|1||
+58251577|Email|102508517|||||||||||||||||||23|Y|horn20@ntlworld.com|horn20@ntlworld.com|1|||1
+58251580|Address|124299355|23|Y|4 Lough Erne Park|Carryduff||||Belfast||GB|BT8 8PG||||||||||||1|1||
+58251580|Email|102508518|||||||||||||||||||23|Y|peterhhood@gmail.com|peterhhood@gmail.com|1|||1
+58251583|Address|124299356|23|Y|The Old Orchard|West Hill||||Ottery St Mary||GB|EX11 1TZ||||||||||||1|1||
+58251583|Email|102508519|||||||||||||||||||23|Y|peter.hilson@clystholdings.co.uk|peter.hilson@clystholdings.co.uk|1|||1
+58251586|Address|124299357|23|Y|31 Meysydd Y Coleg|||||Carmarthen||GB|SA31 3GR||||||||||||1|1||
+58251586|Email|102508520|||||||||||||||||||23|Y|liontaff@yahoo.co.uk|liontaff@yahoo.co.uk|1|||1
+58251589|Address|124299358|23|Y|Caryes|Aylesbeare||||Exeter||GB|EX5 2BU||||||||||||1|1||
+58251592|Address|124299359|23|Y|34 Rainsford Way|||||Hornchurch||GB|RM12 4BJ||||||||||||1|1||
+58251592|Email|102508521|||||||||||||||||||23|Y|petejohnson34@gmail.com|petejohnson34@gmail.com|1|||1
+58251595|Address|124299360|23|Y|Trevine|38 Churchtown Road|Gerrans|||Truro||GB|TR2 5DY||||||||||||1|1||
+58251595|Email|102508522|||||||||||||||||||23|Y|phil@keymer.org.uk|phil@keymer.org.uk|1|||1
+58251598|Address|124299361|23|Y|323 Lode Lane|||||Solihull||GB|B91 2HQ||||||||||||1|1||
+58251601|Address|124299362|23|Y|22 Streatham Drive|||||Exeter||GB|EX4 4PD||||||||||||1|1||
+58251604|Address|124299363|23|Y|20 Bath Court|Kings Esplanade||||Hove||GB|BN3 2WP||||||||||||1|1||
+58251604|Email|102508523|||||||||||||||||||23|Y|raymond.patching@icloud.com|raymond.patching@icloud.com|1|||1
+58251607|Address|124299364|23|Y|Laburnum Cottage|New Brookend||||Berkeley||GB|GL13 9SF||||||||||||1|1||
+58251610|Address|124299365|23|Y|Dunam Lea|12 Mill Lane||||Broxbourne||GB|EN10 7AX||||||||||||1|1||
+58251610|Email|102508524|||||||||||||||||||23|Y|reg.duncan@yahoo.co.uk|reg.duncan@yahoo.co.uk|1|||1
+58251613|Address|124299366|23|Y|Beacon Downe|Church Hill|Pinhoe|||Exeter||GB|EX4 9JB||||||||||||1|1||
+58251616|Address|124299367|23|Y|4 Treefields|||||Brixham||GB|TQ5 8PA||||||||||||1|1||
+58251616|Email|102508525|||||||||||||||||||23|Y|richard.dyke2@btinternet.com|richard.dyke2@btinternet.com|1|||1
+58251619|Address|124299368|23|Y|Bozdown|Culver Lane|Rattery|||South Brent||GB|TQ10 9LJ||||||||||||1|1||
+58251619|Email|102508526|||||||||||||||||||23|Y|richard.haigh@rocketmail.com|richard.haigh@rocketmail.com|1|||1
+58251622|Address|124299369|23|Y|85 Bath Road|||||Cheltenham||GB|GL53 7LH||||||||||||1|1||
+58251622|Email|102508527|||||||||||||||||||23|Y|richard.clay@blueyonder.co.uk|richard.clay@blueyonder.co.uk|1|||1
+58251625|Address|124299370|23|Y|2 School Gardens|||||South Brent||GB|TQ10 9PJ||||||||||||1|1||
+58251625|Email|102508528|||||||||||||||||||23|Y|richardtolchard@outlook.com|richardtolchard@outlook.com|1|||1
+58251628|Address|124299371|23|Y|Winton|Whiterock Road||||Wadebridge||GB|PL27 7ED||||||||||||1|1||
+58251628|Email|102508529|||||||||||||||||||23|Y|rgould365@gmail.com|rgould365@gmail.com|1|||1
+58251631|Address|124299372|23|Y|The Mill House|Poplar Farm|Goonreeve|||Penryn||GB|TR10 9AY||||||||||||1|1||
+58251634|Address|124299373|23|Y|The Archway|Creedy Park||||Crediton||GB|EX17 4EB||||||||||||1|1||
+58251634|Email|102508530|||||||||||||||||||23|Y|hayseed@creedy.myzen.co.uk|hayseed@creedy.myzen.co.uk|1|||1
+58251637|Address|124299374|23|Y|4 Blacksmiths Lane|Smeeton Westerby||||Leicester||GB|LE8 0QB||||||||||||1|1||
+58251637|Email|102508531|||||||||||||||||||23|Y|ra@robalstonretail.com|ra@robalstonretail.com|1|||1
+58251640|Address|124299375|23|Y|18 Popcar Crescent|||||Bourne||GB|PE10 9SA||||||||||||1|1||
+58251640|Email|102508532|||||||||||||||||||23|Y|robdavies96@btinternet.com|robdavies96@btinternet.com|1|||1
+58251643|Address|124299376|23|Y|19 Morlich Crescent|||||Nairn||GB|IV12 4TW||||||||||||1|1||
+58251646|Address|124299377|23|Y|18 Kings Court|Beach Green||||Shoreham-By-Sea||GB|BN43 5YD||||||||||||1|1||
+58251646|Email|102508533|||||||||||||||||||23|Y|pembroke74@hotmail.com|pembroke74@hotmail.com|1|||1
+58251646|Phone|95667118||||||||||||25|N|Other|GB||01273875361|+4401273875361|||||1||1|
+58251649|Address|124299378|23|Y|20 Carrwood Avenue|Bramhall||||Stockport||GB|SK7 2PX||||||||||||1|1||
+58251649|Email|102508534|||||||||||||||||||23|Y|robert.downs@apteco.com|robert.downs@apteco.com|1|||1
+58251652|Address|124299379|23|Y|40 Musley Lane|||||Ware||GB|SG12 7EW||||||||||||1|1||
+58251655|Address|124299380|23|Y|Cheddon Down|Church Lane|Kingston St Mary|||Taunton||GB|TA2 8HR||||||||||||1|1||
+58251655|Email|102508535|||||||||||||||||||23|Y|dunsfordmms@gmail.com|dunsfordmms@gmail.com|1|||1
+58251658|Address|124299381|23|Y|Peacehaven|The Street||||Tidmarsh||GB|RG8 8ER||||||||||||1|1||
+58251661|Address|124299382|23|Y|7 Manor Court|Galmpton||||Brixham||GB|TQ5 0EH||||||||||||1|1||
+58251661|Email|102508536|||||||||||||||||||23|Y|rwm61sail@gmail.com|rwm61sail@gmail.com|1|||1
+58251664|Address|124299383|23|Y|Dukes Barn|Eakring Road|Kirklington|||Newark||GB|NG22 8NZ||||||||||||1|1||
+58251664|Email|102508537|||||||||||||||||||23|Y|rodders57@hotmail.co.uk|rodders57@hotmail.co.uk|1|||1
+58251669|Address|124299384|23|Y|Sunnybank|High Street||||Meonstoke||GB|SO32 3NH||||||||||||1|1||
+58251669|Email|102508538|||||||||||||||||||23|Y|robinson789@btinternet.com|robinson789@btinternet.com|1|||1
+58251672|Address|124299385|23|Y|Hamel Down House|8 Bowring Park||||Moreton Hampsted||GB|TQ13 8GB||||||||||||1|1||
+58251672|Email|102508539|||||||||||||||||||23|Y|roger.tyler@hotmail.com|roger.tyler@hotmail.com|1|||1
+58251675|Address|124299386|23|Y|Bramblewood|Grendon Road|Edgcott|||Aylesbury||GB|HP18 0TN||||||||||||1|1||
+58251675|Email|102508540|||||||||||||||||||23|Y|rogerbehagg@me.com|rogerbehagg@me.com|1|||1
+58251678|Address|124299387|23|Y|30 Bailey Close|||||Windsor||GB|SL4 3RD||||||||||||1|1||
+58251678|Email|102508541|||||||||||||||||||23|Y|get.roger@hotmail.co.uk|get.roger@hotmail.co.uk|1|||1
+58251681|Address|124299388|23|Y|Cooks Green Farm|Holland Road|Little Clacton|||Clacton||GB|CO16 9QH||||||||||||1|1||
+58251684|Address|124299389|23|Y|93 Chertsey Lane|||||Staines||GB|TW18 3LQ||||||||||||1|1||
+58251687|Address|124299390|23|Y|Mint Barn|6 Church Farm Barns|Foyle Hill|||Dorset||GB|SP7 0AG||||||||||||1|1||
+58251687|Email|102508542|||||||||||||||||||23|Y|davesyms@hotmail.com|davesyms@hotmail.com|1|||1
+58251690|Address|124299391|23|Y|37 Thorncliffe Road|||||Nottingham||GB|NG3 5BQ||||||||||||1|1||
+58251690|Email|102508543|||||||||||||||||||23|Y|rosemary.futcher@virginmedia.com|rosemary.futcher@virginmedia.com|1|||1
+58251693|Address|124299392|23|Y|28 Granby Road|||||Edinburgh||GB|EH16 5NL||||||||||||1|1||
+58251693|Email|102508544|||||||||||||||||||23|Y|rosemarymackenzie@hotmail.com|rosemarymackenzie@hotmail.com|1|||1
+58251693|Phone|95627252||||||||||||25|N|Other|GB||07955171617|+4407955171617|||||1||1|
+58251696|Address|124299393|23|Y|Camilla|Bowesden Lane||||Shorne||GB|DA12 3LA||||||||||||1|1||
+58251696|Email|102508545|||||||||||||||||||23|Y|rozel.ballantyne@googlemail.com|rozel.ballantyne@googlemail.com|1|||1
+58251699|Address|124299394|23|Y|5 Church Lea|||||Tavistock||GB|PL19 9PS||||||||||||1|1||
+58251699|Email|102508546|||||||||||||||||||23|Y|stu@davecrick.com|stu@davecrick.com|1|||1
+58251699|Phone|95697132||||||||||||25|N|Other|GB||07813777170|+4407813777170|||||1||1|
+58251702|Address|124299395|23|Y|New House Farm|Canworthy Water||||Launceston||GB|PL15 8UW||||||||||||1|1||
+58251705|Address|124299396|23|Y|16 Hunt Close|||||Bicester||GB|OX26 6HX||||||||||||1|1||
+58251705|Email|102508547|||||||||||||||||||23|Y|sally.trench@live.co.uk|sally.trench@live.co.uk|1|||1
+58251708|Address|124299397|23|Y|41 Byfleet Avenue|Old Basing||||Hampshire||GB|RG24 7HR||||||||||||1|1||
+58251708|Email|102508548|||||||||||||||||||23|Y|sarahharvey4@hotmail.com|sarahharvey4@hotmail.com|1|||1
+58251708|Phone|95627297||||||||||||25|N|Other|GB||07787029584|+4407787029584|||||1||1|
+58251711|Address|124299398|23|Y|32 Wonford Road|||||Exeter||GB|EX2 2LD||||||||||||1|1||
+58251714|Address|124299399|23|Y|Townsend|||||Upper Wardington||GB|OX17 1ST||||||||||||1|1||
+58251717|Address|124299400|23|Y|99 Oxlease Meadows|||||Romsey||GB|SO51 7AB||||||||||||1|1||
+58251717|Email|102508549|||||||||||||||||||23|Y|sheilakharrison@gmail.com|sheilakharrison@gmail.com|1|||1
+58251720|Address|124299401|23|Y|33 Wood Road|Ashurst||||Southampton||GB|SO40 7BD||||||||||||1|1||
+58251720|Email|102508550|||||||||||||||||||23|Y|sheilarud@btinternet.com|sheilarud@btinternet.com|1|||1
+58251720|Phone|95632113||||||||||||25|N|Other|GB||07870114837|+4407870114837|||||1||1|
+58251723|Address|124299402|23|Y|West End House|West End Donhead|St Andrew|||Shaftesbury||GB|SP7 9DY||||||||||||1|1||
+58251723|Email|102508551|||||||||||||||||||23|Y|simon.cooper1936@gmail.com|simon.cooper1936@gmail.com|1|||1
+58251726|Address|124299403|23|Y|2 Woodland Avenue|||||Northampton||GB|NN3 2BY||||||||||||1|1||
+58251726|Email|102508552|||||||||||||||||||23|Y|simonjw@ntlworld.com|simonjw@ntlworld.com|1|||1
+58251729|Address|124299404|23|Y|90 Malmains Way|||||Beckenham||GB|BR3 6SF||||||||||||1|1||
+58251729|Email|102508553|||||||||||||||||||23|Y|vsivathasan@hotmail.com|vsivathasan@hotmail.com|1|||1
+58251732|Address|124299405|23|Y|31 Norman Avenue|||||Twickenham||GB|TW1 2LY||||||||||||1|1||
+58251732|Email|102508554|||||||||||||||||||23|Y|stan@velocitypartners.co.uk|stan@velocitypartners.co.uk|1|||1
+58251735|Address|124299406|23|Y|43 Nursery Road|Taplow||||Slough||GB|SL6 0JX||||||||||||1|1||
+58251738|Address|124299407|23|Y|Westward House|Leigh Lane|Bramshall|||Uttoxeter||GB|ST14 5DN||||||||||||1|1||
+58251738|Email|102508555|||||||||||||||||||23|Y|stephenmckeon@yahoo.co.uk|stephenmckeon@yahoo.co.uk|1|||1
+58251741|Address|124299408|23|Y|29 Ashdale Lane|Llangwm||||Haverfordwest||GB|SA62 4NU||||||||||||1|1||
+58251741|Email|102508556|||||||||||||||||||23|Y|smjburton@yahoo.com|smjburton@yahoo.com|1|||1
+58251744|Address|124299409|23|Y|Driftway|Broadview Road||||Oulton Broad||GB|NR32 3PL||||||||||||1|1||
+58251744|Email|102508557|||||||||||||||||||23|Y|steve_jones001@btinternet.com|steve_jones001@btinternet.com|1|||1
+58251744|Phone|95642107||||||||||||25|N|Other|GB||07859023555|+4407859023555|||||1||1|
+58251747|Address|124299410|23|Y|Cherry Green Farmhouse|Westmill||||Buntingford||GB|SG9 9NW||||||||||||1|1||
+58251747|Email|102508558|||||||||||||||||||23|Y|stephen@swillson.com|stephen@swillson.com|1|||1
+58251747|Phone|95632120||||||||||||25|N|Other|GB||07836278137|+4407836278137|||||1||1|
+58251750|Address|124299411|23|Y|4 Hampton Lane|||||Winchester||GB|SO22 5LF||||||||||||1|1||
+58251750|Email|102508559|||||||||||||||||||23|Y|steve@grapevyne.com|steve@grapevyne.com|1|||1
+58251750|Phone|95627299||||||||||||25|N|Other|GB||7884496759|+447884496759|||||1||1|
+58251753|Address|124299412|23|Y|Pale House|Crossley Park|New Pale Road|||Manley||GB|W6 6JG||||||||||||1|1||
+58251753|Email|102508560|||||||||||||||||||23|Y|stevenwelsby@catalloy.com|stevenwelsby@catalloy.com|1|||1
+58251756|Address|124299413|23|Y|7 Dixon Close|||||Aylesbury||GB|HP21 8FU||||||||||||1|1||
+58251756|Email|102508561|||||||||||||||||||23|Y|stuartcrook@ntlworld.com|stuartcrook@ntlworld.com|1|||1
+58251756|Phone|95627240||||||||||||25|N|Other|GB||07767225518|+4407767225518|||||1||1|
+58251759|Address|124299414|23|Y|Flat 3/1|47 Bellwood Street||||Glasgow||GB|G41 3EX||||||||||||1|1||
+58251759|Email|102508562|||||||||||||||||||23|Y|stuartwhoughton@hotmail.com|stuartwhoughton@hotmail.com|1|||1
+58251762|Address|124299415|23|Y|1 Walnut Mews|The Green|Mill Road|||Marcham||GB|OX13 6NZ||||||||||||1|1||
+58251762|Email|102508563|||||||||||||||||||23|Y|suedavie64@gmail.com|suedavie64@gmail.com|1|||1
+58251765|Address|124299416|23|Y|21 Lupin Drive|Huntington||||Chester||GB|CH3 6SD||||||||||||1|1||
+58251765|Email|102508564|||||||||||||||||||23|Y|amanda.williams10001@gmail.com|amanda.williams10001@gmail.com|1|||1
+58251768|Address|124299417|23|Y|Chaseford Lodge|72 Church Lane|Dore|||Sheffield||GB|S17 3GT||||||||||||1|1||
+58251771|Address|124299418|23|Y|Winton|Whiterock Road||||Wadebridge||GB|PL27 7LW||||||||||||1|1||
+58251771|Email|102508565|||||||||||||||||||23|Y|rickgould@talktalk.net|rickgould@talktalk.net|1|||1
+58251774|Address|124299419|23|Y|21 Green Lane|||||Amersham||GB|HP6 6AS||||||||||||1|1||
+58251774|Email|102508566|||||||||||||||||||23|Y|bankssmb@gmail.com|bankssmb@gmail.com|1|||1
+58251777|Address|124299420|23|Y|4 Hill Farm Court|Mears Ashby||||Northampton||GB|NN6 0ER||||||||||||1|1||
+58251780|Address|124299421|23|Y|Home Cottage|Slapton||||Kingsbridge||GB|TQ7 2PN||||||||||||1|1||
+58251783|Address|124299422|23|Y|14 Lonsdale Avenue|Cliftonville||||Margate||GB|CT9 3BT||||||||||||1|1||
+58251783|Email|102508567|||||||||||||||||||23|Y|sylv.elliott@hotmail.co.uk|sylv.elliott@hotmail.co.uk|1|||1
+58251786|Address|124299423|23|Y|14 Knightsbridge Court|||||Chester||GB|CH1 1QG||||||||||||1|1||
+58251789|Address|124299424|23|Y|C/O Gideon Hirsh|92 Rue Du Stade|60520 La Chapelle En|||Serval||GB|||||||||||||1|1||
+58251789|Email|102508568|||||||||||||||||||23|Y|sharon.hirsh@orange.fr|sharon.hirsh@orange.fr|1|||1
+58251789|Phone|95627239||||||||||||25|N|Other|||688031645|+33688031645|||||1||1|
+58251792|Address|124299425|23|Y|413 Topsham Road|||||Exeter||GB|EX2 7AB||||||||||||1|1||
+58251792|Email|102508569|||||||||||||||||||23|Y|terrypaddon@gmail.com|terrypaddon@gmail.com|1|||1
+58251795|Address|124299426|23|Y|2 Daymerslea Close|Walford Road||||Ross On Wye||GB|HR9 5PG||||||||||||1|1||
+58251798|Address|124299427|23|Y|Winfrieth|Broadway|Chiccompton|||Bath||GB|BA3 4JW||||||||||||1|1||
+58251801|Address|124299428|23|Y|31 Aitken Street|||||Airdrie||GB|ML6 6LT||||||||||||1|1||
+58251804|Address|124299429|23|Y|Allen Park|Fursdon||||Exbourne||GB|EX20 3QY||||||||||||1|1||
+58251807|Address|124299430|23|Y|26 Livesey Close|||||Kingston-Upon-Thames||GB|KT1 3GD||||||||||||1|1||
+58251807|Email|102508570|||||||||||||||||||23|Y|tanfamily.tkt@gmail.com|tanfamily.tkt@gmail.com|1|||1
+58251807|Phone|95637107||||||||||||25|N|Other|GB||7869337801|+447869337801|||||1||1|
+58251810|Address|124299431|23|Y|94 Cross Drove|Coates||||Peterborough||GB|PE7 2HJ||||||||||||1|1||
+58251810|Email|102508571|||||||||||||||||||23|Y|tywr@hotmail.co.uk|tywr@hotmail.co.uk|1|||1
+58251813|Address|124299432|23|Y|11 Bayham Road|||||Bristol||GB|BS4 2DY||||||||||||1|1||
+58251813|Email|102508572|||||||||||||||||||23|Y|1954tgs@gmail.com|1954tgs@gmail.com|1|||1
+58251816|Address|124299433|23|Y|98 Sweetbrier Lane|||||Exeter||GB|EX1 3AR||||||||||||1|1||
+58251819|Address|124299434|23|Y|108 Laburnum Crescent|Allestree||||Derby||GB|DE22 2GS||||||||||||1|1||
+58251819|Email|102508573|||||||||||||||||||23|Y|val.steele1@gmail.com|val.steele1@gmail.com|1|||1
+58251822|Address|124299435|23|Y|90 Malmains Way|||||Beckenham||GB|BR3 6SF||||||||||||1|1||
+58251825|Address|124299436|23|Y|3 Anne Greenwood Close|||||Oxford||GB|OX4 4DN||||||||||||1|1||
+58251825|Email|102508574|||||||||||||||||||23|Y|tinkywood@hotmail.co.uk|tinkywood@hotmail.co.uk|1|||1
+58251828|Address|124299437|23|Y|Lower Wick|Chelsfield Lane||||Orpington||GB|BR6 7RR||||||||||||1|1||
+58251828|Email|102508575|||||||||||||||||||23|Y|vickilloyd8@yahoo.co.uk|vickilloyd8@yahoo.co.uk|1|||1
+58251828|Phone|95642120||||||||||||25|N|Other|GB||07503910813|+4407503910813|||||1||1|
+58251831|Address|124299438|23|Y|Reigate Grange|52 West Street||||Reigate||GB|RH2 9DB||||||||||||1|1||
+58251831|Email|102508576|||||||||||||||||||23|Y|d.triggs01@gmail.com|d.triggs01@gmail.com|1|||1
+58251831|Phone|95627237||||||||||||25|N|Other|GB||7887761218|+447887761218|||||1||1|
+58251834|Address|124299439|23|Y|Driftwood|Lower Cleave|Noaham|||Bideford||GB|EX39 2RH||||||||||||1|1||
+58251837|Address|124299440|23|Y|Green Acre|Water Lane|East Barsham|||Fakenham||GB|NR21 0LF||||||||||||1|1||
+58251837|Email|102508577|||||||||||||||||||23|Y|w.wharton@outlook.com|w.wharton@outlook.com|1|||1
+58251837|Phone|95627275||||||||||||25|N|Other|GB||07554752667|+4407554752667|||||1||1|
+58251840|Address|124299441|23|Y|22 Marsworth Avenue|||||Pinner||GB|HA5 4UB||||||||||||1|1||
+58251843|Address|124299442|23|Y|180 Hill Lane|||||Southampton||GB|SO15 5DB||||||||||||1|1||
+58251848|Address|124299443|23|Y|New House Farm|Canworthy Water||||Launceston||GB|PL15 8UW||||||||||||1|1||
+58251851|Address|124299444|23|Y|80 Sylvia Avenue|||||Pinner||GB|HA5 4QL||||||||||||1|1||
+58251856|Address|124299445|23|Y|9 Two Gate Meadow|Two Gate Lane|Overton|||Basingstoke||GB|RG25 3TG||||||||||||1|1||
+58251856|Email|102508578|||||||||||||||||||23|Y|yvonneebdon@gmail.com|yvonneebdon@gmail.com|1|||1
+58251859|Address|124299446|23|Y|Springhill|Earlswood||||Chepstow||GB|NP16 6AR||||||||||||1|1||
+58251859|Email|102508579|||||||||||||||||||23|Y|Home|yroberton@icloud.com|1|||1
+58251859|Phone|95627250||||||||||||25|N|Other|GB||7770371693|+447770371693|||||1||1|
+58251864|Address|124299447|23|Y|71 Whitecross|Wotton||||Abingdon||GB|OX13 6BS||||||||||||1|1||
+58251864|Email|102508580|||||||||||||||||||23|Y|kpgarrett@hotmail.com|kpgarrett@hotmail.com|1|||1
+58254738|Email|102512531|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+58254739|Email|102512532|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+58254740|Email|102512533|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+58254741|Email|102512534|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+58254743|Email|102512536|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+58254744|Email|102512537|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+58254745|Email|102512538|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+58254746|Email|102512539|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+58254747|Email|102512540|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+58254748|Email|102512541|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+58254749|Email|102512542|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+58254750|Email|102512543|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+58254751|Email|102512544|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+58254752|Email|102512545|||||||||||||||||||25|Y|donotreplydsr@blackfinch.com|donotreplydsr@blackfinch.com|1|||1
+58258877|Address|124299994|27|Y|Woodland Hall|Woodland|Broughton In Furness|||Cumbria||GB|LA20 6DF||||||||||||1|1||
+58260156|Email|102517549|||||||||||||||||||24|Y||Asia.OSullivan@casfin.co.uk|1|||1
+58260230|Address|124303672|23|Y|9 Hill House Drive|||||Reigate|SRY|GB|RH2 8BH||||||||||||1|1||
+58261119|Address|124303766|23|Y|9 Hill House Drive|||||Reigate|SRY|GB|RH2 8BH||||||||||||1|1||
+58261121|Address|124303767|23|Y|Birchley Mill|Bockleton Road|Oldwood|||Tenbury Wells|WOR|GB|WR15 8PW||||||||||||1|1||
+58261128|Address|124303806|23|Y|The Old Rectory|Pershore Road|Little Comberton|||Pershore||GB|WR10 3EP||||||||||||1|1||
+58261130|Address|124303768|23|Y|Lowood|40 High Street||||Great Billing|NTH|GB|NN3 8DT||||||||||||1|1||
+58261133|Address|124303769|23|Y|Lowood|40 High Street||||Great Billing|NTH|GB|NN3 8DT||||||||||||1|1||
+58261135|Address|124303770|23|Y|23 Elley Green|||||Corsham|WIL|GB|SN13 9TX||||||||||||1|1||
+58261139|Address|124303771|23|Y|23 Elley Green|||||Corsham|WIL|GB|SN13 9TX||||||||||||1|1||
+58261501|Address|124303808|23|Y|Birchley Mill|Bockleton Road|Oldwood|||Tenbury Wells|WOR|GB|WR15 8PW||||||||||||1|1||
+58264477|Email|102517875|||||||||||||||||||25|Y|diane.kennedy@policyservices.co.uk|diane.kennedy@policyservices.co.uk|1|||1
+58264953|Address|124313719|19|Y|Oracle Campus|||||Linlithgow|WLN|GB|EH49 7BF||||||||||||1|1||
+58264953|Email|102517920|||||||||||||||||||19|Y||finance@policyservices.co.uk|1|||1
+58265231|Email|102517940|||||||||||||||||||25|Y|jamesl@connorbroadley.co.uk|jamesl@connorbroadley.co.uk|1|||1
+58265237|Email|102517941|||||||||||||||||||25|Y|jonathan.burden@medicalandgeneral.co.uk|jonathan.burden@medicalandgeneral.co.uk|1|||1
+58265238|Email|102517942|||||||||||||||||||25|Y|jordan.evason@hoxtonwealth.co.uk|jordan.evason@hoxtonwealth.co.uk|1|||1
+58265239|Email|102517943|||||||||||||||||||25|Y|tom.gosling@finli.co.uk|tom.gosling@finli.co.uk|1|||1
+58265241|Email|102517944|||||||||||||||||||25|Y|hilary.wise@wealthharbour.co.uk|hilary.wise@wealthharbour.co.uk|1|||1
+58267141|Email|102522490|||||||||||||||||||24|Y||malcolm@riverglenifa.co.uk|1|||1
+58267143|Email|102522492|||||||||||||||||||24|Y||andykirk@goodmanifa.co.uk|1|||1
+58267144|Email|102522491|||||||||||||||||||24|Y||astallard@wwfp.net|1|||1
+58267150|Email|102522493|||||||||||||||||||24|Y||hannah.hewson@financial-advice.co.uk|1|||1
+58267152|Email|102522494|||||||||||||||||||24|Y||andrew.elson@berryandoak.com|1|||1
+58267153|Email|102522495|||||||||||||||||||24|Y||tony@cfpbath.co.uk|1|||1
+58267161|Email|102522497|||||||||||||||||||24|Y||andrew@affinity4advice.co.uk|1|||1
+58267164|Email|102522496|||||||||||||||||||24|Y||alan@bfm-ifa.co.uk|1|||1
+58267169|Email|102522498|||||||||||||||||||24|Y||advice@andygreenifa.com|1|||1
+58267171|Email|102522499|||||||||||||||||||24|Y||andrew@cleddaufinancial.com|1|||1
+58267172|Email|102522500|||||||||||||||||||24|Y||investments@forestfp.co.uk|1|||1
+58267172|Phone|95642126||||||||||||25|N|Other|GB||7946221221|+447946221221|||||1||1|
+58267173|Email|102522501|||||||||||||||||||24|Y||aimee.hogg@furnleyhouse.co.uk|1|||1
+58267175|Email|102522502|||||||||||||||||||24|Y||andy.setterfield@phoenix-wm.co.uk|1|||1
+58267176|Email|102522503|||||||||||||||||||24|Y||adam@clearwaterfinancial.co.uk|1|||1
+58267186|Email|102522504|||||||||||||||||||24|Y||ben@courtneyhavers.co.uk|1|||1
+58267186|Phone|95627232||||||||||||25|N|Other|GB||07906422329|+4407906422329|||||1||1|
+58267187|Email|102522505|||||||||||||||||||24|Y||brian.davies@finli.co.uk|1|||1
+58267188|Email|102522545|||||||||||||||||||24|Y||brian@atawny.co.uk|1|||1
+58267189|Email|102522506|||||||||||||||||||24|Y||brian@northfieldfs.co.uk|1|||1
+58267189|Phone|95627277||||||||||||25|N|Other|GB||07989852312|+4407989852312|||||1||1|
+58267191|Email|102522508|||||||||||||||||||24|Y||charles.matthews@wrensterling.com|1|||1
+58267194|Email|102522510|||||||||||||||||||24|Y||clive@efp.london|1|||1
+58267195|Email|102537556|||||||||||||||||||25|Y|craigshackcloth@outlook.com|craigshackcloth@outlook.com|1|||1
+58267198|Email|102522511|||||||||||||||||||24|Y||chrisstallard@visionifp.co.uk|1|||1
+58267202|Email|102522475|||||||||||||||||||24|Y||david.brassington@cestrianifa.co.uk|1|||1
+58267203|Email|102522476|||||||||||||||||||24|Y||dale@corrigans.org.uk|1|||1
+58267204|Email|102522477|||||||||||||||||||24|Y||david@foxandco.com|1|||1
+58267204|Phone|95627238||||||||||||25|N|Other|GB||01993708007|+4401993708007|||||1||1|
+58267206|Email|102522479|||||||||||||||||||24|Y||david@hr-ifa.co.uk|1|||1
+58267208|Email|102522480|||||||||||||||||||24|Y||ds@dfmfinancial.co.uk|1|||1
+58267209|Email|102522481|||||||||||||||||||24|Y||daniel@mathewscomfort.co.uk|1|||1
+58267218|Email|102522482|||||||||||||||||||24|Y||marcus@kdw.co.uk|1|||1
+58267222|Email|102537557|||||||||||||||||||25|Y|david@emetfs.com|david@emetfs.com|1|||1
+58267223|Email|102522483|||||||||||||||||||24|Y||davidc@mfs-group.co.uk|1|||1
+58267223|Phone|95627216||||||||||||25|N|Other|GB||07990541176|+4407990541176|||||1||1|
+58267225|Email|102522484|||||||||||||||||||24|Y||dan@thurlowe-clarke.co.uk|1|||1
+58267225|Phone|95627218||||||||||||25|N|Other|GB||07982712440|+4407982712440|||||1||1|
+58267227|Email|102522485|||||||||||||||||||24|Y||daniel@coldreywm.co.uk|1|||1
+58267227|Phone|95627215||||||||||||25|N|Other|GB||07980602507|+4407980602507|||||1||1|
+58267229|Email|102522486|||||||||||||||||||24|Y||deane.anderson@highclerewealth.com|1|||1
+58267229|Phone|95632119||||||||||||25|N|Other|GB||7966406605|+447966406605|||||1||1|
+58267230|Email|102522487|||||||||||||||||||24|Y||damien.clyburn@otterfinancial.co.uk|1|||1
+58267230|Phone|95632130||||||||||||25|N|Other|GB||07530001030|+4407530001030|||||1||1|
+58267234|Email|102522488|||||||||||||||||||24|Y||vm@talisifa.com|1|||1
+58267235|Email|102522489|||||||||||||||||||24|Y||dan.seal@afhgroup.com|1|||1
+58267236|Email|102522530|||||||||||||||||||24|Y||david@brightfuturefinancial.co.uk|1|||1
+58267236|Phone|95627262||||||||||||25|N|Other|GB||07701011930|+4407701011930|||||1||1|
+58267238|Email|102522532|||||||||||||||||||24|Y||dan.burnham@argentiswm.co.uk|1|||1
+58267238|Phone|95627287||||||||||||25|N|Other|GB||07921476532|+4407921476532|||||1||1|
+58267239|Email|102522531|||||||||||||||||||24|Y||david.hughes@rutherfordhughes.com|1|||1
+58267240|Email|102522533|||||||||||||||||||24|Y||david.hughes@afhgroup.com|1|||1
+58267241|Email|102522534|||||||||||||||||||24|Y||david.moore@argentiswm.co.uk|1|||1
+58267242|Email|102522536|||||||||||||||||||24|Y||edward@face-uk.com|1|||1
+58267243|Email|102522537|||||||||||||||||||24|Y||fboiling@pembrokefs.co.uk|1|||1
+58267244|Email|102522538|||||||||||||||||||24|Y||fred.segers@argentiswm.co.uk|1|||1
+58267245|Email|102522539|||||||||||||||||||24|Y||gill.lynes@carpenterbox.com|1|||1
+58267246|Email|102522540|||||||||||||||||||24|Y||graham.mcintyre@argentiswm.co.uk|1|||1
+58267252|Email|102522541|||||||||||||||||||24|Y||grahamsmith@paragoninvest.com|1|||1
+58267253|Email|102522542|||||||||||||||||||24|Y||george@mathewscomfort.co.uk|1|||1
+58267253|Phone|95627226||||||||||||25|N|Other|GB||7749418778|+447749418778|||||1||1|
+58267254|Email|102522543|||||||||||||||||||24|Y||graham.eadon@obsidian-financial.com|1|||1
+58267256|Email|102522544|||||||||||||||||||24|Y||gerry@cumminsifa.com|1|||1
+58267259|Email|102522548|||||||||||||||||||24|Y||gh@ifa-affinity.co.uk|1|||1
+58267260|Email|102522547|||||||||||||||||||24|Y||goss@prosserknowles.co.uk|1|||1
+58267262|Email|102522546|||||||||||||||||||24|Y||gregg.taffs@mha.co.uk|1|||1
+58267270|Email|102522507|||||||||||||||||||24|Y||greg@priceferguson.com|1|||1
+58267271|Email|102522512|||||||||||||||||||24|Y||henry@jhfol.co.uk|1|||1
+58267271|Phone|95742118||||||||||||25|N|Other|GB||07941360680|+4407941360680|||||1||1|
+58267272|Email|102522513|||||||||||||||||||24|Y||hhodgkins@oculuswealth.co.uk|1|||1
+58267280|Email|102522514|||||||||||||||||||24|Y||harry@davidwinterifa.co.uk|1|||1
+58267280|Phone|95627219||||||||||||25|N|Other|GB||07493464483|+4407493464483|||||1||1|
+58267282|Email|102522529|||||||||||||||||||24|Y||helen.allen@henwoodcourt.co.uk|1|||1
+58267282|Phone|95627246||||||||||||25|N|Other|GB||7703322014|+447703322014|||||1||1|
+58267284|Email|102522515|||||||||||||||||||24|Y||helen@thomasandgentry.co.uk|1|||1
+58267285|Email|102522516|||||||||||||||||||24|Y||hilary.wise@wealthharbour.co.uk|1|||1
+58267286|Email|102522517|||||||||||||||||||24|Y||ian@greenfields.biz|1|||1
+58267287|Email|102522518|||||||||||||||||||24|Y||iancampbell@visionifp.co.uk|1|||1
+58267290|Email|102522519|||||||||||||||||||24|Y||ian@taylorwatsonfm.com|1|||1
+58267293|Email|102522520|||||||||||||||||||24|Y||ian@hr-ifa.co.uk|1|||1
+58267294|Email|102522521|||||||||||||||||||24|Y||john.colquhoun@cherwellfs.co.uk|1|||1
+58267295|Email|102522522|||||||||||||||||||24|Y||james@pyrfordfp.com|1|||1
+58267295|Phone|95812118||||||||||||25|N|Other|GB||07802743621|+4407802743621|||||1||1|
+58267296|Email|102522524|||||||||||||||||||24|Y||james@avonhurstib.co.uk|1|||1
+58267297|Email|102522525|||||||||||||||||||24|Y||jason@hhw-uk.com|1|||1
+58267298|Email|102522526|||||||||||||||||||24|Y||james.hoare@merchantswealth.co.uk|1|||1
+58267299|Email|102522527|||||||||||||||||||24|Y||jeo@cityfinancialplanning.co.uk|1|||1
+58267300|Email|102522528|||||||||||||||||||24|Y||acartwright@clarionwealth.co.uk|1|||1
+58267869|Email|102522615|||||||||||||||||||24|Y||jon@chesterrosehampshire.co.uk|1|||1
+58267869|Phone|95627266||||||||||||25|N|Other|GB||07734362558|+4407734362558|||||1||1|
+58267871|Email|102522616|||||||||||||||||||24|Y||james@jhfol.co.uk|1|||1
+58267872|Email|102522614|||||||||||||||||||24|Y||jon.elkins.cfp@gmail.com|1|||1
+58267875|Email|102522638|||||||||||||||||||24|Y||john@thomasandgentry.co.uk|1|||1
+58267880|Email|102522602|||||||||||||||||||24|Y||paul@metrofs.co.uk|1|||1
+58267882|Email|102522635|||||||||||||||||||24|Y||jas.ahuja@londonfinancialconsultants.co.uk|1|||1
+58267883|Email|102522633|||||||||||||||||||24|Y||jadon.parke@mayfield.uk.com|1|||1
+58267885|Email|102522637|||||||||||||||||||24|Y||johndavies@jdfc.co.uk|1|||1
+58267887|Email|102522632|||||||||||||||||||24|Y||jordan.evason@hoxtonwealth.co.uk|1|||1
+58267888|Email|102522636|||||||||||||||||||24|Y||jinnie@avonhurstib.co.uk|1|||1
+58267889|Email|102522643|||||||||||||||||||24|Y||keith@simplyadvice.co.uk|1|||1
+58267890|Email|102522639|||||||||||||||||||24|Y||kevin@duchyifa.co.uk|1|||1
+58267890|Phone|95627285||||||||||||25|N|Other|GB||07790369174|+4407790369174|||||1||1|
+58267891|Email|102522640|||||||||||||||||||24|Y||ken.willmin@obsidian-financial.com|1|||1
+58267892|Email|102522641|||||||||||||||||||24|Y||kate.stephens@pkf-francisclark.co.uk|1|||1
+58267895|Email|102522648|||||||||||||||||||24|Y||keith.mcintosh@raeburns.co.uk|1|||1
+58267895|Phone|95627245||||||||||||25|N|Other|GB||07787127574|+4407787127574|||||1||1|
+58267896|Email|102522651|||||||||||||||||||24|Y||kevin@avonhurstib.co.uk|1|||1
+58267899|Email|102522649|||||||||||||||||||24|Y||kellyrussell@amberrivermidlands.com|1|||1
+58267900|Email|102522650|||||||||||||||||||24|Y||lwilliams@wwfp.net|1|||1
+58267901|Email|102522647|||||||||||||||||||24|Y||lawrence.newell@blackthorn-fs.co.uk|1|||1
+58267901|Phone|95627291||||||||||||25|N|Other|GB||07896525759|+4407896525759|||||1||1|
+58267911|Email|102522642|||||||||||||||||||24|Y||louise@concisewealth.com|1|||1
+58267912|Email|102522644|||||||||||||||||||24|Y||martin@simplyadvice.co.uk|1|||1
+58267914|Email|102522645|||||||||||||||||||24|Y||matt.black@elevation-group.co.uk|1|||1
+58267916|Email|102522646|||||||||||||||||||24|Y||mark.brownsea@fairstone.co.uk|1|||1
+58267918|Email|102522618|||||||||||||||||||24|Y||markireland@lyndhurstfm.co.uk|1|||1
+58267919|Email|102522619|||||||||||||||||||24|Y||mark@meldonandco.uk|1|||1
+58267921|Email|102522617|||||||||||||||||||24|Y||michael@priceferguson.com|1|||1
+58267921|Phone|95627265||||||||||||25|N|Other|GB||07710758907|+4407710758907|||||1||1|
+58267926|Email|102522620|||||||||||||||||||24|Y||mark@padstone-fm.co.uk|1|||1
+58267927|Email|102522621|||||||||||||||||||24|Y||matthew.jeffery@fairstone.co.uk|1|||1
+58267928|Email|102522622|||||||||||||||||||24|Y||matthew.williams@ascotlloyd.co.uk|1|||1
+58267930|Email|102522623|||||||||||||||||||24|Y||mark.cooper@finli.co.uk|1|||1
+58267932|Email|102522624|||||||||||||||||||24|Y||matt.garnett@pkf-francisclark.co.uk|1|||1
+58267933|Email|102522625|||||||||||||||||||24|Y||mhigham@wwfp.net|1|||1
+58267934|Email|102522626|||||||||||||||||||24|Y||mark.jones@inco.financial|1|||1
+58267935|Email|102522627|||||||||||||||||||24|Y||michael@brunswickim.com|1|||1
+58267936|Email|102522628|||||||||||||||||||24|Y||matthew.simpson@aspect8.co.uk|1|||1
+58267937|Email|102522629|||||||||||||||||||24|Y||malcolm@mlmwealth.co.uk|1|||1
+58267938|Email|102522630|||||||||||||||||||24|Y||mike.goodhall@fairstone.co.uk|1|||1
+58267938|Phone|95627251||||||||||||25|N|Other|GB||07823358130|+4407823358130|||||1||1|
+58267940|Email|102522631|||||||||||||||||||24|Y||mark@mjbpartnership.co.uk|1|||1
+58267940|Phone|95627221||||||||||||25|N|Other|GB||07783398378|+4407783398378|||||1||1|
+58267942|Email|102522601|||||||||||||||||||24|Y||mark.norris@teeslaw.com|1|||1
+58267944|Email|102522634|||||||||||||||||||24|Y||markwilliams@tpllp.com|1|||1
+58267946|Email|102522603|||||||||||||||||||24|Y||julia@cambournefp.co.uk|1|||1
+58267947|Email|102522604|||||||||||||||||||24|Y||marcus@inspire-wealth.co.uk|1|||1
+58267949|Email|102522605|||||||||||||||||||24|Y||mike@hfwealth.co.uk|1|||1
+58267950|Email|102522606|||||||||||||||||||24|Y||marcbell@bespoke-advice.com|1|||1
+58267951|Email|102522607|||||||||||||||||||24|Y||mark@afmanagement.co.uk|1|||1
+58267952|Email|102522608|||||||||||||||||||24|Y||mike@foxfinancialmanagement.co.uk|1|||1
+58267953|Email|102522609|||||||||||||||||||24|Y||mark.houghton@mchardyprivatewealth.co.uk|1|||1
+58267955|Email|102522610|||||||||||||||||||24|Y||michael.lennon@hoxtonwealth.co.uk|1|||1
+58267959|Email|102522611|||||||||||||||||||24|Y||info@mkmfinancialmanagement.co.uk|1|||1
+58267962|Email|102522612|||||||||||||||||||24|Y||matt@amgwealthsolutions.co.uk|1|||1
+58267964|Email|102522613|||||||||||||||||||24|Y||megan.white@duchyifa.co.uk|1|||1
+58267989|Address|124318722|19|Y|N/A|||||N/A||GB|||||||||||||1|1||
+58268565|Email|102522759|||||||||||||||||||24|Y||nick@prosserknowles.co.uk|1|||1
+58268566|Email|102522760|||||||||||||||||||24|Y||neil.jacobs@mwafinancial.co.uk|1|||1
+58268568|Email|102522762|||||||||||||||||||24|Y||nigel@shouksmithwealth.co.uk|1|||1
+58268573|Email|102522763|||||||||||||||||||24|Y||nbuchan@fs-ifa.com|1|||1
+58268578|Email|102522764|||||||||||||||||||24|Y||nickbroughton@prosserknowles.co.uk|1|||1
+58268579|Email|102522765|||||||||||||||||||24|Y||david.lovell@growthinvest.com|1|||1
+58268580|Email|102522766|||||||||||||||||||24|Y||nicola@whateleywm.co.uk|1|||1
+58268584|Email|102522767|||||||||||||||||||24|Y||nh@talisifa.com|1|||1
+58268584|Phone|95627283||||||||||||25|N|Other|GB||07921166600|+4407921166600|||||1||1|
+58268586|Email|102522768|||||||||||||||||||24|Y||owen.c@ablestoke.com|1|||1
+58268588|Email|102522769|||||||||||||||||||24|Y||peter@priceferguson.com|1|||1
+58268591|Email|102522770|||||||||||||||||||24|Y||peter@inspire-wealth.co.uk|1|||1
+58268599|Email|102522788|||||||||||||||||||24|Y||paul@box-financial-planning.co.uk|1|||1
+58268601|Email|102522789|||||||||||||||||||24|Y||lizac@keightleypattisonifa.co.uk|1|||1
+58268603|Email|102522794|||||||||||||||||||24|Y||paul@manningandco.co.uk|1|||1
+58268610|Email|102522749|||||||||||||||||||24|Y||paulduval@visionifp.co.uk|1|||1
+58268610|Phone|95627286||||||||||||25|N|Other|GB||07823556562|+4407823556562|||||1||1|
+58268611|Email|102522742|||||||||||||||||||24|Y||peterwinter@arghans.net|1|||1
+58268612|Email|102522740|||||||||||||||||||24|Y||philip.hunt@octofp.com|1|||1
+58268613|Email|102522743|||||||||||||||||||24|Y||phil@astutefinancialsolutions.co.uk|1|||1
+58268615|Email|102522744|||||||||||||||||||24|Y||ph@ifa-affinity.co.uk|1|||1
+58268618|Email|102522745|||||||||||||||||||24|Y||paul@scott-financial.com|1|||1
+58268620|Email|102522746|||||||||||||||||||24|Y||richard.cox@fairstone.co.uk|1|||1
+58268621|Email|102522747|||||||||||||||||||24|Y||robert@mayfairprivatewealth.co.uk|1|||1
+58268626|Email|102522748|||||||||||||||||||24|Y||ray.pettitt@galleonwealth.co.uk|1|||1
+58268628|Email|102522739|||||||||||||||||||24|Y||robert@bakerhudson.com|1|||1
+58268630|Email|102522786|||||||||||||||||||24|Y||richard.jennings@afhgroup.com|1|||1
+58268632|Email|102522751|||||||||||||||||||24|Y||info@eastmillsltd.co.uk|1|||1
+58268633|Email|102522752|||||||||||||||||||24|Y||ramesh@psiamllp.com|1|||1
+58268634|Email|102522753|||||||||||||||||||24|Y||rwalker@clarionwealth.co.uk|1|||1
+58268635|Email|102522754|||||||||||||||||||24|Y||rbrocklehurst@astutepwltd.co.uk|1|||1
+58268636|Email|102522755|||||||||||||||||||24|Y||richardpook@visionifp.co.uk|1|||1
+58268637|Email|102522756|||||||||||||||||||24|Y||rachellegg@tpllp.com|1|||1
+58268637|Phone|95642127||||||||||||25|Y|MOBILE|GB||07958309878|+44 07958309878 |||||1||1|
+58268639|Email|102522757|||||||||||||||||||24|Y||robb@astuteip.co.uk|1|||1
+58268640|Email|102522758|||||||||||||||||||24|Y||ros@focusfp.co.uk|1|||1
+58268640|Phone|95672203||||||||||||25|N|Other|GB||07976230835|+4407976230835|||||1||1|
+58268641|Email|102522771|||||||||||||||||||24|Y||peter@mcclellandyarr.co.uk|1|||1
+58268642|Email|102522773|||||||||||||||||||24|Y||ross.baumann@carpenterbox.com|1|||1
+58268644|Email|102522772|||||||||||||||||||24|Y||rachael@jonesfinancial.co.uk|1|||1
+58268651|Email|102522774|||||||||||||||||||24|Y||roger@chalfontinvestments.co.uk|1|||1
+58268653|Email|102522775|||||||||||||||||||24|Y||cmc@cmcifa.co.uk|1|||1
+58268655|Email|102522776|||||||||||||||||||24|Y||simon.munday@prosperityifa.com|1|||1
+58268656|Email|102522777|||||||||||||||||||24|Y||sheree@landmarkgroup.org.uk|1|||1
+58268657|Email|102522778|||||||||||||||||||24|Y||stuart.mehrtens@radiantfinancial.co.uk|1|||1
+58268659|Email|102522779|||||||||||||||||||24|Y||sue@roseifa.co.uk|1|||1
+58268661|Email|102522780|||||||||||||||||||24|Y||steve.henry@amberriverea.com|1|||1
+58268662|Email|102522781|||||||||||||||||||24|Y||simon.brown@bphwealth.co.uk|1|||1
+58268662|Phone|95672160||||||||||||25|N|Other|GB||07831567529|+4407831567529|||||1||1|
+58268663|Email|102522782|||||||||||||||||||24|Y||simon.durkan@kingswood-group.com|1|||1
+58268665|Email|102522783|||||||||||||||||||24|Y||stevespeed@pandbifa.co.uk|1|||1
+58268665|Phone|95627223||||||||||||25|N|Other|GB||07802966962|+4407802966962|||||1||1|
+58268668|Email|102522784|||||||||||||||||||24|Y||sarah@awm-ifa.co.uk|1|||1
+58268669|Email|102522785|||||||||||||||||||24|Y||simon@jonesfinancial.co.uk|1|||1
+58268670|Email|102522787|||||||||||||||||||24|Y||swalker@tjfs.co.uk|1|||1
+58268671|Email|102522792|||||||||||||||||||24|Y||steve.cattle@tsandw.com|1|||1
+58268672|Email|102522793|||||||||||||||||||24|Y||simon@responsiblewealth.co.uk|1|||1
+58268673|Email|102522791|||||||||||||||||||24|Y||simon.lipscombe@sanctuarywealthplanning.co.uk|1|||1
+58268677|Email|102522790|||||||||||||||||||24|Y||simon@claruswealth.co.uk|1|||1
+58268678|Email|102522750|||||||||||||||||||24|Y||simon@anglo-celtic.co.uk|1|||1
+58268680|Email|102522741|||||||||||||||||||24|Y||stevejohnson@visionifp.co.uk|1|||1
+58268681|Email|102522736|||||||||||||||||||24|Y||swales@ripleywales.com|1|||1
+58268682|Email|102522735|||||||||||||||||||24|Y||steve.barton@sbartonfs.co.uk|1|||1
+58268683|Email|102522734|||||||||||||||||||24|Y||steve.bonney@hinedowningfs.com|1|||1
+58268684|Email|102522733|||||||||||||||||||24|Y||simon.lycett@oculuswealth.com|1|||1
+58268685|Email|102522732|||||||||||||||||||24|Y||sselby@mlifa.co.uk|1|||1
+58268686|Email|102522731|||||||||||||||||||24|Y||sarahwilliams@visionifp.co.uk|1|||1
+58268686|Phone|95627231||||||||||||25|N|Other|GB||07900676369|+4407900676369|||||1||1|
+58268688|Email|102522737|||||||||||||||||||24|Y|tracey.o'brien@benchmarkfp.co.uk|tracey.o'brien@benchmarkfp.co.uk|1|||1
+58268689|Email|102522718|||||||||||||||||||24|Y||tom@calderfinancial.co.uk|1|||1
+58268692|Email|102522728|||||||||||||||||||24|Y||tom.hyslop@russellgibson.co.uk|1|||1
+58268693|Email|102522729|||||||||||||||||||24|Y||tombutterly@tpllp.com|1|||1
+58268694|Email|102522730|||||||||||||||||||24|Y||tim.maakestad@cravenstreetwealth.com|1|||1
+58268695|Email|102522717|||||||||||||||||||24|Y||tim@westcountryfinancial.co.uk|1|||1
+58268696|Email|102522738|||||||||||||||||||24|Y||tom.gosling@finli.co.uk|1|||1
+58268697|Email|102522719|||||||||||||||||||24|Y||tim.dawson@pfgl.co.uk|1|||1
+58268698|Email|102522720|||||||||||||||||||24|Y||tking@thomsontyndall.com|1|||1
+58268699|Email|102522721|||||||||||||||||||24|Y||thomas@wealthwide.co.uk|1|||1
+58268699|Phone|95712162||||||||||||25|N|Other|GB||01216855060|+4401216855060|||||1||1|
+58268700|Email|102522722|||||||||||||||||||24|Y||tom@penguinwealth.com|1|||1
+58268704|Email|102522723|||||||||||||||||||24|Y||tony.gardiner@finli.co.uk|1|||1
+58268705|Email|102522724|||||||||||||||||||24|Y||tony.irving@armstrongwatson.co.uk|1|||1
+58268706|Email|102522725|||||||||||||||||||24|Y||willclarke@visionifp.co.uk|1|||1
+58268706|Phone|95627230||||||||||||25|N|Other|GB||07399975381|+4407399975381|||||1||1|
+58268707|Email|102522726|||||||||||||||||||24|Y||joe@amberrivercm.com|1|||1
+58268709|Email|102522727|||||||||||||||||||24|Y||wpoult1@aol.com|1|||1
+58268772|Email|102522804|||||||||||||||||||24|Y||jamesl@connorbroadley.co.uk|1|||1
+58268772|Phone|95627233||||||||||||25|N|Other|GB||07701357029|+4407701357029|||||1||1|
+58268787|Email|102522803|||||||||||||||||||24|Y||jonathan.burden@medicalandgeneral.co.uk|1|||1
+58268797|Email|102522802|||||||||||||||||||24|Y||diane.kennedy@policyservices.co.uk|1|||1
+58269885|Email|102527506|||||||||||||||||||25|Y|raj.manon@marlboroughgroup.com|raj.manon@marlboroughgroup.com|1|||1
+58269885|Phone|95587111||||||||||||24|Y||GB||07977 191074|+44 07977 191074|||||1||1|
+58271850|Email|102527714|||||||||||||||||||25|Y|moesha@thomsongray.co.uk|moesha@thomsongray.co.uk|1|||1
+58272421|Address|124338574|19|Y|N/A|||||N/A||GB|||||||||||||1|1||
+58274693|Address|124338882|23|Y|Low Wood|Alverston Avenue|Woodhall Spa|||Lincolnshire||GB|LN10 6SN||||||||||||1|1||
+58274693|Email|102537649|||||||||||||||||||23|Y|Home|graham-claydens@tiscali.co.uk|1|||1
+58274693|Phone|95622113||||||||||||23|Y||GB||07812957245|+44  07812957245|||||1||1|
+58274693|Phone|95667126||||||||||||23|N|MOBILE|GB||7812957245|+44 7812957245 |||||1||1|
+58274881|Address|124338907|23|Y|2 Armfield Close|||||Boston||GB|PE21 0JS||||||||||||1|1||
+58274881|Email|102537721|||||||||||||||||||23|Y||chriswade686@gmail.com|1|||1
+58274881|Phone|95622117||||||||||||23|Y||GB|44|7976634274|+44 44 7976634274|||||1||1|
+58274881|Phone|95667124||||||||||||23|N|MOBILE|GB||7976634274|+44 7976634274 |||||1||1|
+58275002|Address|124338920|23|Y|2 Armfield Close|||||Boston||GB|PE21 0JS||||||||||||1|1||
+58275002|Email|102537680|||||||||||||||||||23|Y|Home|maxene-wade@hotmail.co.uk|1|||1
+58275002|Phone|95667127||||||||||||23|N|MOBILE|GB||7968372776|+44 7968372776 |||||1||1|
+58275002|Phone|95622122||||||||||||23|Y||GB|44|7968372776|+44 44 7968372776|||||1||1|
+58275196|Address|124338939|23|Y|Low Wood|Alverston Avenue|Woodhall Spa|||Lincolnshire||GB|LN10 6SN||||||||||||1|1||
+58275196|Email|102537696|||||||||||||||||||23|Y|Home|grahamwade32@gmail.com|1|||1
+58275196|Phone|95667125||||||||||||23|N|MOBILE|GB||7976634272|+44 7976634272 |||||1||1|
+58275196|Phone|95627110||||||||||||23|Y||GB||07976634272|+44  07976634272|||||1||1|
+58276796|Address|124339111|19|Y|9 Midland Way|Barlborough||||Chesterfield||GB|S43 4XA||||||||||||1|1||
+58276818|Address|124339116|19|Y|750 Mandarin Court|||||Warrington|CHS|GB|WA1 1GG||||||||||||1|1||
+58277058|Address|124343579|27|Y|39 Halleys Ridge|||||Hertford||GB|SG14 2TQ||||||||||||1|1||
+58278890|Address|124358559|19|Y|29 Clement's Lane|||||London||GB|EC4N 7AE||||||||||||1|1||
+58279646|Address|124363565|19|Y|PO Box 4882|||||Worthing||GB|BN11 9UZ||||||||||||1|1||
+58279823|Address|124363597|27|Y|Church Farm House|Beckbury||||Shifnal|SHR|GB|TF11 9DG||||||||||||1|1||
+58284832|Address|124388642|27|Y|The Teag|Comprigney|Hill|||Truro||GB|TR1 3EE||||||||||||1|1||
+58284833|Address|124388643|27|Y|3 Highfield|Montford Bridge||||Shrewsbury||GB|SY4 1FA||||||||||||1|1||
+58285717|Address|124398650|19|Y|Birchin Court|20 Birchin Lane||||London||GB|EC3V 9DU||||||||||||1|1||
+58287872|Address|124413652|19|Y|57A High Street|Wimbledon|Merton|||London||GB|SW19 5EE||||||||||||1|1||
+58288840|Address|124428563|19|Y|88 Mudeford|||||Dorset||GB|BH23 4AS||||||||||||1|1||
+58289069|Address|124428594|23|Y|Flat 1 Poulett Lodge|Cross Deep||||Twickenham||GB|TW1 4QJ||||||||||||1|1||
+58289069|Email|102582494|||||||||||||||||||23|Y|Home|robchaundy@yahoo.com|1|||1
+58289122|Address|124428604|23|Y|24 Cromwell Road|||||Malvern||GB|WR14 1NA||||||||||||1|1||
+58289122|Email|102582501|||||||||||||||||||23|Y|Home|pchaundy@protonmail.com|1|||1
+58289137|Address|124428605|23|Y|2 Lansdown Terrace|||||Malvern||GB|WR14 2AR||||||||||||1|1||
+58289137|Email|102582502|||||||||||||||||||23|Y|Home|willchaundy@gmail.com|1|||1
+58289137|Phone|95792151||||||||||||23|Y|TELEPHONE|GB||01684 562258|+44 01684 562258 |||||1||1|
+58290095|Email|102587523|||||||||||||||||||25|Y|daniel.simmons@42wealth.com|daniel.simmons@42wealth.com|1|||1
+58290095|Phone|95712131||||||||||||24|Y||GB||07432 020205|+44 07432 020205|||||1||1|
+58294927|Address|124458642|23|Y|17 Beech Avenue|South Croydon||||Croydon||GB|CR2 0NN||||||||||||1|1||
+58294927|Email|102612539|||||||||||||||||||23|Y|Home|vrishtih18@gmail.com|1|||1
+58294927|Phone|95777128||||||||||||23|N|MOBILE|GB||7484269776|+44 7484269776 |||||1||1|
+58294927|Phone|95752172||||||||||||23|Y||GB||7484269776|+44 7484269776|||||1||1|
+58295609|Address|124458715|19|Y|Charter House|Sandford Street||||Lichfield||GB|WS13 6QA||||||||||||1|1||
+58297548|Address|124483590|19|Y|1350-1360 Montpellier Court|||||GL3 4AH||GB|||||||||||||1|1||
+58298328|Address|124483699|27|Y|Trenant|Point Garden|Devoran|||Truro|CON|GB|TR3 NJ||||||||||||1|1||
+58299197|Address|124488564|19|Y|Tower 42|25 Old Broad Street||||London||GB|EC2N 1HQ||||||||||||1|1||
+58299204|Address|124488566|19|Y|3rd Floor|Gaspe House|66-72 Esplanade|||St Helier||JE|JE1 2LH||||||||||||1|1||
+58299221|Address|124488568|19|Y|Tower 42|25 Old Broad Street||||London||GB|EC2N 1HQ||||||||||||1|1||
+58299231|Address|124488569|19|Y|C Walkers Corporate Bermuda|Park Place|55 Par-la-Ville|||Hamilton|BM|BM|||||||||||||1|1||
+58299236|Address|124488570|19|Y|3rd Floor|Gaspe House|66-72 Esplanade|||St Helier||JE|JE1 2LH||||||||||||1|1||
+58299236|Email|102642481|||||||||||||||||||19|Y|Office|l.abreu@igi-inex.com|1|||1
+58299236|Phone|95772174||||||||||||19|Y||GB|55|11964112836|+44 55 11964112836|||||1||1|
+58299253|Address|124488572|19|Y|3rd Floor|Gaspe House|66-72 Esplanade|||St Helier ||JE|JE1 2LH||||||||||||1|1||
+58299257|Address|124488573|19|Y|3rd Floor|Gaspe House|66-72 Esplanade|||St Helier||JE|JE1 2LH||||||||||||1|1||
+58299266|Address|124488575|19|Y|3rd Floor|Gaspe House|66-72 Esplanade|||St Helier||JE|JE1 2LH||||||||||||1|1||
+58299266|Email|102642483|||||||||||||||||||19|Y|Office|l.abreu@igi-index.com|1|||1
+58299266|Phone|95772176||||||||||||19|Y||GB|55|11964112836|+44 55 11964112836|||||1||1|
+58299272|Address|124488577|19|Y|The Hub Workspace Suite W302|Triq Sant'Andrija||||San Gwann||MT|SGN 1612||||||||||||1|1||
+58299282|Address|124488579|19|Y|The Hub Workspace Suite W302|Triq Sant'Andrija||||San Gwann||MT|SGN 1612||||||||||||1|1||
+58299282|Email|102642484|||||||||||||||||||19|Y|Office|o.vella@southcapital.com.mt|1|||1
+58299282|Phone|95772177||||||||||||19|Y||GB|49|1733497380|+44 49 1733497380|||||1||1|
+58299349|Address|124488593|19|Y|The Hub Workspace Suite W302|Triq Sant'Andrija||||San Gwann||MT|SGN 1612||||||||||||1|1||
+58299349|Email|102642491|||||||||||||||||||19|Y|Office|o.vella@southcapital.com.mt|1|||1
+58299349|Phone|95772183||||||||||||19|Y||GB|49|1733497380|+44 49 1733497380|||||1||1|
+58299367|Address|124488596|19|Y|The Hub Workspace Suite W302|Triq Sant'Andrija||||San Gwann||MT|SGN 1612||||||||||||1|1||
+58299367|Email|102642494|||||||||||||||||||19|Y|Office|o.vella@southcapital.co.mt|1|||1
+58299367|Phone|95772185||||||||||||19|Y||GB|49|1733497380|+44 49 1733497380|||||1||1|
+58299626|Address|124488628|23|Y|42 Dovehouse Fields|||||Lichfield||GB|WS14 9BH||||||||||||1|1||
+58299626|Email|102642518|||||||||||||||||||23|Y|Home|PKING42@sky.com|1|||1
+58299626|Phone|95777127||||||||||||23|N|MOBILE|GB||7592067747|+44 7592067747 |||||1||1|
+58299626|Phone|95772202||||||||||||23|Y||GB||7592067747|+44 7592067747|||||1||1|
+58300418|Address|124488738|19|Y|HM Revenue and Customs|||||Inheritance Tax||GB|BX9 1HT||||||||||||1|1||
+58303563|Email|102672495|||||||||||||||||||25|Y|tamara@kliskeyifs.co.uk|tamara@kliskeyifs.co.uk|1|||1
+58303563|Phone|95797130||||||||||||24|Y||GB||07918618552|+44 07918618552|||||1||1|
+58304024|Email|102672542|||||||||||||||||||25|Y|s.delfederico@alphaio.co.uk|s.delfederico@alphaio.co.uk|1|||1
+58304024|Phone|95797163||||||||||||24|Y||GB||07860 349107|+44 07860 349107|||||1||1|
+58304596|Address|124503706|19|Y|Wellington Row,|||||York ||GB|YO90 1WR||||||||||||1|1||
+58305145|Email|102682504|||||||||||||||||||25|Y|m.peterman@ingardifm.co.uk|m.peterman@ingardifm.co.uk|1|||1
+58305184|Address|124508621|23|Y|Flat 118|Globe Wharf|205 Rotherhithe Street|||London||GB|SE165XX||||||||||||1|1||
+58306704|Address|124508684|19|Y|1 Queens Square|Ascot Business Park|Lyndhurst Road|||Ascot|BER|GB|SL5 9FE||||||||||||1|1||
+58307120|Address|124508740|23|Y|10 The Avenue|||||Radlett|HFS|GB|WD7 7DJ||||||||||||1|1||
+58307120|Email|102692519|||||||||||||||||||23|Y|Home|malcolmblanks@hotmail.co.uk|1|||1
+58307120|Phone|95812169||||||||||||23|Y||GB||07836277327|+44  07836277327|||||1||1|
+58307273|Address|124508752|19|Y|Cannon Green|27 Bush Lane||||London||GB|EC4R 0AA||||||||||||1|1||
+58307967|Email|102697540|||||||||||||||||||25|Y|andrewbewick@tpllp.com|andrewbewick@tpllp.com|1|||1
+58307999|Address|124508839|24|Y|Brambledene House|20 Blackberry Way|Whitstable|||Kent||GB|CT5 3BS||||||||||||1|1||
+58307999|Email|102702485|||||||||||||||||||24|Y||m.peterman@ingardifm.co.uk|1|||1
+58307999|Phone|95817131||||||||||||23|Y|MOBILE|GB||07836214739|+44 07836214739 |||||1||1|
+58308366|Email|102702505|||||||||||||||||||24|Y||o.vella@southcapital.com.mt|1|||1
+58308366|Phone|95817136||||||||||||24|Y||DE|173|3497380|+49 173 3497380|||||1||1|
+58308367|Email|102702504|||||||||||||||||||24|Y||u.mex@southcapital.com.mt|1|||1
+58308367|Phone|95817135||||||||||||24|Y||DE|172|7939308|+49 172 7939308|||||1||1|
+58308691|Address|124513565|23|Y|Rua Juruna|50 Interlagos||||Sao Pualo||BR|04792-020||||||||||||1|1||
+58308691|Email|102707477|||||||||||||||||||23|Y|Home|w.schmidt@southcapitaldobrasil.com.br|1|||1
+58309535|Address|124518563|23|Y|4 Poltair Terrace|Heamoor||||Penzance||GB|TR18 3EG||||||||||||1|1||
+58309535|Email|102712475|||||||||||||||||||23|Y|Home|carmee2@hotmail.com|1|||1
+58309535|Phone|95822170||||||||||||23|Y||GB||7807227372|+44  7807227372|||||1||1|
+58309556|Address|124518567|23|Y|4 Poltair Terrace|Heamoor||||Penzance||GB|TR18 3EG||||||||||||1|1||
+58309556|Email|102712477|||||||||||||||||||23|Y|Home|jamesfad@hotmail.com|1|||1
+58309556|Phone|95822172||||||||||||23|Y||GB||7807226807|+44  7807226807|||||1||1|
+58309971|Address|124518628|19|Y|Av. Engenheiro Luiz Carlos Berrini, 550|4 andar|Sala 1|Cidade Moncoes||San Paulo||BR|04571-925||||||||||||1|1||
+58309983|Address|124518634|19|Y|Tower 42|20th Floor|25 Old Broad Street|||London||GB|EC2N 1HQ||||||||||||1|1||
+58309983|Email|102732474|||||||||||||||||||19|Y|Office|l.abreu@igi-inex.com|1|||1
+58309983|Phone|95822189||||||||||||19|Y||GB|55|11964112836|+44 55 11964112836|||||1||1|
+58310514|Address|124523626|19|Y|Building 2|Friern Park|North Finchley|||London||GB|N12 9DA||||||||||||1|1||
+58310514|Email|102737510|||||||||||||||||||19|Y|Office|john.lynch@bandonholdings.com|1|||1
+58310514|Phone|95832249||||||||||||19|Y||GB|020|84455272|+44 020 84455272|||||1||1|
+58310537|Address|124523650|23|Y|1 The Net Loft|Strand|Newlyn|||Penzance||GB|TR18 5HW||||||||||||1|1||
+58310537|Email|102737529|||||||||||||||||||23|Y|Home|kierenguy.mitchell@gmail.co.uk|1|||1
+58310537|Phone|95832266||||||||||||23|Y||GB|44|7738457367|+44 44 7738457367|||||1||1|
+58310537|Phone|95832277||||||||||||23|N|MOBILE|GB||7738457367|+44 7738457367 |||||1||1|
+58311194|Address|124523712|23|Y|4 Sundown Avenue|||||Croydon||GB|CR2 0RP||||||||||||1|1||
+58311194|Email|102742498|||||||||||||||||||23|Y|Home|sylvialampkin@gmail.com|1|||1
+58311219|Address|124523714|23|Y|4 Sundown Avenue|||||Croydon||GB|CR2 0RP||||||||||||1|1||
+58311219|Email|102742499|||||||||||||||||||23|Y|Home|terrylampkin@gmail.com|1|||1
+58311219|Phone|95837141||||||||||||23|Y||GB|44|7768453310|+44 44 7768453310|||||1||1|
+701243|Address|8312234|19|Y|Suffolk Life|153 Princes Street||||Ipswich|PR|GB|IP1 1QJ||||||||||||1|1||
+701304|Address|8334339|19|Y|Navan Business Park|Athlumney||||Navan|MH|IE|C15 CCW8||||||||||||1|1||
+Total Number of Records: |1905

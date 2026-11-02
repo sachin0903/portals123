@@ -1,0 +1,16 @@
+[
+  {
+    "id": "prov-f8e9c763",
+    "name": "portfolio-channel",
+    "type": "slack",
+    "mode": "Socket Mode",
+    "status": "connected",
+    "channels": 0,
+    "lastEvent": "never",
+    "workspaceId": "T0B2L1FQVKL",
+    "botToken": "xoxb-11088049845666-11088084167234-yeCF58UjS6hHcewQQIxNDzbc",
+    "appToken": "xapp-1-A0B2L2FFTT4-11300525270739-ae6b7efc86e7f2b2e5a66c83e2c81554310817c5ea5ebca7e9ff4e2c2312b365",
+    "signingSecret": "73faa1d4ba395de9f8a4dc291bb6ede1",
+    "createdAt": "2026-06-08"
+  }
+]

@@ -1,0 +1,49 @@
+[
+  {
+    "id": "llm-anthropic",
+    "name": "Anthropic Claude",
+    "type": "anthropic",
+    "models": [
+      "claude-opus-4-8",
+      "claude-sonnet-4-6",
+      "claude-haiku-4-5"
+    ],
+    "activeModel": "claude-sonnet-4-6",
+    "active": true,
+    "apiKey": "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",
+    "dataResidency": "US/EU (SaaS)",
+    "usageToday": 0,
+    "costToday": 0
+  },
+  {
+    "id": "llm-openai",
+    "name": "OpenAI",
+    "type": "openai",
+    "models": [
+      "gpt-4o",
+      "gpt-4-turbo",
+      "gpt-4o-mini"
+    ],
+    "activeModel": "gpt-4o",
+    "active": false,
+    "apiKey": "",
+    "dataResidency": "US (SaaS)",
+    "usageToday": 0,
+    "costToday": 0
+  },
+  {
+    "id": "llm-bedrock",
+    "name": "AWS Bedrock",
+    "type": "bedrock",
+    "models": [
+      "anthropic.claude-3-5-sonnet",
+      "anthropic.claude-3-opus"
+    ],
+    "activeModel": "anthropic.claude-3-5-sonnet",
+    "active": false,
+    "apiKey": "",
+    "dataResidency": "Customer VPC (recommended for regulated)",
+    "usageToday": 0,
+    "costToday": 0
+  }
+]

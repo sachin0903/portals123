@@ -1,0 +1,1513 @@
+ENTITY_ID|EMPLOYEE_ROLE_ID|EMPLOYEE_ROLE_DESCRIPTION|EMPLOYEE_TEAM_ID|EMPLOYEE_TEAM_DESCRIPTION|PRIMARY_TEAM_FLAG
+57817506|500575|Operations|200081|Administration|N
+57817507|500580|Self-Service Reporting|200081|Administration|Y
+57817508|500575|Operations|200081|Administration|Y
+57817508|500580|Self-Service Reporting|200081|Administration|Y
+57817509|500580|Self-Service Reporting|200081|Administration|Y
+57817512|500580|Self-Service Reporting|200081|Administration|N
+57817513|500580|Self-Service Reporting|200081|Administration|Y
+57817516|500575|Operations|200081|Administration|Y
+57817519|500580|Self-Service Reporting|200081|Administration|Y
+57817521|500575|Operations|200081|Administration|Y
+57817526|500575|Operations|200081|Administration|Y
+57817527|500575|Operations|200081|Administration|Y
+57818518|500575|Operations|200081|Administration|Y
+57817496|500575|Operations|200081|Administration|Y
+57817497|500575|Operations|200081|Administration|Y
+57817498|500575|Operations|200081|Administration|N
+57817500|500580|Self-Service Reporting|200081|Administration|Y
+57817504|500575|Operations|200081|Administration|N
+57817504|500580|Self-Service Reporting|200081|Administration|N
+57817505|500575|Operations|200081|Administration|N
+58234142|500575|Operations|200081|Administration|N
+58242274|500575|Operations|200081|Administration|Y
+58242275|500575|Operations|200081|Administration|Y
+58261078|500575|Operations|200081|Administration|Y
+58261929|500575|Operations|200081|Administration|Y
+58071127|500575|Operations|200081|Administration|Y
+58071127|500580|Self-Service Reporting|200081|Administration|Y
+58071138|500580|Self-Service Reporting|200081|Administration|Y
+58071970|500580|Self-Service Reporting|200081|Administration|Y
+58071971|500580|Self-Service Reporting|200081|Administration|Y
+58071972|500580|Self-Service Reporting|200081|Administration|Y
+58250001|||200081|Administration|Y
+58252439|500575|Operations|200081|Administration|N
+57817512|500574|Investment Manager|200082|Investment Management|N
+57817515|500589|Dealing Trainee|200082|Investment Management|Y
+57817515|500574|Investment Manager|200082|Investment Management|Y
+57817518|500574|Investment Manager|200082|Investment Management|Y
+57817525|500588|Investment Decision Maker|200082|Investment Management|N
+57817525|500574|Investment Manager|200082|Investment Management|N
+57817502|500588|Investment Decision Maker|200082|Investment Management|N
+57817502|500574|Investment Manager|200082|Investment Management|N
+58234142|||200082|Investment Management|Y
+58252427|||200082|Investment Management|Y
+58252439|||200082|Investment Management|Y
+57817505|500572|Finance|200083|Finance|Y
+57817506|500572|Finance|200083|Finance|Y
+57817504|500572|Finance|200083|Finance|Y
+57817512|500578|Model Administration|200084|Model Administration|N
+57817512|500585|PME System Administration|200084|Model Administration|N
+57817515|500578|Model Administration|200084|Model Administration|N
+57817515|500585|PME System Administration|200084|Model Administration|N
+57817518|500578|Model Administration|200084|Model Administration|N
+57817518|500585|PME System Administration|200084|Model Administration|N
+57817525|500578|Model Administration|200084|Model Administration|N
+57817502|500578|Model Administration|200084|Model Administration|N
+57994765|500571|Compliance|200086|Compliance|Y
+57817512|500571|Compliance|200086|Compliance|Y
+57817521|500571|Compliance|200086|Compliance|N
+57817522|500571|Compliance|200086|Compliance|N
+57817525|500571|Compliance|200086|Compliance|Y
+57817527|500571|Compliance|200086|Compliance|N
+57818518|500571|Compliance|200086|Compliance|N
+57817496|500571|Compliance|200086|Compliance|N
+57817502|500571|Compliance|200086|Compliance|Y
+58261078|500571|Compliance|200086|Compliance|N
+57817507|500569|Staff Read-Only|200087|Management|N
+57817508|500569|Staff Read-Only|200087|Management|N
+57817509|500569|Staff Read-Only|200087|Management|N
+57817510|500569|Staff Read-Only|200087|Management|Y
+57817511|500569|Staff Read-Only|200087|Management|N
+57817513|500569|Staff Read-Only|200087|Management|N
+57817514|60252|Employee User Provisioning|200087|Management|Y
+57817514|500569|Staff Read-Only|200087|Management|Y
+57817517|500569|Staff Read-Only|200087|Management|Y
+57817519|500569|Staff Read-Only|200087|Management|N
+57817520|500569|Staff Read-Only|200087|Management|Y
+57817522|500569|Staff Read-Only|200087|Management|Y
+57817523|500569|Staff Read-Only|200087|Management|Y
+57817524|500569|Staff Read-Only|200087|Management|Y
+57817528|500569|Staff Read-Only|200087|Management|Y
+57817529|500569|Staff Read-Only|200087|Management|Y
+57817530|500569|Staff Read-Only|200087|Management|Y
+57817531|500569|Staff Read-Only|200087|Management|Y
+57817532|500569|Staff Read-Only|200087|Management|Y
+57817533|500569|Staff Read-Only|200087|Management|Y
+57817534|500569|Staff Read-Only|200087|Management|Y
+57817535|500569|Staff Read-Only|200087|Management|Y
+57817536|500569|Staff Read-Only|200087|Management|Y
+57817537|500569|Staff Read-Only|200087|Management|Y
+57817538|500569|Staff Read-Only|200087|Management|Y
+57817539|500569|Staff Read-Only|200087|Management|Y
+57823997|500569|Staff Read-Only|200087|Management|Y
+57817498|500569|Staff Read-Only|200087|Management|Y
+57817499|500569|Staff Read-Only|200087|Management|Y
+57817500|500569|Staff Read-Only|200087|Management|N
+57817501|500569|Staff Read-Only|200087|Management|Y
+57817503|500569|Staff Read-Only|200087|Management|Y
+58071127|500569|Staff Read-Only|200087|Management|N
+58071138|500569|Staff Read-Only|200087|Management|N
+58071970|500569|Staff Read-Only|200087|Management|N
+58071971|500569|Staff Read-Only|200087|Management|N
+58071972|500569|Staff Read-Only|200087|Management|N
+57817516|500575|Operations|200090|Client Accounts|N
+57817526|500575|Operations|200090|Client Accounts|N
+58012501|500600|External Client Service|200115|Administration|N
+58012501|500602|External Operations|200115|Administration|N
+58012502|500600|External Client Service|200115|Administration|N
+58012502|500602|External Operations|200115|Administration|N
+58012503|500740|Select - Client Service|200115|Administration|N
+58012503|500741|Select - Operations|200115|Administration|N
+58012504|500600|External Client Service|200115|Administration|N
+58012504|500602|External Operations|200115|Administration|N
+58012505|500600|External Client Service|200115|Administration|N
+58012505|500602|External Operations|200115|Administration|N
+58012506|500600|External Client Service|200115|Administration|N
+58012506|500602|External Operations|200115|Administration|N
+58012507|500609|Trade Capture|200115|Administration|N
+58012507|500740|Select - Client Service|200115|Administration|N
+58012507|500741|Select - Operations|200115|Administration|N
+58012507|500754|Enrolment Approver|200115|Administration|N
+58012508|60263|CSM Access Only|200115|Administration|N
+58012508|500609|Trade Capture|200115|Administration|N
+58012508|500740|Select - Client Service|200115|Administration|N
+58012508|500741|Select - Operations|200115|Administration|N
+58012508|500754|Enrolment Approver|200115|Administration|N
+58012511|60263|CSM Access Only|200115|Administration|N
+58012511|500609|Trade Capture|200115|Administration|N
+58012511|500741|Select - Operations|200115|Administration|N
+58012511|500754|Enrolment Approver|200115|Administration|N
+58280596|60263|CSM Access Only|200115|Administration|Y
+58280596|500600|External Client Service|200115|Administration|Y
+58280596|500602|External Operations|200115|Administration|Y
+58280596|500609|Trade Capture|200115|Administration|Y
+58280596|500754|Enrolment Approver|200115|Administration|Y
+58069166|60263|CSM Access Only|200115|Administration|N
+58069166|500609|Trade Capture|200115|Administration|N
+58069166|500741|Select - Operations|200115|Administration|N
+58069166|500754|Enrolment Approver|200115|Administration|N
+58012508|500601|Investment Manager|200116|Investment Management|N
+58012511|500601|Investment Manager|200116|Investment Management|N
+58012512|500601|Investment Manager|200116|Investment Management|Y
+58012512|500614|Investment Decision Maker|200116|Investment Management|Y
+58012513|500601|Investment Manager|200116|Investment Management|Y
+58012514|500601|Investment Manager|200116|Investment Management|Y
+58012514|500614|Investment Decision Maker|200116|Investment Management|Y
+58012515|500601|Investment Manager|200116|Investment Management|Y
+58012515|500614|Investment Decision Maker|200116|Investment Management|Y
+58012516|500601|Investment Manager|200116|Investment Management|Y
+58012516|500614|Investment Decision Maker|200116|Investment Management|Y
+58012517|500601|Investment Manager|200116|Investment Management|Y
+58012517|500614|Investment Decision Maker|200116|Investment Management|Y
+58111621|500601|Investment Manager|200116|Investment Management|Y
+58111621|500614|Investment Decision Maker|200116|Investment Management|Y
+58269885|500601|Investment Manager|200116|Investment Management|N
+58269885|500614|Investment Decision Maker|200116|Investment Management|N
+58269895|500601|Investment Manager|200116|Investment Management|N
+58269895|500614|Investment Decision Maker|200116|Investment Management|N
+58269907|500601|Investment Manager|200116|Investment Management|N
+58269907|500614|Investment Decision Maker|200116|Investment Management|N
+58269912|500601|Investment Manager|200116|Investment Management|N
+58269912|500614|Investment Decision Maker|200116|Investment Management|N
+58290095|500601|Investment Manager|200116|Investment Management|N
+58290095|500614|Investment Decision Maker|200116|Investment Management|N
+58290099|500601|Investment Manager|200116|Investment Management|N
+58292102|500601|Investment Manager|200116|Investment Management|N
+58012507|500599|Finance|200117|Finance|N
+58012508|500599|Finance|200117|Finance|N
+58012511|500599|Finance|200117|Finance|N
+58280596|500599|Finance|200117|Finance|N
+58069166|500599|Finance|200117|Finance|N
+58012508|500591|PME System Administration|200118|Strategy Administration|N
+58012508|500605|Model Administration|200118|Strategy Administration|N
+58012511|500591|PME System Administration|200118|Strategy Administration|N
+58012511|500605|Model Administration|200118|Strategy Administration|N
+58012512|500613|Team Model Administration|200118|Strategy Administration|N
+58012512|500591|PME System Administration|200118|Strategy Administration|N
+58012514|500613|Team Model Administration|200118|Strategy Administration|N
+58012514|500591|PME System Administration|200118|Strategy Administration|N
+58012516|500613|Team Model Administration|200118|Strategy Administration|N
+58012516|500591|PME System Administration|200118|Strategy Administration|N
+58012517|500613|Team Model Administration|200118|Strategy Administration|N
+58012517|500591|PME System Administration|200118|Strategy Administration|N
+58111621|500613|Team Model Administration|200118|Strategy Administration|N
+58111621|500591|PME System Administration|200118|Strategy Administration|N
+58280596|500591|PME System Administration|200118|Strategy Administration|N
+58280596|500605|Model Administration|200118|Strategy Administration|N
+58269885|500613|Team Model Administration|200118|Strategy Administration|N
+58269885|500591|PME System Administration|200118|Strategy Administration|N
+58269895|500613|Team Model Administration|200118|Strategy Administration|N
+58269895|500591|PME System Administration|200118|Strategy Administration|N
+58269907|500613|Team Model Administration|200118|Strategy Administration|N
+58269907|500591|PME System Administration|200118|Strategy Administration|N
+58269912|500613|Team Model Administration|200118|Strategy Administration|N
+58269912|500591|PME System Administration|200118|Strategy Administration|N
+58069166|500591|PME System Administration|200118|Strategy Administration|N
+58069166|500605|Model Administration|200118|Strategy Administration|N
+58012501|||200119|Marlborough Service Team|Y
+58012502|||200119|Marlborough Service Team|Y
+58012503|||200119|Marlborough Service Team|Y
+58012504|||200119|Marlborough Service Team|Y
+58012505|||200119|Marlborough Service Team|Y
+58012506|||200119|Marlborough Service Team|Y
+58012507|||200119|Marlborough Service Team|Y
+58012508|||200119|Marlborough Service Team|N
+58012511|||200119|Marlborough Service Team|N
+58012512|||200119|Marlborough Service Team|N
+58012514|||200119|Marlborough Service Team|N
+58012515|||200119|Marlborough Service Team|N
+58012516|||200119|Marlborough Service Team|N
+58012517|||200119|Marlborough Service Team|N
+58111621|||200119|Marlborough Service Team|N
+58280596|||200119|Marlborough Service Team|N
+58269885|||200119|Marlborough Service Team|N
+58269895|||200119|Marlborough Service Team|N
+58269907|||200119|Marlborough Service Team|N
+58269912|||200119|Marlborough Service Team|N
+58069166|||200119|Marlborough Service Team|N
+58012508|500598|Compliance|200120|Compliance|N
+58012511|500598|Compliance|200120|Compliance|N
+58280596|500598|Compliance|200120|Compliance|N
+58069166|500598|Compliance|200120|Compliance|N
+58012501|500607|Self-Service Reporting|200121|Management|N
+58012502|500607|Self-Service Reporting|200121|Management|N
+58012503|500607|Self-Service Reporting|200121|Management|N
+58012504|500607|Self-Service Reporting|200121|Management|N
+58012505|500607|Self-Service Reporting|200121|Management|N
+58012506|500607|Self-Service Reporting|200121|Management|N
+58012507|500607|Self-Service Reporting|200121|Management|N
+58012508|500596|Staff Read-Only|200121|Management|Y
+58012508|500607|Self-Service Reporting|200121|Management|Y
+58012511|500596|Staff Read-Only|200121|Management|Y
+58012511|500607|Self-Service Reporting|200121|Management|Y
+58012512|500607|Self-Service Reporting|200121|Management|N
+58012513|500607|Self-Service Reporting|200121|Management|N
+58012514|500607|Self-Service Reporting|200121|Management|N
+58012515|500607|Self-Service Reporting|200121|Management|N
+58012516|500607|Self-Service Reporting|200121|Management|N
+58012517|500607|Self-Service Reporting|200121|Management|N
+58111621|500607|Self-Service Reporting|200121|Management|N
+58280596|500596|Staff Read-Only|200121|Management|N
+58280596|500607|Self-Service Reporting|200121|Management|N
+58269885|500607|Self-Service Reporting|200121|Management|N
+58069166|500596|Staff Read-Only|200121|Management|Y
+58069166|500607|Self-Service Reporting|200121|Management|Y
+58304001|60264|CSM Access Only|200144|Administration|N
+58304001|500670|Client Service|200144|Administration|N
+58304001|500672|Operations|200144|Administration|N
+58304001|500747|Ops Approver|200144|Administration|N
+58304002|60264|CSM Access Only|200144|Administration|N
+58304002|500670|Client Service|200144|Administration|N
+58304002|500672|Operations|200144|Administration|N
+58304002|500747|Ops Approver|200144|Administration|N
+58304019|60264|CSM Access Only|200144|Administration|N
+58304019|500670|Client Service|200144|Administration|N
+58304019|500672|Operations|200144|Administration|N
+58304019|500747|Ops Approver|200144|Administration|N
+58304022|60264|CSM Access Only|200144|Administration|N
+58304022|500670|Client Service|200144|Administration|N
+58304022|500672|Operations|200144|Administration|N
+58304022|500747|Ops Approver|200144|Administration|N
+58303267|60264|CSM Access Only|200144|Administration|N
+58303267|500670|Client Service|200144|Administration|N
+58303267|500672|Operations|200144|Administration|N
+58304001|500671|Investment Manager|200145|Investment Management|N
+58304001|500673|Investment Analyst|200145|Investment Management|N
+58304002|500671|Investment Manager|200145|Investment Management|N
+58304002|500673|Investment Analyst|200145|Investment Management|N
+58304019|500671|Investment Manager|200145|Investment Management|N
+58304019|500673|Investment Analyst|200145|Investment Management|N
+58304022|500671|Investment Manager|200145|Investment Management|N
+58304022|500673|Investment Analyst|200145|Investment Management|N
+58304024|500671|Investment Manager|200145|Investment Management|N
+58304024|500673|Investment Analyst|200145|Investment Management|N
+58304024|500742|Investment Decision Maker|200145|Investment Management|N
+58304063|500671|Investment Manager|200145|Investment Management|N
+58304063|500673|Investment Analyst|200145|Investment Management|N
+58304063|500742|Investment Decision Maker|200145|Investment Management|N
+58303267|500671|Investment Manager|200145|Investment Management|N
+58303267|500673|Investment Analyst|200145|Investment Management|N
+58304001|500669|Finance|200146|Finance|N
+58304002|500669|Finance|200146|Finance|N
+58304019|500669|Finance|200146|Finance|N
+58304022|500669|Finance|200146|Finance|N
+58303267|500669|Finance|200146|Finance|N
+58304001|500661|PME System Administration|200147|Alpha Model Administration|N
+58304001|500675|Team Model Administrator|200147|Alpha Model Administration|N
+58304002|500661|PME System Administration|200147|Alpha Model Administration|N
+58304002|500675|Team Model Administrator|200147|Alpha Model Administration|N
+58304019|500661|PME System Administration|200147|Alpha Model Administration|N
+58304019|500675|Team Model Administrator|200147|Alpha Model Administration|N
+58304022|500661|PME System Administration|200147|Alpha Model Administration|N
+58304022|500675|Team Model Administrator|200147|Alpha Model Administration|N
+58303267|500661|PME System Administration|200147|Alpha Model Administration|N
+58303267|500675|Team Model Administrator|200147|Alpha Model Administration|N
+58304001|500737|Branch Administrator|200148|Alpha Investment Office|Y
+58304002|500737|Branch Administrator|200148|Alpha Investment Office|Y
+58304013|500737|Branch Administrator|200148|Alpha Investment Office|Y
+58304019|500737|Branch Administrator|200148|Alpha Investment Office|Y
+58304022|500737|Branch Administrator|200148|Alpha Investment Office|Y
+58304024|500737|Branch Administrator|200148|Alpha Investment Office|Y
+58304063|500737|Branch Administrator|200148|Alpha Investment Office|Y
+58303267|500739|Paraplanner|200148|Alpha Investment Office|N
+58304001|500668|Compliance|200149|Compliance|N
+58304002|500668|Compliance|200149|Compliance|N
+58304019|500668|Compliance|200149|Compliance|N
+58304022|500668|Compliance|200149|Compliance|N
+58303267|500668|Compliance|200149|Compliance|N
+58303267|500677|Self-Service Reporting|200150|Oversight|N
+58303267|||200152|SEI Validation Team|N
+58304001|500663|ECX Content Creator|200153|System Administration|N
+58304001|500664|ECX Content Approver|200153|System Administration|N
+58304002|500663|ECX Content Creator|200153|System Administration|N
+58304002|500664|ECX Content Approver|200153|System Administration|N
+58304019|500663|ECX Content Creator|200153|System Administration|N
+58304019|500664|ECX Content Approver|200153|System Administration|N
+58304022|500663|ECX Content Creator|200153|System Administration|N
+58304022|500664|ECX Content Approver|200153|System Administration|N
+58303267|500663|ECX Content Creator|200153|System Administration|N
+58303267|500664|ECX Content Approver|200153|System Administration|N
+58303267|||200154|User Provisioning|Y
+58012507|||200177|42 Wealth Management|N
+58012508|||200177|42 Wealth Management|N
+58012511|||200177|42 Wealth Management|N
+58280596|||200177|42 Wealth Management|N
+58290095|||200177|42 Wealth Management|Y
+58290097|||200177|42 Wealth Management|Y
+58290098|||200177|42 Wealth Management|Y
+58290099|||200177|42 Wealth Management|Y
+58292102|||200177|42 Wealth Management|Y
+58069166|||200177|42 Wealth Management|N
+58012507|||200177|42 Wealth Management|N
+58012508|||200177|42 Wealth Management|N
+58012511|||200177|42 Wealth Management|N
+58280596|||200177|42 Wealth Management|N
+58290095|500610|Adviser|200177|42 Wealth Management|Y
+58290097|||200177|42 Wealth Management|Y
+58290098|||200177|42 Wealth Management|Y
+58290099|||200177|42 Wealth Management|Y
+58292102|||200177|42 Wealth Management|Y
+58069166|||200177|42 Wealth Management|N
+58012507|||200178|42 Wealth Service Team|N
+58012508|||200178|42 Wealth Service Team|N
+58012511|||200178|42 Wealth Service Team|N
+58280596|||200178|42 Wealth Service Team|N
+58290095|||200178|42 Wealth Service Team|N
+58290097|||200178|42 Wealth Service Team|N
+58290098|||200178|42 Wealth Service Team|N
+58290099|||200178|42 Wealth Service Team|N
+58292102|||200178|42 Wealth Service Team|N
+58069166|||200178|42 Wealth Service Team|N
+57817510|500584|Marketing|409560|Systems Support|N
+57817511|500584|Marketing|409560|Systems Support|Y
+57817520|500584|Marketing|409560|Systems Support|N
+57817503|500584|Marketing|409560|Systems Support|N
+58242276|500590|User Request Administrator|409560|Systems Support|Y
+58012492|500587|Adviser|703610|Adviser|Y
+58012495|||703610|Adviser|Y
+57820278|500587|Adviser|703610|Adviser|Y
+57820353|500587|Adviser|703610|Adviser|Y
+57820354|500587|Adviser|703610|Adviser|Y
+57820355|500587|Adviser|703610|Adviser|Y
+57820356|500587|Adviser|703610|Adviser|Y
+57820357|500587|Adviser|703610|Adviser|Y
+57820358|500587|Adviser|703610|Adviser|Y
+57820359|500587|Adviser|703610|Adviser|Y
+57820360|500587|Adviser|703610|Adviser|Y
+57820361|500587|Adviser|703610|Adviser|Y
+57820362|500587|Adviser|703610|Adviser|Y
+57820363|500587|Adviser|703610|Adviser|Y
+57820364|500587|Adviser|703610|Adviser|Y
+57820365|500587|Adviser|703610|Adviser|Y
+57820366|500587|Adviser|703610|Adviser|Y
+57820367|500587|Adviser|703610|Adviser|Y
+57820368|500587|Adviser|703610|Adviser|Y
+57820369|500587|Adviser|703610|Adviser|Y
+57820370|500587|Adviser|703610|Adviser|Y
+57820371|500587|Adviser|703610|Adviser|Y
+57820372|500587|Adviser|703610|Adviser|Y
+57820373|500587|Adviser|703610|Adviser|Y
+57820374|500587|Adviser|703610|Adviser|Y
+57820375|500587|Adviser|703610|Adviser|Y
+57820376|500587|Adviser|703610|Adviser|Y
+57820377|500587|Adviser|703610|Adviser|Y
+57820378|500587|Adviser|703610|Adviser|Y
+57820379|500587|Adviser|703610|Adviser|Y
+57820380|500587|Adviser|703610|Adviser|Y
+57820381|500587|Adviser|703610|Adviser|Y
+57820382|500587|Adviser|703610|Adviser|Y
+57820383|500587|Adviser|703610|Adviser|Y
+57820384|500587|Adviser|703610|Adviser|Y
+57820385|500587|Adviser|703610|Adviser|Y
+57820386|500587|Adviser|703610|Adviser|Y
+57820387|500587|Adviser|703610|Adviser|Y
+57820388|500587|Adviser|703610|Adviser|Y
+57820389|500587|Adviser|703610|Adviser|Y
+57820390|500587|Adviser|703610|Adviser|Y
+57820391|500587|Adviser|703610|Adviser|Y
+57820392|500587|Adviser|703610|Adviser|Y
+57820393|500587|Adviser|703610|Adviser|Y
+57820394|500587|Adviser|703610|Adviser|Y
+57820395|500587|Adviser|703610|Adviser|Y
+57820396|500587|Adviser|703610|Adviser|Y
+57820397|500587|Adviser|703610|Adviser|Y
+57820398|500587|Adviser|703610|Adviser|Y
+57820399|500587|Adviser|703610|Adviser|Y
+57820400|500587|Adviser|703610|Adviser|Y
+57820401|500587|Adviser|703610|Adviser|Y
+57820402|500587|Adviser|703610|Adviser|Y
+57820403|500587|Adviser|703610|Adviser|Y
+57820404|500587|Adviser|703610|Adviser|Y
+57820405|500587|Adviser|703610|Adviser|Y
+57820406|500587|Adviser|703610|Adviser|Y
+57820407|500587|Adviser|703610|Adviser|Y
+57820408|500587|Adviser|703610|Adviser|Y
+57820409|500587|Adviser|703610|Adviser|Y
+57820410|500587|Adviser|703610|Adviser|Y
+57820411|500587|Adviser|703610|Adviser|Y
+57820412|500587|Adviser|703610|Adviser|Y
+57820413|500587|Adviser|703610|Adviser|Y
+57820414|500587|Adviser|703610|Adviser|Y
+57820415|500587|Adviser|703610|Adviser|Y
+57820416|500587|Adviser|703610|Adviser|Y
+57820417|500587|Adviser|703610|Adviser|Y
+57820418|500587|Adviser|703610|Adviser|Y
+57820419|500587|Adviser|703610|Adviser|Y
+57820420|500587|Adviser|703610|Adviser|Y
+57820421|500587|Adviser|703610|Adviser|Y
+57820422|500587|Adviser|703610|Adviser|Y
+57820423|500587|Adviser|703610|Adviser|Y
+57820424|500587|Adviser|703610|Adviser|Y
+57820425|500587|Adviser|703610|Adviser|Y
+57820426|500587|Adviser|703610|Adviser|Y
+57820427|500587|Adviser|703610|Adviser|Y
+57820428|500587|Adviser|703610|Adviser|Y
+57820429|500587|Adviser|703610|Adviser|Y
+57820430|500587|Adviser|703610|Adviser|Y
+57820431|500587|Adviser|703610|Adviser|Y
+57820432|500587|Adviser|703610|Adviser|Y
+57820433|500587|Adviser|703610|Adviser|Y
+57820434|500587|Adviser|703610|Adviser|Y
+57820435|500587|Adviser|703610|Adviser|Y
+57820436|500587|Adviser|703610|Adviser|Y
+57820437|500587|Adviser|703610|Adviser|Y
+57820438|500587|Adviser|703610|Adviser|Y
+57820439|500587|Adviser|703610|Adviser|Y
+57820440|500587|Adviser|703610|Adviser|Y
+57820441|500587|Adviser|703610|Adviser|Y
+57820442|500587|Adviser|703610|Adviser|Y
+57820443|500587|Adviser|703610|Adviser|Y
+57820444|500587|Adviser|703610|Adviser|Y
+57820445|500587|Adviser|703610|Adviser|Y
+57820446|500587|Adviser|703610|Adviser|Y
+57820447|500587|Adviser|703610|Adviser|Y
+57820448|500587|Adviser|703610|Adviser|Y
+57820449|500587|Adviser|703610|Adviser|Y
+57820450|500587|Adviser|703610|Adviser|Y
+57820451|500587|Adviser|703610|Adviser|Y
+57820452|500587|Adviser|703610|Adviser|Y
+57820453|500587|Adviser|703610|Adviser|Y
+57820454|500587|Adviser|703610|Adviser|Y
+57820455|500587|Adviser|703610|Adviser|Y
+57820456|500587|Adviser|703610|Adviser|Y
+57820457|500587|Adviser|703610|Adviser|Y
+57820458|500587|Adviser|703610|Adviser|Y
+57820459|500587|Adviser|703610|Adviser|Y
+57820460|500587|Adviser|703610|Adviser|Y
+57820461|500587|Adviser|703610|Adviser|Y
+57820462|500587|Adviser|703610|Adviser|Y
+57820463|500587|Adviser|703610|Adviser|Y
+57820464|500587|Adviser|703610|Adviser|Y
+57820465|500587|Adviser|703610|Adviser|Y
+57820466|500587|Adviser|703610|Adviser|Y
+57820467|500587|Adviser|703610|Adviser|Y
+57820468|500587|Adviser|703610|Adviser|Y
+57820469|500587|Adviser|703610|Adviser|Y
+57820470|500587|Adviser|703610|Adviser|Y
+57820471|500587|Adviser|703610|Adviser|Y
+57820472|500587|Adviser|703610|Adviser|Y
+57820473|500587|Adviser|703610|Adviser|Y
+57820474|500587|Adviser|703610|Adviser|Y
+57820475|500587|Adviser|703610|Adviser|Y
+57820476|500587|Adviser|703610|Adviser|Y
+57820477|500587|Adviser|703610|Adviser|Y
+57820478|500587|Adviser|703610|Adviser|Y
+57820479|500587|Adviser|703610|Adviser|Y
+57820480|500587|Adviser|703610|Adviser|Y
+57820481|500587|Adviser|703610|Adviser|Y
+57820482|500587|Adviser|703610|Adviser|Y
+57820483|500587|Adviser|703610|Adviser|Y
+57820484|500587|Adviser|703610|Adviser|Y
+57820485|500587|Adviser|703610|Adviser|Y
+57820486|500587|Adviser|703610|Adviser|Y
+57820487|500587|Adviser|703610|Adviser|Y
+57820488|500587|Adviser|703610|Adviser|Y
+57820489|500587|Adviser|703610|Adviser|Y
+57820490|500587|Adviser|703610|Adviser|Y
+57820491|500587|Adviser|703610|Adviser|Y
+57820492|500587|Adviser|703610|Adviser|Y
+57820493|500587|Adviser|703610|Adviser|Y
+57820494|500587|Adviser|703610|Adviser|Y
+57820495|500587|Adviser|703610|Adviser|Y
+57820496|500587|Adviser|703610|Adviser|Y
+57820497|500587|Adviser|703610|Adviser|Y
+57820498|500587|Adviser|703610|Adviser|Y
+57820499|500587|Adviser|703610|Adviser|Y
+57820500|500587|Adviser|703610|Adviser|Y
+57820501|500587|Adviser|703610|Adviser|Y
+57820502|500587|Adviser|703610|Adviser|Y
+57820503|500587|Adviser|703610|Adviser|Y
+57820504|500587|Adviser|703610|Adviser|Y
+57820505|500587|Adviser|703610|Adviser|Y
+57820506|500587|Adviser|703610|Adviser|Y
+57820507|500587|Adviser|703610|Adviser|Y
+57820508|500587|Adviser|703610|Adviser|Y
+57820509|500587|Adviser|703610|Adviser|Y
+57820510|500587|Adviser|703610|Adviser|Y
+57820511|500587|Adviser|703610|Adviser|Y
+57820512|500587|Adviser|703610|Adviser|Y
+57820513|500587|Adviser|703610|Adviser|Y
+57820514|500587|Adviser|703610|Adviser|Y
+57820515|500587|Adviser|703610|Adviser|Y
+57820516|500587|Adviser|703610|Adviser|Y
+57820517|500587|Adviser|703610|Adviser|Y
+57820518|500587|Adviser|703610|Adviser|Y
+57820519|500587|Adviser|703610|Adviser|Y
+57820520|500587|Adviser|703610|Adviser|Y
+57820521|500587|Adviser|703610|Adviser|Y
+57820522|500587|Adviser|703610|Adviser|Y
+57820523|500587|Adviser|703610|Adviser|Y
+57820524|500587|Adviser|703610|Adviser|Y
+57820525|500587|Adviser|703610|Adviser|Y
+57820526|500587|Adviser|703610|Adviser|Y
+57820527|500587|Adviser|703610|Adviser|Y
+57820528|500587|Adviser|703610|Adviser|Y
+57820529|500587|Adviser|703610|Adviser|Y
+57820530|500587|Adviser|703610|Adviser|Y
+57820531|500587|Adviser|703610|Adviser|Y
+58020009|||703610|Adviser|Y
+57822426|||703610|Adviser|Y
+57822427|||703610|Adviser|Y
+57822428|||703610|Adviser|Y
+57822429|||703610|Adviser|Y
+57822430|||703610|Adviser|Y
+57822431|||703610|Adviser|Y
+57822432|||703610|Adviser|Y
+57822433|||703610|Adviser|Y
+57822434|||703610|Adviser|Y
+57822435|||703610|Adviser|Y
+57822436|||703610|Adviser|Y
+57822437|||703610|Adviser|Y
+57822438|||703610|Adviser|Y
+57822439|||703610|Adviser|Y
+57822440|||703610|Adviser|Y
+57822441|||703610|Adviser|Y
+57822442|||703610|Adviser|Y
+57822443|||703610|Adviser|Y
+57822444|||703610|Adviser|Y
+57822445|||703610|Adviser|Y
+57822446|||703610|Adviser|Y
+57822447|||703610|Adviser|Y
+57822448|||703610|Adviser|Y
+57822449|||703610|Adviser|Y
+57822450|||703610|Adviser|Y
+57822451|||703610|Adviser|Y
+57822452|||703610|Adviser|Y
+57822453|||703610|Adviser|Y
+57822454|||703610|Adviser|Y
+57822455|||703610|Adviser|Y
+57822456|||703610|Adviser|Y
+57822457|||703610|Adviser|Y
+57822458|||703610|Adviser|Y
+57822459|||703610|Adviser|Y
+57822460|||703610|Adviser|Y
+57822461|||703610|Adviser|Y
+57822462|||703610|Adviser|Y
+57822463|||703610|Adviser|Y
+57822464|||703610|Adviser|Y
+57822465|||703610|Adviser|Y
+57822466|||703610|Adviser|Y
+57822467|||703610|Adviser|Y
+57822468|||703610|Adviser|Y
+57822469|||703610|Adviser|Y
+57822470|||703610|Adviser|Y
+57822471|||703610|Adviser|Y
+57822472|||703610|Adviser|Y
+57822473|||703610|Adviser|Y
+57822474|||703610|Adviser|Y
+57822475|||703610|Adviser|Y
+57822476|||703610|Adviser|Y
+57822477|||703610|Adviser|Y
+57822478|||703610|Adviser|Y
+57822479|||703610|Adviser|Y
+57822480|||703610|Adviser|Y
+57822481|||703610|Adviser|Y
+57822482|||703610|Adviser|Y
+57822483|||703610|Adviser|Y
+57822484|||703610|Adviser|Y
+57822485|||703610|Adviser|Y
+57822486|||703610|Adviser|Y
+57822487|||703610|Adviser|Y
+57822488|||703610|Adviser|Y
+57822489|||703610|Adviser|Y
+57822490|||703610|Adviser|Y
+57822491|||703610|Adviser|Y
+57822492|||703610|Adviser|Y
+57822493|||703610|Adviser|Y
+57822494|||703610|Adviser|Y
+57822495|||703610|Adviser|Y
+57822496|||703610|Adviser|Y
+57822497|||703610|Adviser|Y
+57822498|||703610|Adviser|Y
+57822499|||703610|Adviser|Y
+57822500|||703610|Adviser|Y
+57822501|||703610|Adviser|Y
+57822502|||703610|Adviser|Y
+57822503|||703610|Adviser|Y
+57822504|||703610|Adviser|Y
+57822505|||703610|Adviser|Y
+57822506|||703610|Adviser|Y
+57822507|||703610|Adviser|Y
+57822508|||703610|Adviser|Y
+57822509|||703610|Adviser|Y
+57822510|||703610|Adviser|Y
+57822511|||703610|Adviser|Y
+57822512|||703610|Adviser|Y
+57822513|||703610|Adviser|Y
+57822514|||703610|Adviser|Y
+57822515|||703610|Adviser|Y
+57822516|||703610|Adviser|Y
+57822517|||703610|Adviser|Y
+57822518|||703610|Adviser|Y
+57822519|||703610|Adviser|Y
+57822520|||703610|Adviser|Y
+57822521|||703610|Adviser|Y
+57822522|||703610|Adviser|Y
+57822523|||703610|Adviser|Y
+57822524|||703610|Adviser|Y
+57822525|||703610|Adviser|Y
+57822526|||703610|Adviser|Y
+57822527|||703610|Adviser|Y
+57822528|||703610|Adviser|Y
+57822529|||703610|Adviser|Y
+57822530|||703610|Adviser|Y
+57822531|||703610|Adviser|Y
+57822532|||703610|Adviser|Y
+57822533|||703610|Adviser|Y
+57822534|||703610|Adviser|Y
+57822535|||703610|Adviser|Y
+57822536|||703610|Adviser|Y
+57822537|||703610|Adviser|Y
+57822538|||703610|Adviser|Y
+57822539|||703610|Adviser|Y
+57822540|||703610|Adviser|Y
+57822541|||703610|Adviser|Y
+57822542|||703610|Adviser|Y
+57822543|||703610|Adviser|Y
+57822544|||703610|Adviser|Y
+57822545|||703610|Adviser|Y
+57822546|||703610|Adviser|Y
+57822547|||703610|Adviser|Y
+57822548|||703610|Adviser|Y
+57822549|||703610|Adviser|Y
+57822550|||703610|Adviser|Y
+57822551|||703610|Adviser|Y
+57822552|||703610|Adviser|Y
+57822553|||703610|Adviser|Y
+57822554|||703610|Adviser|Y
+57822555|||703610|Adviser|Y
+57822556|||703610|Adviser|Y
+57822557|||703610|Adviser|Y
+57822558|||703610|Adviser|Y
+57822559|||703610|Adviser|Y
+57822560|||703610|Adviser|Y
+57822561|||703610|Adviser|Y
+57822562|||703610|Adviser|Y
+57822563|||703610|Adviser|Y
+57822564|||703610|Adviser|Y
+57822565|||703610|Adviser|Y
+57822566|||703610|Adviser|Y
+57822567|||703610|Adviser|Y
+57822568|||703610|Adviser|Y
+57822569|||703610|Adviser|Y
+57822570|||703610|Adviser|Y
+57822571|||703610|Adviser|Y
+57822572|||703610|Adviser|Y
+57822573|||703610|Adviser|Y
+57822574|||703610|Adviser|Y
+57822575|||703610|Adviser|Y
+57822576|||703610|Adviser|Y
+57822577|||703610|Adviser|Y
+57822578|||703610|Adviser|Y
+57822579|||703610|Adviser|Y
+57822580|||703610|Adviser|Y
+57822581|||703610|Adviser|Y
+57822582|||703610|Adviser|Y
+57822583|||703610|Adviser|Y
+57822584|||703610|Adviser|Y
+57822585|||703610|Adviser|Y
+57822586|||703610|Adviser|Y
+57822587|||703610|Adviser|Y
+57822588|||703610|Adviser|Y
+57822589|||703610|Adviser|Y
+57822590|||703610|Adviser|Y
+57822591|||703610|Adviser|Y
+57822592|||703610|Adviser|Y
+57822593|||703610|Adviser|Y
+57822594|||703610|Adviser|Y
+57822595|||703610|Adviser|Y
+57822596|||703610|Adviser|Y
+57822597|||703610|Adviser|Y
+57822598|||703610|Adviser|Y
+57822599|||703610|Adviser|Y
+57822600|||703610|Adviser|Y
+57822601|||703610|Adviser|Y
+57822602|||703610|Adviser|Y
+57822603|||703610|Adviser|Y
+57822604|||703610|Adviser|Y
+57822605|||703610|Adviser|Y
+57822606|||703610|Adviser|Y
+57822607|||703610|Adviser|Y
+57822608|||703610|Adviser|Y
+57822609|||703610|Adviser|Y
+57822610|||703610|Adviser|Y
+57822611|||703610|Adviser|Y
+57822612|||703610|Adviser|Y
+57822613|||703610|Adviser|Y
+57822614|||703610|Adviser|Y
+57822615|||703610|Adviser|Y
+57822616|||703610|Adviser|Y
+57822617|||703610|Adviser|Y
+57822618|||703610|Adviser|Y
+57822619|||703610|Adviser|Y
+57822620|||703610|Adviser|Y
+57822621|||703610|Adviser|Y
+57822622|||703610|Adviser|Y
+57822623|||703610|Adviser|Y
+57822624|||703610|Adviser|Y
+57822625|||703610|Adviser|Y
+57822626|||703610|Adviser|Y
+57822627|||703610|Adviser|Y
+57822628|||703610|Adviser|Y
+57822629|||703610|Adviser|Y
+57822630|||703610|Adviser|Y
+57822631|||703610|Adviser|Y
+57822632|||703610|Adviser|Y
+57822633|||703610|Adviser|Y
+57822634|||703610|Adviser|Y
+57822635|||703610|Adviser|Y
+57822636|||703610|Adviser|Y
+57822637|||703610|Adviser|Y
+57822638|||703610|Adviser|Y
+57822639|||703610|Adviser|Y
+57822640|||703610|Adviser|Y
+57822641|||703610|Adviser|Y
+57822642|||703610|Adviser|Y
+57822643|||703610|Adviser|Y
+57822644|||703610|Adviser|Y
+57822645|||703610|Adviser|Y
+57822646|||703610|Adviser|Y
+57822647|||703610|Adviser|Y
+57822648|||703610|Adviser|Y
+57822649|||703610|Adviser|Y
+57822650|||703610|Adviser|Y
+57822651|||703610|Adviser|Y
+57822652|||703610|Adviser|Y
+57822653|||703610|Adviser|Y
+57822654|||703610|Adviser|Y
+57822655|||703610|Adviser|Y
+57822656|||703610|Adviser|Y
+57822657|||703610|Adviser|Y
+57822658|||703610|Adviser|Y
+57822659|||703610|Adviser|Y
+57822660|||703610|Adviser|Y
+57822661|||703610|Adviser|Y
+57822662|||703610|Adviser|Y
+57822663|||703610|Adviser|Y
+57822664|||703610|Adviser|Y
+57822665|||703610|Adviser|Y
+57822666|||703610|Adviser|Y
+57822667|||703610|Adviser|Y
+57822668|||703610|Adviser|Y
+57822669|||703610|Adviser|Y
+57822670|||703610|Adviser|Y
+57822671|||703610|Adviser|Y
+57822672|||703610|Adviser|Y
+57822673|||703610|Adviser|Y
+57822674|||703610|Adviser|Y
+57822675|||703610|Adviser|Y
+57822676|||703610|Adviser|Y
+57822677|||703610|Adviser|Y
+57822678|||703610|Adviser|Y
+57822679|||703610|Adviser|Y
+57822680|||703610|Adviser|Y
+57822681|||703610|Adviser|Y
+57822682|||703610|Adviser|Y
+57822683|||703610|Adviser|Y
+57822684|||703610|Adviser|Y
+57822685|||703610|Adviser|Y
+57822686|||703610|Adviser|Y
+57822687|||703610|Adviser|Y
+57822688|||703610|Adviser|Y
+57822689|||703610|Adviser|Y
+57822690|||703610|Adviser|Y
+57822691|||703610|Adviser|Y
+57822692|||703610|Adviser|Y
+57822693|||703610|Adviser|Y
+57822694|||703610|Adviser|Y
+57822695|||703610|Adviser|Y
+57822696|||703610|Adviser|Y
+57822697|||703610|Adviser|Y
+57822698|||703610|Adviser|Y
+57822699|||703610|Adviser|Y
+57822700|||703610|Adviser|Y
+57822701|||703610|Adviser|Y
+57822702|||703610|Adviser|Y
+57822703|||703610|Adviser|Y
+57822704|||703610|Adviser|Y
+57822705|||703610|Adviser|Y
+57822706|||703610|Adviser|Y
+57822707|||703610|Adviser|Y
+57822708|||703610|Adviser|Y
+57822709|||703610|Adviser|Y
+57822710|||703610|Adviser|Y
+57822711|||703610|Adviser|Y
+57822712|||703610|Adviser|Y
+57822713|||703610|Adviser|Y
+57822714|||703610|Adviser|Y
+57822715|||703610|Adviser|Y
+57822716|||703610|Adviser|Y
+57822717|||703610|Adviser|Y
+57822718|||703610|Adviser|Y
+57822719|||703610|Adviser|Y
+57822720|||703610|Adviser|Y
+57822721|||703610|Adviser|Y
+57822722|||703610|Adviser|Y
+57822723|||703610|Adviser|Y
+57822724|||703610|Adviser|Y
+57822725|||703610|Adviser|Y
+57822726|||703610|Adviser|Y
+57822727|||703610|Adviser|Y
+57822728|||703610|Adviser|Y
+57822729|||703610|Adviser|Y
+57822730|||703610|Adviser|Y
+57822731|||703610|Adviser|Y
+57822732|||703610|Adviser|Y
+57822733|||703610|Adviser|Y
+57822734|||703610|Adviser|Y
+57822735|||703610|Adviser|Y
+57822736|||703610|Adviser|Y
+57822737|||703610|Adviser|Y
+57822738|||703610|Adviser|Y
+57822739|||703610|Adviser|Y
+57822740|||703610|Adviser|Y
+57822741|||703610|Adviser|Y
+57822742|||703610|Adviser|Y
+57822743|||703610|Adviser|Y
+57822744|||703610|Adviser|Y
+57822745|||703610|Adviser|Y
+57822746|||703610|Adviser|Y
+57822747|||703610|Adviser|Y
+57822748|||703610|Adviser|Y
+57822749|||703610|Adviser|Y
+57822750|||703610|Adviser|Y
+57822751|||703610|Adviser|Y
+57822752|||703610|Adviser|Y
+57822753|||703610|Adviser|Y
+57822754|||703610|Adviser|Y
+57822755|||703610|Adviser|Y
+57822756|||703610|Adviser|Y
+57822757|||703610|Adviser|Y
+57822758|||703610|Adviser|Y
+57822759|||703610|Adviser|Y
+57822760|||703610|Adviser|Y
+57822761|||703610|Adviser|Y
+57822762|||703610|Adviser|Y
+57822763|||703610|Adviser|Y
+57822764|||703610|Adviser|Y
+57822765|||703610|Adviser|Y
+57822766|||703610|Adviser|Y
+57822767|||703610|Adviser|Y
+57822768|||703610|Adviser|Y
+58001815|500587|Adviser|703610|Adviser|Y
+57864286|||703610|Adviser|Y
+57940921|||703610|Adviser|Y
+57820532|500587|Adviser|703610|Adviser|Y
+57820533|500587|Adviser|703610|Adviser|Y
+57820534|500587|Adviser|703610|Adviser|Y
+57820535|500587|Adviser|703610|Adviser|Y
+57820536|500587|Adviser|703610|Adviser|Y
+57820537|500587|Adviser|703610|Adviser|Y
+57820538|500587|Adviser|703610|Adviser|Y
+57820539|500587|Adviser|703610|Adviser|Y
+57820540|500587|Adviser|703610|Adviser|Y
+57820541|500587|Adviser|703610|Adviser|Y
+57820542|500587|Adviser|703610|Adviser|Y
+57820543|500587|Adviser|703610|Adviser|Y
+57820544|500587|Adviser|703610|Adviser|Y
+57820545|500587|Adviser|703610|Adviser|Y
+57820546|500587|Adviser|703610|Adviser|Y
+57820547|500587|Adviser|703610|Adviser|Y
+57820548|500587|Adviser|703610|Adviser|Y
+57820549|500587|Adviser|703610|Adviser|Y
+57820550|500587|Adviser|703610|Adviser|Y
+57820551|500587|Adviser|703610|Adviser|Y
+57820552|500587|Adviser|703610|Adviser|Y
+57820553|500587|Adviser|703610|Adviser|Y
+57820554|500587|Adviser|703610|Adviser|Y
+57820555|500587|Adviser|703610|Adviser|Y
+57820556|500587|Adviser|703610|Adviser|Y
+57820557|500587|Adviser|703610|Adviser|Y
+57820558|500587|Adviser|703610|Adviser|Y
+57820559|500587|Adviser|703610|Adviser|Y
+57820560|500587|Adviser|703610|Adviser|Y
+57820561|500587|Adviser|703610|Adviser|Y
+57820562|500587|Adviser|703610|Adviser|Y
+57820563|500587|Adviser|703610|Adviser|Y
+57820564|500587|Adviser|703610|Adviser|Y
+57820565|500587|Adviser|703610|Adviser|Y
+57820566|500587|Adviser|703610|Adviser|Y
+57820567|500587|Adviser|703610|Adviser|Y
+57820568|500587|Adviser|703610|Adviser|Y
+57820569|500587|Adviser|703610|Adviser|Y
+57820570|500587|Adviser|703610|Adviser|Y
+57820571|500587|Adviser|703610|Adviser|Y
+57820572|500587|Adviser|703610|Adviser|Y
+57820573|500587|Adviser|703610|Adviser|Y
+57820574|500587|Adviser|703610|Adviser|Y
+57820575|500587|Adviser|703610|Adviser|Y
+57820576|500587|Adviser|703610|Adviser|Y
+57820577|500587|Adviser|703610|Adviser|Y
+57820578|500587|Adviser|703610|Adviser|Y
+57820579|500587|Adviser|703610|Adviser|Y
+57820580|500587|Adviser|703610|Adviser|Y
+57820581|500587|Adviser|703610|Adviser|Y
+57820582|500587|Adviser|703610|Adviser|Y
+57820583|500587|Adviser|703610|Adviser|Y
+57820584|500587|Adviser|703610|Adviser|Y
+57820585|500587|Adviser|703610|Adviser|Y
+57820586|500587|Adviser|703610|Adviser|Y
+57820587|500587|Adviser|703610|Adviser|Y
+57820588|500587|Adviser|703610|Adviser|Y
+57820589|500587|Adviser|703610|Adviser|Y
+57820590|500587|Adviser|703610|Adviser|Y
+57820591|500587|Adviser|703610|Adviser|Y
+57820592|500587|Adviser|703610|Adviser|Y
+57820593|500587|Adviser|703610|Adviser|Y
+57820594|500587|Adviser|703610|Adviser|Y
+57820595|500587|Adviser|703610|Adviser|Y
+57820596|500587|Adviser|703610|Adviser|Y
+57820597|500587|Adviser|703610|Adviser|Y
+57820598|500587|Adviser|703610|Adviser|Y
+57820599|500587|Adviser|703610|Adviser|Y
+57820600|500587|Adviser|703610|Adviser|Y
+57820601|500587|Adviser|703610|Adviser|Y
+57820602|500587|Adviser|703610|Adviser|Y
+57820603|500587|Adviser|703610|Adviser|Y
+57820604|500587|Adviser|703610|Adviser|Y
+57820605|500587|Adviser|703610|Adviser|Y
+57820606|500587|Adviser|703610|Adviser|Y
+57820607|500587|Adviser|703610|Adviser|Y
+57820608|500587|Adviser|703610|Adviser|Y
+57820609|500587|Adviser|703610|Adviser|Y
+57820610|500587|Adviser|703610|Adviser|Y
+57820611|500587|Adviser|703610|Adviser|Y
+57820612|500587|Adviser|703610|Adviser|Y
+57820613|500587|Adviser|703610|Adviser|Y
+57820614|500587|Adviser|703610|Adviser|Y
+57820615|500587|Adviser|703610|Adviser|Y
+57820616|500587|Adviser|703610|Adviser|Y
+57820617|500587|Adviser|703610|Adviser|Y
+57820618|500587|Adviser|703610|Adviser|Y
+57820619|500587|Adviser|703610|Adviser|Y
+57820620|500587|Adviser|703610|Adviser|Y
+57820621|500587|Adviser|703610|Adviser|Y
+57820622|500587|Adviser|703610|Adviser|Y
+57820623|500587|Adviser|703610|Adviser|Y
+57820624|500587|Adviser|703610|Adviser|Y
+57820625|500587|Adviser|703610|Adviser|Y
+57820626|500587|Adviser|703610|Adviser|Y
+57820627|500587|Adviser|703610|Adviser|Y
+57820628|500587|Adviser|703610|Adviser|Y
+57820629|500587|Adviser|703610|Adviser|Y
+57820630|500587|Adviser|703610|Adviser|Y
+57820631|500587|Adviser|703610|Adviser|Y
+57820632|500587|Adviser|703610|Adviser|Y
+57820633|500587|Adviser|703610|Adviser|Y
+57820634|500587|Adviser|703610|Adviser|Y
+57820635|500587|Adviser|703610|Adviser|Y
+57820636|500587|Adviser|703610|Adviser|Y
+57820637|500587|Adviser|703610|Adviser|Y
+57820638|500587|Adviser|703610|Adviser|Y
+57820639|500587|Adviser|703610|Adviser|Y
+57820640|500587|Adviser|703610|Adviser|Y
+57820641|500587|Adviser|703610|Adviser|Y
+57820642|500587|Adviser|703610|Adviser|Y
+57820643|500587|Adviser|703610|Adviser|Y
+57820644|500587|Adviser|703610|Adviser|Y
+57820645|500587|Adviser|703610|Adviser|Y
+57820646|500587|Adviser|703610|Adviser|Y
+57820647|500587|Adviser|703610|Adviser|Y
+57820648|500587|Adviser|703610|Adviser|Y
+57820649|500587|Adviser|703610|Adviser|Y
+57820650|500587|Adviser|703610|Adviser|Y
+57820651|500587|Adviser|703610|Adviser|Y
+57820652|500587|Adviser|703610|Adviser|Y
+57820653|500587|Adviser|703610|Adviser|Y
+57820654|500587|Adviser|703610|Adviser|Y
+57820655|500587|Adviser|703610|Adviser|Y
+57820656|500587|Adviser|703610|Adviser|Y
+57820657|500587|Adviser|703610|Adviser|Y
+57820658|500587|Adviser|703610|Adviser|Y
+57820659|500587|Adviser|703610|Adviser|Y
+57820660|500587|Adviser|703610|Adviser|Y
+57820661|500587|Adviser|703610|Adviser|Y
+57820662|500587|Adviser|703610|Adviser|Y
+57820663|500587|Adviser|703610|Adviser|Y
+57820664|500587|Adviser|703610|Adviser|Y
+57820665|500587|Adviser|703610|Adviser|Y
+57820666|500587|Adviser|703610|Adviser|Y
+57820667|500587|Adviser|703610|Adviser|Y
+57820668|500587|Adviser|703610|Adviser|Y
+57820669|500587|Adviser|703610|Adviser|Y
+57820670|500587|Adviser|703610|Adviser|Y
+57820671|500587|Adviser|703610|Adviser|Y
+57820672|500587|Adviser|703610|Adviser|Y
+57820673|500587|Adviser|703610|Adviser|Y
+57820674|500587|Adviser|703610|Adviser|Y
+57820675|500587|Adviser|703610|Adviser|Y
+57820676|500587|Adviser|703610|Adviser|Y
+57820677|500587|Adviser|703610|Adviser|Y
+57820678|500587|Adviser|703610|Adviser|Y
+57820679|500587|Adviser|703610|Adviser|Y
+57820680|500587|Adviser|703610|Adviser|Y
+57820681|500587|Adviser|703610|Adviser|Y
+57820682|500587|Adviser|703610|Adviser|Y
+57820683|500587|Adviser|703610|Adviser|Y
+57820684|500587|Adviser|703610|Adviser|Y
+57820685|500587|Adviser|703610|Adviser|Y
+57820686|500587|Adviser|703610|Adviser|Y
+57820687|500587|Adviser|703610|Adviser|Y
+57820688|500587|Adviser|703610|Adviser|Y
+57820689|500587|Adviser|703610|Adviser|Y
+57820690|500587|Adviser|703610|Adviser|Y
+57820691|500587|Adviser|703610|Adviser|Y
+57820692|500587|Adviser|703610|Adviser|Y
+57820693|500587|Adviser|703610|Adviser|Y
+57820694|500587|Adviser|703610|Adviser|Y
+57820695|500587|Adviser|703610|Adviser|Y
+57820696|500587|Adviser|703610|Adviser|Y
+57820697|500587|Adviser|703610|Adviser|Y
+57820698|500587|Adviser|703610|Adviser|Y
+57820699|500587|Adviser|703610|Adviser|Y
+57820700|500587|Adviser|703610|Adviser|Y
+57820701|500587|Adviser|703610|Adviser|Y
+57820702|500587|Adviser|703610|Adviser|Y
+57820703|500587|Adviser|703610|Adviser|Y
+57820704|500587|Adviser|703610|Adviser|Y
+57820705|500587|Adviser|703610|Adviser|Y
+57820706|500587|Adviser|703610|Adviser|Y
+57820707|500587|Adviser|703610|Adviser|Y
+57820708|500587|Adviser|703610|Adviser|Y
+57820709|500587|Adviser|703610|Adviser|Y
+57820710|500587|Adviser|703610|Adviser|Y
+57820711|500587|Adviser|703610|Adviser|Y
+57820712|500587|Adviser|703610|Adviser|Y
+57820713|500587|Adviser|703610|Adviser|Y
+57820714|500587|Adviser|703610|Adviser|Y
+57820715|500587|Adviser|703610|Adviser|Y
+57820716|500587|Adviser|703610|Adviser|Y
+57820717|500587|Adviser|703610|Adviser|Y
+57820718|500587|Adviser|703610|Adviser|Y
+57820719|500587|Adviser|703610|Adviser|Y
+57820720|500587|Adviser|703610|Adviser|Y
+57820721|500587|Adviser|703610|Adviser|Y
+57820722|500587|Adviser|703610|Adviser|Y
+57820723|500587|Adviser|703610|Adviser|Y
+57820724|500587|Adviser|703610|Adviser|Y
+57820725|500587|Adviser|703610|Adviser|Y
+57820726|500587|Adviser|703610|Adviser|Y
+57820727|500587|Adviser|703610|Adviser|Y
+57820728|500587|Adviser|703610|Adviser|Y
+57820729|500587|Adviser|703610|Adviser|Y
+57820730|500587|Adviser|703610|Adviser|Y
+57820731|500587|Adviser|703610|Adviser|Y
+57820732|500587|Adviser|703610|Adviser|Y
+57820733|500587|Adviser|703610|Adviser|Y
+57820734|500587|Adviser|703610|Adviser|Y
+57820735|500587|Adviser|703610|Adviser|Y
+57820736|500587|Adviser|703610|Adviser|Y
+57820737|500587|Adviser|703610|Adviser|Y
+57820738|500587|Adviser|703610|Adviser|Y
+57820739|500587|Adviser|703610|Adviser|Y
+57820740|500587|Adviser|703610|Adviser|Y
+57820741|500587|Adviser|703610|Adviser|Y
+57820742|500587|Adviser|703610|Adviser|Y
+57820743|500587|Adviser|703610|Adviser|Y
+57820744|500587|Adviser|703610|Adviser|Y
+57820745|500587|Adviser|703610|Adviser|Y
+57820746|500587|Adviser|703610|Adviser|Y
+57820747|500587|Adviser|703610|Adviser|Y
+57820748|500587|Adviser|703610|Adviser|Y
+57820749|500587|Adviser|703610|Adviser|Y
+57820750|500587|Adviser|703610|Adviser|Y
+57820751|500587|Adviser|703610|Adviser|Y
+57820752|500587|Adviser|703610|Adviser|Y
+57820753|500587|Adviser|703610|Adviser|Y
+57820754|500587|Adviser|703610|Adviser|Y
+57820755|500587|Adviser|703610|Adviser|Y
+57820756|500587|Adviser|703610|Adviser|Y
+57820757|500587|Adviser|703610|Adviser|Y
+57820758|500587|Adviser|703610|Adviser|Y
+57820759|500587|Adviser|703610|Adviser|Y
+57820760|500587|Adviser|703610|Adviser|Y
+57820761|500587|Adviser|703610|Adviser|Y
+57820762|500587|Adviser|703610|Adviser|Y
+57820763|500587|Adviser|703610|Adviser|Y
+57820764|500587|Adviser|703610|Adviser|Y
+57820765|500587|Adviser|703610|Adviser|Y
+57820766|500587|Adviser|703610|Adviser|Y
+57820767|500587|Adviser|703610|Adviser|Y
+57820768|500587|Adviser|703610|Adviser|Y
+57820769|500587|Adviser|703610|Adviser|Y
+57820770|500587|Adviser|703610|Adviser|Y
+57820771|500587|Adviser|703610|Adviser|Y
+57820772|500587|Adviser|703610|Adviser|Y
+57820773|500587|Adviser|703610|Adviser|Y
+57820774|500587|Adviser|703610|Adviser|Y
+57820775|500587|Adviser|703610|Adviser|Y
+57820776|500587|Adviser|703610|Adviser|Y
+57820777|500587|Adviser|703610|Adviser|Y
+57820778|500587|Adviser|703610|Adviser|Y
+57820779|500587|Adviser|703610|Adviser|Y
+57820780|500587|Adviser|703610|Adviser|Y
+57820781|500587|Adviser|703610|Adviser|Y
+57820782|500587|Adviser|703610|Adviser|Y
+57820783|500587|Adviser|703610|Adviser|Y
+57820784|500587|Adviser|703610|Adviser|Y
+57820785|500587|Adviser|703610|Adviser|Y
+57820786|500587|Adviser|703610|Adviser|Y
+57820787|500587|Adviser|703610|Adviser|Y
+57820788|500587|Adviser|703610|Adviser|Y
+57820789|500587|Adviser|703610|Adviser|Y
+57820790|500587|Adviser|703610|Adviser|Y
+57820791|500587|Adviser|703610|Adviser|Y
+57820792|500587|Adviser|703610|Adviser|Y
+57820793|500587|Adviser|703610|Adviser|Y
+57820794|500587|Adviser|703610|Adviser|Y
+57820795|500587|Adviser|703610|Adviser|Y
+57820796|500587|Adviser|703610|Adviser|Y
+57820797|500587|Adviser|703610|Adviser|Y
+57820798|500587|Adviser|703610|Adviser|Y
+57820799|500587|Adviser|703610|Adviser|Y
+57820800|500587|Adviser|703610|Adviser|Y
+57820801|500587|Adviser|703610|Adviser|Y
+57820802|500587|Adviser|703610|Adviser|Y
+57820803|500587|Adviser|703610|Adviser|Y
+57820804|500587|Adviser|703610|Adviser|Y
+57820805|500587|Adviser|703610|Adviser|Y
+57820806|500587|Adviser|703610|Adviser|Y
+57820807|500587|Adviser|703610|Adviser|Y
+57820808|500587|Adviser|703610|Adviser|Y
+57820809|500587|Adviser|703610|Adviser|Y
+57820810|500587|Adviser|703610|Adviser|Y
+57820811|500587|Adviser|703610|Adviser|Y
+57820812|500587|Adviser|703610|Adviser|Y
+57820813|500587|Adviser|703610|Adviser|Y
+57820814|500587|Adviser|703610|Adviser|Y
+57820815|500587|Adviser|703610|Adviser|Y
+57820816|500587|Adviser|703610|Adviser|Y
+57820817|500587|Adviser|703610|Adviser|Y
+57821590|||703610|Adviser|Y
+57821591|||703610|Adviser|Y
+57821596|||703610|Adviser|Y
+57821597|||703610|Adviser|Y
+57821598|||703610|Adviser|Y
+57821599|||703610|Adviser|Y
+57821600|||703610|Adviser|Y
+57821601|||703610|Adviser|Y
+57821606|||703610|Adviser|Y
+57821612|||703610|Adviser|Y
+57822235|||703610|Adviser|Y
+57822354|||703610|Adviser|Y
+57822378|||703610|Adviser|Y
+57822379|||703610|Adviser|Y
+57822380|||703610|Adviser|Y
+57822381|||703610|Adviser|Y
+57822382|||703610|Adviser|Y
+57822383|||703610|Adviser|Y
+57822384|||703610|Adviser|Y
+57822385|||703610|Adviser|Y
+57822386|||703610|Adviser|Y
+57822387|||703610|Adviser|Y
+57822388|||703610|Adviser|Y
+57822389|||703610|Adviser|Y
+57822390|||703610|Adviser|Y
+57822391|||703610|Adviser|Y
+57822392|||703610|Adviser|Y
+57822393|||703610|Adviser|Y
+57822394|||703610|Adviser|Y
+57822395|||703610|Adviser|Y
+57822396|||703610|Adviser|Y
+57822397|||703610|Adviser|Y
+57822398|||703610|Adviser|Y
+57822399|||703610|Adviser|Y
+57822400|||703610|Adviser|Y
+57822401|||703610|Adviser|Y
+57822402|||703610|Adviser|Y
+57822403|||703610|Adviser|Y
+57822404|||703610|Adviser|Y
+57822405|||703610|Adviser|Y
+57822406|||703610|Adviser|Y
+57822407|||703610|Adviser|Y
+57822408|||703610|Adviser|Y
+57822409|||703610|Adviser|Y
+57822410|||703610|Adviser|Y
+57822411|||703610|Adviser|Y
+57822412|||703610|Adviser|Y
+57822413|||703610|Adviser|Y
+57822414|||703610|Adviser|Y
+57822415|||703610|Adviser|Y
+57822416|||703610|Adviser|Y
+57822417|||703610|Adviser|Y
+57822418|||703610|Adviser|Y
+57822419|||703610|Adviser|Y
+57822420|||703610|Adviser|Y
+57822421|||703610|Adviser|Y
+57822422|||703610|Adviser|Y
+57822423|||703610|Adviser|Y
+57822424|||703610|Adviser|Y
+57822425|||703610|Adviser|Y
+58041537|||703610|Adviser|Y
+57822769|||703610|Adviser|Y
+57822770|||703610|Adviser|Y
+57822771|||703610|Adviser|Y
+57822772|||703610|Adviser|Y
+57822773|||703610|Adviser|Y
+57822774|||703610|Adviser|Y
+57822775|||703610|Adviser|Y
+57822776|||703610|Adviser|Y
+57822777|||703610|Adviser|Y
+57822778|||703610|Adviser|Y
+57822779|||703610|Adviser|Y
+57822780|||703610|Adviser|Y
+57822781|||703610|Adviser|Y
+57822782|||703610|Adviser|Y
+57822783|||703610|Adviser|Y
+57822784|||703610|Adviser|Y
+57822785|||703610|Adviser|Y
+57822786|||703610|Adviser|Y
+57822787|||703610|Adviser|Y
+57822788|||703610|Adviser|Y
+57822789|||703610|Adviser|Y
+57822790|||703610|Adviser|Y
+57822791|||703610|Adviser|Y
+57822792|||703610|Adviser|Y
+57822793|||703610|Adviser|Y
+57822794|||703610|Adviser|Y
+57822795|||703610|Adviser|Y
+57822796|||703610|Adviser|Y
+57822797|||703610|Adviser|Y
+57822798|||703610|Adviser|Y
+57822799|||703610|Adviser|Y
+57822800|||703610|Adviser|Y
+57822801|||703610|Adviser|Y
+57822802|||703610|Adviser|Y
+57822803|||703610|Adviser|Y
+57822804|||703610|Adviser|Y
+57822805|||703610|Adviser|Y
+57822806|||703610|Adviser|Y
+57822807|||703610|Adviser|Y
+57822808|||703610|Adviser|Y
+57822809|||703610|Adviser|Y
+57822810|||703610|Adviser|Y
+57822811|||703610|Adviser|Y
+57822812|||703610|Adviser|Y
+57822813|||703610|Adviser|Y
+57822814|||703610|Adviser|Y
+57822815|||703610|Adviser|Y
+57822816|||703610|Adviser|Y
+57822817|||703610|Adviser|Y
+57822818|||703610|Adviser|Y
+57822819|||703610|Adviser|Y
+57822820|||703610|Adviser|Y
+57822821|||703610|Adviser|Y
+57822822|||703610|Adviser|Y
+57822823|||703610|Adviser|Y
+57822824|||703610|Adviser|Y
+57822825|||703610|Adviser|Y
+57822826|||703610|Adviser|Y
+57822827|||703610|Adviser|Y
+57822828|||703610|Adviser|Y
+57822829|||703610|Adviser|Y
+57822830|||703610|Adviser|Y
+57822831|||703610|Adviser|Y
+57822832|||703610|Adviser|Y
+57822833|||703610|Adviser|Y
+57822834|||703610|Adviser|Y
+57822835|||703610|Adviser|Y
+57822836|||703610|Adviser|Y
+57822837|||703610|Adviser|Y
+57822838|||703610|Adviser|Y
+57822839|||703610|Adviser|Y
+57822840|||703610|Adviser|Y
+57822841|||703610|Adviser|Y
+58305145|||703610|Adviser|Y
+58307967|||703610|Adviser|Y
+58167494|||703610|Adviser|Y
+58254738|500587|Adviser|703610|Adviser|Y
+58254739|500587|Adviser|703610|Adviser|Y
+58254740|500587|Adviser|703610|Adviser|Y
+58254741|500587|Adviser|703610|Adviser|Y
+58254742|500587|Adviser|703610|Adviser|Y
+58254743|500587|Adviser|703610|Adviser|Y
+58254744|500587|Adviser|703610|Adviser|Y
+58254745|500587|Adviser|703610|Adviser|Y
+58254746|500587|Adviser|703610|Adviser|Y
+58254747|500587|Adviser|703610|Adviser|Y
+58254748|500587|Adviser|703610|Adviser|Y
+58254749|500587|Adviser|703610|Adviser|Y
+58254750|500587|Adviser|703610|Adviser|Y
+58254751|500587|Adviser|703610|Adviser|Y
+58254752|500587|Adviser|703610|Adviser|Y
+58264477|||703610|Adviser|Y
+58265231|||703610|Adviser|Y
+58265237|||703610|Adviser|Y
+58265238|||703610|Adviser|Y
+58265239|||703610|Adviser|Y
+58265241|||703610|Adviser|Y
+58043020|500610|Adviser|704259|One Knightsbridge Capital LLP|Y
+58043020|500615|Paraplanner|704259|One Knightsbridge Capital LLP|Y
+58043021|500615|Paraplanner|704259|One Knightsbridge Capital LLP|Y
+58043022|500610|Adviser|704259|One Knightsbridge Capital LLP|Y
+58012507|||704717|Select Platform Direct|N
+58012508|||704717|Select Platform Direct|N
+58012511|||704717|Select Platform Direct|N
+58280596|||704717|Select Platform Direct|N
+58069166|||704717|Select Platform Direct|N
+58012507|||704718|Select Service Team|N
+58012508|||704718|Select Service Team|N
+58012511|||704718|Select Service Team|N
+58280596|||704718|Select Service Team|N
+58239496|||704718|Select Service Team|Y
+58069166|||704718|Select Service Team|N
+58304001|500737|Branch Administrator|704760|LeifBridge|N
+58304002|500737|Branch Administrator|704760|LeifBridge|N
+58304013|500737|Branch Administrator|704760|LeifBridge|N
+58304019|500737|Branch Administrator|704760|LeifBridge|N
+58304022|500737|Branch Administrator|704760|LeifBridge|N
+58304024|500737|Branch Administrator|704760|LeifBridge|N
+58304063|500737|Branch Administrator|704760|LeifBridge|N
+58300005|500743|SEI Guernsey Offshore Analyst - Select|704765|Custody Offshore for Select|Y
+58300005|500744|SEI Guernsey-Carey Commercial Administrative Team Lead - Select|704765|Custody Offshore for Select|Y
+58300006|500743|SEI Guernsey Offshore Analyst - Select|704765|Custody Offshore for Select|Y
+58300006|500744|SEI Guernsey-Carey Commercial Administrative Team Lead - Select|704765|Custody Offshore for Select|Y
+58300010|500743|SEI Guernsey Offshore Analyst - Select|704765|Custody Offshore for Select|Y
+58300010|500744|SEI Guernsey-Carey Commercial Administrative Team Lead - Select|704765|Custody Offshore for Select|Y
+58300012|500743|SEI Guernsey Offshore Analyst - Select|704765|Custody Offshore for Select|Y
+58300012|500744|SEI Guernsey-Carey Commercial Administrative Team Lead - Select|704765|Custody Offshore for Select|Y
+58300013|500743|SEI Guernsey Offshore Analyst - Select|704765|Custody Offshore for Select|Y
+58300013|500744|SEI Guernsey-Carey Commercial Administrative Team Lead - Select|704765|Custody Offshore for Select|Y
+58300014|500743|SEI Guernsey Offshore Analyst - Select|704765|Custody Offshore for Select|Y
+58300014|500744|SEI Guernsey-Carey Commercial Administrative Team Lead - Select|704765|Custody Offshore for Select|Y
+58300016|500743|SEI Guernsey Offshore Analyst - Select|704765|Custody Offshore for Select|Y
+58300016|500744|SEI Guernsey-Carey Commercial Administrative Team Lead - Select|704765|Custody Offshore for Select|Y
+58287815|500610|Adviser|704772|Cannizaro Wealth Management (MGM) Limited|Y
+58070363|500610|Adviser|704772|Cannizaro Wealth Management (MGM) Limited|Y
+58303563|500610|Adviser|704787|Kliskey Independent Financial Services Limited|Y
+58303571|500610|Adviser|704787|Kliskey Independent Financial Services Limited|Y
+58303572|500615|Paraplanner|704787|Kliskey Independent Financial Services Limited|Y
+58012508|||409649|Select Platform|N
+58012511|||409649|Select Platform|N
+58280596|||409649|Select Platform|N
+58069166|||409649|Select Platform|N
+58012507|||409655|Marlborough MPS|N
+58012508|||409655|Marlborough MPS|N
+58012511|||409655|Marlborough MPS|N
+58012513|||409655|Marlborough MPS|N
+58012516|||409655|Marlborough MPS|N
+58012517|||409655|Marlborough MPS|N
+58280596|||409655|Marlborough MPS|N
+58269885|||409655|Marlborough MPS|Y
+58269895|||409655|Marlborough MPS|Y
+58269907|||409655|Marlborough MPS|Y
+58269912|||409655|Marlborough MPS|Y
+58069166|||409655|Marlborough MPS|N
+58091831|500610|Adviser|409663|Chester Rose|Y
+58091836|500610|Adviser|409663|Chester Rose|Y
+58091837|500610|Adviser|409663|Chester Rose|Y
+58091851|500610|Adviser|409663|Chester Rose|Y
+58115435|500615|Paraplanner|409663|Chester Rose|Y
+58115436|500615|Paraplanner|409663|Chester Rose|Y
+58204841|500615|Paraplanner|409663|Chester Rose|Y
+58292097|500610|Adviser|409664|One Financial Solutions|Y
+58070362|500610|Adviser|409664|One Financial Solutions|Y
+58070364|500610|Adviser|409664|One Financial Solutions|Y
+58027578|500615|Paraplanner|409665|Howard Financial Services|Y
+58027579|500610|Adviser|409665|Howard Financial Services|Y
+58027580|500615|Paraplanner|409665|Howard Financial Services|Y
+58027581|500615|Paraplanner|409665|Howard Financial Services|Y
+58027582|500615|Paraplanner|409665|Howard Financial Services|Y
+58027583|500615|Paraplanner|409665|Howard Financial Services|Y
+58012507|||409666|Marlborough Personal Portfolios|N
+58012508|||409666|Marlborough Personal Portfolios|N
+58012511|||409666|Marlborough Personal Portfolios|N
+58012512|||409666|Marlborough Personal Portfolios|N
+58012513|||409666|Marlborough Personal Portfolios|N
+58012514|||409666|Marlborough Personal Portfolios|N
+58012515|||409666|Marlborough Personal Portfolios|N
+58012516|||409666|Marlborough Personal Portfolios|N
+58012517|||409666|Marlborough Personal Portfolios|N
+58111621|||409666|Marlborough Personal Portfolios|N
+58280596|||409666|Marlborough Personal Portfolios|N
+58069166|||409666|Marlborough Personal Portfolios|N
+58239510|500610|Adviser|409737|Harvest Associates Limited|Y
+58239510|500615|Paraplanner|409737|Harvest Associates Limited|Y
+58239512|500610|Adviser|409737|Harvest Associates Limited|Y
+58239513|500610|Adviser|409737|Harvest Associates Limited|Y
+58137805|500615|Paraplanner|409738|First Wealth (London) Limited|Y
+58137807|500610|Adviser|409738|First Wealth (London) Limited|Y
+58250314|500615|Paraplanner|409750|Corbel Partners Limited|Y
+58250315|500610|Adviser|409750|Corbel Partners Limited|Y
+58261078|500590|User Request Administrator|||
+57817496|500590|User Request Administrator|||
+57817497|500590|User Request Administrator|||
+57817500|500590|User Request Administrator|||
+57817507|500590|User Request Administrator|||
+57817509|500590|User Request Administrator|||
+57817514|500590|User Request Administrator|||
+57817519|500590|User Request Administrator|||
+57817521|500590|User Request Administrator|||
+57817527|500590|User Request Administrator|||
+57818518|500590|User Request Administrator|||
+58261078|60245|End Client User Provisioning|||
+57817496|60245|End Client User Provisioning|||
+57817497|60245|End Client User Provisioning|||
+57817521|60245|End Client User Provisioning|||
+57817527|60245|End Client User Provisioning|||
+58242276|60252|Employee User Provisioning|||
+58012515|500613|Team Model Administration|||
+58292102|500613|Team Model Administration|||
+58290095|500613|Team Model Administration|||
+58290097|500613|Team Model Administration|||
+58012507|500591|PME System Administration|||
+58012513|500591|PME System Administration|||
+58012515|500591|PME System Administration|||
+58303563|500600|External Client Service|||
+58303571|500600|External Client Service|||
+58303572|500600|External Client Service|||
+58292102|500600|External Client Service|||
+58290095|500600|External Client Service|||
+58290097|500600|External Client Service|||
+58290098|500600|External Client Service|||
+58290099|500600|External Client Service|||
+58303563|500601|Investment Manager|||
+58303571|500601|Investment Manager|||
+58303572|500601|Investment Manager|||
+58290097|500601|Investment Manager|||
+58303563|500602|External Operations|||
+58303571|500602|External Operations|||
+58303572|500602|External Operations|||
+58292102|500602|External Operations|||
+58290095|500602|External Operations|||
+58290097|500602|External Operations|||
+58290098|500602|External Operations|||
+58290099|500602|External Operations|||
+58012507|500605|Model Administration|||
+58303563|500607|Self-Service Reporting|||
+58303571|500607|Self-Service Reporting|||
+58303572|500607|Self-Service Reporting|||
+58292102|500607|Self-Service Reporting|||
+58290095|500607|Self-Service Reporting|||
+58290097|500607|Self-Service Reporting|||
+58290098|500607|Self-Service Reporting|||
+58290099|500607|Self-Service Reporting|||
+58269895|500607|Self-Service Reporting|||
+58269907|500607|Self-Service Reporting|||
+58290097|500614|Investment Decision Maker|||
+58242276|500569|Staff Read-Only|||
+58234142|500569|Staff Read-Only|||
+58252427|500569|Staff Read-Only|||
+58252439|500569|Staff Read-Only|||
+57817497|500571|Compliance|||
+57817497|500572|Finance|||
+57817502|500580|Self-Service Reporting|||
+58304024|500661|PME System Administration|||
+58304063|500661|PME System Administration|||
+58304013|500663|ECX Content Creator|||
+58304024|500663|ECX Content Creator|||
+58304063|500663|ECX Content Creator|||
+58304013|500664|ECX Content Approver|||
+58304024|500664|ECX Content Approver|||
+58304063|500664|ECX Content Approver|||
+58304013|500670|Client Service|||
+58304024|500670|Client Service|||
+58304063|500670|Client Service|||
+58304013|500672|Operations|||
+58304024|500672|Operations|||
+58304063|500672|Operations|||
+58304024|500675|Team Model Administrator|||
+58304063|500675|Team Model Administrator|||
+58304001|500677|Self-Service Reporting|||
+58304002|500677|Self-Service Reporting|||
+58304013|500677|Self-Service Reporting|||
+58304019|500677|Self-Service Reporting|||
+58304022|500677|Self-Service Reporting|||
+58304024|500677|Self-Service Reporting|||
+58304063|500677|Self-Service Reporting|||
+58303267|500738|Adviser|||
+58304013|500747|Ops Approver|||
+58304024|500747|Ops Approver|||
+58304063|500747|Ops Approver|||
+Total Number of Records: |1511

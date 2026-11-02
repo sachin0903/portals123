@@ -1,0 +1,43 @@
+GROUP_ID|GROUP_NAME|GROUP_TYPE|GROUP_STATUS|GROUP_BASE_CURRENCY|FEE_PACKAGE_ID|FEE_PACKAGE_NAME|PORTFOLIO_NAME|ACCOUNT_NUMBER|ACCOUNT_NAME|POSSIBLE_RECIPIENT_ID|POSSIBLE_RECIPIENT_NAME|FIRM_ID|GROUP_DEACTIVATION_DT|STRATEGY_ID|STRATEGY_NAME|MODEL_ID|ACCOUNT_ID|PORTFOLIO_ID|GROUP_TYPE_ID
+58028406|Barry Clarke|Communication Group|1|GBP|||Portfolio-01 (Capital)|MSP000010|GIA Short-Term Barry Clarke|701243|Suffolk Life Trustees Limited|3106||||87737|58017914|58017915|188
+58028406|Barry Clarke|Communication Group|1|GBP|||Portfolio-01 (Capital)|MSP000010|GIA Short-Term Barry Clarke|701304|Utmost PanEurope DAC|3106||||87737|58017914|58017915|188
+58028406|Barry Clarke|Communication Group|1|GBP|||Portfolio-01 (Capital)|MSP000010|GIA Short-Term Barry Clarke|58017883|Clarke, Barry George|3106||||87737|58017914|58017915|188
+58028406|Barry Clarke|Communication Group|1|GBP|||Portfolio-01 (Capital)|MSP000010|GIA Short-Term Barry Clarke|58020669|Price, Gary|3106||||87737|58017914|58017915|188
+58028406|Barry Clarke|Communication Group|1|GBP|||Portfolio-01 (Capital)|MSP000010|GIA Short-Term Barry Clarke|58026078|Hopkins, Emma|3106||||87737|58017914|58017915|188
+58028406|Barry Clarke|Communication Group|1|GBP|||Portfolio-01 (Capital)|MSP000011|ISA Medium-Term Barry Clarke|701243|Suffolk Life Trustees Limited|3106||||87741|58017970|58017971|188
+58028406|Barry Clarke|Communication Group|1|GBP|||Portfolio-01 (Capital)|MSP000011|ISA Medium-Term Barry Clarke|701304|Utmost PanEurope DAC|3106||||87741|58017970|58017971|188
+58028406|Barry Clarke|Communication Group|1|GBP|||Portfolio-01 (Capital)|MSP000011|ISA Medium-Term Barry Clarke|58017883|Clarke, Barry George|3106||||87741|58017970|58017971|188
+58028406|Barry Clarke|Communication Group|1|GBP|||Portfolio-01 (Capital)|MSP000011|ISA Medium-Term Barry Clarke|58020669|Price, Gary|3106||||87741|58017970|58017971|188
+58028406|Barry Clarke|Communication Group|1|GBP|||Portfolio-01 (Capital)|MSP000011|ISA Medium-Term Barry Clarke|58026078|Hopkins, Emma|3106||||87741|58017970|58017971|188
+58069388|Barry Clarke|Fee Group|1||49513|Marlborough Investment Management Fee|Portfolio-01 (Capital)|MSP000010|GIA Short-Term Barry Clarke|||3106||||87737|58017914|58017915|258
+58069388|Barry Clarke|Fee Group|1||49513|Marlborough Investment Management Fee|Portfolio-01 (Capital)|MSP000011|ISA Medium-Term Barry Clarke|||3106||||87741|58017970|58017971|258
+58069388|Barry Clarke|Fee Group|1||49513|Marlborough Investment Management Fee|Portfolio-01 (Capital)|MSP000041|Utmost PanEurope DAC GP3790344|||3106||||87740|58056216|58056217|258
+58069388|Barry Clarke|Fee Group|1||49513|Marlborough Investment Management Fee|Portfolio-01 (Capital)|MSP000060|Suffolk Life Trustees Ltd 338623|||3106||||87738|58089261|58089262|258
+58071090|Anderson and Burton|Fee Group|1||49513|Marlborough Investment Management Fee|Portfolio-01 (Capital)|MSP000042|GIA - Deborah Burton|||3106||||87736|58068910|58068911|258
+58071090|Anderson and Burton|Fee Group|1||49513|Marlborough Investment Management Fee|Portfolio-01 (Capital)|MSP000045|ISA - Deborah Burton|||3106||||87742|58068921|58068922|258
+58071090|Anderson and Burton|Fee Group|1||49513|Marlborough Investment Management Fee|Portfolio-01 (Capital)|MSP000050|GIA - Alex Anderson|||3106||||87736|58066413|58066414|258
+58071090|Anderson and Burton|Fee Group|1||49513|Marlborough Investment Management Fee|Portfolio-01 (Capital)|MSP000051|ISA - Alex Anderson|||3106||||87742|58066495|58066496|258
+58071090|Anderson and Burton|Fee Group|1||49513|Marlborough Investment Management Fee|Portfolio-01 (Capital)|MSP000075|Suffolk Life Trustees Ltd 338900|||3106||||87740|58103721|58103722|258
+58071090|Anderson and Burton|Fee Group|1||49513|Marlborough Investment Management Fee|Portfolio-01 (Capital)|MSP000076|Suffolk Life Trustees Ltd 338927|||3106||||87740|58103734|58103735|258
+58101666|Dominic Barton|Communication Group|1|USD|||Portfolio-01 (Capital)|MSP000073|Utmost PanEurope DAC GP3800041|58101319|Barton, Dominic|3106||||87754|58101441|58101442|188
+58101666|Dominic Barton|Communication Group|1|USD|||Portfolio-01 (Capital)|MSP000073|Utmost PanEurope DAC GP3800041|58144231|Lipset, Lance|3106||||87754|58101441|58101442|188
+58101666|Dominic Barton|Communication Group|1|USD|||Portfolio-01 (Capital)|MSP000073|Utmost PanEurope DAC GP3800041|58227463|Downs, Valerie|3106||||87754|58101441|58101442|188
+58101666|Dominic Barton|Communication Group|1|USD|||Portfolio-01 (Capital)|MSP000074|Utmost PanEurope DAC GP3800042|58101319|Barton, Dominic|3106||||87754|58101453|58101454|188
+58101666|Dominic Barton|Communication Group|1|USD|||Portfolio-01 (Capital)|MSP000074|Utmost PanEurope DAC GP3800042|58144231|Lipset, Lance|3106||||87754|58101453|58101454|188
+58101666|Dominic Barton|Communication Group|1|USD|||Portfolio-01 (Capital)|MSP000074|Utmost PanEurope DAC GP3800042|58227463|Downs, Valerie|3106||||87754|58101453|58101454|188
+58141251|Alex Anderson|Communication Group|1|GBP|||Portfolio-01 (Capital)|MSP000050|GIA - Alex Anderson|58066393|Anderson, Alex John|3106||||87736|58066413|58066414|188
+58141251|Alex Anderson|Communication Group|1|GBP|||Portfolio-01 (Capital)|MSP000051|ISA - Alex Anderson|58066393|Anderson, Alex John|3106||||87742|58066495|58066496|188
+58141251|Alex Anderson|Communication Group|1|GBP|||Portfolio-01 (Capital)|MSP000075|Suffolk Life Trustees Ltd 338900|58066393|Anderson, Alex John|3106||||87740|58103721|58103722|188
+58141350|Deborah Burton|Communication Group|1|GBP|||Portfolio-01 (Capital)|MSP000042|GIA - Deborah Burton|58068907|Burton, Deborah Tracey|3106||||87736|58068910|58068911|188
+58141350|Deborah Burton|Communication Group|1|GBP|||Portfolio-01 (Capital)|MSP000045|ISA - Deborah Burton|58068907|Burton, Deborah Tracey|3106||||87742|58068921|58068922|188
+58141350|Deborah Burton|Communication Group|1|GBP|||Portfolio-01 (Capital)|MSP000076|Suffolk Life Trustees Ltd 338927|58068907|Burton, Deborah Tracey|3106||||87740|58103734|58103735|188
+58182447|GIA - Consulting Smile Services Ltd|Communication Group|1|GBP|||Portfolio-01 (Capital)|MSP000100|GIA - Consulting Smile Services Ltd|58173250|Consulting Smile Services Ltd|3106||||87735|58182155|58182156|188
+58182447|GIA - Consulting Smile Services Ltd|Communication Group|1|GBP|||Portfolio-01 (Capital)|MSP000100|GIA - Consulting Smile Services Ltd|58182736|Oretti, Robert|3106||||87735|58182155|58182156|188
+58182447|GIA - Consulting Smile Services Ltd|Communication Group|1|GBP|||Portfolio-01 (Capital)|MSP000100|GIA - Consulting Smile Services Ltd|58183301|Oretti, Robert|3106||||87735|58182155|58182156|188
+58277589|Wade Investment Management Fee|Fee Group|1||49513|Marlborough Investment Management Fee|Portfolio-01 (Capital)|MSP000150|Minerva SIPP - Christopher Wade 16563|||3106||||87826|58274894|58274895|258
+58277589|Wade Investment Management Fee|Fee Group|1||49513|Marlborough Investment Management Fee|Portfolio-01 (Capital)|MSP000151|Minerva SIPP - Maxene Wade 16564|||3106|||||58275005|58275006|258
+58277589|Wade Investment Management Fee|Fee Group|1||49513|Marlborough Investment Management Fee|Portfolio-01 (Capital)|MSP000160|Minerva SIPP - Odette Robson-Wade 16552|||3106||||87826|58274922|58274923|258
+58277589|Wade Investment Management Fee|Fee Group|1||49513|Marlborough Investment Management Fee|Portfolio-01 (Capital)|MSP000170|Minerva SIPP - Graham Wade 16551|||3106||||87741|58275199|58275200|258
+58287808|Servante Investment Management Fee|Fee Group|1||49513|Marlborough Investment Management Fee|Portfolio-01 (Capital)|MSP000130|GIA - Kathryn Servante|||3106||||87637|58260965|58260966|258
+58287808|Servante Investment Management Fee|Fee Group|1||49513|Marlborough Investment Management Fee|Portfolio-01 (Capital)|MSP000140|GIA - Graham Servante|||3106||||87654|58261040|58261041|258
+Total Number of Records: |41

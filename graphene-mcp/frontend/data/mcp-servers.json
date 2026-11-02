@@ -1,0 +1,55 @@
+[
+  {
+    "id": "mcp-portfolio",
+    "name": "Portfolio MCP",
+    "endpoint": "http://localhost:8001/mcp",
+    "description": "Portfolio data including positions, P&L, history, and transactions",
+    "authToken": "",
+    "status": "healthy",
+    "tools": [
+      {
+        "name": "get_positions",
+        "description": "Get all current portfolio positions with symbol, shares, cost basis, current value, and P&L",
+        "enabled": true
+      },
+      {
+        "name": "get_pnl",
+        "description": "Get portfolio profit and loss summary including daily, weekly, and monthly performance and total AUM",
+        "enabled": true
+      },
+      {
+        "name": "get_history",
+        "description": "Get historical portfolio AUM and daily returns over the past 6 months",
+        "enabled": true
+      },
+      {
+        "name": "get_transactions",
+        "description": "Get the 5 most recent portfolio transactions including buys and sells",
+        "enabled": true
+      }
+    ],
+    "latencyMs": 45,
+    "callsToday": 8240,
+    "agentsUsing": [
+      "Portfolio Agent",
+      "Advisor Agent",
+      "Report Agent"
+    ],
+    "createdAt": "2026-01-01",
+    "updatedAt": "2026-06-08"
+  },
+  {
+    "id": "mcp-ccf08df3",
+    "name": "position mcp",
+    "endpoint": "http://position-api/mcp",
+    "description": "",
+    "authToken": "",
+    "status": "unknown",
+    "tools": [],
+    "latencyMs": 0,
+    "callsToday": 0,
+    "agentsUsing": [],
+    "createdAt": "2026-06-08",
+    "updatedAt": "2026-06-08"
+  }
+]
