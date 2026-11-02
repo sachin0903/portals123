@@ -1,0 +1,35 @@
+-- ============================================================================
+-- 0063_models_drop_platform_identifier -- remove the one column on platform.models that has
+-- no source at all.
+--
+-- The review this came from asked which of platform.models' fields actually come from Seccl.
+-- Answered honestly, most of the ones that do not are firm-authored ON PURPOSE and must stay:
+--
+--   from Seccl        name, aim, model_type, risk_rating, model_charge, vatable,
+--                     suspend_rebalances, cash_allocation, status, data
+--   from the FIRM     target_return (+ _basis, _horizon_years), benchmark, risk_profile,
+--                     investment_decision, currency, code, enabled
+--   functional        id, tenant_id, platform_id, products, created_at
+--
+-- `target_return` exists precisely BECAUSE Seccl has no field for it — firms were putting it in
+-- Seccl's `url` field (0042). `investment_decision` is not Seccl's `investmentDecision` either:
+-- that one carries the decision MAKER's identity ({"firmLei":…,"personId":…}), which is why the
+-- conformed model publishes it as `decision_maker` and the sync deliberately leaves the Graphene
+-- classification alone. Dropping those would delete a feature, not tidy up after one.
+--
+-- `platform_identifier` is the exception: it is genuinely dead.
+--   * 0041 states outright that "the platform_identifier columns 0002 put on accounts/products/
+--     models are superseded" by the per-platform join tables.
+--   * 0042 records that "the existing (model -> platform, platform_identifier) pairs move to the
+--     join 0031 added" -- i.e. platform.model_platforms.external_id, which is where a model's
+--     reference on a given platform has lived since.
+--   * Nothing writes it (it is absent from materialise.py's model upsert and from catalogue.py's
+--     `_MODEL_FIELDS`), nothing selects it (the catalogue's model query does not mention it), and
+--     no portal renders it. The `platform_identifier` references that remain in the codebase are
+--     all on ACCOUNTS and PRODUCTS, which still use theirs.
+--
+-- Contract-safe: a column no reader selects cannot break a reader. Kept as its own migration so
+-- it is revertible independently of the pipeline work around it.
+-- ============================================================================
+
+ALTER TABLE platform.models DROP COLUMN IF EXISTS platform_identifier;

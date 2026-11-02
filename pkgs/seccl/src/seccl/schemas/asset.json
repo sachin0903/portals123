@@ -1,0 +1,222 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "description": "observed values: Asset"
+    },
+    "firmId": {
+      "type": "string",
+      "description": "observed values: SDEMO, SECCI"
+    },
+    "isin": {
+      "type": "string"
+    },
+    "shortName": {
+      "type": "string"
+    },
+    "longName": {
+      "type": "string"
+    },
+    "instrumentType": {
+      "type": "string",
+      "description": "observed values: ETF, Equity, Fund"
+    },
+    "currency": {
+      "type": "string",
+      "description": "observed values: EUR, GBP, USD"
+    },
+    "ticker": {
+      "type": "string"
+    },
+    "mic": {
+      "type": "string",
+      "description": "observed values: XETR, XFRA, XLON, XNCM, XOFF, XPAR"
+    },
+    "status": {
+      "type": "string",
+      "description": "observed values: Active"
+    },
+    "firmAccessProhibited": {
+      "type": "boolean"
+    },
+    "availableToNodeId": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "observed values: 0"
+      }
+    },
+    "auditDetails": {
+      "$ref": "#/$defs/AuditDetails"
+    },
+    "updateId": {
+      "type": "string"
+    },
+    "minimumTransferUnit": {
+      "type": "number"
+    },
+    "quoteUnit": {
+      "type": "number"
+    },
+    "settlementPeriod": {
+      "type": "number"
+    },
+    "customName": {
+      "type": "string",
+      "description": "observed values: ARCAM calum test"
+    },
+    "nodeId": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "classifications": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Classification"
+      }
+    },
+    "ask": {
+      "type": "number"
+    },
+    "bid": {
+      "type": "number"
+    },
+    "mid": {
+      "type": "number"
+    },
+    "ocfEstimated": {
+      "type": "number"
+    },
+    "priceDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "mexId": {
+      "type": "string"
+    },
+    "ptm": {
+      "type": "boolean"
+    },
+    "stampable": {
+      "type": "boolean"
+    },
+    "stampCountry": {
+      "type": "string",
+      "description": "observed values: GB"
+    },
+    "ocfCalculated": {
+      "type": "number"
+    },
+    "kiidDocumentUrl": {
+      "type": "string"
+    },
+    "kiddDocumentUrl": {
+      "type": "string"
+    },
+    "mifidCharges": {
+      "$ref": "#/$defs/MifidCharges"
+    },
+    "primaryMarket": {
+      "type": "boolean"
+    },
+    "_longName": {
+      "type": "string"
+    },
+    "_shortName": {
+      "type": "string"
+    }
+  },
+  "required": ["id"],
+  "title": "Asset",
+  "description": "Asset as Seccl returns it -- inferred from 64 example(s) in the Postman collection.",
+  "$defs": {
+    "AssetCreate": {
+      "type": "object",
+      "properties": {
+        "firmId": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "description": "observed values: 275F1"
+        },
+        "availableToNodeId": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "observed values: 0"
+          }
+        }
+      },
+      "required": ["firmId", "id"],
+      "title": "AssetCreate",
+      "description": "Body for creating a Asset -- inferred from 5 example(s) in the Postman collection."
+    },
+    "AuditDetails": {
+      "type": "object",
+      "properties": {
+        "updateDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "userFirmId": {
+          "type": "string",
+          "description": "observed values: BACKGROUND, SECCL"
+        },
+        "userId": {
+          "type": "string",
+          "description": "observed values: 029B3F3, Background"
+        },
+        "version": {
+          "type": "integer"
+        },
+        "application": {
+          "type": "string",
+          "description": "observed values: PfolioAPI, ProductProcessor"
+        }
+      },
+      "required": [
+        "application",
+        "updateDate",
+        "userFirmId",
+        "userId",
+        "version"
+      ]
+    },
+    "Classification": {
+      "type": "object",
+      "properties": {
+        "classificationType": {
+          "type": "string",
+          "description": "observed values: IMA, LSE Sector, LSE Segment"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "required": ["classificationType", "value"]
+    },
+    "MifidCharges": {
+      "type": "object",
+      "properties": {
+        "exAnteOngoing": {
+          "type": "number"
+        },
+        "exAnteIncidental": {
+          "type": "number"
+        },
+        "exAnteTransaction": {
+          "type": "number"
+        }
+      },
+      "required": ["exAnteIncidental", "exAnteOngoing", "exAnteTransaction"]
+    }
+  }
+}

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Suitability Report 2026 — Margaret Chen</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scrollbar-gutter: stable; }
+  body { font-family: 'Georgia', serif; background: transparent; color: #1a1a1a; padding: 12px 0; }
+  .page { background: #fff; width: 794px; aspect-ratio: 210 / 297; zoom: var(--doc-zoom, 1); margin: 0 auto 12px; padding: 64px 72px; box-shadow: 0 2px 16px rgba(0,0,0,0.10); border-radius: 2px; }
+  .doc-header { display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 2px solid #1e3a5f; padding-bottom: 28px; margin-bottom: 36px; }
+  .firm-name { font-family: 'Arial', sans-serif; font-size: 20px; font-weight: 700; color: #1e3a5f; letter-spacing: -0.3px; }
+  .firm-sub { font-family: 'Arial', sans-serif; font-size: 11px; color: #6b7280; margin-top: 3px; letter-spacing: 0.3px; }
+  .doc-meta { text-align: right; }
+  .doc-type { font-family: 'Arial', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px; color: #1e3a5f; }
+  .doc-ref { font-family: 'Arial', sans-serif; font-size: 11px; color: #9ca3af; margin-top: 4px; }
+  .title-block { margin-bottom: 36px; }
+  .title-block h1 { font-size: 26px; font-weight: 400; color: #1e3a5f; letter-spacing: -0.5px; line-height: 1.25; }
+  .title-block .subtitle { font-family: 'Arial', sans-serif; font-size: 13px; color: #6b7280; margin-top: 6px; }
+  .client-strip { background: #f8f7f4; border: 1px solid #e5e2da; border-radius: 4px; padding: 18px 22px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 40px; }
+  .client-strip dt { font-family: 'Arial', sans-serif; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: #9ca3af; margin-bottom: 4px; }
+  .client-strip dd { font-size: 14px; font-weight: 600; color: #1a1a1a; }
+  .section { margin-bottom: 36px; }
+  .section-title { font-family: 'Arial', sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #1e3a5f; border-bottom: 1px solid #e5e2da; padding-bottom: 8px; margin-bottom: 16px; }
+  p { font-size: 13.5px; line-height: 1.7; color: #374151; margin-bottom: 12px; }
+  p:last-child { margin-bottom: 0; }
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 36px; }
+  .stat-card { border: 1px solid #e5e2da; border-radius: 4px; padding: 18px 20px; }
+  .stat-label { font-family: 'Arial', sans-serif; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: #9ca3af; margin-bottom: 6px; }
+  .stat-value { font-size: 22px; font-weight: 700; color: #1e3a5f; letter-spacing: -0.5px; }
+  .stat-change { font-family: 'Arial', sans-serif; font-size: 11px; margin-top: 4px; color: #6b7280; }
+  .stat-change.up { color: #16a34a; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 8px; }
+  thead th { font-family: 'Arial', sans-serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #9ca3af; text-align: left; padding: 0 0 10px; border-bottom: 1px solid #e5e2da; }
+  thead th:not(:first-child) { text-align: right; }
+  tbody tr td { padding: 12px 0; border-bottom: 1px solid #f3f1ec; vertical-align: middle; }
+  tbody tr:last-child td { border-bottom: none; }
+  td:not(:first-child) { text-align: right; font-variant-numeric: tabular-nums; }
+  .asset-name { font-weight: 600; color: #1a1a1a; }
+  .asset-sub { font-family: 'Arial', sans-serif; font-size: 11px; color: #9ca3af; }
+  .totals td { font-weight: 700; color: #1a1a1a; border-top: 2px solid #e5e2da; border-bottom: none; padding-top: 12px; }
+  .rec-list { list-style: none; }
+  .rec-list li { display: flex; align-items: baseline; gap: 10px; padding: 12px 0; border-bottom: 1px solid #f3f1ec; font-size: 13.5px; line-height: 1.5; color: #374151; }
+  .rec-list li:last-child { border-bottom: none; }
+  .rec-num { font-family: 'Arial', sans-serif; font-size: 10px; font-weight: 700; color: #1e3a5f; background: #eef2f8; border-radius: 2px; padding: 2px 6px; flex-shrink: 0; }
+  .doc-footer { border-top: 1px solid #e5e2da; padding-top: 20px; margin-top: 48px; display: flex; justify-content: space-between; align-items: flex-start; }
+  .footer-left, .footer-right { font-family: 'Arial', sans-serif; font-size: 10px; color: #9ca3af; line-height: 1.6; }
+  .footer-right { text-align: right; }
+  .page-num { font-family: 'Arial', sans-serif; font-size: 10px; color: #d1cdc4; text-align: center; margin-top: 12px; }
+  /* Print: a clean full-page document (the on-screen card view is unchanged). */
+  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  @media print {
+    @page { size: A4; margin: 0; }
+    .page { aspect-ratio: auto; zoom: 1; width: auto; }
+    body { background: #fff; padding: 0; }
+    .page { box-shadow: none; border: none; border-radius: 0; margin: 0; max-width: none; padding: 52px 60px; }
+    .page + .page { page-break-before: always; }
+    .page-num { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="doc-header">
+    <div>
+      <div class="firm-name">Acme Advisers</div>
+      <div class="firm-sub">Authorised &amp; Regulated by the Financial Conduct Authority · FRN 123456</div>
+    </div>
+    <div class="doc-meta">
+      <div class="doc-type">Suitability Report</div>
+      <div class="doc-ref">Ref: AA/SR/2026/0312</div>
+      <div class="doc-ref">2 June 2026</div>
+    </div>
+  </div>
+
+  <div class="title-block">
+    <h1>Personal Suitability Report</h1>
+    <div class="subtitle">Prepared for Margaret Chen &nbsp;·&nbsp; Recommendation date: 2 June 2026</div>
+  </div>
+
+  <dl class="client-strip">
+    <div><dt>Client</dt><dd>Margaret Chen</dd></div>
+    <div><dt>Adviser</dt><dd>James Okafor</dd></div>
+    <div><dt>Risk Profile</dt><dd>Balanced (3/5)</dd></div>
+  </dl>
+
+  <div class="section">
+    <div class="section-title">Your Objectives</div>
+    <p>Following our meeting on 21 May 2026, you asked us to recommend a tax-efficient strategy for investing £150,000 of accumulated savings over a medium-to-long term horizon, with the aim of supplementing your retirement income from 2031 onwards.</p>
+    <p>You confirmed that you have an adequate cash emergency fund, no short-term liabilities, and that you are comfortable accepting moderate fluctuations in capital value in exchange for the prospect of real growth above inflation.</p>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-label">Amount Invested</div><div class="stat-value">£150,000</div><div class="stat-change">Lump sum</div></div>
+    <div class="stat-card"><div class="stat-label">Recommended Wrapper</div><div class="stat-value">ISA + GIA</div><div class="stat-change">£20,000 ISA / £130,000 GIA</div></div>
+    <div class="stat-card"><div class="stat-label">Risk Level</div><div class="stat-value">Balanced</div><div class="stat-change">3 of 5</div></div>
+    <div class="stat-card"><div class="stat-label">Projected Value (10yr)</div><div class="stat-value">£241,000</div><div class="stat-change up">Mid-rate, after charges</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Recommended Portfolio</div>
+    <table>
+      <thead><tr><th>Fund</th><th>Allocation</th><th>OCF</th></tr></thead>
+      <tbody>
+        <tr><td><div class="asset-name">Vanguard FTSE Global All Cap</div><div class="asset-sub">Global equities, passive</div></td><td>52%</td><td>0.23%</td></tr>
+        <tr><td><div class="asset-name">iShares Core UK Gilts</div><div class="asset-sub">UK government bonds</div></td><td>22%</td><td>0.07%</td></tr>
+        <tr><td><div class="asset-name">L&amp;G Global Inflation-Linked Bond</div><div class="asset-sub">Index-linked fixed income</div></td><td>14%</td><td>0.27%</td></tr>
+        <tr><td><div class="asset-name">iShares Global Property Securities</div><div class="asset-sub">Listed property</div></td><td>7%</td><td>0.22%</td></tr>
+        <tr><td><div class="asset-name">Royal London Short Term Money Market</div><div class="asset-sub">Cash &amp; equivalents</div></td><td>5%</td><td>0.10%</td></tr>
+        <tr class="totals"><td>Blended portfolio</td><td>100%</td><td>0.19%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Why This Recommendation Is Suitable</div>
+    <ul class="rec-list">
+      <li><span class="rec-num">01</span><span>The blended asset allocation matches your Balanced (3/5) attitude to risk and your capacity for loss as assessed in our risk questionnaire.</span></li>
+      <li><span class="rec-num">02</span><span>Using your full £20,000 ISA allowance shelters part of the portfolio from income and capital gains tax; the balance is held in a flexible General Investment Account.</span></li>
+      <li><span class="rec-num">03</span><span>A blended ongoing fund cost of 0.19% keeps charges low, leaving more of your return invested for growth.</span></li>
+      <li><span class="rec-num">04</span><span>The 10-year horizon allows time to recover from short-term market falls, consistent with your stated objectives.</span></li>
+    </ul>
+  </div>
+
+  <div class="doc-footer">
+    <div class="footer-left">Acme Advisers Ltd · 14 Finsbury Square, London EC2A 1HP<br />Authorised and regulated by the FCA. Registration No. 123456.</div>
+    <div class="footer-right">Confidential — prepared for Margaret Chen only<br />Capital is at risk. Past performance is not a guide to the future.</div>
+  </div>
+  <div class="page-num">1 of 1</div>
+</div>
+
+<script>
+(function () {
+  var BASE = 794, GUTTER = 56;
+  function fit() {
+    var w = document.documentElement.clientWidth;
+    document.body.style.setProperty('--doc-zoom', Math.min(1, (w - GUTTER) / BASE));
+  }
+  window.addEventListener('resize', fit);
+  fit();
+}());
+</script>
+</body>
+</html>

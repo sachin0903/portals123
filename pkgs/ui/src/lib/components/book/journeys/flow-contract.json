@@ -1,0 +1,524 @@
+{
+	"$comment": "THE FLOWS v3 CONTRACT — the single source of truth shared by the Python engine (apps/api/app/flows/*) and the TypeScript authoring surfaces (apps/platform flow-editor, @graphene/ui book/journeys + automations). Both sides assert against this file in their own test suites, exactly as block-contract.json polices the client-portal widget system, so the engine and the builder cannot drift apart. Change this file only together with both sides. Keys are snake_case where they ride the wire as authored JSON (step config, condition fields) and camelCase for contract metadata the wire never carries.",
+	"version": 3,
+
+	"$comment_stepTypes": "The work a flow asks a human to do. Mirrors app/flows/definitions.py::STEP_TYPES exactly — the pin test compares type, defaultAssignee, defaultScope and configKeys as sets. Adding a step type is an entry here + there + a handler; nothing else.",
+	"stepTypes": {
+		"fill_form": {
+			"defaultAssignee": "client",
+			"defaultScope": "participant",
+			"$comment_remember": "remember is the AUTHORED promotion into case memory — {memoryKey: answerField}. Deliberately not \"copy every answer\": a fact-find carries hundreds of the client's most sensitive fields, and memory is read by branch conditions and printed into client-facing copy, so what crosses into it is a decision the author makes one key at a time.",
+			"configKeys": ["form_uid", "category", "mapping", "mode", "title", "remember"],
+			"requiredConfig": ["form_uid"]
+		},
+		"accept_terms": {
+			"defaultAssignee": "client",
+			"defaultScope": "account",
+			"$comment_content": "term_uid points at the terms catalogue (`terms.terms`) and is how a step should be configured — the version the client accepts is pinned from it, and the acceptance is durable. content (markdown or a pasted HTML snippet) and document_uid (a library PDF) are the pre-catalogue way of carrying the copy on the step itself. Publish requires one of the three — see definitions._step_publish_issues — rather than a single requiredConfig key.",
+			"configKeys": ["term_uid", "document_uid", "content", "category", "title"],
+			"requiredConfig": []
+		},
+		"upload_document": {
+			"defaultAssignee": "client",
+			"defaultScope": "participant",
+			"configKeys": ["category", "format_hint", "title"],
+			"requiredConfig": []
+		},
+		"setup_account": {
+			"defaultAssignee": "staff",
+			"defaultScope": "account",
+			"configKeys": ["provider", "product_id", "model_id", "fee_package_id", "role"],
+			"requiredConfig": []
+		},
+		"verify_identity": {
+			"defaultAssignee": "staff",
+			"defaultScope": "participant",
+			"configKeys": ["provider", "category"],
+			"requiredConfig": []
+		},
+		"aml_check": {
+			"defaultAssignee": "staff",
+			"defaultScope": "participant",
+			"configKeys": ["category"],
+			"requiredConfig": []
+		},
+		"generate_document": {
+			"defaultAssignee": "staff",
+			"defaultScope": "application",
+			"configKeys": ["template_uid", "dataset", "category", "title"],
+			"requiredConfig": ["template_uid"]
+		},
+		"review": {
+			"defaultAssignee": "staff",
+			"defaultScope": "account",
+			"configKeys": ["title", "category", "gate"],
+			"requiredConfig": []
+		},
+		"task": {
+			"defaultAssignee": "staff",
+			"defaultScope": "application",
+			"configKeys": ["description", "invite_clients"],
+			"requiredConfig": []
+		}
+	},
+
+	"$comment_nodeKinds": "Every node carries a `kind`. `step` (the default when omitted, so legacy definitions load untouched) is human work — `type` resolves against stepTypes. `action` is unattended work the engine performs — `type` resolves against actionTypes, and this is the discriminator that keeps generate_document unambiguous in both vocabularies. The rest are control flow, described below. `condition` is one of them — a `branch` with a fixed two-arm shape, implemented on the same machinery (see controlNodes.condition). `start` is the graph's explicit entry: at most one per definition, no config, and its whole purpose is a list-valued `next` (see $comment_nextArity) so a journey can OPEN on several things at once.",
+	"nodeKinds": [
+		"start",
+		"step",
+		"action",
+		"condition",
+		"branch",
+		"wait",
+		"wait_for_event",
+		"start_flow",
+		"exit"
+	],
+
+	"$comment_nodeEnvelope": "The keys every authored node may carry, whatever its kind — the envelope, as distinct from the kind-specific `config` above. `id` is a slug unique within the definition; `kind` defaults to 'step'; `title` is the author's label; `config` is the kind's own object; `next` is the outgoing edge or edges (absent on branch, which carries its edges on its branches, and on the terminal kinds, which have none); `depends_on` is the authored prerequisite list the engine already enforced before v3; `visibility` (steps and actions only) is the plan-time condition; `position` is the canvas coordinate.",
+	"nodeEnvelope": {
+		"always": ["id", "kind", "title", "config", "position", "depends_on"],
+		"workNodesOnly": [
+			"type",
+			"required",
+			"assignee",
+			"scope",
+			"visibility",
+			"per_participant",
+			"tasks"
+		],
+		"$comment_position": "{x, y} numbers, or null. UI-only and opaque to the engine, but it IS persisted and it IS honoured: the builder saves where the author dropped a node and the layout pass places only the nodes whose position is null. This is the layout contract — auto-layout is the fallback for unplaced nodes, not an authority that overwrites placement. (Before v3 the editor wrote null unconditionally and therefore had to disable dragging, since a dragged node snapped back on the next render.) A definition whose nodes all carry null lays out exactly as it always did, so nothing existing moves.",
+		"$comment_nextArity": "THE ARITY RULE. `next` is a node id, a LIST of node ids, or null — and a list means PARALLEL: every target becomes available at once, none of them waits for the others. A single edge is written as a bare string so no existing document changes shape; readers on both sides normalise to a list (graph.py `Node.next_ids`, nodes.ts `nextIds`). Order inside the list is presentation only. This is what a legacy `{steps}` definition needs to be expressible at all: its order is `depends_on`, so a tier offers every dependency-free step together, and a single-valued `next` could only have compiled that into a chain (`effective_depends_on` turns an edge into a hard prerequisite). Sequencing is `depends_on`, not edge count: `next: [a, b]` then `b.depends_on: [a]` is a fan-out where one arm happens to wait. A BRANCH ARM stays single-valued on purpose — an arm that must open several things at once points at a node that fans out, rather than giving the document two ways to spell a fan-out.",
+		"$comment_terminalEdges": "`next: null` on a non-terminal node is authored-but-unfinished, not a graph error at save time — the builder saves work in progress. Publish is where it becomes a refusal (graph_issues), which is the same split every other validator here uses: save is permissive, publish is strict."
+	},
+
+	"$comment_legacyUpgrade": "How a pre-v3 `{steps}` document's PREREQUISITES read as wires — implemented in graph.py::upgrade_legacy and mirrored by convert.ts::wireFromPrerequisites, with `legacyUpgradeExample` below pinning the two. It is the FIRST HALF of converting a legacy flow (the second is $comment_conditionUpgrade) and deliberately NOT what merely READING one does: nodes.ts::toNodes invents no edges and no start node, because a legacy document has neither. THE RULE: mint one `start` node; it fans out (list-valued `next`) to every step with no `depends_on`, in document order; every other step is wired FROM each of its `depends_on` entries, and keeps its authored `depends_on` verbatim. The result compiles back to exactly the authored prerequisites (`effective_depends_on` walks predecessor edges to the nearest step ancestors, and `start` is not a step), which is what makes the upgrade faithful rather than merely non-destructive. Do NOT wire the steps into the array order the old editor drew: that order was presentation, inferred at render time and stored nowhere, and the prerequisites are the only ordering the document actually states.",
+	"legacyUpgradeExample": {
+		"legacy": [
+			{ "id": "a" },
+			{ "id": "b" },
+			{ "id": "c", "depends_on": ["a", "b"] },
+			{ "id": "d", "depends_on": ["a"] }
+		],
+		"upgraded": [
+			{ "id": "start", "kind": "start", "next": ["a", "b"] },
+			{ "id": "a", "kind": "step", "next": ["c", "d"] },
+			{ "id": "b", "kind": "step", "next": "c" },
+			{ "id": "c", "kind": "step", "next": null, "depends_on": ["a", "b"] },
+			{ "id": "d", "kind": "step", "next": null, "depends_on": ["a"] }
+		]
+	},
+
+	"$comment_conditionUpgrade": "How a step's plan-time `visibility` becomes an authored node — implemented in graph.py::visibility_to_conditions and mirrored by convert.ts::conditionsFromVisibility, pinned by `conditionUpgradeExample` below. THE RULE: for each work node carrying a `visibility`, mint one `condition` node that TAKES ITS PLACE on the path — its `true` arm holds that condition verbatim and points at the node, its `false` arm points at wherever the node itself led (its single successor, or nowhere when it has none or several), and every edge that pointed at the node is re-aimed at the condition. Then clear the node's own `visibility`. Taking its place is the point: a condition is control flow, evaluated when the case walks into it, so it has to sit ON the path, and the `false` arm is what the case does when the work does not apply — 'carry on to whatever came next'. The false arm is left unwired when the node fans out to several successors: an arm is single-valued by contract and guessing one of several would drop the others, so publish says so and the author draws the wire. The minted title is `Only when · <the gated node's title>` and the arms are minted through one helper per language (graph.py::condition_arms / convert.ts::conditionArms), so a converted document is byte-identical across them.",
+	"conditionUpgradeExample": {
+		"authored": [
+			{
+				"id": "core",
+				"kind": "step",
+				"next": "extra",
+				"visibility": { "field": "contact.type", "operator": "equals", "value": "individual" }
+			},
+			{ "id": "extra", "kind": "step", "next": null }
+		],
+		"converted": [
+			{
+				"id": "core_when",
+				"kind": "condition",
+				"title": "Only when · core",
+				"config": {
+					"branches": [
+						{
+							"id": "true",
+							"label": "Yes",
+							"conditions": {
+								"field": "contact.type",
+								"operator": "equals",
+								"value": "individual"
+							},
+							"next": "core"
+						},
+						{ "id": "false", "label": "No", "conditions": null, "next": "extra" }
+					]
+				}
+			},
+			{ "id": "core", "kind": "step", "next": "extra", "visibility": null },
+			{ "id": "extra", "kind": "step", "next": null }
+		]
+	},
+
+	"$comment_controlNodes": "v3's graph nodes — the things that are NOT work items. A branch node is a first-class authored block with numbered outgoing branches (first satisfiable wins) and a MANDATORY unconditional else, enforced by the publish validator: a fan-out with no fallback is how a client silently falls off the end of a process, so the builder refuses it. Before v3 a 'decision' was only a step's visibility property rendered to look like a branch (apps/platform flow-editor/graph.ts) — that pseudo-node is retired. `condition` IS a branch, fixed at two arms, and shares its representation (`config.branches`) so that every traversal, decision and elision rule reads one kind set (graph.py::BRANCHING_KINDS) rather than forking.",
+	"controlNodes": {
+		"start": {
+			"label": "Start",
+			"config": [],
+			"$comment": "The graph's explicit entry, and the ONLY reason it exists is fan-out: a journey that opens on several things at once has no node to fan out FROM, and 'the first node nothing points at' cannot name more than one. At most one per definition (the parser refuses a second — an author must never be able to draw two starting points), no config, no depends_on, nothing may point at it. When a definition has one it IS the entry; when it has none the entry stays derived exactly as it always was, so every v3 definition authored before the arity rule loads unchanged.",
+			"maxPerFlow": 1
+		},
+		"condition": {
+			"label": "Condition",
+			"config": ["branches"],
+			"armIds": ["true", "false"],
+			"$comment": "A BRANCH WITH TWO ARMS — control flow, decided when a case walks into it, and implemented ON the branch machinery rather than beside it. Its arms live in `config.branches` in the same representation a branch uses, fixed at two: `true` carries the author's condition, `false` is the unconditional else. BOTH ARMS MAY POINT AT THE SAME NODE, which is how a journey splits around a piece of work and comes back together — the re-convergence the whole spine is drawn around. What differs from `branch` is the authoring surface (a condition, and 'if it holds go to… / otherwise go to…') and the look; `branch` is the node for three or more paths. HISTORY, because the opposite is written all over the older comments and was right for the shape it was written against: until Aug 2026 this was a PLAN-TIME GATE that compiled into the gated step's `visibility` and that nothing walked through. That was forced by the seeded onboarding having no control spine at all — three tiers offering their work in parallel — so branch-gating its conditions left 14 steps held behind nodes nothing reached. Wiring every node into the next removed that: control now flows through every node, so a condition can decide a path and `planning.control_gated_steps` releases the work behind it when the walk arrives. Publish refuses a condition with no conditions (it decides nothing), one whose `true` arm leads nowhere (same), one whose arms are not exactly `true`/`false`, and one nothing leads to (a control node is entered by a wire and by nothing else). An unwired `false` arm is allowed and means 'and otherwise this path is finished'."
+		},
+		"branch": {
+			"label": "Branch",
+			"config": ["branches"],
+			"$comment": "branches: [{ id, label, conditions|null, next }] — evaluated in array order, the first whose conditions pass is taken; exactly one branch MUST have conditions:null (the else). Branches may re-converge on a shared next node.",
+			"minBranches": 2,
+			"requiresElse": true
+		},
+		"wait": {
+			"label": "Wait",
+			"config": ["duration_days", "duration_hours", "until_date_field"],
+			"$comment": "Pause the case for a duration, or until a date carried in case memory / a subject field. Durable across worker restarts (flows.timers)."
+		},
+		"wait_for_event": {
+			"label": "Wait for event",
+			"config": ["trigger", "conditions", "timeout_days", "timeout_branch"],
+			"$comment": "Crisp's mid-flow listener with the thing Crisp cannot express: a timeout branch. 'No signed form in 7 days -> chase' is one node. `trigger` names an entry from the trigger registry below, and it must be one the `listeners` block says can be DELIVERED to a waiting case — a narrower set than the rule tier's menu, see $comment_listeners. `timeout_branch` names the node to jump to when the deadline passes."
+		},
+		"start_flow": {
+			"label": "Start another flow",
+			"config": ["flow_code", "carry_memory"],
+			"$comment": "Tail-call, not a subroutine call — control does not return (Crisp's Run Workflow). Depth-capped at runtime (safety.maxChainDepth) AND cycle-checked at publish: routers/flows.py::_automation_issues follows each flow_code through the TARGET's published definition, up to maxChainDepth hops, and refuses a chain that comes back round. The check lives in the router rather than in the pure graph validator because following a tail call means resolving a code to a published version and parsing it — it needs the database. It is a check on the definitions as they stand at publish: re-publishing a downstream flow can still close a loop afterwards, and only the runtime cap catches that one."
+		},
+		"exit": {
+			"label": "End",
+			"config": ["outcome", "reason"],
+			"$comment": "outcome: completed | cancelled | failed. An explicit terminal node; a graph may have several."
+		}
+	},
+
+	"$comment_actionTypes": "What an automation DOES. One vocabulary shared by flow action-steps (Phase B) and the rule tier (Phase A) — the same executor runs both. NOTE THE DISCRIMINATOR: `generate_document` names both a human step (staff render a document as part of the process) and an automated action (the engine renders one unattended). They are different behaviours, so the node's `kind` decides which — `kind: \"step\"` resolves `type` against stepTypes, `kind: \"action\"` against actionTypes. A precedence rule ('step types win') would have made one of them silently unauthorable, so the ambiguity is settled by an explicit field rather than by ordering. `permission` names the slug a HUMAN needs for the equivalent act: the executor calls that same permissioned service layer, and publish preflight refuses an action whose tenant has no role holding the slug (an action that could never run should fail at authoring, not at 3am in a client's journey). Every action emits its normal action event with the automation as the named actor, so automated work appears in the audit log like anyone else's.",
+	"actionTypes": {
+		"apply_tag": {
+			"config": ["tag", "target"],
+			"permission": "contacts:write",
+			"$comment": "target: contact | case. Tags are the shared substrate automations compose through (Crisp's segments) — deliberately plain labels; structured detail belongs in real fields."
+		},
+		"remove_tag": { "config": ["tag", "target"], "permission": "contacts:write" },
+		"raise_task": {
+			"config": [
+				"title",
+				"description",
+				"assign_to",
+				"assignee_role_slug",
+				"category",
+				"priority",
+				"due_in_days"
+			],
+			"permission": "tasks:write"
+		},
+		"send_email": {
+			"config": ["template_code", "to", "variables"],
+			"permission": "documents:send",
+			"$comment": "APPROVED TEMPLATES ONLY — template_code resolves to a reviewed template and interpolates case memory; free text authored in a flow never reaches a client. Gated on documents:send because it is client-facing release, the exact category that split exists to control. variables: {name: interpolated string} supplying the template merge fields the CASE cannot carry — a document name, a covering note. Values interpolate in the authored `{{ key || fallback }}` grammar (raise_task.title's), so a variable is composed from facts rather than being a second place to write free prose; the copy around it is still the published template. A name may not be dotted and may not shadow a context scope: an author who could define `brand` could replace the firm's own support address in a client-facing email."
+		},
+		"assign_adviser": { "config": ["adviser_id", "role"], "permission": "contacts:write" },
+		"set_case_status": { "config": ["status"], "permission": "cases:write" },
+		"request_document": {
+			"config": ["category", "title", "target_contact"],
+			"permission": "documents:send"
+		},
+		"generate_document": {
+			"config": ["template_uid", "dataset"],
+			"permission": "documents:write"
+		},
+		"send_document": { "config": ["document_uid"], "permission": "documents:send" },
+		"webhook_out": {
+			"config": ["endpoint_key", "payload_keys"],
+			"permission": "automations:write",
+			"$comment": "Rides the flows outbox — retries and dead-letters included, unlike Crisp's fire-and-forget."
+		},
+		"lookup": {
+			"config": ["endpoint_key", "request_mapping", "response_mapping"],
+			"permission": "automations:write",
+			"$comment": "Phase D. The inbound half Crisp refuses to ship: call an ALLOWLISTED endpoint and map response fields into case memory. endpoint_key resolves to a server-side allowlist entry — a flow never names a raw URL."
+		},
+		"classify": {
+			"config": ["input_fields", "question", "labels", "remember_as"],
+			"permission": "automations:write",
+			"$comment": "Phase D2. Read unstructured text and return exactly ONE label from the author's closed set, into case memory, so a BRANCH decides on it. The model routes; it does not decide. Anything it returns outside the declared set becomes the reserved `unknown` label, which is always in the set and never authorable — so an off-set answer is a visible arm, not a silent fall-through. Publish REFUSES a classify whose downstream branch has no arm for every label including unknown (the mandatory-else rule, one level up). `input_fields` is the same {name: source} shape as lookup's request_mapping and is the ONLY thing sent: an author names the narrowest slice, bounded by safety.aiMaxInputFields / aiMaxInputChars, and no AML/KYC/screening field may be named (docs/aml.md, the tipping-off control)."
+		},
+		"draft_message": {
+			"config": ["input_fields", "brief", "title", "assignee_role_slug", "due_in_days"],
+			"permission": "tasks:write",
+			"$comment": "Phase D2. Draft client-facing copy and RAISE IT AS A TASK for a human, draft attached. It does not enqueue to the outbox and is structurally incapable of doing so (app/flows/ai.py imports no sending module; an AST scan pins it, the way simulate.py's side-effect freedom is pinned). The send stays a person's act, audited as theirs — which is why this is gated on tasks:write and NOT documents:send: it raises a task, it does not release anything to a client. Same `input_fields` allowlist and the same AML/KYC refusal as classify."
+		}
+	},
+
+	"$comment_mapping": "A `fill_form` step's `mapping` writes the client's answers onto crm.contacts (app/flows/mapping.py + step_handlers._write_contact_patch). BOTH lists are mirrored as Python literals and pinned by tests/test_flows_graph.py — the API container ships without pkgs/ui, so change the three together. `transforms` compose left to right and are all str->str (lists pass through when transforms are empty or trim-like). `targets` are the columns a mapping may set DIRECTLY; dotted paths under `address` / `bank_account` merge into those real jsonb COLUMNS; any other dotted target nests into the `data` jsonb (offshore KYC, employer contributions).",
+	"mapping": {
+		"transforms": [
+			"trim",
+			"upper",
+			"lower",
+			"title",
+			"collapse_spaces",
+			"digits",
+			"iso_date",
+			"postcode",
+			"snake"
+		],
+		"targets": [
+			"first_name",
+			"middle_name",
+			"surname",
+			"title",
+			"email",
+			"mobile",
+			"phone",
+			"dob",
+			"gender",
+			"nationality",
+			"tax_residency",
+			"national_identifier",
+			"national_identifier_type",
+			"marital_status",
+			"employment_status",
+			"retirement_age",
+			"source_of_wealth",
+			"occupation",
+			"occupation_detail",
+			"country_of_birth",
+			"town_of_birth",
+			"source_of_funds",
+			"source_of_funds_detail",
+			"tax_relief",
+			"employer_contributions",
+			"employer_name",
+			"employer_registration_number",
+			"source_of_wealth_detail",
+			"us_person",
+			"is_vulnerable",
+			"vulnerability_reasons",
+			"vulnerability_characteristics",
+			"vulnerability_notes",
+			"fatca_status",
+			"fatca_certified_at"
+		]
+	},
+
+	"$comment_triggers": "The curated projection of our event stream. Automation authors see this menu of human-named triggers, never the raw audit.actions firehose (Crisp's most important product decision). `event` is the real event type the consumer matches: 'action.' + the OpenAPI operation id (tag-routename) for source:action; a flows/domain event name for source:domain; source:schedule is evaluated by the timer loop in the firm's timezone. A TRIPWIRE TEST asserts every source:action entry resolves to a live route's event type — a renamed endpoint fails the suite instead of silently disarming a firm's automations. `subject` tells the engine what a case started here is about.",
+	"triggers": {
+		"client.document_uploaded": {
+			"label": "A client uploads a document",
+			"source": "action",
+			"event": "document_request.item_fulfilled",
+			"subject": "contact"
+		},
+		"client.form_submitted": {
+			"label": "A client submits a form",
+			"source": "action",
+			"event": "document_request.form_submitted",
+			"subject": "contact"
+		},
+		"document.generated": {
+			"label": "A document is generated",
+			"source": "action",
+			"event": "document.generated",
+			"subject": "contact"
+		},
+		"document.sent": {
+			"label": "A document is sent to a client",
+			"source": "action",
+			"event": "document.sent",
+			"subject": "contact"
+		},
+		"document.requested": {
+			"label": "A document is requested from a client",
+			"source": "action",
+			"event": "document_request.created",
+			"subject": "contact"
+		},
+		"contact.created": {
+			"label": "A client record is created",
+			"source": "action",
+			"event": "client.created",
+			"subject": "contact"
+		},
+		"contact.login_linked": {
+			"label": "A client login is linked",
+			"source": "action",
+			"event": "client.portal_user_linked",
+			"subject": "contact"
+		},
+		"contact.adviser_assigned": {
+			"label": "An adviser is assigned",
+			"source": "action",
+			"event": "client.adviser_assigned",
+			"subject": "contact"
+		},
+		"contact.bank_details_changed": {
+			"label": "Bank details change",
+			"source": "action",
+			"event": "client.bank_account_updated",
+			"subject": "contact"
+		},
+		"account.model_changed": {
+			"label": "An account's model changes",
+			"source": "action",
+			"event": "account.model_updated",
+			"subject": "account"
+		},
+		"instruction.created": {
+			"label": "An instruction is raised",
+			"source": "action",
+			"event": "instruction.created",
+			"subject": "contact"
+		},
+		"instruction.cancelled": {
+			"label": "An instruction is cancelled",
+			"source": "action",
+			"event": "instruction.cancelled",
+			"subject": "contact"
+		},
+		"task.created": {
+			"label": "A task is raised",
+			"source": "action",
+			"event": "task.created",
+			"subject": "task"
+		},
+		"task.completed": {
+			"label": "A task is completed",
+			"source": "action",
+			"event": "task.completed",
+			"subject": "task"
+		},
+		"application.started": {
+			"label": "An application starts",
+			"source": "action",
+			"event": "journey.started",
+			"subject": "application"
+		},
+		"case.completed": {
+			"label": "A journey completes",
+			"source": "domain",
+			"event": "flows.case.completed",
+			"subject": "case",
+			"$comment": "The composition trigger — flows chain through events, the Crisp way, not by calling each other."
+		},
+		"case.step_completed": {
+			"label": "A journey step completes",
+			"source": "domain",
+			"event": "flows.case.step_completed",
+			"subject": "case"
+		},
+		"screening.completed": {
+			"label": "A screening result arrives",
+			"source": "domain",
+			"event": "aml.screen.completed",
+			"subject": "contact"
+		},
+		"tag.applied": {
+			"label": "A tag is applied",
+			"source": "domain",
+			"event": "tags.applied",
+			"subject": "contact"
+		},
+		"schedule.recurring": {
+			"label": "On a schedule",
+			"source": "schedule",
+			"event": null,
+			"subject": "contact",
+			"$comment": "Crisp has no scheduled trigger at all — a chat-product artefact, not wisdom. Annual reviews and allowance deadlines need one. Config: cron-ish (day/hour, firm timezone) + a subject query the conditions then filter."
+		}
+	},
+
+	"$comment_listeners": "WHICH OF THOSE TRIGGERS A RUNNING JOURNEY MAY WAIT FOR. The `triggers` map above is the RULE tier's menu — what can ARM an automation. A `wait_for_event` node asks a different question, and the answer is a strictly smaller set, so it is stated here once rather than re-derived by each surface. Two conditions, both structural: (1) the signal has to REACH the listener, and the only thing that releases a parked case is the audit.actions consumer (app/flows/automation.py::handle_event calls timers.release_listeners) — so `source` must be in `deliverableSources`. `schedule` is not an event at all (its `event` is null, so no event type can ever resolve to it) and `domain` has no consumer yet — it joins this list on the day one lands, alongside triggers.py::SUPPORTED_SOURCES. (2) the release has to be SCOPED to this case's own subject, or client A's upload releases client B's journey — so `subject` must be in `scopableSubjects`, the spaces flows.cases can actually name (timers.py::_case_subject). `task` is absent on purpose: a case is about a contact or an account, and an application through its execution — never a task. 'Wait until the task is done' has no task to be about, and there is no honest id to scope the listener to, so it is refused rather than silently degraded. Making it work would need a listener axis a case CAN name (e.g. 'any task on this case'), which is a schema and consumer change, not a registry entry. THREE READERS, ONE ANSWER: publish refuses (graph.py::_wait_for_event_issues), arm refuses (timers.py::arm_listener, which is what protects definitions published before this rule existed), and the builder disables the menu entry (automations/contract.ts::listenerRefusal). The predicate is pinned both sides; the refusal COPY is each surface's own, because a publish refusal and a picker tooltip are not the same sentence.",
+	"listeners": {
+		"deliverableSources": ["action"],
+		"scopableSubjects": ["contact", "account", "application", "case"]
+	},
+
+	"$comment_conditions": "ONE evaluator, three sites: trigger entry conditions, runtime branch nodes, and the existing plan-time step visibility (which stays — it answers a different question: plan this step in or out per participant/account at instantiate). Operators are deliberately thin; Crisp proves rich algebra is not what makes this work. Every condition carries is/is-not polarity via its negated twin.",
+	"conditions": {
+		"operators": [
+			"equals",
+			"notEquals",
+			"in",
+			"notIn",
+			"contains",
+			"notContains",
+			"isEmpty",
+			"isNotEmpty",
+			"matches",
+			"notMatches",
+			"greaterThan",
+			"lessThan",
+			"before",
+			"after",
+			"withinDays",
+			"olderThanDays"
+		],
+		"$comment_operators": "The first eight already exist in app/flows/visibility.py and MUST keep their exact semantics (v1/v2 definitions in the wild use them). `matches`/`notMatches` are wildcard text (* = word, ** = substring, case- and punctuation-insensitive — Crisp's grammar). The four temporal operators take an ISO date or a field reference.",
+		"fieldScopes": {
+			"contact": [
+				"contact.type",
+				"contact.service_type",
+				"contact.sub_type",
+				"contact.enabled",
+				"contact.tags",
+				"contact.nationality",
+				"contact.has_login"
+			],
+			"application": [
+				"application.custody",
+				"application.status",
+				"application.has_pension_product",
+				"application.has_sipp_product",
+				"application.has_transfer"
+			],
+			"account": [
+				"account.product",
+				"account.custody",
+				"account.status",
+				"account.has_transfer",
+				"account.value",
+				"account.discretionary"
+			],
+			"case": ["case.status", "case.flow_code", "case.tags", "case.started_at"],
+			"memory": ["memory.*"],
+			"event": ["event.type", "event.actor_id", "event.subject.*"],
+			"time": ["time.hour", "time.weekday", "time.since_step_completed"]
+		},
+		"$comment_fields": "memory.* and event.subject.* are open namespaces (authored keys); everything else is a closed registry the builder renders as a picker. Unknown field ⇒ null ⇒ only isEmpty/notEquals can match it — never an exception, never a silent true."
+	},
+
+	"$comment_caps": "Structural limits. Publish refuses a definition breaching any of them.",
+	"caps": {
+		"maxNodesPerFlow": 200,
+		"maxBranchesPerNode": 8,
+		"maxTriggersPerFlow": 4,
+		"maxRulesPerTenant": 200,
+		"maxWaitDays": 90,
+		"maxConditionsPerGroup": 20
+	},
+
+	"$comment_safety": "The spine that has to exist before any automation can send an email. Crisp's storm guards are two magic numbers appropriate to chat; ours are explicit, configurable and tested. These are DEFAULTS — per-tenant overrides live in the automations settings row.",
+	"safety": {
+		"automationEventsTriggerByDefault": false,
+		"$comment_selfTrigger": "THE most important guard: our action stream emits an event for everything an automation does, so automations feeding themselves is the default failure mode, not an edge case. An automation-sourced event never fires another automation unless that trigger opts in explicitly, and the chain depth rides on the event so the cap still applies.",
+		"maxChainDepth": 5,
+		"caseTriggerBudget": 50,
+		"defaultRearmMinutes": 1440,
+		"tenantExecutionsPerMinute": 60,
+		"flowConcurrency": 20,
+		"lookupTimeoutMs": 10000,
+		"$comment_rates": "Overflow is DEFERRED, never dropped — a rate limit that loses a client's chaser task is worse than one that runs it a minute late. Exhaustion of a budget or the depth cap raises an operations task rather than failing silently.",
+		"aiTimeoutMs": 10000,
+		"aiMaxLabels": 12,
+		"aiMaxInputFields": 6,
+		"aiMaxInputChars": 6000,
+		"aiUnknownLabel": "unknown",
+		"$comment_ai": "The bounds on `classify` / `draft_message`. aiMaxInputFields and aiMaxInputChars are PII minimisation with numbers on it: an author names the narrowest slice that answers the question and the total is truncated-refused, never silently trimmed. aiTimeoutMs is 10000 — the same as lookupTimeoutMs and for the same reason, which is not the model’s speed but the worker’s: a synchronous call on the rule path blocks a whole BATCH_LIMIT batch, and 25 × 10s is the largest budget that still fits the automations loop’s stall allowance (the timers loop’s too). aiUnknownLabel is reserved — it is added to every label set, an author may not declare it, and it is what any off-set answer becomes. There is no aiEnabled here on purpose: whether a firm may use this is a per-tenant operator decision in flows.ai_tenants, not something a contract states for everyone."
+	},
+
+	"$comment_permissions": "New slugs this programme registers (app/permissions.py). automations:* is separate from flows:* deliberately: authoring an onboarding journey and arming a rule that emails clients are different grants, consistent with the money-movement split.",
+	"permissions": {
+		"automations:read": "platform",
+		"automations:write": "platform",
+		"automations:pause": "platform",
+		"automations:global_pause": "operations"
+	}
+}

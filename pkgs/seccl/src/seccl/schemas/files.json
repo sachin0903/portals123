@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "observed values: 16-08-2022-1660640202083"
+    },
+    "url": {
+      "type": "string"
+    }
+  },
+  "required": ["id", "url"],
+  "title": "File",
+  "description": "File as Seccl returns it -- inferred from 2 example(s) in the Postman collection.",
+  "$defs": {
+    "FileCreate": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "firmId": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "description": "observed values: GENERATE_ILLUSTRATION_DOC"
+        },
+        "fileType": {
+          "type": "string",
+          "description": "observed values: ILLUSTRATION"
+        },
+        "clientId": {
+          "type": "string"
+        }
+      },
+      "required": ["firmId", "id"],
+      "title": "FileCreate",
+      "description": "Body for creating a File -- inferred from 14 example(s) in the Postman collection."
+    }
+  }
+}

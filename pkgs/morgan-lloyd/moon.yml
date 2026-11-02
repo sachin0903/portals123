@@ -1,0 +1,63 @@
+layer: 'library'
+language: 'python'
+
+# Python runs as plain uv command-tasks (moon's python toolchain is still
+# unstable in v2). `uv` is provided by proto via .prototools.
+tasks:
+  install:
+    command: 'uv sync'
+    toolchain: 'system'
+    inputs: []
+    options: { cache: false }
+  lint:
+    command: 'uv'
+    args: 'run ruff check .'
+  format:
+    command: 'uv'
+    args: 'run ruff format --check .'
+  typecheck:
+    command: 'uv'
+    args: 'run mypy src'
+  test:
+    command: 'uv'
+    args: 'run pytest'
+
+  # LIVE tests against the vendor's own test environment. NEVER part of a gate.
+  #
+  # `runInCI: false` and `cache: false`, and neither is decorative: a cached pass would say the
+  # counterparty still behaves this way when the only thing established is that it did once, and
+  # the whole value of these is that they re-ask.
+  #
+  # `-m integration` overrides the `addopts` exclusion in pyproject (see the note there — the
+  # default has to be safe wherever pytest is invoked, not just from this task).
+  integration-test:
+    command: 'uv'
+    args: 'run pytest -m integration tests/integration -v'
+    options:
+      cache: false
+      runInCI: false
+      # THE CREDENTIALS LIVE WITH THE SERVICE, NOT THE PACKAGE. `Morgan_LloydSettings`
+      # reads `.env` relative to the WORKING DIRECTORY, which under moon is this package — where
+      # there is no `.env` and never should be. The real ones are in `services/morgan-lloyd/.env`
+      # (what the sync uses) and `apps/api/.env.local`; moon loads them into the process env,
+      # which pydantic-settings prefers over its own `env_file` anyway.
+      #
+      # Same `/`-prefixed workspace-root form the services' own tasks use. A file that is not
+      # there is skipped, so a fresh clone gets the guard's "credentials are not set" rather
+      # than a task that cannot start.
+      envFile: ['/.env', '/services/morgan-lloyd/.env']
+  # Re-transcribe the vendor documentation into src/morgan_lloyd/vendor_manifest.json.
+  # Deliberately NOT part of the gate: it fetches a third-party page, so wiring it into CI
+  # would make the build fail when Clifton's docs site is down, and make a green build depend
+  # on the network. Run it by hand and review the diff -- a change here is a change to a
+  # contract we send real payloads against.
+  build-manifest:
+    command: 'uv'
+    args: 'run python scripts/build_manifest.py'
+    options: { cache: false, runInCI: false }
+  # The same fetch, but asserting no drift. For a human asking "has the vendor changed
+  # anything?", not for CI, for the same reason.
+  check-manifest:
+    command: 'uv'
+    args: 'run python scripts/build_manifest.py --check'
+    options: { cache: false, runInCI: false }

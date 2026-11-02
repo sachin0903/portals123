@@ -1,0 +1,23 @@
+layer: 'library'
+language: 'python'
+
+# Python runs as plain uv command-tasks (moon's python toolchain is still unstable in v2).
+tasks:
+  install:
+    command: 'uv sync'
+    toolchain: 'system'
+    inputs: []
+    options: { cache: false }
+  lint:
+    command: 'uv'
+    args: 'run ruff check .'
+  format:
+    command: 'uv'
+    args: 'run ruff format --check .'
+  typecheck:
+    command: 'uv'
+    args: 'run mypy src tests'
+  test:
+    command: 'uv'
+    args: 'run pytest'
+    options: { cache: false }

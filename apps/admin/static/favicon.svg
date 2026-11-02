@@ -1,0 +1,11 @@
+<svg viewBox="0 0 426 372" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Graphene">
+	<defs>
+		<linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+			<stop offset="0%" stop-color="#1e3a5e" />
+			<stop offset="55%" stop-color="#265574" />
+			<stop offset="100%" stop-color="#2f6789" />
+		</linearGradient>
+	</defs>
+	<path fill="url(#g)" d="M110 0 318 0 338 33 350 55 141 55 64 188 141 319 289 318 333 232 365 289 323 372 107 372 0 189Z" />
+	<path fill="url(#g)" d="M209 129 393 129 426 186 397 244 360 183 240 183 210 130Z" />
+</svg>

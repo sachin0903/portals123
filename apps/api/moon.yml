@@ -1,0 +1,197 @@
+layer: 'application'
+language: 'python'
+
+# Python runs as plain uv command-tasks (moon's python toolchain is still
+# unstable in v2). `uv` is provided by proto via .prototools.
+tasks:
+  # Sync the Python environment from pyproject/uv.lock.
+  install:
+    command: 'uv sync'
+    toolchain: 'system'
+    inputs: []
+    options: { cache: false }
+  dev:
+    command: 'uv'
+    # `python -m app` (app/__main__.py) so Windows gets the selector event loop before uvicorn
+    # starts (psycopg's async driver can't use the default ProactorEventLoop). Reload + auto loop
+    # on Linux/macOS; see app/__main__.py.
+    args: 'run python -m app'
+    preset: 'server'
+    # Bring the local stack up AND migrate it to head first (via db-migrate ->
+    # db-up), so the app's startup reconcile always hits a live, schema-current DB.
+    # `worker` rides along so `moon run :dev` starts the reactive half too — see its own note.
+    deps: ['~:db-migrate', '~:worker', '~:external-dev']
+  # The WORKER: the notifications + email consumers, the automations loop, the flows outbox
+  # dispatcher, the task notifier, the WorkOS and AML syncs, and the document render queue.
+  # Everything that reacts to something rather than answering a request.
+  #
+  # `dev` DEPENDS ON THIS, which is what makes `moon run :dev` bring it up. It was not in `:dev`
+  # before, and the consequence was not subtle: the notification consumers tail `audit.actions`
+  # from a stored cursor, so with nothing draining it locally the cursor simply stopped — two days
+  # and 350 events behind, on a machine where every rule was enabled and the stream was still
+  # growing. That reads as "notifications are broken" and is really "nothing is running them".
+  # Deployed environments never showed it, because there the worker is its own compose service
+  # (Dockerfile.worker).
+  #
+  # A persistent dep, not a blocking one: moon batches `preset: 'server'` tasks and runs them in
+  # parallel after the rest of the graph, so `dev` does not wait on a task that never finishes.
+  # `db-migrate` is shared with `dev` and deduped, so the worker also starts against a migrated DB.
+  #
+  # RENDER_SERVICE_PORT=8011 because the worker hosts the render service, and 8001 is taken by the
+  # dockerised renderer in the local stack — the default collides and the worker dies on bind.
+  worker:
+    command: 'uv'
+    args: 'run python -m app.worker'
+    preset: 'server'
+    deps: ['~:db-migrate']
+    env:
+      RENDER_SERVICE_PORT: '8011'
+  lint:
+    command: 'uv'
+    args: 'run ruff check .'
+  format:
+    command: 'uv'
+    args: 'run ruff format --check .'
+  typecheck:
+    command: 'uv'
+    args: 'run mypy app external'
+  # The firm API (Litestar). Its own process, beside `python -m app`. `dev` depends on this
+  # so `moon run :dev` starts it. EXTERNAL_STUB defaults to true in external/__main__.py (the
+  # in-memory stub). Deployed compose sets it false. EXTERNAL_HOST defaults to 127.0.0.1 and
+  # EXTERNAL_PORT to 8010; a container overrides the host to 0.0.0.0.
+  external-dev:
+    command: 'uv'
+    args: 'run python -m external'
+    preset: 'server'
+    deps: ['~:db-migrate']
+  # The OpenAPI schema as a FILE. `api-client:generate` depends on this, so generating the typed
+  # client no longer needs the API to be running — and, more to the point, the client is generated
+  # from the same input in a developer's checkout as in CI. Hey API infers the client's default
+  # base URL and narrows `ClientOptions['baseUrl']` FROM ITS INPUT, so generating against
+  # `http://localhost:8000/openapi.json` baked a dev machine's address into the committed artefact
+  # and `client-drift` (which regenerates from a dumped file and diffs) went red on every branch.
+  # The two schemas are byte-identical; only where they were read from differed.
+  dump-openapi:
+    command: 'uv'
+    args:
+      - 'run'
+      - 'python'
+      - '-c'
+      - 'import json; from app.main import app; open("openapi.json", "w").write(json.dumps(app.openapi()))'
+    options:
+      cache: false
+
+  test:
+    command: 'uv'
+    # `-m "not bench"` keeps the 500-document render-queue load test out of every pull request.
+    # It still runs with `uv run pytest -m bench`.
+    args: 'run pytest -m "not bench"'
+  # Every test that reads PORTAL source (pkgs/ui's block-contract.json, flow-contract.json or a TS
+  # module directly; or a portal app's own TypeScript) carries @pytest.mark.pkgs_ui_pin — NOT
+  # name-substring matching. `-k contract` was tried first and was wrong in both directions: it
+  # missed real pkgs/ui pins self-documented without "contract" in the name
+  # (test_email_publish_guards.py, test_email_send_parity.py, test_contacts.py), and it separately
+  # matched 17 tests that have nothing to do with pkgs/ui at
+  # all — vendor API "contracts" in test_platform_actions.py, an HTTP "wire contract" in
+  # test_documents_api.py — purely coincidental uses of the English word. The marker is the only
+  # reliable selector; tests/test_pkgs_ui_pin_coverage.py is the tripwire that keeps it honest —
+  # it fails if any test reads a pkgs/ui file without carrying the marker.
+  #
+  # This runs UNCONDITIONALLY in CI (like client-drift), independent of moon's affected-detection:
+  # api has no declared dependency on ui (different language, different workspace), so a ui-only
+  # PR would never be selected to re-run api:test under `moon ci` — and a `dependsOn: ['ui']` edge
+  # was tried and rejected, because pkgs/ui changes constantly and api rarely, so that edge would
+  # re-run the FULL suite on nearly every ui PR. Running just this ~5s slice unconditionally
+  # catches the actual risk (pkgs/ui drifting from its Python mirror) without paying for the other
+  # 4900+ deselected tests on every unrelated change.
+  test-contracts:
+    command: 'uv'
+    args: 'run pytest -m pkgs_ui_pin -q'
+  migrate:
+    command: 'uv'
+    args: 'run alembic upgrade head'
+    options:
+      cache: false
+  # Regenerate the portals' typed permission constants from app/permissions.py (the registry is
+  # the single source of truth). CI runs this + fails on drift, like the OpenAPI client.
+  generate-permissions:
+    command: 'uv'
+    args: 'run python scripts/generate_permissions_ts.py'
+    options:
+      cache: false
+
+  # --- Local dev stack (docker-compose.local.yaml at the workspace root) ----
+  # Postgres 18 + RustFS. `docker` is a system tool; run from the repo root so
+  # the `-f` path and the compose file's root-relative bind mounts resolve.
+  # Local-only infra, so never run in CI (runInCI: false) and never cached.
+  # `up -d --wait` blocks until the healthchecks pass; the foreground rustfs-init
+  # then creates the bucket (idempotent) so its output/failures are visible.
+  db-up:
+    script: 'node scripts/ensure-graphene-dev-network.mjs && docker compose -f docker-compose.local.yaml up -d --wait db rustfs && docker compose -f docker-compose.local.yaml up rustfs-init'
+    toolchain: 'system'
+    inputs: []
+    # `&&` needs a shell that supports it; Windows PowerShell 5.1 (moon's default) rejects it, so
+    # run this script through pwsh (PowerShell 7). bash on unix already handles `&&`.
+    options: { cache: false, runInCI: false, runFromWorkspaceRoot: true, windowsShell: 'pwsh' }
+  db-down:
+    # Compose still parses the file on `down`, so the external network must exist even to stop.
+    script: 'node scripts/ensure-graphene-dev-network.mjs && docker compose -f docker-compose.local.yaml down'
+    toolchain: 'system'
+    inputs: []
+    options: { cache: false, runInCI: false, runFromWorkspaceRoot: true, windowsShell: 'pwsh' }
+  # Destructive: wipes the data volumes and re-runs the init scripts on next up.
+  # (The next `moon run :dev` re-applies migrations via db-migrate.) Also drops the
+  # host interlace control planes — compose volumes go with `down -v`, but
+  # `moon run :dev` keeps state in services/*/.interlace, and a leftover state db
+  # points the next run at snapshot tables this reset just destroyed.
+  db-reset:
+    script: 'node scripts/ensure-graphene-dev-network.mjs && docker compose -f docker-compose.local.yaml down -v && node scripts/clear-interlace-state.mjs && docker compose -f docker-compose.local.yaml up -d --wait db rustfs && docker compose -f docker-compose.local.yaml up rustfs-init'
+    toolchain: 'system'
+    inputs: []
+    # See db-up: `&&` needs pwsh on Windows (5.1 rejects it); unix bash is fine.
+    options: { cache: false, runInCI: false, runFromWorkspaceRoot: true, windowsShell: 'pwsh' }
+  # Re-apply the superuser role bootstrap. It runs from docker-entrypoint-initdb.d on FIRST INIT
+  # only, so an existing local database never sees a role added to it later — and a migration that
+  # grants to that role then fails on `role "…" does not exist`, twenty migrations into an upgrade,
+  # on a machine whose only sin was existing before the role did. That is what happened when 0062
+  # introduced `book_writer`.
+  #
+  # The script is idempotent by design (every CREATE ROLE is wrapped in a duplicate_object guard),
+  # so applying it before every local migrate costs nothing and removes the trap permanently rather
+  # than documenting it. LOCAL ONLY: managed environments provision roles out of band, which is why
+  # `migrate` (the deploy task) does not depend on this.
+  db-roles:
+    script: 'docker compose -f docker-compose.local.yaml exec -T -e PGPASSWORD=postgres db psql -v ON_ERROR_STOP=1 -U postgres -d portals -f /docker-entrypoint-initdb.d/01-roles.sql'
+    toolchain: 'system'
+    inputs: []
+    deps: ['~:db-up']
+    options: { cache: false, runInCI: false, runFromWorkspaceRoot: true }
+  # Local-only bridge: stack up (healthy) -> roles -> alembic upgrade head. `dev` depends on
+  # this so `moon run :dev` always starts against a migrated DB. The plain `migrate`
+  # task above stays standalone — the deploy pipeline runs it in CI against managed
+  # Postgres (.github/workflows/deploy.yml) where no local stack exists.
+  db-migrate:
+    command: 'uv'
+    args: 'run alembic upgrade head'
+    deps: ['~:db-roles']
+    options: { cache: false, runInCI: false }
+  # Local login identity: Graphene tenant + owner (platform + operations, status active).
+  # `pnpm db:reset` wipes this, and a local revoke leaves memberships inactive — the WorkOS
+  # poller will not promote those back. Re-run this (or `api:bootstrap-dev`) to restore login.
+  bootstrap-dev-tenant:
+    command: 'uv'
+    args: 'run python scripts/bootstrap_dev_tenant.py'
+    env:
+      PYTHONPATH: '.'
+    deps: ['~:db-migrate']
+    options: { cache: false, runInCI: false }
+  # Tenant identity THEN WorkOS host routing (env row + encrypted keys + firm org + portal apps).
+  # This is the command after a reset: without the environment half, login on :5173/:5174/:5175
+  # reads as 503 misconfigured even when the user row exists.
+  bootstrap-dev:
+    command: 'uv'
+    args: 'run python scripts/bootstrap_dev_environment.py'
+    env:
+      PYTHONPATH: '.'
+    deps: ['~:bootstrap-dev-tenant']
+    options: { cache: false, runInCI: false }

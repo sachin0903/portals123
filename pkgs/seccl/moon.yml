@@ -1,0 +1,61 @@
+layer: 'library'
+language: 'python'
+
+# Python runs as plain uv command-tasks (moon's python toolchain is still
+# unstable in v2). `uv` is provided by proto via .prototools.
+tasks:
+  install:
+    command: 'uv sync'
+    toolchain: 'system'
+    inputs: []
+    options: { cache: false }
+  # Re-merge the vendored collection's examples into src/seccl/schemas. Pure local
+  # computation over a checked-in file, so it is safe in CI; review the diff it produces.
+  build-schemas:
+    command: 'uv'
+    args: 'run python scripts/build_schemas.py'
+    options: { cache: false }
+  # Regenerate src/seccl/models from those schemas. `test` fails if the checked-in
+  # modules are stale, so this is the only way they should ever change.
+  generate-models:
+    command: 'uv'
+    args: 'run python scripts/generate_models.py'
+    deps: ['~:build-schemas']
+    options: { cache: false }
+  lint:
+    command: 'uv'
+    args: 'run ruff check .'
+  format:
+    command: 'uv'
+    args: 'run ruff format --check .'
+  typecheck:
+    command: 'uv'
+    args: 'run mypy src scripts'
+  test:
+    command: 'uv'
+    args: 'run pytest'
+
+  # LIVE tests against the vendor's own test environment. NEVER part of a gate.
+  #
+  # `runInCI: false` and `cache: false`, and neither is decorative: a cached pass would say the
+  # counterparty still behaves this way when the only thing established is that it did once, and
+  # the whole value of these is that they re-ask.
+  #
+  # `-m integration` overrides the `addopts` exclusion in pyproject (see the note there — the
+  # default has to be safe wherever pytest is invoked, not just from this task).
+  integration-test:
+    command: 'uv'
+    args: 'run pytest -m integration tests/integration -v'
+    options:
+      cache: false
+      runInCI: false
+      # THE CREDENTIALS LIVE WITH THE SERVICE, NOT THE PACKAGE. `SecclSettings`
+      # reads `.env` relative to the WORKING DIRECTORY, which under moon is this package — where
+      # there is no `.env` and never should be. The real ones are in `services/seccl/.env`
+      # (what the sync uses) and `apps/api/.env.local`; moon loads them into the process env,
+      # which pydantic-settings prefers over its own `env_file` anyway.
+      #
+      # Same `/`-prefixed workspace-root form the services' own tasks use. A file that is not
+      # there is skipped, so a fresh clone gets the guard's "credentials are not set" rather
+      # than a task that cannot start.
+      envFile: ['/.env', '/services/seccl/.env']

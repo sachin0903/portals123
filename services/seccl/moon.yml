@@ -1,0 +1,56 @@
+# pkgs/seccl owns the bare id (the generated API payload models); this is the sync
+# service on top of it, mirroring pkgs/morgan-lloyd and services/morgan-lloyd.
+id: 'seccl-sync'
+
+layer: 'application'
+language: 'python'
+
+# Python runs as plain uv command-tasks (moon's python toolchain is still
+# unstable in v2). `uv` is provided by proto via .prototools.
+tasks:
+  install:
+    command: 'uv sync'
+    toolchain: 'system'
+    inputs: []
+    options: { cache: false }
+  # The pipeline daemon: serve --no-apply, then one full POST /runs (streams ingest on :8100).
+  # CronTrigger still waits until the next slot; the startup run is the boot.
+  dev:
+    command: 'uv'
+    args: 'run python -m book_sink.startup_run --host 127.0.0.1 --port 8100 --allow-open --no-apply'
+    preset: 'server'
+    options: { envFile: ['/.env', '.env'] }
+  # The webhook gateway (Seccl -> HMAC verify -> enrich -> interlace streams).
+  gateway:
+    command: 'uv'
+    args: 'run uvicorn seccl_sync.gateway:app --host 127.0.0.1 --port 8101'
+    preset: 'server'
+    options: { envFile: ['/.env', '.env'] }
+  plan:
+    command: 'uv'
+    args: 'run interlace plan'
+    options: { cache: false, envFile: ['/.env', '.env'] }
+  apply:
+    command: 'uv'
+    args: 'run interlace apply'
+    options: { cache: false, envFile: ['/.env', '.env'] }
+  run:
+    command: 'uv'
+    args: 'run interlace run'
+    options: { cache: false, envFile: ['/.env', '.env'] }
+  lint:
+    command: 'uv'
+    args: 'run ruff check .'
+  format:
+    command: 'uv'
+    args: 'run ruff format --check .'
+  typecheck:
+    command: 'uv'
+    # `models` as well as `src`: the models ARE this service — the extractors, the conformed
+    # SQL and the per-tenant chain registration all live there, outside `src/`, so `mypy src`
+    # never saw the transformation layer at all. They pass today; what this stops is the next
+    # change to them landing unchecked.
+    args: 'run mypy src models'
+  test:
+    command: 'uv'
+    args: 'run pytest'

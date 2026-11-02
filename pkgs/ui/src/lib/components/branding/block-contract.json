@@ -1,0 +1,401 @@
+{
+	"$comment": "The Python/TS contract for client-portal customisation. apps/api/tests/test_branding.py and the pkgs/ui registry test BOTH assert against this file, so the two sides cannot drift silently. Settings keys are snake_case because they ride the wire exactly as pydantic dumps them. `variants` are the DATA shapes a block can take; `looks` are its VISUAL designs (per-instance `look` setting; 'auto' follows the portal finish — card finish ⇒ 'card', ledger finish ⇒ the type's chrome-less look). portfolioHeader carries no looks: its variants ARE its looks. Change this file only together with both sides.",
+	"$comment_defaultPages": "A `defaultPages` entry's `blocks` IS the page's `default` audience layout; the optional `individual`/`organisation` arrays are audience overrides in the same block shape (absent ⇒ that audience follows `blocks`, which is why the pre-audience entries below need no rewrite). A block's `id` is optional and defaults to its type name — spell it out only where a page holds two blocks of one type, and keep the id of the block that also exists in `blocks` so an override reads as the copy-on-write of the default it is. `settings` objects are MINIMAL (an entry with none is omitted): both sides validate them through the type's settings model before comparing, so the canonical dump's untouched defaults must not be written out here.",
+	"blocks": {
+		"portfolioHeader": {
+			"variants": ["auto", "hero", "canvas", "ledger", "compact"],
+			"settings": ["variant", "show_chart", "actions", "default_period"]
+		},
+		"accounts": {
+			"variants": ["auto", "stack", "cards", "table", "summary"],
+			"looks": ["auto", "card", "float", "ink"],
+			"settings": ["variant", "look", "limit", "group_by", "show_sparklines"]
+		},
+		"allocation": {
+			"variants": ["auto", "donut", "bars"],
+			"looks": ["auto", "card", "orbit", "spectrum"],
+			"settings": ["variant", "look"]
+		},
+		"holdings": {
+			"variants": ["auto", "top", "table", "grouped"],
+			"looks": ["auto", "card", "sheet", "bars"],
+			"settings": ["variant", "look", "limit", "toolbar"]
+		},
+		"activity": {
+			"variants": ["auto", "list", "table"],
+			"looks": ["auto", "card", "timeline"],
+			"settings": ["variant", "look", "limit", "toolbar"]
+		},
+		"adviser": {
+			"variants": ["auto"],
+			"looks": ["auto", "card", "portrait", "strip"],
+			"settings": ["variant", "look"]
+		},
+		"news": {
+			"variants": ["auto", "feed", "library"],
+			"looks": ["auto", "card", "magazine", "journal"],
+			"settings": ["variant", "look", "limit"]
+		},
+		"documents": {
+			"variants": ["auto", "recent", "grouped"],
+			"looks": ["auto", "card", "shelf", "index", "timeline"],
+			"settings": ["variant", "look", "limit", "toolbar", "show_requests"]
+		},
+		"actionItems": {
+			"variants": ["auto"],
+			"looks": ["auto", "card", "banner"],
+			"settings": ["variant", "look", "limit", "hide_when_empty"]
+		},
+		"onboardingProgress": {
+			"variants": ["auto"],
+			"looks": ["auto", "banner", "slim", "milestones"],
+			"settings": ["variant", "look"]
+		},
+		"message": {
+			"variants": ["auto"],
+			"looks": ["auto", "card", "note", "banner"],
+			"settings": ["variant", "look", "title", "body"]
+		}
+	},
+	"reservedSlugs": [
+		"onboarding",
+		"requests",
+		"notifications",
+		"profile",
+		"adviser",
+		"messages",
+		"active-contact",
+		"login",
+		"logout",
+		"mfa",
+		"set-password",
+		"forgot-password",
+		"verify",
+		"share",
+		"search",
+		"look-through",
+		"terms",
+		"transfer",
+		"files",
+		"_assets",
+		"api",
+		"page-view",
+		"rum",
+		"view-as",
+		"p",
+		"i"
+	],
+	"shadowableSlugs": ["home", "accounts", "holdings", "activity", "documents", "insights"],
+	"pageIcons": [
+		"house",
+		"wallet",
+		"layers",
+		"arrow-left-right",
+		"file-text",
+		"clipboard-list",
+		"pie-chart",
+		"receipt",
+		"landmark",
+		"briefcase",
+		"shield",
+		"users",
+		"newspaper",
+		"message-circle",
+		"banknote",
+		"chart-line",
+		"folder",
+		"star",
+		"layout-grid",
+		"info"
+	],
+	"caps": {
+		"maxPages": 12,
+		"maxBlocksPerPage": 24,
+		"maxTotalBlocks": 200,
+		"maxNavPages": 6
+	},
+	"defaultPages": [
+		{
+			"slug": "home",
+			"label": "Home",
+			"icon": "house",
+			"blocks": [
+				{
+					"type": "onboardingProgress",
+					"w": 12,
+					"h": 2,
+					"visible": true,
+					"settings": { "look": "milestones" }
+				},
+				{
+					"type": "actionItems",
+					"w": 12,
+					"h": 1,
+					"visible": true,
+					"settings": { "look": "banner", "hide_when_empty": true }
+				},
+				{
+					"type": "portfolioHeader",
+					"w": 12,
+					"h": 1,
+					"visible": true,
+					"settings": { "variant": "hero", "show_chart": true }
+				},
+				{
+					"type": "accounts",
+					"w": 6,
+					"h": 1,
+					"visible": true,
+					"settings": {
+						"variant": "stack",
+						"look": "card",
+						"group_by": "wrapper",
+						"show_sparklines": true
+					}
+				},
+				{
+					"type": "adviser",
+					"w": 6,
+					"h": 1,
+					"visible": true,
+					"settings": { "look": "card" }
+				},
+				{
+					"type": "activity",
+					"w": 6,
+					"h": 2,
+					"visible": true,
+					"settings": { "variant": "list", "look": "card", "limit": 4 }
+				},
+				{
+					"type": "documents",
+					"w": 6,
+					"h": 2,
+					"visible": true,
+					"settings": { "variant": "recent", "limit": 4 }
+				},
+				{
+					"type": "message",
+					"w": 12,
+					"h": 2,
+					"visible": true,
+					"settings": { "look": "note" }
+				},
+				{
+					"type": "allocation",
+					"w": 5,
+					"h": 2,
+					"visible": false,
+					"settings": { "variant": "donut" }
+				},
+				{
+					"type": "holdings",
+					"w": 6,
+					"h": 2,
+					"visible": false,
+					"settings": { "variant": "top", "limit": 5 }
+				},
+				{
+					"type": "news",
+					"w": 4,
+					"h": 2,
+					"visible": false
+				}
+			],
+			"organisation": [
+				{
+					"type": "onboardingProgress",
+					"w": 12,
+					"h": 2,
+					"visible": true,
+					"settings": { "look": "milestones" }
+				},
+				{
+					"type": "actionItems",
+					"w": 12,
+					"h": 1,
+					"visible": true,
+					"settings": { "look": "banner", "hide_when_empty": true }
+				},
+				{
+					"type": "portfolioHeader",
+					"w": 12,
+					"h": 1,
+					"visible": true,
+					"settings": { "variant": "hero", "show_chart": true }
+				},
+				{
+					"type": "accounts",
+					"w": 12,
+					"h": 2,
+					"visible": true,
+					"settings": { "variant": "table", "group_by": "owner" }
+				},
+				{
+					"type": "adviser",
+					"w": 12,
+					"h": 1,
+					"visible": true,
+					"settings": { "look": "strip" }
+				},
+				{
+					"type": "activity",
+					"w": 12,
+					"h": 2,
+					"visible": true,
+					"settings": { "variant": "table", "limit": 8 }
+				},
+				{
+					"type": "documents",
+					"w": 12,
+					"h": 2,
+					"visible": true,
+					"settings": { "variant": "recent", "limit": 4 }
+				},
+				{
+					"type": "message",
+					"w": 12,
+					"h": 2,
+					"visible": true,
+					"settings": { "look": "note" }
+				},
+				{
+					"type": "allocation",
+					"w": 6,
+					"h": 2,
+					"visible": false,
+					"settings": { "variant": "bars", "look": "spectrum" }
+				},
+				{
+					"type": "holdings",
+					"w": 6,
+					"h": 2,
+					"visible": false,
+					"settings": { "variant": "top", "limit": 8 }
+				},
+				{
+					"type": "news",
+					"w": 4,
+					"h": 2,
+					"visible": false
+				}
+			]
+		},
+		{
+			"slug": "portfolio",
+			"label": "Portfolio",
+			"icon": "pie-chart",
+			"blocks": [
+				{
+					"type": "portfolioHeader",
+					"w": 12,
+					"h": 1,
+					"visible": true,
+					"settings": { "variant": "compact", "show_chart": false }
+				},
+				{
+					"type": "allocation",
+					"w": 12,
+					"h": 2,
+					"visible": true,
+					"settings": { "variant": "donut" }
+				},
+				{
+					"type": "holdings",
+					"w": 12,
+					"h": 4,
+					"visible": true,
+					"settings": { "variant": "grouped" }
+				}
+			],
+			"organisation": [
+				{
+					"id": "accounts-2",
+					"type": "accounts",
+					"w": 12,
+					"h": 2,
+					"visible": true,
+					"settings": { "variant": "summary" }
+				},
+				{
+					"type": "accounts",
+					"w": 12,
+					"h": 4,
+					"visible": true,
+					"settings": { "variant": "table", "group_by": "wrapper", "show_sparklines": true }
+				},
+				{
+					"type": "allocation",
+					"w": 12,
+					"h": 2,
+					"visible": true,
+					"settings": { "variant": "bars", "look": "spectrum" }
+				},
+				{
+					"type": "holdings",
+					"w": 12,
+					"h": 4,
+					"visible": true,
+					"settings": { "variant": "table", "toolbar": true }
+				}
+			]
+		},
+		{
+			"slug": "activity",
+			"label": "Activity",
+			"icon": "arrow-left-right",
+			"blocks": [
+				{
+					"type": "activity",
+					"w": 12,
+					"h": 4,
+					"visible": true,
+					"settings": { "variant": "list", "look": "card", "toolbar": true }
+				}
+			]
+		},
+		{
+			"slug": "documents",
+			"label": "Docs",
+			"icon": "file-text",
+			"blocks": [
+				{
+					"type": "documents",
+					"w": 12,
+					"h": 4,
+					"visible": true,
+					"settings": {
+						"variant": "grouped",
+						"look": "timeline",
+						"toolbar": true,
+						"show_requests": true
+					}
+				}
+			]
+		},
+		{
+			"slug": "insights",
+			"label": "Insights",
+			"icon": "newspaper",
+			"blocks": [
+				{
+					"type": "news",
+					"w": 12,
+					"h": 4,
+					"visible": true,
+					"settings": { "variant": "library", "look": "magazine" }
+				}
+			]
+		}
+	],
+	"settingLimits": {
+		"message.title": 80,
+		"message.body": 1000,
+		"accounts.limit": [1, 50],
+		"holdings.limit": [1, 25],
+		"activity.limit": [1, 50],
+		"documents.limit": [1, 12],
+		"actionItems.limit": [1, 10],
+		"news.limit": [1, 12]
+	}
+}

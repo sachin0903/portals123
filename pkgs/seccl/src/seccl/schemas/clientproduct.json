@@ -1,0 +1,445 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "clientIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "observed values: 024B197, 02693G1"
+      }
+    },
+    "firmId": {
+      "type": "string",
+      "description": "observed values: SDEMO, SECCI"
+    },
+    "nodeId": {
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "observed values: 0"
+          }
+        },
+        {
+          "type": "string",
+          "description": "observed values: 0"
+        }
+      ]
+    },
+    "wrapperType": {
+      "type": "string",
+      "description": "observed values: ISA, PENSION"
+    },
+    "auditDetails": {
+      "$ref": "#/$defs/AuditDetails"
+    },
+    "updateId": {
+      "type": "string"
+    },
+    "schemeProductId": {
+      "type": "string",
+      "description": "observed values: 004P4"
+    },
+    "expressionOfWishNominations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ExpressionOfWishNomination"
+      }
+    },
+    "productDetail": {
+      "$ref": "#/$defs/ProductDetail"
+    },
+    "clientProductActionType": {
+      "type": "string"
+    },
+    "accountDetails": {
+      "$ref": "#/$defs/AccountDetails"
+    },
+    "accountId": {
+      "type": "string",
+      "description": "observed values: 027F323, 027JDDC"
+    },
+    "advised": {
+      "type": "boolean"
+    },
+    "fcaIndividualReference": {
+      "type": "string",
+      "description": "observed values: ABC123"
+    },
+    "benefitsTakenBefore2006": {
+      "type": "boolean"
+    },
+    "protectedRetirementAgeOrLumpSum": {
+      "type": "boolean"
+    },
+    "crystallisationDetails": {
+      "$ref": "#/$defs/CrystallisationDetails"
+    },
+    "guidance": {
+      "type": "boolean"
+    },
+    "withdrawalDetails": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/WithdrawalDetail"
+      }
+    },
+    "clientProductId": {
+      "type": "string",
+      "description": "observed values: 6436cdca33a066262eae7764, 6523a3aa9c9363eaab8ebcc5"
+    },
+    "status": {
+      "type": "string",
+      "description": "observed values: Completed"
+    },
+    "benefitCrystallisationEvents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/BenefitCrystallisationEvent"
+      }
+    },
+    "processAction": {
+      "type": "string",
+      "description": "observed values: Determine Account, Generate Statement"
+    }
+  },
+  "title": "ClientProduct",
+  "description": "ClientProduct as Seccl returns it -- inferred from 29 example(s) in the Postman collection.",
+  "$defs": {
+    "ClientProductCreate": {
+      "type": "object",
+      "properties": {
+        "firmId": {
+          "type": "string"
+        },
+        "accountDetails": {
+          "$ref": "#/$defs/AccountDetails"
+        },
+        "accountId": {
+          "type": "string"
+        },
+        "advised": {
+          "type": "boolean"
+        },
+        "guidance": {
+          "type": "boolean"
+        },
+        "fcaIndividualReference": {
+          "type": "string",
+          "description": "observed values: ABC123"
+        },
+        "benefitsTakenBefore2006": {
+          "type": "boolean"
+        },
+        "protectedRetirementAgeOrLumpSum": {
+          "type": "boolean"
+        },
+        "crystallisationDetails": {
+          "$ref": "#/$defs/CrystallisationDetails"
+        },
+        "withdrawalDetails": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/WithdrawalDetail"
+          }
+        }
+      },
+      "required": [
+        "accountId",
+        "advised",
+        "benefitsTakenBefore2006",
+        "crystallisationDetails",
+        "fcaIndividualReference",
+        "firmId",
+        "guidance",
+        "protectedRetirementAgeOrLumpSum"
+      ],
+      "title": "ClientProductCreate",
+      "description": "Body for creating a ClientProduct -- inferred from 3 example(s) in the Postman collection."
+    },
+    "ClientProductUpdate": {
+      "type": "object",
+      "properties": {
+        "updateId": {
+          "type": "string"
+        },
+        "declarations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "clientId": {
+                "type": "string",
+                "description": "observed values: 03BG88J"
+              },
+              "acceptedDate": {
+                "type": "string",
+                "format": "date"
+              }
+            },
+            "required": ["acceptedDate", "clientId"]
+          }
+        },
+        "declarationAcceptedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "acceptedProviderTermsDate": {
+          "type": "string"
+        },
+        "acceptedProviderTerms": {
+          "type": "boolean"
+        },
+        "expressionOfWishNominations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ExpressionOfWishNomination"
+          }
+        },
+        "productDetail": {
+          "$ref": "#/$defs/ProductDetail"
+        },
+        "status": {
+          "type": "string",
+          "description": "observed values: Cancelled"
+        },
+        "updateReason": {
+          "type": "string"
+        },
+        "productStatus": {
+          "type": "string",
+          "description": "observed values: drawdownPending"
+        }
+      },
+      "title": "ClientProductUpdate",
+      "description": "Partial update to a ClientProduct; where the endpoint takes an `updateId` it is Seccl's optimistic-concurrency token -- inferred from 9 example(s) in the Postman collection."
+    },
+    "AccountDetails": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "observed values: Drawdown Account"
+        }
+      },
+      "required": ["name"]
+    },
+    "AuditDetails": {
+      "type": "object",
+      "properties": {
+        "application": {
+          "type": "string"
+        },
+        "updateDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "userFirmId": {
+          "type": "string",
+          "description": "observed values: BACKGROUND, SCUST, SECCI"
+        },
+        "userId": {
+          "type": "string",
+          "description": "observed values: 029B3F4, 029B3GJ, Background"
+        },
+        "version": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "application",
+        "updateDate",
+        "userFirmId",
+        "userId",
+        "version"
+      ]
+    },
+    "BenefitCrystallisationEvent": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "type": {
+          "type": "string",
+          "description": "observed values: BCE1, BCE6"
+        },
+        "lifetimeAllowanceUsed": {
+          "type": "number"
+        },
+        "accountId": {
+          "type": "string",
+          "description": "observed values: 027JDDC, 027JDDD"
+        },
+        "accountGroupId": {
+          "type": "string",
+          "description": "observed values: 02G2H, 02G2J"
+        }
+      },
+      "required": ["amount", "date", "lifetimeAllowanceUsed", "type"]
+    },
+    "CrystallisationDetails": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "observed values: FAD, UFPLS"
+        },
+        "frequency": {
+          "type": "string",
+          "description": "observed values: Regular, Single"
+        },
+        "fullCrystallisation": {
+          "type": "boolean"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "crystallisationDay": {
+          "type": "number"
+        },
+        "expiryDate": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      "required": ["amount", "frequency", "type"]
+    },
+    "ExpressionOfWishNomination": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "observed values: Dr, Miss, Mr"
+        },
+        "firstName": {
+          "type": "string",
+          "description": "observed values: Added, James, Test"
+        },
+        "surname": {
+          "type": "string",
+          "description": "observed values: Jon, Nominee, Nominees"
+        },
+        "beneficiaryRelationship": {
+          "type": "string",
+          "description": "observed values: DAUGHTER, HUSBAND, WIFE"
+        },
+        "beneficiaryProportion": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "beneficiaryProportion",
+        "beneficiaryRelationship",
+        "firstName",
+        "surname",
+        "title"
+      ]
+    },
+    "ProductDetail": {
+      "type": "object",
+      "properties": {
+        "flexiAccessDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "flexibleBenefitsAccessed": {
+          "type": "boolean"
+        },
+        "pensionOptOut": {
+          "type": "boolean"
+        },
+        "transitionalTaxFreeAmount": {
+          "type": "number"
+        },
+        "transitionalTaxFreeAmountChecked": {
+          "type": "boolean"
+        },
+        "lumpSumAllowanceUsedElsewhere": {
+          "type": "number"
+        },
+        "lumpSumAllowanceUsedPreApril2024": {
+          "type": "number"
+        },
+        "protection": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "protectionType": {
+                "type": "string",
+                "description": "observed values: Primary"
+              },
+              "certificateReferenceNumber": {
+                "type": "string",
+                "description": "observed values: 12458"
+              },
+              "schemeAdminReferenceNumber": {
+                "type": "string",
+                "description": "observed values: 23598"
+              }
+            },
+            "required": [
+              "certificateReferenceNumber",
+              "protectionType",
+              "schemeAdminReferenceNumber"
+            ]
+          }
+        },
+        "updateId": {
+          "type": "string"
+        },
+        "lifetimeAllowanceUsedElsewhere": {
+          "type": "number"
+        }
+      }
+    },
+    "WithdrawalDetail": {
+      "type": "object",
+      "properties": {
+        "transactionType": {
+          "type": "string",
+          "description": "observed values: Payment"
+        },
+        "transactionSubType": {
+          "type": "string",
+          "description": "observed values: FAD, PCLS"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "frequency": {
+          "type": "string",
+          "description": "observed values: Single"
+        },
+        "method": {
+          "type": "string",
+          "description": "observed values: BACS Credit"
+        },
+        "movementType": {
+          "type": "string",
+          "description": "observed values: Out"
+        },
+        "grossAmount": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "frequency",
+        "method",
+        "movementType",
+        "transactionSubType",
+        "transactionType"
+      ]
+    }
+  }
+}

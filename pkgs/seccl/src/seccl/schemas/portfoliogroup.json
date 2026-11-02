@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "observed values: 024H3, 64a1b2c3d4e5f6a7b8c9d0e1"
+    },
+    "firmId": {
+      "type": "string",
+      "description": "observed values: FIRM001"
+    },
+    "groupIntent": {
+      "type": "string",
+      "description": "observed values: Client Fee Group"
+    },
+    "name": {
+      "type": "string",
+      "description": "observed values: Smith Family Group"
+    },
+    "updateId": {
+      "type": "string",
+      "description": "observed values: 64a1b2c3d4e5f6a7b8c9d0e2"
+    },
+    "intentDetails": {
+      "$ref": "#/$defs/IntentDetails"
+    }
+  },
+  "title": "PortfolioGroup",
+  "description": "PortfolioGroup as Seccl returns it -- inferred from 4 example(s) in the Postman collection.",
+  "$defs": {
+    "PortfolioGroupCreate": {
+      "type": "object",
+      "properties": {
+        "firmId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "observed values: Addams Family"
+        },
+        "nodeId": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "groupIntent": {
+          "type": "string",
+          "description": "observed values: Client Fee Group"
+        },
+        "intentDetails": {
+          "$ref": "#/$defs/IntentDetails"
+        }
+      },
+      "required": ["firmId", "groupIntent", "intentDetails", "name", "nodeId"],
+      "title": "PortfolioGroupCreate",
+      "description": "Body for creating a PortfolioGroup -- inferred from 1 example(s) in the Postman collection."
+    },
+    "PortfolioGroupUpdate": {
+      "type": "object",
+      "properties": {
+        "updateId": {
+          "type": "string"
+        },
+        "nominatedAccounts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "accountId": {
+                "type": "string"
+              },
+              "feeCoveredAccounts": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": ["accountId", "feeCoveredAccounts"]
+          }
+        },
+        "intentDetails": {
+          "$ref": "#/$defs/IntentDetails"
+        },
+        "name": {
+          "type": "string",
+          "description": "observed values: New name"
+        }
+      },
+      "required": ["updateId"],
+      "title": "PortfolioGroupUpdate",
+      "description": "Partial update to a PortfolioGroup; where the endpoint takes an `updateId` it is Seccl's optimistic-concurrency token -- inferred from 9 example(s) in the Postman collection."
+    },
+    "FeeStructures": {
+      "type": "object",
+      "properties": {
+        "adviserFeeId": {
+          "type": "string",
+          "description": "observed values: 64f1a2b3c4d5e6f7a8b9c0d1"
+        }
+      },
+      "required": ["adviserFeeId"]
+    },
+    "IntentDetails": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "description": "observed values: Active, Archived"
+        },
+        "platformFee": {
+          "type": "boolean"
+        },
+        "adviserFee": {
+          "type": "boolean"
+        },
+        "feeStructures": {
+          "$ref": "#/$defs/FeeStructures"
+        },
+        "addMembers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "removeMembers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1544 @@
+openapi: 3.0.0
+info:
+  version: PSI51
+  title: Initiate the Creation of a Cash Receipt
+  description: |
+    API to initiate a cash receipt with receipt types of ACR (Anticipated Cash Receipt), Direct Payment (US only), Direct Debit (UK only), and memo post (US and UK).
+    
+    ## Revision History
+    ***
+    | Version | Name | Release | Date | Description |
+    | ------- | -------- | -------- | ------- | ------- |
+    | 1.0 | SEI Investments | PSI 27 |September, 2017 | Initial version |
+    | 2.0 | SEI Investments| PSI 27 |October, 2017 | Clarified restrictions on ACRs and beneficiary value date |
+    | 3.0 | SEI Investments |PSI 29|March, 2018 | Updated External System transaction ID |
+    | 4.0 | SEI Investments |PSI 30|June, 2018| Enhancements to Create Currency Receipt for Description Code/ Treatment Code Restriction. |
+    | 5.0 | SEI Investments | PSI 31 |August, 2018 | Added information for asynchronous invocation support |
+    | 6.0 | SEI Investments | PSI 31 |August, 2018 | Added fees And Charges segment in create currency receipt WS. |
+    | 7.0 | SEI Investments | PSI 31 |September,2018 | Added details on Financial Institutions Associated with Payer to AML, Cash Agent Cutoff & Firm Buffer by Payment Method and Approval By Payment Method |
+    | 8.0 | SEI Investments | PSI 32 |December, 2018 | Nostro Derivation (Exception Messages). Related Asset validation (Warning Messages) |
+    | 9.0 | SEI Investments | PSI 41 |Feburary, 2021 | Edit releatedSecurityIdentifier to take security type identifier code 26 instead of 22 |
+    | 10.0 | SEI Investments | PSI44 |November, 2023 | Edit business exception to state new exception for memo function point |
+    | 11.0 | SEI Investments | PSI46 |July, 2024 | Add New Net Fees Optional field to Cash Receipt Adhoc/Memo Post as well as relevent business exceptions |
+    | 12.0 | SEI Investments | PSI47 | November, 2024 | Added new bookCost field, Document stndardization, Net fees updated to allow one time scheduled and recurring |
+    | 13.0 | SEI Investments | PSI49 | June, 2025 | Added new cashPostingRefId1,cashPostingRefType1,cashPostingRefId3,cashPostingRefType3 fields, Document standardization |
+    | 14.0 | SEI Investments | PSI51 | January, 2025 | Enable the ability to have resolve next/prior via cash receipt web service |
+    | 15.0 | SEI Investments | PSI51 | March, 2026 | Add new attribute feesAndChargesDetails for create Currency Receipt API along with function point validation |
+    | 16.0 | SEI Investments | PSI51 | April, 2026 | Added new business exceptions related to feesAndChargesDetails attribute for create Currency Receipt API |
+    
+    ## Service Summary
+    ***
+    This guide provides details for use of the Currency Receipt web service on the SEI Wealth Platform.  These are designed to initiate the Currency Recipet workflow on the platform. At this time, the services support memo post, ad hoc, one time schedule and recurring.  
+    In addition, all payment methods are supported.  However, ACRs are only supported for recurring (including "recurrence of 1").
+    
+    &nbsp; 
+    ## List of Operations / Methods
+    ***
+    * ### Create Currency Receipt
+      This operation creates a new cash receipt request/workflow for an account and portfolio subject to all applicable configured Services and Approvals. This can be a memo post, ad hoc, one time scheduled or recurring receipt for both U.S. and U.K. receipt methods i.e. Check, ACH, BACS, Fed Wire, SWIFT or CHAPS.
+    
+      On successful service execution, the cash receipt activity will be created.  The web service response will return the cash receipt activity ID.  If applicable a corresponding invest cash activity will also be created. This service enables the creation of a recurring cash receipt into account from an established third-party payer.  Account, amount, frequency, payer and other details will be required.
+    
+    * ### Create Currency Receipt (Asynchronous)
+        For the Asynchronous invocation, the Request URI is appended with Async. This is the only change to be made from synchronous request to an asynchronous request. Invoking an API in an asynchronous  mode allows for the processing to happen asynchronously and the client does not have to wait for the processing to complete. It also allows to client to invoke the API when the system is in Limited Availability mode. The requests are queued up and processed once the system comes out to Limited Availability mode.This is used for when the environment in LA mode and stores the request until out of LA mode.
+    
+    ## Service Usage
+    ***
+    * The service is not available during SWP system Limited Availability mode or, while the system is in "clone" mode during planned maintenance outages.
+    * The service supports Asynchronous call.
+    * A call is expected to be a single request / response. The service does not support bulk requests.
+    * Any approvals configured for the cash receipt workflows can be by-passed by the caller or not.All regularly configured approvals occur on the workflow if approvals are not bypassed.
+    * Fee overrides can be specified on the receipt.
+     
+    
+    ## Service - Create Currency Receipt
+    ***
+    Creates cash receipt activity.  Types of activities that can be created include -
+    
+    * Recurring cash receipt for both U.S. and U.K. receipt methods.
+    * Memo Post cash receipt for both U.S. and U.K. receipt methods.
+    * Ad hoc cash receipt for both U.S. and U.K. receipt methods.
+    * One time schedule for both U.S. and U.K. receipt methods.
+     
+    ## Usage and Business Impact
+    ***
+    The service allows the user to initiate a workflow to create currency receipts (adhoc or one time schedule or memo post  or recurring). All receipt types supports both US and UK receipt methods. These activities are used to record receipt of funds or collection into client account based on receipt/collection instructions provided by such client.
+    
+    &nbsp; 
+    ## Variations From UI
+    ***
+    * For recurring cash receipt, the web service will support existing Payer recipients only.  A separate service is available to create a new Payer.
+    * In Core Platform, investment compliance pop up messages can be overwritten by an entitled user by providing a note and it is not supported in Web Services.
+    * The web service supports an option to bypass firm-configured approvals.
+    * Approval by Receipt Method not supported in prior versions of the web service are now supported in PSI27 so this variation is no longer applicable.
+    * Services managed by entitlement to a specific function point are not supported.
+    ## Function Point
+    ***
+    
+    * function point ID is 123 for cash receipt
+    * function Point ID is 7368 to control when recomputation of overridden fees is allowed to be performed by the cash webservices.
+    &nbsp;
+
+    ## EndPoint URL
+    ***
+      * /api/v1/swp/currencyreceiptservices/createCurrencyReceipt
+tags:
+  - name: Currency Receipt
+    description: Service allows initiation of Cash Receipts
+paths:
+  /createCurrencyReceipt:
+    post:
+      tags:
+        - Currency Receipt
+      summary: This API allows initiation of Cash Receipts
+      operationId: createCurrencyReceiptUsingPOST
+      description: This is used to create a cash receipt transaction.
+      parameters:
+        - name: AppKey
+          in: header
+          description: "This is the Consumer Key provided during the App Registration process and is used to identify the user's application."
+          example: "weekei39292992-1jddkdk"
+          required: true
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: "access_token value obtained from the Token endpoint.This is passed as \"Bearer access_token\""
+          example: "Bearer aidfke-2dkljdfkljlajf-ejljere"
+          required: true
+          schema:
+            type: string  
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonCurrencySoaSuccessResponse'
+              examples:
+                CreateCashReceiptSuccess_Response:
+                  $ref: '#/components/examples/CreateCashReceiptSuccessResponse'
+                CreateCashReceiptSuccessWithApprovalWorkflow_Response:
+                  $ref: '#/components/examples/CreateCashReceiptSuccessWithApprovalWorkflowResponse' 
+                CreateCashReceiptWithRefIdTypeSuccess_Response:
+                  $ref: '#/components/examples/CreateCashReceiptWithRefIdTypeSuccessResponse'
+                CreateRecurringCashReceiptWithPreventSSM_Response:
+                  $ref: '#/components/examples/CreateRecurringCashReceiptWithPreventSSMResponse'
+                CreateCashReceiptWithRaiseCashWithWarning_Response:
+                  $ref: '#/components/examples/CreateCashReceiptWithRaiseCashWithWarningResponse'
+          description: |
+            Returns success message along with the below warning messages if applicable.
+            ## List of Warning Messages
+            ***
+            | S.No | Business Exception | Warning Code | Warning Details |
+            | ------- | ------- | ------- | ------- |
+            | 1 | When Bypass approval flag is false | 1145 | Approval Exists - Approval Ref ID - Approval Reason Desc < text> |
+            | 2 | When Bypass approval flag is true | 1145 | Approval is bypassed |
+            | 3 | When feeAndCharges provided in the request if not applicable | 2196 | Fee override is ignored as fee types doesn't exists for the firm. |
+            | 4 | When receipt amount type provided is "4" along with feeAndCharges segment. | 2196 | Fee override is ignored as it's not applicable for receipt amount type - 4 |
+            | 5 | Asset validation warning when Service ID 207- Related Asset Validation is turned "On". | 2219 | The selected asset has not been held in Account {account name}|{account number} |
+            | 6 | Asset validation warning when Service ID 207- Related Asset Validation is turned "On". | 2219 | The selected asset is no longer held by Account (account name) |(account number) . This asset was last disposed on (held date) from (portfolio name) . |
+            | 7 | Origination statement text is ignored as this is not required for receipt method | 2196 | Origination statement text is ignored as this is not required for receipt method < ReceiptMethod> |
+            | 8 | Destination statement text is ignored as this is not required for receipt method | 2196 | "Destination statement text is ignored as this is not required for receipt method < ReceiptMethod> |
+            | 9 | For non adhoc transaction the Txn suppression type code will ignored | 2196 | Txn suppression type code is ignored for non adhoc transaction 2|
+
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                CreateCashReceiptError_Response:
+                  $ref: '#/components/examples/CreateCashReceiptErrorResponse'
+                CreateCashReceiptWithoutRefTypes_Response:
+                  $ref: '#/components/examples/CreateCashReceiptWithoutRefTypesResponse'
+                CreateCashReceiptInvalidRefTypes_Response:
+                  $ref: '#/components/examples/CreateCashReceiptInvalidRefTypesResponse'
+          description: |
+            Bad Request - The server cannot or will not process the request due to an incorrect request submitted by the client application. Please correct and resubmit the request.
+            
+            ## List of Error Messages
+            ***
+            | S.No | Business Exception | Error Code | Error Details |
+            | ------- | ------- | ------- | ------- |
+            | 1 | Invalid account id is Provided | 1002 | The account is invalid. |
+            | 2 | Invalid portfolio id provided | 1006 | Please provide valid input to invoke the service. |
+            | 3 | Invalid description code is provided | 1006 | Description code invalid |
+            | 4 | Invalid treatment code is provided | 1006 | Treatment code invalid |
+            | 5 | Treatment code provided is not configured for description code entered | 1006 | Treatment code invalid |
+            | 6 | Invalid currency code is provided | 1016 | The currency code is invalid. |
+            | 7 | Payment type provided is not configured under currency code entered | 1006 | Please provide valid input to invoke the service. |
+            | 8 | Amount type provided is invalid/not allowed for the firm. | 2022 | Amount Type must be valid for the Firm. |
+            | 9 | Invalid reference id is provided | 2041 | The selected security is not currently active and cannot be linked to the transaction. |
+            | 10 | Related security is provided blank | 1169 | The specified asset identifier can be traded at multiple locations. Please provide more specific identification of the asset (e.g. MIC Code). |
+            | 11 | Portfolio not eligible for invest cash | 2067 | Invest cash Exception- This Portfolio is not eligible for Invest Cash |
+            | 12 | Firm not subscribed to Invest Cash Scheduler | 2067 | Invest cash Exception- This Portfolio is not eligible for Invest Cash |
+            | 13 | Due Date is provided a past date/invalid. | 2024 | TXT_SCHD_DATE_NOT_BUSINESS_DATE |
+            | 14 | Start date is provided a past date/invalid. | 2024 | Processing Date is not a valid business date. |
+            | 15 | End date is provided a past date/invalid | 100010 | Sorry! The system has encountered an unexpected error. |
+            | 16 | End date less than start date | 100010 | Sorry! The system has encountered an unexpected error. |
+            | 17 | Invalid monthDayNum value when DayType = 2 (business day) |  |  |
+            | 18 | Beneficiary date is provided prior to account open | 1006 | Beneficiary value date is invalid |
+            | 19 | Beneficiary date is provided prior 365 days | 1006 | Beneficiary value date is invalid |
+            | 20 | Net amount exceeds pledged amount | 2063 | Pledged Amount Exception- Amount brings account value below pledged amount on the account |
+            | 21 | Investment compliance rule violation | 2064 | Investment Compliance Exception- Request violates an investment compliance rule on the account is not allowed |
+            | 22 | Payer Id profile Id provided is not valid | 2044 | Payer details invalid |
+            | 23 | Receipt amount is less than minimum amount configured | 2127 | Amount is not within minimum and maximum range configured. |
+            | 24 | System error | 100010 | Sorry! The system has encountered an unexpected error. |
+            | 25 | Invalid firm id when user is at PO level | 1001 | The firm is invalid or missing. |
+            | 26 | Firm Id not provided when user is at PO level | 1001 | The firm is invalid or missing. |
+            | 27 | Invalid firm Id when user is at firm level | 1001 | The firm is invalid or missing. |
+            | 28 | Firm Id not provided when user is at instance level | 1001 | The firm is invalid or missing. |
+            | 29 | User not authorized to selected account | 380145 | You do not have the proper entitlements to view this information. |
+            | 30 | Check number is not provided if check is received | 2092 | Check number is required |
+            | 31 | Check number is provided when check is not received | 2092 | Check number is not required |
+            | 32 | More than one asset qualifies for related security | 1170 | The specified asset identifier can be traded at multiple locations. Please provide more specific identification of the asset (e.g. MIC Code). |
+            | 33 | Non base currency is provided for IRA account | 2020 | Specified currency is not allowable for an IRA account. |
+            | 34 | ACH Direct Payment using this Payer's financial institutions are not permitted | 2212 | Invalid input code for Payer ID |
+            | 35 | Please provide valid input to invoke the service. | 1006 | Source Treatment code invalid - < treatmentCodeId> |
+            | 36 | Please provide valid input to invoke the service. | 1006 | Target Treatment code invalid - < treatmentCodeId> |
+            | 37 | Please provide valid input to invoke the service | 1006 | Treatment code invalid - < treatmentCodeId> |
+            | 38 | There are no codes configured for this transaction or they have been restricted by the Firm when Service 196 is On. | 1006 | There are no available Description Codes. |
+            | 39 | Please provide valid input to invoke the service. | 1006 | Source Description code invalid -< descriptionCodeId> |
+            | 40 | Please provide valid input to invoke the service. | 1006 | Target Description code invalid - < descriptionCodeId> |
+            | 41 | Please provide valid input to invoke the service. | 1006 | Description code invalid - < descriptionCodeId> |
+            | 42 | Please provide valid input to invoke the service. | 1006 | Fee description id is invalid- < feeDescriptionId> |
+            | 43 | Please provide valid input to invoke the service. | 1006 | Fee amount type is invalid- < feeAmountType> |
+            | 44 | Please provide valid input to invoke the service. | 1006 | Fee amount format is invalid- < overridenFeeAmount> |
+            | 45 | Nostro Derivation looks for a Settlement Nostro Account for ACATS receipts | 2183 | Settlement Nostro not found |
+            | 46 | Nostro Derivation looks for a Funding Nostro Account | 2183 | Funding Nostro is not setup for the Portfolio-Currency-Purpose combination |
+            | 47 | You do not have the proper entitlements to view this information. Entitlement Exception. | 380145 | You don't have access to the memo post cash receipt function point when making a memo post cash receipt | 
+            | 48 | Please provide valid input to invoke the service | 1006 | Fees cannot be netted due to a banded or tiered rule with more than one band or tier qualifying |
+            | 49 | Please provide valid input to invoke the service | 1006 | Fees cannot be netted due to multiple fee packages, rules, or fee types qualifying |
+            | 50 | Please provide valid input to invoke the service | 1006 | Firm/PO is not configured for gross/net fees service |
+            | 51 | Ensure Account nuber is valid | 1002 | Account number is invalid- < AccountNumber> |
+            | 52 | Ensure cashPostingRefType3 is valid | 1006 | cashPostingRefType3: <cashPostingRefType3> is not valid | 
+            | 53 | Ensure cashPostingRefType1 is valid | 1006 | cashPostingRefType1: <cashPostingRefType3> is not valid | 
+            | 54 | When cashPostingRefId1 is provided then cashPostingRefType1 is mandatory | 2195 | When cashPostingRefId1 is provided then cashPostingRefType1 is mandatory | 
+            | 55 | When cashPostingRefId3 is provided then cashPostingRefType3 is mandatory | 2195 | When cashPostingRefId3 is provided then cashPostingRefType3 is mandatory |
+            | 56 | When cashPostingRefType1 is provided then cashPostingRefId1 is mandatory | 2195 | When cashPostingRefType1 is provided then cashPostingRefId1 is mandatory | 
+            | 57 | When cashPostingRefType3 is provided then cashPostingRefId3 is mandatory | 2195 | When cashPostingRefType3 is provided then cashPostingRefId3 is mandatory | 
+            | 58 | Invalid resolve Option.Valid value is Prior[1] OR Next[2] | 1006 | Invalid resolve option |
+            | 59 | Reference ID cannot be NULL in the input request  | 2 | Reference ID is missing |
+            | 60 | Base Fee Type Profile ID cannot be NULL in the input request | 3 | Base Fee Type Profile ID is missing |
+            | 61 | Account ID cannot be NULL in the input request | 1| Account ID is missing |
+            | 62 | Fee Currency cannot be NULL in the input request | 4 | Fee Currency is missing |
+            | 63 | Base Fee Amount cannot be NULL in the input request | 5 | Base Fee Amount is missing |
+            | 64 | Base Fee Type Profile ID in the input request is invalid | 7 | Invalid Base Fee Type Profile ID |
+            | 65 | Base Fee Type Profile ID provided in input request with non-NULL VAT Fee Rule ID, but the Base Fee Type Profile ID is not VAT eligible | 8 | Provided Base Fee Type Profile ID is not VAT eligible |
+            | 66 | Base Fee Type Profile ID provided in input request with a NULL VAT Fee Rule ID, but the Base Fee Type Profile ID is VAT eligible | 9 | VAT Fee Rule ID is missing for a VAT eligible Base Fee Type Profile ID |
+            | 67 | Base Fee Rule ID in input request is invalid (cannot be found in database) | 10 | Invalid Base Fee Rule ID |
+            | 68 | Base Fee Rule ID is not assigned to the Account ID passed in the input request | 11 | Base Fee Rule ID is not assigned to the Account ID |
+            | 69 | One or more Fee Currency in the input request is invalid (cannot be found in database) | 12 | Invalid Fee Currency |
+            | 70 | One or more VAT Fee Rule ID in input request is invalid (cannot be found in database) | 13 | Invalid VAT Fee Rule ID |
+            | 71 | Firm (or PO) OR account is not VAT eligible | 14 | Firm or account is not VAT eligible |
+            | 72 | Firm ID cannot be NULL in the input request | 15 | Firm ID is missing |
+            | 73 | Firm ID in input request is invalid (cannot be found in database) | 16 | Invalid Firm ID |
+            | 74 | Within a Group ID (across different reference IDs), if the "Firm ID + Account ID + Fee Currency" field values are different | 17 | Firm ID + Account ID + Fee Currency must be the same |
+            | 75 | Within a Group ID (across difference reference IDs), if the BASE FEE RULE ID or BASE FEE TYPE PROFILE ID is repeated or duplicated | 18 | Duplicate Base Fee Rule ID or Base Fee Type Profile ID provided |
+            | 76 | Base Fee Amount cannot be negative in the input request | 19 | Base Fee Amount is negative |
+            | 77 | When User is  not entitled for Fee override FP | 380145 | User is not entitled to create cash transactions with overridden fees. |
+            | 78 | When notes length is more than 512 characters for FeeAndChargesDetails | 1006 | Invalid input for Notes: < notes >. |
+            | 79 | When FeeRuleId length is more than 36 for FeeAndChargesDetails | 1006 | Invalid input for feeRuleId: < feeRuleId > |
+            | 80 | When VatFeeRuleId length is more than 36 for FeeAndChargesDetails | 1006 | Invalid input for vatFeeRuleId: < vatFeeRuleId > |
+            | 81 | When feePercentage value is not between 0 and 100.00 |1006| Invalid input for feePercentage: < feePercentage > |
+            | 82 | when isOverride is yes but both feePercentage and overrideFeeamount are null | 1006 | Invalid input for IsOverridden: < isOverride > |
+            | 83 | When feeTypeId is not provided for fee override | 2195 | Fee type id is required |
+            | 84 | When feeTypeId is blank | 1006 | Fee Type Id can't be blank. |
+            | 85 | When feeTypeId format is not valid,Must match numeric pattern (1-9 digits) | 1006 | Fee Type Id format is not valid: < feeTypeId > |
+            | 86 | When OriginalFeeAmount is blank | 1006 | Original fee amount amount can't be blank |
+            | 87 | When OriginalFeeAmount format is not valid | 1006 | Original fee amount format is invalid: < originalFeeAmount > |
+            | 88 | When overrideFeeAmount is blank | 1006 | Override fee amount amount can't be blank |
+            | 89 | When overrideFeeAmount format is not valid | 1006 | Override fee amount format is invalid: < overrideFeeAmount > |
+            | 90 | When feeRuleId is blank | 1006 | Fee Rule Id can't be blank. |
+            | 91 | When feeRuleId format is not valid | 1006 | Fee Rule Id format is not valid:  |
+            | 92 | When vatFeeRuleId is blank | 1006 | Vat Fee Rule Id can't be blank. |
+            | 93 | When vatFeeRuleId format is not valid | 1006 | Vat Fee Rule Id format is not valid: < vatFeeRuleId > |
+            | 94 | when isOverride is blank | 1006 | IS Overridden can't be blank. |
+            | 95 | when isOverride format is not valid | 1006 | IsOverridden format is invalid: < isOverride > |
+            | 96 | When notes is blank | 1006 | Notes can't be blank. |
+            | 97 | When notes format is not valid, Must not exceed 512 characters | 1006 | Notes format is invalid: < notes > |
+            | 98 | When feePercentage is blank | 1006 |Fee Percentage can't be blank. |
+            | 99 | When feePercentage format is not valid | 1006 | Fee Percentage format is invalid: < feePercentage > |
+            
+
+        '401':
+          description: "Not Authorized - Invalid authentication details have been provided"
+        '403':
+          description: "Forbidden- SEI server understands the request , but refuses to fulfill it"
+        '404':
+          description: "Not found - The requested resource or underlying resource does not exist. Please resubmit the request after making required corrections"
+        '405':
+          description: "Method not supported"
+        '422':
+          description: "Business Exception - The server cannot or will not process the request due to an incorrect request submitted by the client application. Please correct and resubmit the request"
+        '500':
+          description: "Internal server problem - The server was unable to fulfill the request due to an unknown condition. Please reach out to SEI support."
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CurrencyReceiptRequest'
+            examples:
+              CreateCashReceiptSuccess_Request:
+                $ref: '#/components/examples/CreateCashReceiptSuccessRequest'
+              CreateCashReceiptSuccessWithApprovalWorkflow_Request:
+                $ref: '#/components/examples/CreateCashReceiptSuccessWithApprovalWorkflowRequest'
+              CreateCashReceiptWithRefIdTypeSuccess_Request:
+                $ref: '#/components/examples/CreateCashReceiptWithRefIdTypeSuccessRequest'
+              CreateRecurringCashReceiptWithPreventSSM_Request:
+                $ref: '#/components/examples/CreateRecurringCashReceiptWithPreventSSMRequest'
+              CreateCashReceiptWithRaiseCashWithWarning_Request:
+                $ref: '#/components/examples/CreateCashReceiptWithRaiseCashWithWarningRequest'
+              CreateCashReceiptError_Request:
+                $ref: '#/components/examples/CreateCashReceiptErrorRequest'
+              CreateCashReceiptWithoutRefTypes_Request:
+                $ref: '#/components/examples/CreateCashReceiptWithoutRefTypesRequest'
+              CreateCashReceiptInvalidRefTypes_Request:
+                $ref: '#/components/examples/CreateCashReceiptInvalidRefTypesRequest'
+              CreateCashReceiptFeeOverride_Request:
+                $ref: '#/components/examples/CreateCashReceiptFeeOverrideRequest'
+        description: receiptRequest
+        required: true
+servers:
+  - url: https://extranettest.api.seic.com/api/v1/swp/currencyreceiptservices
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: /v3/oauthtoken
+          scopes: {}
+        password:
+          tokenUrl: /api/v1/swp/oauthsecurity/access_token
+          scopes: {}
+  schemas:
+    RelatedSecurityDetails:
+      type: object
+      description: 'Related Security Details is optional and its eligible for Memo Post , Ad –hoc and some scenario in recurring '
+      properties:
+        relatedSecurityIdentifier:
+          type: string
+          example: "5"
+          description: 'Identifies security instruments (2=ISIN, 4= Ticker, 5=CUSIP, 11=SEDOL, 22=Firm_Asset_Id).'
+          maxLength: 2
+        relatedSecurity:
+          type: string
+          example: "741852M96"
+          description: 'The security identifier code of an asset. It must be of the type specified in above relatedSecurityIdentifier.'
+          maxLength: 30
+    JsonCurrencySoaSuccessResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          description: Success Data
+          items:
+            $ref: '#/components/schemas/SuccessData'
+      description: Response data object for create currency receipt.
+    Monthly:
+      type: object
+      description: 'The monthly having scheduled recurring event which will occur monthly.'
+      required:
+        - dayType
+        - interval
+        - monthDayNum
+        - monthDayType
+        - monthlyOccurrence
+      properties:
+        interval:
+          type: string
+          example: "2"
+          description: 'Indicates the number of months between occurrences.'
+          maxLength: 2
+        dayType:
+          type: string
+          example: "2"
+          description: 'Indicator for calendar (1 = Day) or business (2 = Business) days'
+          maxLength: 1
+        monthDayNum:
+          type: string
+          example: "18"
+          description: 'Used in conjunction with dayType, indicates the day of the month the Event is due. Valid values are 1 – 31. (eq. 10th business day or 25th day)'
+          maxLength: 2
+        resolveOption:
+          type: string
+          maxLength: 1
+          default: "2"
+          example: "1"
+          description: |
+             A user will be able to enter either "1" or "2", with 1 being prior and 2 being next. This will only function with the monthly option when using                daytype and monthdaynum parameters.
+        monthDayType:
+          type: string
+          example: "1"
+          description: 'Indicator for the day of the week (1 =Day, 2 = Business Day, 3 = Sunday, 4 = Monday, 5 = Tuesday, 6 = Wednesday, 7 = Thursday, 8 = Friday, 9 = Saturday).'
+          maxLength: 1
+        monthlyOccurrence:
+          type: string
+          example: "2"
+          description: 'Indicator used in conjunction with monthDayType to determine which day of the month the Event is due (1 = first, 2 = second, 3 = third, 4 = fourth, 5 = last, 6 = second to last, 7 = third to last). (eq. second Thursday of the month) '
+          maxLength: 1
+    CurrencyReceiptRequest:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          description: Data for create currency receipt
+          items:
+            $ref: '#/components/schemas/Data'
+      description: Model data object for create currency receipt request.
+    Once:
+      type: object
+      description: 'The once having Memo Post, One Time Schedule and ADHOC details . Firm buffers per Payment Methods can be set, which defines the latest time a cash movement can be initiated for processing today. Cash Receipt ACH Collections that are entered and approved before the Cash Agent cut-off, minus the Firm Payment Method buffer time, process today. Requests after the Firm Payment Method buffer are processed the next business day.'
+      properties:
+        dueDate:
+          type: string
+          example: "2017-07-28"
+          description: 'The date by which scheduled activity must be completed by[YYYY/MM/DD]. '
+          maxLength: 16
+        beneficiaryValueDate:
+          type: string
+          example: "2017-08-28"
+          description: 'The desired date for funds to be credited to the client account. For Cash receipts, this typically makes sense only for memo posts (e.g. if you wanted to back date a memo post date). If not specified, the date of the receipt will be the date the funds clear and are available to the client account. [YYYY/MM/DD].'
+          maxLength: 16
+    Attributes:
+      type: object
+      required:
+        - accountNumber
+        - portfolioId
+        - receiptInstructions
+      properties:
+        accountNumber:
+          type: string
+          description: 'The account number for which cash receipt activity is generated.'
+          example: "USB00001"
+          maxLength: 17
+        portfolioId:
+          type: string
+          description: 'SEI Portfolio Id of above account by which cash receipt is generated.'
+          example: "12085274"
+          maxLength: 9
+        firmId:
+          type: string
+          description: 'Required if caller is at the Processing Organization level. Firm level users do not need to specify - Optional'
+          example: "90215"
+          maxLength: 9
+        receiptInstructions:
+            $ref: '#/components/schemas/ReceiptInstructions'
+        processingScheduleDetails:
+            $ref: '#/components/schemas/ProcessingScheduleDetails'
+        optionalInstructions:
+            $ref: '#/components/schemas/OptionalInstructions'
+    PayerInfo:
+      type: object
+      description: 'The payerInfo contains all information related to the payer. '
+      required:
+        - payerId
+        - destinationStatementText
+        - originationStatementText
+      properties:
+        payerId:
+          type: string
+          example: "85274196"
+          description: 'The Profile Id of existing Payer- Associated with the account and designated receipt method.The Entity, person or organization, and the associated Financial Institutions and Intermediaries associated with this Payerid are subject to AML Review for Firms subject to SPTC AML monitoring. Failure to pass AML Review results in the request going into Exception “Under Review”. Once SPTC reviews the Payer details they may pass the review which allows the cash movement to be marked Complete or they may fail the review and the cash movement must be cancelled Only Payerids which entities and Financial institutions that passed AML Review can be used.'
+          maxLength: 9
+        originationStatementText:
+          type: string
+          example: "Create CR Webservice"
+          description: 'BACS Direct Debit and ACH Direct Payment Statement Payer text for additional information '
+          maxLength: 65
+        destinationStatementText:
+          type: string
+          example: "Create CR Webservice"
+          description: 'BACS Direct Debit and ACH Direct Payment Destination Payer Text for additional information'
+          maxLength: 65
+        uniqueMandateReference:
+          type: string
+          example: "Create CR Webservice"
+          description: 'Additional text for BACS Direct Debit and ACH Direct Payment Receipt - Optional'
+          maxLength: 65
+    OptionalInstructions:
+      type: object
+      description: 'Optional Instructions is optional and its eligible for all receipt types. '
+      properties:
+        referenceId:
+          type: string
+          example: "18596345"
+          description: 'Reference Id is optional and its eligible for Memo Post , Ad –hoc and some scenario in recurring '
+          maxLength: 9
+        referenceComment:
+          type: string
+          example: "Created for CR Webservice"
+          description: 'Reference Comment is optional and its eligible for Memo Post , Ad –hoc and some scenario in recurring'
+          maxLength: 100
+        caseNumber:
+          type: string
+          example: "QC78457"
+          description: 'Case Number is optional and its eligible for Memo Post , Ad –hoc and some scenario in recurring - Optional'
+          maxLength: 50
+        reasonCode:
+          type: string
+          example: "16"
+          description: 'Reason Code is optional and its eligible for Memo Post , Ad –hoc and some scenario in recurring. Possible values[SEI-Transfer - Nostro Err = 84, SEI-System Issue = 10, SEI-Reebook Original Posted on Time = 15, SEI-Other = 13, SEI-Account Closure = 86, Firm-Rebook Original Posted on Time = 16, Firm-Other = 14, FIRM-RSKMGT = 83, FIRM-LATEAPP = 81, FIMR-FIRM REQUEST = 85, CA processing of an ADR Fee. Not reflective of the disbursement Process = 82] - Optional'
+          maxLength: 9
+        reasonCodeComments:
+          type: string
+          example: "Created for CR Webservice"
+          description: 'Reason Code Comments is optional and its eligible for Memo Post , Ad –hoc and some scenario in recurring - Optional'
+          maxLength: 60
+        freetrackTxnNum:
+          type: string
+          example: "CreateCRWebservice"
+          description: 'Freetrack Txn Num is optional and its eligible for Memo Post , Ad –hoc and some scenario in recurring - Optional'
+          maxLength: 50
+        cashPostingRefId1:
+          type: integer
+          format: int64
+          maxLength: 18
+          example: 1234567
+          description: |
+            The cashPostingRefId1 is optional field, but if cashPostingRefType1 is given then cashPostingRefId1 will be mandatory.
+               Optional/Mandatory =>
+               
+               * One Time Ad hoc -  Optional
+               * One Time Scheduled -  Optional
+               * Recurring -  Optional
+               * Memo Post  -  Optional
+        cashPostingRefType1:
+          type: integer
+          format: int32
+          maxLength: 5
+          example: 72
+          description: |
+            The cashPostingRefType1 is optional field, but if cashPostingRefId1 is given then cashPostingRefType1 will be mandatory and should valid system_code (35989).
+               Optional/Mandatory =>
+               
+               * One Time Ad hoc -  Optional
+               * One Time Scheduled -  Optional
+               * Recurring -  Optional
+               * Memo Post  -  Optional
+        cashPostingRefId3:
+          type: integer
+          format: int64
+          maxLength: 18
+          example: 12345678
+          description: |
+            The cashPostingRefId3 is optional field, but if cashPostingRefType3 is given then cashPostingRefId3 will be mandatory.
+               Optional/Mandatory =>
+               
+               * One Time Ad hoc -  Optional
+               * One Time Scheduled -  Optional
+               * Recurring -  Optional
+               * Memo Post  -  Optional     
+        cashPostingRefType3:
+          type: integer
+          format: int32
+          maxLength: 5
+          example: 72
+          description: |
+            The cashPostingRefType3 is optional field, but if cashPostingRefId3 is given then cashPostingRefType3 will be mandatory and should valid system_code (35989).
+               Optional/Mandatory =>
+               
+               * One Time Ad hoc -  Optional
+               * One Time Scheduled -  Optional
+               * Recurring -  Optional
+               * Memo Post  -  Optional
+        relatedSecurityDetails:
+          $ref: '#/components/schemas/RelatedSecurityDetails'
+    SuccessAttributes:
+      type: object
+      properties:
+        activityId:
+          type: string
+          description: "System generated identifier for the cash receipt activity record."
+          example: "857458"
+        beneficiaryValueDate:
+          type: string
+          description: Beneficiary Value Date
+          example: "2018-08-20"
+        eventId:
+          type: string
+          description: Event Id
+          example: "963258"
+        investCashActivityId:
+          type: string
+          description: "Invest cash activity Id - Optional"
+          example: "741852"
+          maxLength: 1
+        receiptAmount:
+          type: string
+          description: "The receipt amount is received into the portfolio. And this can take decimal value"
+          example: "200"
+          maxLength: 17
+        warnings:
+          type: array
+          description: Warning list
+          items:
+            $ref: '#/components/schemas/RESTWebServiceWarning'
+      description: Response data object for create currency receipt.
+    Source:
+      type: object
+      properties:
+        pointer:
+          type: string
+    ResponseMetaData:
+      type: object
+      properties:
+        currentPageSize:
+          type: integer
+          format: int32
+        pageNumber:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        sort:
+          type: array
+          items:
+            $ref: '#/components/schemas/Sort'
+        totalElements:
+          type: integer
+          format: int32
+        totalPages:
+          type: integer
+          format: int32
+        warnings:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseWarning'
+    Daily:
+      type: object
+      description: 'The daily having scheduled recurring event which will occur daily.'
+      required: 
+        - dayType
+        - interval
+      properties:
+        interval:
+          type: string
+          example: "1"
+          description: 'Indicates the number of days between occurrences.'
+          maxLength: 1
+        dayType:
+          type: string
+          example: "2"
+          description: 'Indicator for calendar (1 = Day) or business (2 = Business) days '
+          maxLength: 1
+    Recurring:
+      type: object
+      description: 'The recurring having scheduled recurring event which can occur daily, weekly or monthly. '
+      required:
+        - startDate
+      properties:
+        startDate:
+          type: string
+          example: "2017-01-01"
+          description: 'Date Event will first occur, as supplied when created [YYYY/MM/DD]. '
+          maxLength: 16
+        daily:
+          $ref: '#/components/schemas/Daily'
+        weekly:
+          $ref: '#/components/schemas/Weekly'
+        monthly:
+          $ref: '#/components/schemas/Monthly'
+        endAfterCount:
+          type: string
+          example: "2"
+          description: 'Value representing the number of recurrences of the event, after which the vent will stop, if the Event was set-up with a value for “End After ‘n’ Occurrences” - Optional'
+          maxLength: 9
+        endByDate:
+          type: string
+          example: "2018-12-31"
+          description: 'Date recurring Event is scheduled to stop, if Event was set-up with an ending date specified for “End By” [YYYY/MM/DD]. - Optional'
+          maxLength: 16
+    Weekly:
+      type: object
+      description: 'The Weekly having scheduled recurring event which will occur weekly.'
+      required:
+        - interval
+        - weekDay
+      properties:
+        interval:
+          type: string
+          example: "1"
+          description: 'Indicates the number of weeks between occurrences.'
+          maxLength: 2
+        weekDay:
+          type: string
+          example: "5"
+          description: 'Indicator for day of week the weekly Event is scheduled to occur on. (1 = Sunday, 2 = Monday, 3 = Tuesday, 4 = Wednesday, 5 = Thursday, 6 = Friday, 7 = Saturday)'
+          maxLength: 1
+    Sort:
+      type: object
+      properties:
+        direction:
+          type: string
+        ignoreCase:
+          type: boolean
+        property:
+          type: string
+    ResponseWarning:
+      type: object
+      properties:
+        code:
+          type: string
+          description: 'The code to identify the type of failure.'
+        detail:
+          type: string
+          description: 'The specific error code for the specific failure'
+        title:
+          type: string
+          description: 'It contains Service Name details'
+    FeeOverride:
+      type: object
+      required:
+        - feeDescriptionId
+        - feeAmountType
+        - overridenFeeAmount
+      properties:
+        feeDescriptionId:
+          type: string
+          example: "85436"
+          description: 'feeDescriptionId indicates the description of the overridden fees. '
+          maxLength: 9
+        feeAmountType:
+          type: string
+          example: "1"
+          description: 'feeAmountType can be “Gross Value i.e. 1”.'
+          maxLength: 1
+        overridenFeeAmount:
+          type: string
+          example: "1"
+          description: 'It indicates the overridden fee amount. '
+          maxLength: 17
+        notes:
+          type: string
+          example: "Notes"
+          description: 'Additional text for overridden fees.'
+          maxLength: 60
+    SuccessData:
+      type: object
+      properties:
+        type:
+          type: string
+          example: "CreateCurrencyReceipt"
+          description: Type
+        attributes:
+          $ref: '#/components/schemas/SuccessAttributes'
+      description: Response data object for create currency receipt.
+    ReceiptInstructions:
+      type: object
+      description: 'Receipt Instructions for the cash receipt input details.'
+      required:
+        - currencyCode
+        - descriptionTypeCode
+        - receiptAmount
+        - receiptMethod
+        - treatmentTypeCode
+      properties:
+        currencyCode:
+          type: string
+          example: "GBP"
+          description: 'ISO Currency code for the cash receipt activity.'
+          maxLength: 3
+        receiptMethod:
+          type: string
+          example: "3"
+          description: 'The code associated with payment method in cash receipt (ACH=1, Wire=2, CHECK=3, BACS=5, CHAPS via SWIFT = 6, SWIFT = 7)'
+          maxLength: 1
+        receiptType:
+          type: string
+          example: "2"
+          description: 'Receipt Type – For BACS[Direct Debit =2 , Direct Credit = 1] For ACH[Direct Deposit = 1, Direct Payment = 2] - Optional'
+          maxLength: 1
+        officialCheck:
+          type: string
+          example: "true"
+          description: 'Official Check indicator for the CHECK receipt method. [true/false] - Optional'
+          maxLength: 1
+        checkReceivedFlag:
+          type: string
+          example: "true"
+          description: 'check Received Flag'
+          maxLength: 1
+        checkNumber:
+          type: string
+          example: "12345698"
+          description: 'Check Number for the CHECK receipt method. Must be provided if Check Received is true - Optional'
+          maxLength: 256
+        descriptionTypeCode:
+          type: string
+          example: "20207"
+          description: 'The description code associated with the portfolio Id. Describes the purpose of the transaction. The Description Code provided in the request are validated for restriction for the Transaction Type. If it is restricted, an exception message is returned.'
+          maxLength: 9
+        treatmentTypeCode:
+          type: string
+          example: "1451"
+          description: 'The treatment code associated with the Description code. Determines the tax treatment for the amount involved in the transaction. The Treatment Codes provided in the request are validated for restriction for the Transaction Type and for the User Role.If it is restricted, an exception message is returned.'
+          maxLength: 9
+        treatmentCodeTaxYear:
+          type: string
+          description: 'One of the tax year configured for the account involved in the transaction. Must be provided for specific valid combinations of DC and TC. - Optional'
+          maxLength: 9
+        netFeesFlag:
+          type: string
+          description: 'This flag can be used to call the net fees service and is optional, it defaults to No for non ISA account and default to yes for ISA account. When set to yes, it will call the net fees service when the firm/PO is configured for it.  This is for adhoc or memo post only'
+          maxLength: 3
+        investCash:
+          type: string
+          example: "true"
+          description: 'Invest cash indicator to invest received cash amount to buy assets.[true/false]'
+        eligibleForInvestCashScheduler:
+          type: string
+          example: "true"
+          description: 'Flag to enable the batch process to invest cash.[true/false] - Optional'
+          maxLength: 1
+        receiptAmountType:
+          type: string
+          example: "1"
+          description: 'Receipt amount type can be “Gross Value = 1, Unknown = 4” - Optional'
+          maxLength: 1
+        receiptAmount:
+          type: string
+          example: "21.25"
+          description: 'The receipt amount is received into the portfolio. And this can take decimal value. '
+        isaContribution:
+          type: string
+          example: "100"
+          description: 'ISA Contribution for ISA/JISA accounts. ISA Contribution can be provided only for ISA accounts and treatment codes which are configured for contribution amount - Optional'
+          maxLength: 17
+        externalReference:
+          type: string
+          example: "Create CR Webservice"
+          description: 'External identifier associated with SEI activity - Optional'
+          maxLength: 65
+        additionalNotes:
+          type: string
+          example: "Notes"
+          description: 'Additional Notes associated with Cash Reciept activity. It is send to AML Scan and if it failed the scan, the Cash Movement Activity goes into exception for "Under Review" and is assigned to the SPTC AML role for review. The Activity is resolved if the fields pass the review. - Optional'
+          maxLength: 256
+        txnSuppressionFor:
+          type: string
+          example: "4"
+          description: 'Flag to determine if transactions should be suppressed. Valid values: 1 – No suppression 2 - Statements 3 - Both Statements and Contract Notes/Advices 4 - Contract Notes/Advices'
+          maxLength: 1
+        furtherCreditTo:
+          type: string
+          example: "Created CR Webservice"
+          description: 'Further credit to associated with Cash Reciept activity.This is applicable only for ACH and WIRE. Subject to SPTC AML Review as Entities and Financial Institutions are. Any text failing AML Review results in the request going to Exception “Under Review”. See Payerid for handling - Optional'
+        acatsFlag:
+          type: string
+          example: "true"
+          description: 'Flag to enable the ACATS to currency receipt[true/false] - Optional'
+        sendPreNote:
+          type: string
+          example: "false"
+          description: 'Flag to enable the send prenote to create currency receipt[true/false] - Optional'
+        acquisitionCost:
+          type: string
+          example: "100"
+          description: 'Acquisition Cost is eligible when we choose one time schedule, selected currency should not be base currency and check received true - true'
+          maxLength: 17
+        acquisitionDate:
+          type: string
+          description: 'Acquisition Date is eligible when we choose one time schedule, selected currency should not be base currency and check received true - Optional'
+          maxLength: 10
+        acquisitionCostUnknownFlg:
+          type: string
+          example: "true"
+          description: 'Acquisition Cost Unknown Flag should not be true with Acquisition Cost . [true/false] - Optional'
+          maxLength: 1
+        acquisitionDateUnknownFlg:
+          type: string
+          example: "true"
+          description: 'Acquisition Date Unknown Flag should not true with Acquisition Date. [tru/false] - Optional'
+          maxLength: 1
+        byPassApprovalRequired:
+          type: string
+          example: "true"
+          description: 'The bypass approval indicator flag. When set to true, it bypasses the initiated approval workflow. When set to false, it initiates the approval workflow[true/false] -Optional'
+          maxLength: 1
+        payerInfo:
+          $ref: '#/components/schemas/PayerInfo'
+        acquisitionCostOverrideFlg:
+          type: string
+        acquisitionDateOverrideFlg:
+          type: string
+          example: "false"
+          description: 'acquisition Date Override Flg'
+        feesAndCharges:
+          type: array
+          description: 'List of overridden fees'
+          items:
+            $ref: '#/components/schemas/FeeOverride'
+        memoFlag:
+          type: string
+          example: "true"
+        preventStreetSideMsg:
+          type: string
+        releaseInvestCashImmediately:
+          type: string
+          example: "true"
+          description: 'release InvestCash Immediately'
+        externalSystemTxnId:
+          type: string
+          example: "PayerCheck"
+          description: 'Text string to capture External System Transaction Id - Optional'
+          maxLength: 50
+        feesAndChargesDetails:
+          type: array
+          description: List of fee details
+          items:
+            $ref: '#/components/schemas/feesAndChargesDetails'
+    feesAndChargesDetails:
+      type: object
+      properties:
+        feeTypeId:
+          type: Integer
+          format: int32
+          example: 1234
+          description: Code to identify the fee profile id.
+        feeRuleId:
+          type: string
+          example: "FeeRule1"
+          description: Code to identify the fee rule id.
+          maxLength: 36
+        originalFeeAmount:
+          type: number
+          format: bigdecimal
+          example: 10.45
+          description: The original amount of the fee calculated based on the fee rule.
+        overrideFeeAmount:
+          type: number
+          format: bigdecimal
+          example: 5.45
+          description: The override amount for the fee. This is the amount that will be used to override original fee amount.
+        isOverridden:
+          type: Integer
+          example: 1
+          description: Flag to indicate whether the original fee amount is overridden by the override fee amount.
+        feePercentage:
+          type: number
+          format: double
+          example: 10.45
+          description: The percentage of the fee if the fee is calculated based on percentage.
+        vatFeeRuleId:
+          type: string
+          example: "VATFeeRule1"
+          description: Code to identify the VAT fee rule id if there is any VAT associated with the fee.
+          maxLength: 36
+        notes:
+          type: string
+          example: "Fee notes"
+          description: Notes associated with the fee.
+          maxLength: 512
+    Data:
+      type: object
+      required:
+        - attributes
+        - type
+      properties:
+        type:
+          type: string
+          example: "CurrencyReceiptRequest"
+          description: 'Type for create currency receipt'
+        attributes:
+            $ref: '#/components/schemas/Attributes'
+    RESTWebServiceWarning:
+      type: object
+      properties:
+        code:
+          type: string
+          example: '2197'
+          description: 'The code to identify the type of failure. '
+        detail:
+          type: string
+          example: 'Origination statement text is ignored as this is not required for receipt method 1'
+          description: 'The specific error code for the specific failure '
+        id:
+          type: string
+          example: 'abcd123-sdddf433'
+          description: 'The unique instance of the failure '
+        link:
+          type: string
+          example: '/createCurrencyReceipt'
+          description: 'The link is very first method name of service.'
+        source:
+          $ref: '#/components/schemas/Source'
+        status:
+          type: string
+          example: '200'
+          description: 'The status like 400, 500, 200 for the failure '
+        title:
+          type: string
+          example: 'Input is ignored.'
+          description: 'It contains Service Name details'
+    ResponseErrorSource:
+      type: object
+      properties:
+        pointer:
+          type: string
+    ProcessingScheduleDetails:
+      type: object
+      description: 'The Processing Schedule Details having event details. '
+      properties:
+        once:
+          $ref: '#/components/schemas/Once'
+        recurring:
+          $ref: '#/components/schemas/Recurring'
+    ApiErrorResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiError'
+    ApiError:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "ac00ba35-bbb1-458e-9754-37a53979de81"
+          description: "The unique instance of the failure"
+        status:
+          type: integer
+          format: int32
+          example: 400
+          description: "The httpstatus like 400/500/200 for the failure"
+        code:
+          type: string
+          example: "1006"
+          description: "The code to identify the type of failure."
+        source:
+          $ref: '#/components/schemas/ResponseErrorSource'
+        title:
+          type: string
+          example: "Please provide valid input to invoke the service."
+          description: "The title to identify the error."
+        link:
+          type: string
+          example: "/createCurrencyReceipt"
+          description: "The link is very first method name of service"
+        detail:
+          type: string
+          example: "Fee description id is invalid: 8232."
+          description: "Detailed error message"
+  examples:
+    CreateCashReceiptSuccessRequest:
+      value: { "data": [
+        {
+          "type": "CurrencyReceiptRequest",
+          "attributes": {
+            "accountNumber": "395357",
+            "portfolioId": "12199051",
+            "receiptInstructions": {
+              "currencyCode": "USD",
+              "receiptMethod": "7",
+              "descriptionTypeCode": "20300",
+              "treatmentTypeCode": "1451",
+              "receiptAmount": "100",
+              "receiptAmountType": "1",
+              "externalReference": "Created from WS",
+              "additionalNotes": "Created from WS",
+              "byPassApprovalRequired": "true",
+              "memoFlag": "false",
+              "externalSystemTxnId": "test"
+            },
+            "processingScheduleDetails": {
+              "recurring": {
+                "startDate": "2025-09-19",
+                "daily": {
+                  "interval": 1,
+                  "dayType": 1
+                },
+                "endAfterCount": 1
+              }
+            },
+            "firmId": "81228"
+          }
+        }
+      ]
+    }
+    CreateCashReceiptSuccessResponse:
+      value:
+        "data": [{
+          "type": "CreateCurrencyReceipt",
+          "attributes": {
+            "activityId": "514698642",
+            "beneficiaryValueDate": "",
+            "receiptAmount": "",
+            "investCashActivityId": "",
+            "eventId": "77482412",
+            "warnings": []
+          }
+        }]
+
+    CreateCashReceiptSuccessWithApprovalWorkflowRequest:
+      value: { "data": [
+        {
+          "type": "CurrencyReceiptRequest",
+          "attributes": {
+            "accountNumber": "001019940",
+            "portfolioId": "22892827",
+            "firmId": "90040",
+            "receiptInstructions": {
+              "currencyCode": "USD",
+              "receiptMethod": "1",
+              "receiptType": "2",
+              "sendPreNote": "true",
+              "descriptionTypeCode": "20052",
+              "treatmentTypeCode": "1233",
+              "eligibleForInvestCashScheduler": "true",
+              "receiptAmountType": "1",
+              "receiptAmount": "125",
+              "externalReference": "Created for CR Web Service",
+              "additionalNotes": "Created for CR Web Service",
+              "byPassApprovalRequired": "false",
+              "furtherCreditTo": "Created for CR Web Service",
+              "payerInfo": {
+                "payerId": "22892826",
+                "originationStatementText": "Created for CR Web Service",
+                "destinationStatementText": "Created for CR Web Service",
+                "uniqueMandateReference": "Created for CR Web Service"
+              }
+            },
+            "processingScheduleDetails": {
+              "recurring": {
+                "startDate": "2025-08-27",
+                "endByDate": "2025-09-28",
+                "daily": {
+                  "interval": "1",
+                  "dayType": "2"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+
+    CreateCashReceiptSuccessWithApprovalWorkflowResponse:
+          value:
+              "data" :  [{
+        "type": "CreateCurrencyReceipt",
+        "attributes":    {
+        "activityId": "37814876",
+        "beneficiaryValueDate": "",
+        "receiptAmount": "",
+        "investCashActivityId": "",
+        "eventId": "16235233",
+        "warnings":       [
+              {
+          "id": "ad6be336-1d90-4e7e-b75e-dc85d8cc1ee2",
+          "status": "200",
+          "code": "1145",
+          "source": null,
+          "title": "Approval Warning",
+          "link": "/createCurrencyReceipt",
+          "detail": "Approval Exists : Approval Ref ID: Approval Reason Desc  41365 Traditional IRA Account; "
+         },
+              {
+          "id": "2dc9256a-61e6-47f0-ba37-446af2838263",
+          "status": "",
+          "code": "2196",
+           "source": {"pointer": "/data/attributes/receiptInstructions/officialCheck"},
+          "title": "Input is ignored.",
+          "link": "/createCurrencyReceipt",
+          "detail": "Origination statement text is ignored as this is not required for receipt method 1"
+         },
+              {
+          "id": "e261376b-d171-41a4-b9e4-a773c291f81f",
+          "status": "",
+          "code": "2196",
+          "source": {"pointer": "/data/attributes/receiptInstructions/officialCheck"},
+          "title": "Input is ignored.",
+          "link": "/createCurrencyReceipt",
+          "detail": "Destination statement text is ignored as this is not required for receipt method 1"
+         }
+        ]
+       }
+    }]
+
+    CreateCashReceiptWithRefIdTypeSuccessRequest:
+          value:
+              {
+      "data": [
+      {
+        "type": "CurrencyReceiptRequest",
+        "attributes": {
+          "accountNumber": "395357",
+          "portfolioId": "12199051",
+          "receiptInstructions": {
+            "currencyCode": "USD",
+            "receiptMethod": "7",
+            "descriptionTypeCode": "20300",
+            "treatmentTypeCode": "1451",
+            "receiptAmount": "100",
+            "receiptAmountType": "1",
+            "externalReference": "Created from WS",
+            "additionalNotes": "Created from WS",
+            "byPassApprovalRequired": "true",
+            "memoFlag": "false",
+            "externalSystemTxnId": "test"
+          },
+          "processingScheduleDetails": {
+            "once": {
+              "dueDate": "2026-06-26"
+            }
+          },
+          "optionalInstructions": {
+            "cashPostingRefId1": "1",
+            "cashPostingRefType1": "12",
+            "cashPostingRefId3": "1",
+            "cashPostingRefType3": "1"
+          },
+          "firmId": "81228"
+        }
+      }
+    ]
+  }
+    CreateCashReceiptWithRefIdTypeSuccessResponse:
+          value:
+               { "data": [
+          {
+          "type": "CreateCurrencyReceipt",
+          "attributes": {
+          "activityId": "1144011968",
+          "beneficiaryValueDate": "",
+          "receiptAmount": "",
+          "investCashActivityId": "",
+          "eventId": "16845190",
+          "warnings": []
+        }
+      }
+    ]}
+    CreateRecurringCashReceiptWithPreventSSMRequest:
+          value:
+              { "data": [{
+         "type":"CurrencyReceiptRequest",
+         "attributes":{
+          "accountNumber":"00000000012361",
+          "Frequency":"2",
+          "portfolioId":"15513427",
+          "receiptInstructions":{
+             "currencyCode":"USD",
+             "receiptMethod":"1",
+             "receiptType":"1",
+            "descriptionTypeCode":"20029",
+             "treatmentTypeCode":"2226",
+             "receiptAmount":"100",
+             "receiptAmountType":"1",
+             "externalReference":"Created from WS",
+             "additionalNotes":"Created from WS",
+             "byPassApprovalRequired":"false",
+             "preventStreetSideMsg":"true"
+
+          },
+          "processingScheduleDetails":{
+            "recurring":{
+              "startDate":"2019-07-10",
+              "daily":{
+                 "interval":"1",
+                 "dayType": "1"
+                    }
+                     }
+                    },
+               "firmId":"3100"
+         }
+
+    }
+    ]}
+
+    CreateRecurringCashReceiptWithPreventSSMResponse:
+          value:
+               { "data": [
+          {
+          "type": "CreateCurrencyReceipt",
+          "attributes": {
+          "activityId": "52160339",
+          "beneficiaryValueDate": "",
+          "receiptAmount": "",
+          "investCashActivityId": "",
+          "eventId": "18239324",
+          "warnings": []
+        }
+      }
+    ]}
+
+    CreateCashReceiptWithRaiseCashWithWarningRequest:
+          value: {
+              "data": [{
+       "type" : "CurrencyReceiptRequest",
+       "attributes" : {
+                "accountNumber":"AE10006H",
+                 "portfolioId":"12000497",
+                 "receiptInstructions":{
+                 "currencyCode":"USD",
+                 "receiptMethod":"4",
+
+                 "descriptionTypeCode":"20417",
+                 "treatmentTypeCode":"4552",
+                 "investCash":"true",
+                "releaseInvestCashImmediately":"true",
+                 "receiptAmount":"54.65",
+                 "receiptAmountType":"1",
+                 "externalReference":"Created from WS",
+                 "additionalNotes":"Created from WS",
+                 "byPassApprovalRequired":"false",
+                 "txnSuppressionFor":"2"
+                 },
+                 "processingScheduleDetails":{
+                 "once" :
+           {
+               "dueDate" : "2017-07-13"
+                            }
+                    },
+                 "firmId":"3100"
+                 }
+         }
+         ]}
+
+    CreateCashReceiptWithRaiseCashWithWarningResponse:
+          value:
+               { "data": [
+          {"type": "CreateCurrencyReceipt",
+        "attributes":    {
+        "activityId": "37105509",
+        "beneficiaryValueDate": "",
+        "receiptAmount": "",
+        "investCashActivityId": "37105510",
+        "eventId": "16070548",
+        "warnings": [      {
+         "id": "2eb11842-60b4-4dad-a769-9f1eff76128f",
+         "status": "200",
+         "code": "2196",
+         "source": null,
+         "title": "Input is ignored.",
+         "link": "/createCurrencyReceipt",
+         "detail": "Txn suppression type code is ignored for non adhoc transaction 2."
+        }]
+       }
+    }]}
+
+    CreateCashReceiptErrorRequest:
+          value: {"data": [{
+          "type": "CurrencyReceiptRequest",
+          "attributes" : {
+          "accountNumber" : "2342342",
+          "portfolioId" : "48332211",
+          "receiptInstructions" : {
+          "currencyCode" : "GBP",
+          "receiptMethod" : "5",
+          "receiptType" : "1",
+          "descriptionTypeCode" : "20190",
+          "treatmentTypeCode" : "1453",
+          "amountIncludesFees" : "Yes",
+          "receiptAmount" : "1600",
+          "receiptAmountType" : "1",
+          "externalReference" : "Created via REST WS",
+          "additionalNotes" : "Net Fees Validations",
+          "byPassApprovalRequired" : "true",
+          "memoFlag" : "false",
+          "externalSystemTxnId" : "10282024" },
+          "processingScheduleDetails" : {
+             "recurring" : {
+              "startDate" : "2024-10-30",
+              "daily" : {
+               "interval" : "1",
+               "dayType" : "1"
+              },
+              "endAfterCount" : "5"
+             }
+          },
+          "firmId" : "50021"
+          }
+        }
+        ]}
+
+    CreateCashReceiptErrorResponse:
+          value: {
+       "errors": [{
+       "id": "fa233202-9fb1-45cc-892b-e37d983735b6",
+       "status": "400",
+       "code": "1002",
+       "title": "The account is invalid.",
+       "link": "/createCurrencyReceipt",
+       "detail": "Account number is invalid: 2342342"
+    }]}
+
+
+    CreateCashReceiptWithoutRefTypesRequest:
+          value: {"data": [{
+        "type": "CurrencyReceiptRequest",
+        "attributes": {
+          "accountNumber": "395357",
+          "portfolioId": "12199051",
+          "receiptInstructions": {
+            "currencyCode": "USD",
+            "receiptMethod": "7",
+            "descriptionTypeCode": "20300",
+            "treatmentTypeCode": "1451",
+            "receiptAmount": "100",
+            "receiptAmountType": "1",
+            "externalReference": "Created from WS",
+            "additionalNotes": "Created from WS",
+            "byPassApprovalRequired": "true",
+            "memoFlag": "false",
+            "externalSystemTxnId": "test"
+          },
+          "processingScheduleDetails": {
+            "once": {
+              "dueDate": "2026-06-26"
+            }
+          },
+          "optionalInstructions": {
+            "cashPostingRefId1": "1",
+            "cashPostingRefId3": "1"
+          },
+          "firmId": "81228"
+        }
+      }
+    ]}
+
+    CreateCashReceiptWithoutRefTypesResponse:
+          value:
+            {
+    "errors": [
+      {
+        "id": "aa768a4e-4639-4c9b-82f3-208be0ae319e",
+        "status": "400",
+        "code": "2195",
+        "source": {
+          "pointer": "/data/attributes/optionalInstructions/cashPostingRefType1"
+        },
+        "title": "Input is required.",
+        "link": "/createCurrencyReceipt",
+        "detail": "When cashPostingRefId1 is provided then cashPostingRefType1 is mandatory"
+      },
+      {
+        "id": "73948084-6b3c-4e5a-946b-a6ab8ad34eb1",
+        "status": "400",
+        "code": "2195",
+        "source": {
+          "pointer": "/data/attributes/optionalInstructions/cashPostingRefType3"
+        },
+        "title": "Input is required.",
+        "link": "/createCurrencyReceipt",
+        "detail": "When cashPostingRefId3 is provided then cashPostingRefType3 is mandatory"
+      }
+    ]
+    }
+
+    CreateCashReceiptInvalidRefTypesResponse:
+          value:
+            {
+    "errors": [
+      {
+        "id": "aa768a4e-4639-4c9b-82f3-208be0ae319e",
+        "status": "400",
+        "code": "1006",
+        "source": {
+          "pointer": "/data/attributes/optionalInstructions/cashPostingRefType1"
+        },
+        "title": "Input is required.",
+        "link": "/createCurrencyReceipt",
+        "detail": "cashPostingRefType1: 112343 is not valid"
+      },
+      {
+        "id": "73948084-6b3c-4e5a-946b-a6ab8ad34eb1",
+        "status": "400",
+        "code": "1006",
+        "source": {
+          "pointer": "/data/attributes/optionalInstructions/cashPostingRefType3"
+        },
+        "title": "Input is required.",
+        "link": "/createCurrencyReceipt",
+        "detail": "cashPostingRefType3: 123423 is not valid"
+      }
+    ]
+    }
+
+    CreateCashReceiptInvalidRefTypesRequest:
+          value: {"data": [{
+        "type": "CurrencyReceiptRequest",
+        "attributes": {
+          "accountNumber": "395357",
+          "portfolioId": "12199051",
+          "receiptInstructions": {
+            "currencyCode": "USD",
+            "receiptMethod": "7",
+            "descriptionTypeCode": "20300",
+            "treatmentTypeCode": "1451",
+            "receiptAmount": "100",
+            "receiptAmountType": "1",
+            "externalReference": "Created from WS",
+            "additionalNotes": "Created from WS",
+            "byPassApprovalRequired": "true",
+            "memoFlag": "false",
+            "externalSystemTxnId": "test"
+          },
+          "processingScheduleDetails": {
+            "once": {
+              "dueDate": "2026-06-26"
+            }
+          },
+          "optionalInstructions": {
+            "cashPostingRefId1": "1",
+            "cashPostingRefType1": "112343",
+            "cashPostingRefId3": "1",
+            "cashPostingRefType3": "123423"
+          },
+          "firmId": "81228"
+        }
+      }
+    ]}
+    CreateCashReceiptFeeOverrideRequest:
+      value: {
+        "data": [
+          {
+            "type": "CurrencyReceiptRequest",
+            "attributes": {
+              "accountNumber": "VUKL210001",
+              "portfolioId": "8950572",
+              "receiptInstructions": {
+                "currencyCode": "GBP",
+                "receiptMethod": "7",
+                "descriptionTypeCode": "20041",
+                "treatmentTypeCode": "3008",
+                "receiptAmount": "400",
+                "receiptAmountType": "1",
+                "externalReference": "Created from WS",
+                "additionalNotes": "Created from WS",
+                "byPassApprovalRequired": "true",
+                "memoFlag": "false",
+                "feesAndChargesDetails": {
+                  "feesAndCharges": [
+                    {
+                      "feeTypeId": "81970",
+                      "feeRuleId": "4b8f73062f12bb21e0631a1ed00a02e5",
+                      "originalFeeAmount": "32.50",
+                      "overrideFeeAmount": "36.00",
+                      "isOverridden": "1",
+                      "notes": "Fee amount Overridden for daily rec"
+                    }
+                  ]
+                },
+                "externalSystemTxnId": "test"
+              },
+              "processingScheduleDetails": {
+                "recurring": {
+                  "startDate": "2026-03-11",
+                  "endByDate": "2026-03-27",
+                  "daily": {
+                    "interval": "1",
+                    "dayType": "2"
+                  }
+                }
+              },
+              "firmId": "35210"
+            }
+          }
+        ]
+      }

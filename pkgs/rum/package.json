@@ -1,0 +1,29 @@
+{
+	"name": "@graphene/rum",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"exports": {
+		".": "./src/index.ts",
+		"./beacon": "./src/RumBeacon.svelte",
+		"./forward": "./src/forward.ts"
+	},
+	"scripts": {
+		"lint": "eslint .",
+		"test": "vitest run"
+	},
+	"dependencies": {
+		"web-vitals": "^5.1.0"
+	},
+	"peerDependencies": {
+		"@sveltejs/kit": "^2.70.2",
+		"svelte": "^5.57.0"
+	},
+	"devDependencies": {
+		"@graphene/config": "workspace:*",
+		"eslint": "^9.39.5",
+		"typescript": "^5.9.3",
+		"vite": "^8.3.4",
+		"vitest": "^4.1.11"
+	}
+}

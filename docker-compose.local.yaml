@@ -1,0 +1,736 @@
+# Local development stack: Postgres 18 + RustFS + the app (API, portals, pipelines, worker).
+# LOCAL ONLY — production uses docker-compose.yaml. Non-default name so plain `docker compose`
+# still resolves to the prod file. From the workspace root:
+#
+#   moon run api:db-up / api:migrate / api:db-reset
+#   pnpm worker:up / storage:up
+#   node scripts/ensure-graphene-dev-network.mjs && docker compose -f docker-compose.local.yaml up --build
+#
+# Compose interpolates this whole file from the root `.env`, even for `api:db-up`. App secrets
+# live in apps/*/.env(.local) and services/*/.env — load them via env_file, never re-declare
+# as a blank default (that wins). Interpolations here use `:-` so a missing secret parses;
+# production docker-compose.yaml stays `:?`. First init runs migrations/bootstrap/.
+x-workos: &workos
+  WORKOS_CLIENT_ID: ${WORKOS_CLIENT_ID:-}
+  WORKOS_API_KEY: ${WORKOS_API_KEY:-}
+  WORKOS_COOKIE_PASSWORD: ${WORKOS_COOKIE_PASSWORD:-}
+  INTERNAL_API_TOKEN: ${INTERNAL_API_TOKEN:-}
+
+# Same pair pydantic-settings reads. `.env.local` last. Optional so db-up works on a fresh clone.
+x-api-env-files: &api-env-files
+  - path: apps/api/.env
+    required: false
+  - path: apps/api/.env.local
+    required: false
+
+# Every SvelteKit portal runs identically. Host-keyed shared portals: ONE deployment serves MANY
+# tenant hosts, so we can't pin a single ORIGIN — that makes SvelteKit reject form POSTs from every
+# other host with "Cross-site POST forbidden". Deriving the origin per-request from the proxy's
+# forwarded headers (Coolify/Traefik terminate TLS and set these) makes the CSRF origin check match
+# the real public host + scheme for each tenant. Safe because the app is only reachable via that
+# trusted proxy. (Do NOT also set ORIGIN — it would override these.)
+x-portal: &portal
+  NODE_ENV: local
+  PORT: "3000"
+  HOST: 0.0.0.0
+  PROTOCOL_HEADER: x-forwarded-proto
+  HOST_HEADER: x-forwarded-host
+  # Same as the prod portal block. A request that hits :3000–:3002 directly has no
+  # X-Forwarded-For, and getClientAddress() then throws; sign-in catches that and stores
+  # no address. The header is what a proxy in front of these ports must send.
+  ADDRESS_HEADER: x-forwarded-for
+  XFF_DEPTH: "1"
+  # REST and realtime SSE are forwarded server-side over the private compose network.
+  API_URL: http://api:8000
+  # Request-body ceiling for the node adapter (`env('BODY_SIZE_LIMIT', '512K')` in its handler.js).
+  # It is enforced BEFORE any form action runs, so the default 512 KB rejects every real upload with a
+  # bare "Payload Too Large" — documents, supporting files, client request fulfilment, chat
+  # attachments, and a branding logo near its own 512 KiB cap. `vite dev` has no such ceiling, which
+  # is why uploads work locally and 413 on a deployment. Sized above the API's own multi-file ceiling
+  # (`documents.py::MAX_UPLOAD_BODY_BYTES` = 25 MiB x 10 + 1 MiB headroom = 251 MiB) so the API is the
+  # one that refuses an over-size drop — its message names the real limit, this one cannot.
+  # Cost: a portal form action buffers the whole multipart body in memory before forwarding it.
+  BODY_SIZE_LIMIT: ${BODY_SIZE_LIMIT:-256M}
+  # Local portals are the dev instance. The admin tenant page shows the outbound-email restriction
+  # for dev and staging only.
+  APP_STAGE: ${APP_STAGE:-dev}
+
+# Object storage (S3-compatible) — docs/storage.md. ONE endpoint + credential (the PLATFORM ROOT
+# credential) serves ALL buckets: it provisions the per-tenant `t-{uid}` buckets and performs the
+# API's own writes. Local store is the `rustfs` service below; do not interpolate host `.env`
+# (`localhost:9000`) into containers.
+x-s3: &s3
+  S3_ENDPOINT_URL: http://rustfs:9000
+  S3_REGION: ${S3_REGION:-auto}
+  S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-rustfsadmin}
+  S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-rustfsadmin}
+  # Canned ACL for uploads: `public-read` on providers with object ACLs (AWS S3, MinIO, RustFS);
+  # blank on R2 / B2 (use a bucket policy). Force addressing style if a provider or custom domain
+  # needs it (true=path, false=virtual).
+  S3_ACL: ${S3_ACL:-}
+  S3_FORCE_PATH_STYLE: ${S3_FORCE_PATH_STYLE:-true}
+  # PRIVATE documents (uploads + rendered PDFs). Bytes reach the browser via the API's
+  # presign/proxy, never a public URL.
+  S3_DOCUMENTS_BUCKET: ${S3_DOCUMENTS_BUCKET:-portals-documents}
+
+x-observability: &observability
+  # app/logging.py resolves a blank LOG_FORMAT to text on APP_STAGE=dev and json otherwise;
+  # SENTRY_DSN off => failures still reach the structured log at ERROR.
+  LOG_FORMAT: ${LOG_FORMAT:-}
+  LOG_LEVEL: ${LOG_LEVEL:-INFO}
+  SENTRY_DSN: ${SENTRY_DSN:-}
+
+# The Seccl login, presented identically by the pipeline and the gateway.
+x-seccl-auth: &seccl-auth
+  # Defaults so `api:db-up` can parse; pipelines load services/seccl/.env.
+  SECCL_API_URL: ${SECCL_API_URL:-}
+  SECCL_FIRM_ID: ${SECCL_FIRM_ID:-}
+  # private_key_jwt (production M2M) | client_secret (staging)
+  SECCL_AUTH_TYPE: ${SECCL_AUTH_TYPE:-private_key_jwt}
+  SECCL_AUTH0_DOMAIN: ${SECCL_AUTH0_DOMAIN:-}
+  SECCL_AUDIENCE: ${SECCL_AUDIENCE:-}
+  SECCL_CLIENT_ID: ${SECCL_CLIENT_ID:-}
+  SECCL_KID: ${SECCL_KID:-}
+  SECCL_CLIENT_SECRET: ${SECCL_CLIENT_SECRET:-}
+  # The PEM registered with Seccl, base64-encoded — an env value, not a file. It used to be a bind
+  # mount from a fixed host path (`/opt/graphene/secrets/seccl.pem`) because Coolify refuses a
+  # volume source containing `${`, which made it the one secret in this stack that could not be set
+  # in the env list at all. `private_key_b64` takes precedence over `private_key_path` in
+  # seccl_sync.settings, so this replaces the mount outright.
+  SECCL_PRIVATE_KEY_B64: ${SECCL_PRIVATE_KEY_B64:-}
+
+# The Morgan Lloyd (Clifton) Dynamics 365 service principal. MORGAN_LLOYD_TENANT_ID is the Azure
+# DIRECTORY id — the OAuth token URL and the `ml_tenant_id` slice key — and is NOT the adviser firm
+# id, which is an `accounts` record and the value the vendor issues under three different field
+# names (`cam_financialadviser_Account`, Create Adviser's `accountId`, Create Investment's
+# `provider`). Without the adviser firm id a synced contact is unattached and every later
+# `cam_createscheme` 403s, so `sync-to-morgan-lloyd` warns up front rather than half-succeeding.
+# The two option-set values are firm-specific with no documented labels: blank means scheme
+# creation refuses by name instead of guessing a number.
+x-morgan-lloyd-auth: &morgan-lloyd-auth
+  MORGAN_LLOYD_RESOURCE_URL: ${MORGAN_LLOYD_RESOURCE_URL:-}
+  MORGAN_LLOYD_TENANT_ID: ${MORGAN_LLOYD_TENANT_ID:-}
+  MORGAN_LLOYD_CLIENT_ID: ${MORGAN_LLOYD_CLIENT_ID:-}
+  MORGAN_LLOYD_CLIENT_SECRET: ${MORGAN_LLOYD_CLIENT_SECRET:-}
+  MORGAN_LLOYD_ADVISER_FIRM_ID: ${MORGAN_LLOYD_ADVISER_FIRM_ID:-}
+  MORGAN_LLOYD_ADVISER_CONTACT_ID: ${MORGAN_LLOYD_ADVISER_CONTACT_ID:-}
+  MORGAN_LLOYD_SCHEME_TYPE: ${MORGAN_LLOYD_SCHEME_TYPE:-}
+  MORGAN_LLOYD_SIPP_TYPE: ${MORGAN_LLOYD_SIPP_TYPE:-}
+  MORGAN_LLOYD_INVESTMENT_PROVIDER_ID: ${MORGAN_LLOYD_INVESTMENT_PROVIDER_ID:-}
+  ML_SYNC_ADVISER_EMAILS: ${ML_SYNC_ADVISER_EMAILS:-}
+
+# SEI: three stacked credential sets, because the drop and the API are different doors.
+#   * SFTP — the nightly encrypted report drop. SEI restricts by SOURCE IP, so this only works
+#     from an allowlisted host; auth failing from anywhere else is expected, not a bad password.
+#   * PGP — the drop is encrypted; without the key and passphrase every file lands and none reads.
+#   * mTLS + OAuth + AppKey — the SWP REST API.
+# The BASE64 forms are deliberate: a container cannot mount a PKCS#12 or a key file, and Coolify
+# refuses a volume source containing `${`. Both take precedence over their `_PATH` fallbacks.
+x-sei-auth: &sei-auth
+  SEI_ENV: ${SEI_ENV:-}
+  SEI_SFTP_HOST: ${SEI_SFTP_HOST:-}
+  SEI_SFTP_PORT: ${SEI_SFTP_PORT:-22}
+  SEI_SFTP_USERNAME: ${SEI_SFTP_USERNAME:-}
+  SEI_SFTP_PASSWORD: ${SEI_SFTP_PASSWORD:-}
+  SEI_SFTP_REMOTE_DIR: ${SEI_SFTP_REMOTE_DIR:-}
+  SEI_PGP_PRIVATE_KEY_BASE64: ${SEI_PGP_PRIVATE_KEY_BASE64:-}
+  SEI_PGP_PASSPHRASE: ${SEI_PGP_PASSPHRASE:-}
+  SEI_API_BASE_URL: ${SEI_API_BASE_URL:-}
+  SEI_OAUTH_USERNAME: ${SEI_OAUTH_USERNAME:-}
+  SEI_OAUTH_PASSWORD: ${SEI_OAUTH_PASSWORD:-}
+  SEI_APPKEY: ${SEI_APPKEY:-}
+  SEI_APPSECRET: ${SEI_APPSECRET:-}
+  SEI_PFX_BASE64: ${SEI_PFX_BASE64:-}
+  SEI_PFX_PASSWORD: ${SEI_PFX_PASSWORD:-}
+  SEI_API_LOOKBACK_DAYS: ${SEI_API_LOOKBACK_DAYS:-}
+
+# intelliflo-sync's own Postgres login (`integrations.*` on the local `portals` DB) + the shared,
+# read-only SEI lake reader — in-network literal hosts (`db`/`rustfs`), the same split *warehouse
+# gives the write-side daemons below. INTELLIFLO_* app credentials (client id/secret, api key,
+# life cycle id, webhook secret/url, cron overrides) come from the service's own .env (env_file
+# on each service below) — same seccl/sei/morgan-lloyd split: infra here, provider creds there.
+x-intelliflo: &intelliflo
+  PG_HOST: db
+  PG_PORT: "5432"
+  PG_DBNAME: portals
+  PG_USER: migrator
+  PG_PASSWORD: migrator
+  PG_SET_ROLE: service_role
+  DATALAKE_CATALOG_DSN: dbname=datalakes host=db port=5432 user=lake_reader password=lake_reader
+  S3_CORE_BUCKET: ${S3_CORE_BUCKET:-platforms}
+  S3_ENDPOINT_HOST: rustfs:9000
+  S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-rustfsadmin}
+  S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-rustfsadmin}
+  S3_USE_SSL: "false"
+
+# The warehouse + object store, under the names every service now reads: `services/*/interlace.yaml`
+# interpolates these straight from the container environment, and the runtime settings accept them
+# with the `{PROVIDER}_*` form left as an override. So the translation layer that used to sit here
+# (a SECCL_S3_* copy of each S3_* value) is gone — there is one name per fact.
+#
+# S3_ENDPOINT_HOST is a second FORM of the one endpoint, not a second endpoint: the DuckDB secret
+# takes host[:port] with no scheme, and compose cannot strip one off S3_ENDPOINT_URL.
+#
+# In-network hosts (`db` / `rustfs`), not root `.env` (`localhost`). Host-native moon
+# pipeline tasks still read `/.env`.
+x-warehouse: &warehouse
+  DATALAKE_WRITER_DSN: dbname=datalakes host=db port=5432 user=lake_writer password=lake_writer
+  # `book_writer` on the PORTALS database — the per-tenant merge's own login (0062), the narrowest
+  # credential in the stack: it reaches the merged relations, platform.merge_rejects, auth.tenants,
+  # platform.tenant_platforms and storage.tenants, and nothing else. Libpq KEYWORD form, because
+  # interlace interpolates it into postgres:<BOOK_WRITER_DSN> for DuckDB's postgres extension.
+  #
+  # REQUIRED, not optional: unset, `book_sink.tenants.enabled()` logs a warning and returns [], so
+  # the daemon registers NO tenant models — no slice, no staging, no merge — and still serves and
+  # reports healthy. A firm's book simply never fills, which is indistinguishable from a firm with
+  # no data at this custodian. It belongs in this shared block rather than per service because all
+  # three daemons need the same value (docs/provider-pipeline.md §7).
+  BOOK_WRITER_DSN: dbname=portals host=db port=5432 user=book_writer password=book_writer
+  S3_CORE_BUCKET: ${S3_CORE_BUCKET:-platforms}
+  # NOTHING READS THIS. No module in apps/, pkgs/ or services/ resolves it — the API's own
+  # `s3_integrations_bucket` setting had no reader and has been removed. The bucket is still
+  # created below and the value still passed, because an existing bucket may hold bytes and
+  # silently ceasing to provision one is not a cleanup. Delete both once its contents are
+  # accounted for.
+  S3_INTEGRATIONS_BUCKET: ${S3_INTEGRATIONS_BUCKET:-integrations}
+  S3_ENDPOINT_HOST: rustfs:9000
+  S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-rustfsadmin}
+  S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-rustfsadmin}
+
+# Pipelines need Postgres and the buckets rustfs-init creates.
+x-warehouse-ready: &warehouse-ready
+  db:
+    condition: service_healthy
+  rustfs-init:
+    condition: service_completed_successfully
+
+x-portal-healthcheck: &portal-healthcheck
+  test:
+    [
+      "CMD",
+      "node",
+      "-e",
+      "fetch('http://localhost:3000/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+    ]
+  interval: 30s
+  timeout: 3s
+  retries: 3
+  start_period: 15s
+services:
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file: *api-env-files
+    environment:
+      <<: *s3
+      # In-network DSNs only. Secrets come from env_file — do not list them here.
+      DATABASE_URL: postgresql+psycopg://app:app@db:5432/portals
+      MIGRATION_DATABASE_URL: postgresql+psycopg://migrator:migrator@db:5432/portals
+      # Compose :3000–:3002 and vite :5173–:5175.
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:3000,http://localhost:3001,http://localhost:3002,http://localhost:5173,http://localhost:5174,http://localhost:5175}
+      OPERATIONS_PORTAL_URL: ${SERVICE_URL_ADMIN:-http://localhost:3002}
+      CLIENT_PORTAL_BASE_URL: ${SERVICE_URL_CLIENT:-http://localhost:3000}
+      # env_file has localhost lake URLs; override for the compose network.
+      DATALAKE_DATABASE_URL: postgresql+psycopg://lake_writer:lake_writer@db:5432/datalakes
+      DATALAKE_CATALOG_DSN: dbname=datalakes host=db port=5432 user=lake_reader password=lake_reader
+      DATALAKE_OLTP_DSN: dbname=portals host=db port=5432 user=app password=app
+      RENDER_SERVICE_URL: http://render:8001
+      INTERLACE_SECCL_URL: http://seccl-pipeline:8100
+      INTERLACE_MORGAN_LLOYD_URL: http://morgan-lloyd-pipeline:8102
+      INTERLACE_SEI_URL: http://sei-pipeline:8103
+    expose:
+      - "8000"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health').status==200 else 1)",
+        ]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+
+  # Firm API. Same image as `api`. EXTERNAL_STUB is left unset so the process default (true)
+  # applies, unless apps/api/.env or .env.local already sets it.
+  external:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    command: ["python", "-m", "external"]
+    working_dir: /app/apps/api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file: *api-env-files
+    environment:
+      DATABASE_URL: postgresql+psycopg://app:app@db:5432/portals
+      EXTERNAL_HOST: 0.0.0.0
+      EXTERNAL_PORT: "8010"
+    ports:
+      - "8010:8010"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8010/health').status==200 else 1)",
+        ]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+
+  client:
+    build:
+      context: .
+      dockerfile: apps/client/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    env_file:
+      - path: apps/client/.env
+        required: false
+      - path: apps/client/.env.local
+        required: false
+    environment:
+      <<: *portal
+    ports:
+      - '3000:3000'
+    healthcheck: *portal-healthcheck
+
+  platform:
+    build:
+      context: .
+      dockerfile: apps/platform/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    env_file:
+      - path: apps/platform/.env
+        required: false
+      - path: apps/platform/.env.local
+        required: false
+    environment:
+      <<: *portal
+    ports:
+      - '3001:3000'
+    healthcheck: *portal-healthcheck
+
+  admin:
+    build:
+      context: .
+      dockerfile: apps/admin/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    # NETWORK-LOCK THIS SERVICE in Coolify: no public domain — reach it only via the corp VPN /
+    # IP allowlist / Cloudflare Access / Tailscale.
+    env_file:
+      - path: apps/admin/.env
+        required: false
+      - path: apps/admin/.env.local
+        required: false
+    environment:
+      <<: *portal
+    ports:
+      - '3002:3000'
+    healthcheck: *portal-healthcheck
+
+  seccl-pipeline:
+    build:
+      context: .
+      dockerfile: services/seccl/Dockerfile
+    restart: unless-stopped
+    command: ["python", "-m", "book_sink.startup_run", "--host", "0.0.0.0", "--port", "8100", "--allow-open", "--no-apply"]
+    depends_on: *warehouse-ready
+    env_file:
+      - path: services/seccl/.env
+        required: false
+    environment:
+      <<: *warehouse
+      # interlace.yaml interpolates the warehouse block from the CONTAINER env — a value set in
+      # Coolify but absent from this service never reaches the daemon. Since interlaced 2.0.0a3 the
+      # default engine opens in the startup lifespan and an unresolved placeholder is fatal, so a
+      # missing value means an unhealthy container and a failed deploy (they used to be read at
+      # first engine open, which hid the gap). The parquet PREFIX and the catalogue schema are
+      # literals in that file — facts about the provider, not about the deployment.
+      #
+      # docs/datalake.md; migrations/bootstrap/03-datalakes.sql must have been applied to the
+      # managed instance.
+      # state/stream SQLite live on the persistent volume below.
+      SECCL_STATE_PATH: /app/services/seccl/.interlace/state.db
+      SECCL_STREAM_PATH: /app/services/seccl/.interlace/streams.db
+    volumes:
+      - ./pkgs/book-sink:/app/pkgs/book-sink  # live package
+      - seccl-warehouse:/app/services/seccl/.interlace
+    expose:
+      - "8100"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8100/health').status==200 else 1)",
+        ]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 15s
+
+  seccl-gateway:
+    build:
+      context: .
+      dockerfile: services/seccl/Dockerfile
+    restart: unless-stopped
+    command:
+      [
+        "uvicorn",
+        "seccl_sync.gateway:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8101",
+      ]
+    depends_on:
+      seccl-pipeline:
+        condition: service_healthy
+    env_file:
+      - path: services/seccl/.env
+        required: false
+    environment:
+      <<: *warehouse
+      GATEWAY_INTERLACE_URL: http://seccl-pipeline:8100
+    volumes:
+      - ./pkgs/book-sink:/app/pkgs/book-sink
+    expose:
+      - "8101"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8101/health').status==200 else 1)",
+        ]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 15s
+
+  # --- Morgan Lloyd sync (services/morgan-lloyd): interlace pipeline -----------------------------
+  # Poll-only (Dataverse OData + custom actions), so one process and no gateway.
+  morgan-lloyd-pipeline:
+    build:
+      context: .
+      dockerfile: services/morgan-lloyd/Dockerfile
+    restart: unless-stopped
+    command: ["python", "-m", "book_sink.startup_run", "--host", "0.0.0.0", "--port", "8102", "--allow-open", "--no-apply"]
+    depends_on: *warehouse-ready
+    env_file:
+      - path: services/morgan-lloyd/.env
+        required: false
+    environment:
+      <<: *warehouse
+    volumes:
+      - ./pkgs/book-sink:/app/pkgs/book-sink
+      - morgan-lloyd-warehouse:/app/services/morgan-lloyd/.interlace
+    expose:
+      - "8102"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8102/health').status==200 else 1)",
+        ]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 15s
+
+  # --- SEI sync (services/sei): interlace pipeline -----------------------------------------------
+  # A file-drop custodian: the nightly SFTP pull is `raw.files`, the HEAD of this project's DAG,
+  # which all 47 report models depend on — so it is not a separate cron and there is no gateway.
+  sei-pipeline:
+    build:
+      context: .
+      dockerfile: services/sei/Dockerfile
+    restart: unless-stopped
+    command: ["python", "-m", "book_sink.startup_run", "--host", "0.0.0.0", "--port", "8103", "--allow-open", "--no-apply"]
+    depends_on: *warehouse-ready
+    env_file:
+      - path: services/sei/.env
+        required: false
+    environment:
+      <<: *warehouse
+    volumes:
+      - ./pkgs/book-sink:/app/pkgs/book-sink
+      - sei-warehouse:/app/services/sei/.interlace
+    expose:
+      - "8103"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8103/health').status==200 else 1)",
+        ]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 15s
+
+  # --- Intelliflo sync (services/integrations/intelliflo) -----------------------------------------
+  # Two of its three deployables, one Dockerfile — a separate build `target:` per process (its own
+  # three stages), unlike seccl's one image + command override. The third, webhook, is not run —
+  # not needed today. Copy .env.example to .env first.
+  intelliflo-scheduler:
+    build:
+      context: .
+      dockerfile: services/integrations/intelliflo/Dockerfile
+      target: scheduler
+    restart: unless-stopped
+    depends_on: *warehouse-ready
+    env_file:
+      - path: services/integrations/intelliflo/.env
+        required: false
+    environment:
+      <<: *intelliflo
+    healthcheck:
+      disable: true
+
+  intelliflo-tenant-sync:
+    build:
+      context: .
+      dockerfile: services/integrations/intelliflo/Dockerfile
+      target: tenant-sync
+    restart: unless-stopped
+    depends_on: *warehouse-ready
+    env_file:
+      - path: services/integrations/intelliflo/.env
+        required: false
+    environment:
+      <<: *intelliflo
+    healthcheck:
+      disable: true
+
+  db:
+    image: postgres:18
+    container_name: graphene-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: portals
+    # Dev query diagnostics. Preload pg_stat_statements (the per-query totals pgNow and any
+    # slow-query analysis read) and auto_explain, time I/O for those totals, and log the text of
+    # any statement over 500ms. `shared_preload_libraries` is restart-only, so changing this needs
+    # a `docker compose -f docker-compose.local.yaml up -d db` (recreate; the data volume is kept).
+    command:
+      - postgres
+      - -c
+      - shared_preload_libraries=pg_stat_statements,auto_explain
+      - -c
+      - pg_stat_statements.max=10000
+      - -c
+      - pg_stat_statements.track=all
+      - -c
+      - track_io_timing=on
+      - -c
+      - auto_explain.log_min_duration=2000
+      - -c
+      - auto_explain.log_analyze=off
+      - -c
+      - log_min_duration_statement=500
+    # Host port is overridable (DB_PORT) so it won't silently collide with a host Postgres
+    # already on 5432. If you change it, point DATABASE_URL/MIGRATION_DATABASE_URL at it too.
+    ports:
+      - '${DB_PORT:-5432}:5432'
+    volumes:
+      # PG18 images store data in a major-version subdir, so mount the parent (not /data).
+      - graphene-db-data:/var/lib/postgresql
+      - ./apps/api/migrations/bootstrap:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d portals']
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    # On graphene-dev too (not just the implicit default network) — render reaches `db` over
+    # this stable external network specifically so it survives a compose recreate; see render's
+    # own networks: comment below.
+    networks:
+      - default
+      - graphene-dev
+
+  # ── Object storage (S3-compatible) ─────────────────────────────────────────
+  # RustFS stands in for the external object store locally (see docs/storage.md):
+  # the core `platforms` bucket (raw/staged provider data, private), the legacy
+  # shared `branding` bucket (public), the PRIVATE documents bucket (uploads +
+  # rendered PDFs, S3_DOCUMENTS_BUCKET), and the per-tenant `t-{uid}` buckets the
+  # API mints at tenant creation. Point the API at it in apps/api/.env.local:
+  #   S3_ENDPOINT_URL=http://localhost:9000  S3_BUCKET=branding
+  #   S3_DOCUMENTS_BUCKET=portals-documents
+  #   S3_ACCESS_KEY_ID/S3_SECRET_ACCESS_KEY=rustfsadmin
+  #   S3_PUBLIC_BASE_URL=http://localhost:9000/branding
+  #   S3_CORE_BUCKET=platforms
+  # 9000 = S3 API, 9001 = web console (rustfsadmin/rustfsadmin). Default creds are
+  # fine here: the ports are bound to localhost use on a dev machine only.
+  rustfs:
+    # Pinned: the IAM/STS subsystem is still stabilising upstream — upgrade deliberately
+    # and re-run the credential acceptance tests (tests/test_object_store.py + the live
+    # matrix in docs/storage.md) on every bump.
+    image: rustfs/rustfs:1.0.0-beta.9
+    container_name: graphene-rustfs
+    environment:
+      RUSTFS_ACCESS_KEY: ${S3_ACCESS_KEY_ID:-rustfsadmin}
+      RUSTFS_SECRET_KEY: ${S3_SECRET_ACCESS_KEY:-rustfsadmin}
+      RUSTFS_ADDRESS: 0.0.0.0:9000
+      RUSTFS_CONSOLE_ENABLE: 'true'
+      RUSTFS_CONSOLE_ADDRESS: 0.0.0.0:9001
+      # SSE-S3 default-encryption master key (base64 of 32 bytes). beta.9 requires this to satisfy
+      # server-side encryption on PutObject; without it document uploads fail with an InternalError.
+      # Dev-only, localhost-bound store — overridable via a root .env, like the creds above.
+      RUSTFS_SSE_S3_MASTER_KEY: ${RUSTFS_SSE_S3_MASTER_KEY:-Gttr3n6u0jtozdAMoMsamMzNbhQw0OXhvQ90EdeLGek=}
+    ports:
+      - '${RUSTFS_PORT:-9000}:9000'
+      - '${RUSTFS_CONSOLE_PORT:-9001}:9001'
+    volumes:
+      - graphene-rustfs-data:/data
+    healthcheck:
+      test: ['CMD-SHELL', 'curl -sf http://localhost:9000/health || exit 1']
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+  # One-shot: create the shared buckets. `branding` is publicly readable (legacy shared
+  # branding assets — logos on the logged-out login page); `platforms` stays private
+  # (raw/staged provider data — Graphene-internal only, docs/storage.md §2). Per-tenant
+  # `t-{uid}` buckets are NOT created here — the API mints them at tenant creation.
+  # RustFS's own client (`rc`); MinIO archived `mc` and Docker Hub now denies `minio/mc`.
+  rustfs-init:
+    image: rustfs/rc:v0.1.35
+    depends_on:
+      rustfs:
+        condition: service_healthy
+    environment:
+      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-rustfsadmin}
+      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-rustfsadmin}
+      S3_BUCKET: ${S3_BUCKET:-branding}
+      S3_CORE_BUCKET: ${S3_CORE_BUCKET:-platforms}
+      S3_DOCUMENTS_BUCKET: ${S3_DOCUMENTS_BUCKET:-portals-documents}
+      S3_INTEGRATIONS_BUCKET: ${S3_INTEGRATIONS_BUCKET:-integrations}
+    entrypoint: >
+      /bin/sh -c "
+      rc alias set local http://rustfs:9000 \"$$S3_ACCESS_KEY_ID\" \"$$S3_SECRET_ACCESS_KEY\";
+      rc mb --ignore-existing local/\"$$S3_BUCKET\";
+      rc anonymous set download local/\"$$S3_BUCKET\";
+      rc mb --ignore-existing local/\"$$S3_CORE_BUCKET\";
+      rc mb --ignore-existing local/\"$$S3_DOCUMENTS_BUCKET\";
+      rc mb --ignore-existing local/\"$$S3_INTEGRATIONS_BUCKET\";
+      echo 'rustfs buckets ready';
+      "
+    restart: 'no'
+
+  # DocumentWorker -- renders generated documents (Jinja2 + WeasyPrint) in Linux, where WeasyPrint's
+  # native stack installs from apt (it won't load on Windows). The Windows-native dev API enqueues
+  # into documents.render_jobs; this drains it. It reaches Postgres + RustFS by container name on
+  # this compose network (`portals_default`): `rustfs` (the service above) and `db`. If your Postgres
+  # runs OUTSIDE this compose file (a standalone container), attach it to the network once with the
+  # `db` alias:  docker network connect --alias db portals_default <your-postgres-container>
+  # Start: `pnpm worker:up`. Dev creds match bootstrap_roles.sql + the rustfs service above; code is
+  # bind-mounted for hot-restart (`pnpm worker:restart`).
+  render:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile.worker
+    # The worker is a FULL worker, not just a render engine: it drains flows.outbox, sends task
+    # notices and mails clients. Its environment listed only the database and the object store, so
+    # it had no RESEND_API_KEY — and `dispatcher._drain` HOLDS an email row when
+    # `sending_disabled()` says the deployment can mail nobody, without counting an attempt. That
+    # is right (it stops a dev box manufacturing dead letters) and it is also silent, so task
+    # notifications simply never sent and nothing surfaced why. The API's own env file is the one
+    # source of those settings; `environment:` below still wins, so the container keeps its
+    # in-network DB and object-store addresses.
+    env_file: *api-env-files
+    environment:
+      APP_STAGE: dev
+      # The env file above also carries the HOST's lake/book DSNs (`localhost:5433`-style), which
+      # resolve to nothing from inside a container. Blanked rather than inherited: an absent lake
+      # is a clean "that feature is off", where a wrong address is a connection error every pass.
+      # These four are the ones `environment:` does not already override.
+      DATALAKE_DATABASE_URL: ''
+      DATALAKE_CATALOG_DSN: ''
+      DATALAKE_WRITER_DSN: ''
+      BOOK_WRITER_DSN: ''
+      # WHICH POSTGRES. `db` is the alias attached to this stack's Postgres on the external
+      # `graphene-dev` network (see the note at the bottom of this file) — and an alias is not
+      # exclusive: a second checkout that attaches ITS database with the same alias makes `db`
+      # resolve to two addresses, and Docker's resolver then hands out either. The worker polls
+      # `documents.render_jobs`, so on a bad draw it claims nothing and a queued document sits
+      # queued for ever, or it looks up a document that lives in the other checkout's database and
+      # fails with "document or its template version is missing". Neither reads as a name clash.
+      #
+      # So the host is nameable. Default `db`, which is what a single checkout has always used;
+      # set `RENDER_DB_HOST` in the gitignored root `.env` to a container name (e.g. `graphene-db`)
+      # when more than one stack shares the network. Container names are unique, aliases are not.
+      MIGRATION_DATABASE_URL: postgresql+psycopg://migrator:migrator@${RENDER_DB_HOST:-db}:5432/portals
+      DATABASE_URL: postgresql+psycopg://app:app@${RENDER_DB_HOST:-db}:5432/portals
+      S3_ENDPOINT_URL: http://rustfs:9000
+      S3_REGION: us-east-1
+      S3_ACCESS_KEY_ID: rustfsadmin
+      S3_SECRET_ACCESS_KEY: rustfsadmin
+      S3_DOCUMENTS_BUCKET: ${S3_DOCUMENTS_BUCKET:-portals-documents}
+      S3_FORCE_PATH_STYLE: 'true'
+      # Synchronous preview-render endpoint (app.render_service). Published to the host so the
+      # Windows-native dev API can POST previews here — the same engine generation uses — via
+      # RENDER_SERVICE_URL=http://localhost:${RENDER_SERVICE_PORT:-8001} in apps/api/.env.local.
+      RENDER_SERVICE_PORT: '8001'
+    ports:
+      - '${RENDER_SERVICE_PORT:-8001}:8001'
+    depends_on: *warehouse-ready
+    healthcheck:
+      # Same as production `render`. The image also declares this HEALTHCHECK; repeating it
+      # here is how docker-compose.yaml makes liveness visible next to the service.
+      test: ['CMD', 'python', '-m', 'app.worker', '--healthcheck']
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - default        # reaches `rustfs` (the service above)
+      - graphene-dev   # reaches `db` — a stable external network so it survives compose recreates
+    volumes:
+      - ./apps/api/app:/app/app
+
+volumes:
+  graphene-db-data:
+  # Persists the private documents bucket (uploads + rendered PDFs) across redeploys.
+  graphene-rustfs-data:
+  # DuckLake warehouse + state/stream SQLite for the Seccl sync service.
+  seccl-warehouse:
+  # The same, for the other two provider daemons.
+  morgan-lloyd-warehouse:
+  sei-warehouse:
+
+# external so `down` cannot detach a standalone Postgres. Create with
+# scripts/ensure-graphene-dev-network.mjs. Attach a standalone DB with:
+#   docker network connect --alias db graphene-dev <postgres-container>
+networks:
+  graphene-dev:
+    external: true

@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Transfer status model & reconciliation · Graphene</title>
+</head>
+<body>
+<!--ARTIFACT-START-->
+<style>
+  :root{
+    --ground:#FAFAFA;--surface:#FFFFFF;--surface-2:#F4F4F5;
+    --ink:#18181B;--ink-2:#52525B;--ink-3:#A1A1AA;
+    --line:#E4E4E7;--line-2:#D4D4D8;
+    --live:#2540D8;--live-bg:#EEF0FE;
+    --break:#DC2626;--break-bg:#FEF2F2;
+    --warn:#B45309;--warn-bg:#FEF6E7;
+    --done:#18181B;--done-bg:#18181B;
+    --radius:0.625rem;--radius-sm:0.4375rem;--radius-xs:0.3125rem;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,"SF Mono","Cascadia Mono","Roboto Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --shadow:0 1px 2px rgba(24,24,27,.04),0 1px 3px rgba(24,24,27,.06);
+  }
+  *,*::before,*::after{box-sizing:border-box;}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3,p,ul,ol,figure,table{margin:0;}
+  ul{list-style:none;padding:0;}
+  :focus-visible{outline:2px solid var(--live);outline-offset:2px;}
+  .mono{font-family:var(--mono);font-variant-numeric:tabular-nums;}
+  .eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);font-weight:500;}
+
+  .mast{display:flex;align-items:center;gap:14px;padding:0 28px;height:58px;background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30;}
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand .wm{font-family:var(--mono);font-weight:600;letter-spacing:.04em;font-size:13px;}
+  .brand .wm b{color:var(--ink);}.brand .wm span{color:var(--ink-3);}
+  .mast .doctype{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--ink-2);border:1px solid var(--line);border-radius:999px;padding:3px 11px;}
+
+  main{max-width:1180px;margin:0 auto;padding:30px 28px 80px;display:flex;flex-direction:column;gap:34px;}
+  .lede{max-width:760px;}
+  .lede h1{font-size:23px;font-weight:600;letter-spacing:-.02em;line-height:1.18;}
+  .lede p{color:var(--ink-2);font-size:14px;margin-top:10px;}
+  .lede .meta{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:12px;}
+
+  section{display:flex;flex-direction:column;gap:14px;}
+  .s-head{display:flex;flex-direction:column;gap:5px;}
+  .s-head h2{font-size:16px;font-weight:600;letter-spacing:-.01em;}
+  .s-head .n{font-family:var(--mono);font-size:11px;color:var(--live);letter-spacing:.04em;}
+  .s-head p{color:var(--ink-2);font-size:13px;max-width:820px;}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+
+  /* status chips */
+  .chip{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:560;border-radius:999px;padding:2px 9px;border:1px solid transparent;white-space:nowrap;}
+  .chip::before{content:"";width:5px;height:5px;border-radius:50%;flex:0 0 auto;}
+  .chip.idle{background:var(--surface-2);color:var(--ink-2);border-color:var(--line);}.chip.idle::before{background:var(--ink-3);}
+  .chip.live{background:var(--live-bg);color:var(--live);}.chip.live::before{background:var(--live);}
+  .chip.done{background:var(--ink);color:#fff;}.chip.done::before{background:#fff;}
+  .chip.warn{background:var(--warn-bg);color:var(--warn);}.chip.warn::before{background:var(--warn);}
+  .chip.brk{background:var(--break-bg);color:var(--break);}.chip.brk::before{background:var(--break);}
+  .chip.none{background:none;color:var(--ink-3);border-color:var(--line);}.chip.none::before{display:none;}
+  .code{font-family:var(--mono);font-size:10px;color:var(--ink-3);}
+
+  /* crosswalk table */
+  .xwrap{overflow-x:auto;}
+  table.xw{width:100%;border-collapse:collapse;min-width:760px;}
+  table.xw th,table.xw td{text-align:left;vertical-align:top;padding:11px 14px;border-bottom:1px solid var(--line);}
+  table.xw thead th{background:var(--surface-2);font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-2);font-weight:600;position:sticky;top:58px;}
+  table.xw thead th .sub{display:block;color:var(--ink-3);font-weight:400;letter-spacing:.04em;text-transform:none;margin-top:2px;}
+  table.xw tbody tr:hover{background:var(--surface-2);}
+  table.xw td.stage{white-space:nowrap;}
+  table.xw td.stage .st{font-weight:600;font-size:12.5px;display:block;}
+  table.xw td.stage .gx{font-family:var(--mono);font-size:10px;color:var(--ink-3);margin-top:2px;}
+  table.xw td .note{display:block;font-size:10.5px;color:var(--ink-3);margin-top:4px;}
+  table.xw td .stk{display:flex;flex-direction:column;gap:4px;align-items:flex-start;}
+
+  /* registers (three cards) */
+  .regs{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .reg{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+  .reg-h{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:8px;}
+  .reg-h .nm{font-weight:600;font-size:13px;}
+  .reg-h .role{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);}
+  .reg-b{padding:12px 14px;display:flex;flex-direction:column;gap:13px;}
+  .reg-grp .gt{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:7px;}
+  .reg-grp ul{display:flex;flex-direction:column;gap:5px;}
+  .reg-grp li{display:flex;gap:8px;align-items:baseline;font-size:11.5px;}
+  .reg-grp li .k{font-family:var(--mono);font-size:10px;color:var(--ink-3);min-width:18px;text-align:right;flex:0 0 auto;}
+  .reg-grp li .v{color:var(--ink-2);}
+  .reg-grp li .v b{color:var(--ink);font-weight:560;}
+  .dotline{display:inline-flex;align-items:center;gap:6px;}
+  .dot{width:6px;height:6px;border-radius:50%;flex:0 0 auto;}
+  .dot.idle{background:var(--ink-3);}.dot.live{background:var(--live);}.dot.done{background:var(--ink);}.dot.warn{background:var(--warn);}.dot.brk{background:var(--break);}
+
+  /* reconciliation flow */
+  .recon-flow{display:flex;align-items:stretch;gap:0;overflow-x:auto;padding:4px;}
+  .rstep{flex:1 1 0;min-width:150px;display:flex;align-items:stretch;}
+  .rbox{flex:1 1 auto;background:var(--surface);border:1px solid var(--line-2);border-radius:var(--radius-sm);padding:12px 13px;display:flex;flex-direction:column;gap:6px;}
+  .rbox .rk{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);}
+  .rbox .rt{font-weight:600;font-size:12.5px;}
+  .rbox .rd{font-size:11px;color:var(--ink-2);}
+  .rbox .tbl{font-family:var(--mono);font-size:10px;color:var(--ink-3);line-height:1.5;}
+  .rbox.accent{border-color:var(--live);box-shadow:0 0 0 3px var(--live-bg);}
+  .rbox.split{border-style:dashed;}
+  .rarrow{display:flex;align-items:center;justify-content:center;width:30px;color:var(--ink-3);flex:0 0 auto;font-family:var(--mono);}
+  .callout{display:flex;gap:10px;background:var(--warn-bg);border:1px solid #EAD9A6;border-radius:var(--radius-sm);padding:11px 13px;font-size:12px;color:var(--warn);}
+  .callout svg{flex:0 0 auto;margin-top:1px;}
+  .callout b{font-weight:600;}
+  .callout .body{color:#7c5310;}
+
+  /* canonical transaction-type table */
+  table.tx{width:100%;border-collapse:collapse;min-width:680px;}
+  table.tx th,table.tx td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);font-size:11.5px;vertical-align:top;}
+  table.tx thead th{background:var(--surface-2);font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);}
+  table.tx td.canon{font-family:var(--mono);font-weight:600;color:var(--ink);font-size:11px;}
+  table.tx td .raw{font-family:var(--mono);font-size:10px;color:var(--ink-2);}
+
+  .kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:11.5px;}
+  .kv dt{font-family:var(--mono);font-size:10px;color:var(--ink-3);}
+  .kv dd{margin:0;color:var(--ink-2);}
+  .kv dd b{color:var(--ink);font-weight:560;font-family:var(--mono);font-size:11px;}
+
+  /* routes */
+  .routes{display:flex;flex-direction:column;gap:10px;}
+  .route{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);padding:12px 14px;}
+  .route .tag{font-family:var(--mono);font-size:10px;font-weight:600;border-radius:var(--radius-xs);padding:2px 8px;flex:0 0 auto;}
+  .route .tag.now{background:var(--ink);color:#fff;}
+  .route .tag.next{background:var(--live-bg);color:var(--live);}
+  .route .tag.later{background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line);}
+  .route .path{font-family:var(--mono);font-size:11.5px;flex:1 1 auto;min-width:0;}
+  .route .path b{color:var(--ink);}.route .path .a{color:var(--ink-3);margin:0 6px;}
+  .route .desc{font-size:11px;color:var(--ink-2);flex:1 1 40%;min-width:0;}
+
+  /* effort table */
+  table.eff{width:100%;border-collapse:collapse;min-width:680px;}
+  table.eff th,table.eff td{text-align:left;padding:10px 13px;border-bottom:1px solid var(--line);font-size:12px;vertical-align:top;}
+  table.eff thead th{background:var(--surface-2);font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);}
+  table.eff td .ws{font-weight:560;}
+  table.eff td .sub{display:block;color:var(--ink-2);font-size:11px;margin-top:2px;}
+  .sz{font-family:var(--mono);font-size:10px;font-weight:600;border-radius:var(--radius-xs);padding:2px 8px;white-space:nowrap;}
+  .sz.s{background:var(--live-bg);color:var(--live);}
+  .sz.m{background:var(--warn-bg);color:var(--warn);}
+  .sz.l{background:var(--break-bg);color:var(--break);}
+  .reuse{font-size:11px;color:var(--ink-2);}
+
+  .foot{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);text-align:center;padding-top:6px;line-height:1.7;}
+  .foot b{color:var(--ink-2);}
+
+  @media (max-width:900px){.regs{grid-template-columns:1fr;}.route{flex-wrap:wrap;}.route .desc{flex-basis:100%;}}
+</style>
+
+<header class="mast">
+  <div class="brand">
+    <svg width="22" height="24" viewBox="0 0 22 24" aria-hidden="true">
+      <polygon points="11,1 20.5,6.5 20.5,17.5 11,23 1.5,17.5 1.5,6.5" fill="none" stroke="#18181B" stroke-width="1.5"/>
+      <polygon points="11,6 16,9 16,15 11,18 6,15 6,9" fill="none" stroke="#2540D8" stroke-width="1.5"/>
+    </svg>
+    <span class="wm"><b>GRAPHENE</b> <span>/ TRANSFERS</span></span>
+  </div>
+  <span class="doctype">Reference · status model</span>
+</header>
+
+<main>
+  <div class="lede">
+    <h1>Transfer status model &amp; reconciliation</h1>
+    <p>One canonical lifecycle, three custodian vocabularies. This maps Morgan Lloyd, SEI and Seccl transfer statuses onto Graphene's <span class="mono">transfer_status</span> saga, then traces how a transfer reconciles all the way down to a single <span class="mono">platform.transactions</span> row — and what it would take to run the same workbench across all three systems.</p>
+    <div class="meta">Sources: pensions.transfers · platform.transactions · transaction_expectations · reconciliation_breaks · ML/SEI/Seccl API specs</div>
+  </div>
+
+  <!-- 1. CANONICAL LIFECYCLE -->
+  <section>
+    <div class="s-head"><span class="n">01</span><h2>The canonical lifecycle</h2>
+      <p>Graphene owns the state machine. The <span class="mono">pensions.transfers.status</span> enum is authoritative; every provider status is interpreted relative to these nine states (seven happy-path, one terminal-good, one exception).</p>
+    </div>
+    <div class="card" style="padding:18px 18px 14px;">
+      <div class="recon-flow" style="padding:0;">
+        <div class="rstep"><div class="rbox"><span class="rk">01 idle</span><span class="rt">entered</span><span class="rd">Draft recorded</span></div></div>
+        <div class="rarrow">&rarr;</div>
+        <div class="rstep"><div class="rbox accent"><span class="rk">02 live</span><span class="rt">submitted_to_ml</span><span class="rd">Sent to provider</span></div></div>
+        <div class="rarrow">&rarr;</div>
+        <div class="rstep"><div class="rbox accent"><span class="rk">03 live</span><span class="rt">in_flight</span><span class="rd">Provider processing</span></div></div>
+        <div class="rarrow">&rarr;</div>
+        <div class="rstep"><div class="rbox accent"><span class="rk">04–05 live</span><span class="rt">ml_complete → settlement_date_advised</span><span class="rd">Ceding done, date set</span></div></div>
+        <div class="rarrow">&rarr;</div>
+        <div class="rstep"><div class="rbox accent"><span class="rk">06 live</span><span class="rt">sei_acr_created</span><span class="rd">Cash receipt / assets registered</span></div></div>
+        <div class="rarrow">&rarr;</div>
+        <div class="rstep"><div class="rbox"><span class="rk">07–08 done</span><span class="rt">reconciled → adviser_notified</span><span class="rd">Matched &amp; closed</span></div></div>
+      </div>
+      <div style="margin-top:12px;display:flex;align-items:center;gap:10px;">
+        <span class="chip brk">manual_intervention</span>
+        <span style="font-size:12px;color:var(--ink-2);">— reachable from any non-terminal state on exhausted retries or a reconciliation break.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. CROSSWALK -->
+  <section>
+    <div class="s-head"><span class="n">02</span><h2>Status crosswalk</h2>
+      <p>What each system reports at each canonical stage, for the live pension route (external SIPP&nbsp;&rarr;&nbsp;Morgan&nbsp;Lloyd&nbsp;&rarr;&nbsp;SEI custody). Colour = canonical bucket: <span class="chip idle">idle</span> <span class="chip live">live</span> <span class="chip done">done</span> <span class="chip brk">break</span>.</p>
+    </div>
+    <div class="card xwrap">
+      <table class="xw">
+        <thead><tr>
+          <th>Canonical stage<span class="sub">Graphene</span></th>
+          <th>Morgan Lloyd<span class="sub">SIPP administrator · Dynamics</span></th>
+          <th>SEI<span class="sub">custody · cash &amp; assets</span></th>
+          <th>Seccl<span class="sub">custody ledger · transfers</span></th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td class="stage"><span class="st">Draft</span><span class="gx">entered</span></td>
+            <td><span class="chip none">—</span><span class="note">not yet created</span></td>
+            <td><span class="chip none">—</span></td>
+            <td><div class="stk"><span class="chip idle">Pending</span><span class="note">Product Transfer drafted, not Placed</span></div></td>
+          </tr>
+          <tr>
+            <td class="stage"><span class="st">Submitted</span><span class="gx">submitted_to_ml</span></td>
+            <td><div class="stk"><span class="chip live">submitted</span><span class="note mono">cam_createtransfer →</span></div></td>
+            <td><span class="chip none">—</span></td>
+            <td><div class="stk"><span class="chip live">Placed</span><span class="chip live">With Previous Provider</span></div></td>
+          </tr>
+          <tr>
+            <td class="stage"><span class="st">In flight</span><span class="gx">in_flight</span></td>
+            <td><div class="stk"><span class="chip live">inflight</span><span class="note mono">cam_status: processing</span></div></td>
+            <td><div class="stk"><span class="chip live">2 · In process — submitted</span><span class="chip live">3 · Received at counterparty</span></div></td>
+            <td><span class="chip live">Onboarding Assets</span><span class="note">in-specie · CREST</span></td>
+          </tr>
+          <tr>
+            <td class="stage"><span class="st">ML complete</span><span class="gx">ml_complete</span></td>
+            <td><span class="chip live">complete / settled</span></td>
+            <td><span class="chip none">—</span></td>
+            <td><span class="chip live">Completed</span><span class="note">ceding side done</span></td>
+          </tr>
+          <tr>
+            <td class="stage"><span class="st">Settlement advised</span><span class="gx">settlement_date_advised</span></td>
+            <td><div class="stk"><span class="chip live">settlement advised</span><span class="note mono">cam_settlementdate set</span></div></td>
+            <td><span class="chip none">—</span></td>
+            <td><span class="chip none">—</span></td>
+          </tr>
+          <tr>
+            <td class="stage"><span class="st">Cash receipt</span><span class="gx">sei_acr_created</span></td>
+            <td><span class="chip none">—</span></td>
+            <td><div class="stk"><span class="chip live">cash · 2 In process</span><span class="chip live">assets · 8/9 In progress</span><span class="note mono">createCurrencyReceipt / transferIn</span></div></td>
+            <td><span class="chip none">—</span></td>
+          </tr>
+          <tr>
+            <td class="stage"><span class="st">Reconciled</span><span class="gx">reconciled</span></td>
+            <td><span class="chip none">—</span></td>
+            <td><div class="stk"><span class="chip done">6 · Settled</span><span class="chip done">17 · Cost basis matched</span></div></td>
+            <td><span class="chip done">transaction posted</span></td>
+          </tr>
+          <tr>
+            <td class="stage"><span class="st">Closed</span><span class="gx">adviser_notified</span></td>
+            <td><span class="chip none">—</span></td>
+            <td><span class="chip done">7 · Complete</span></td>
+            <td><span class="chip none">—</span></td>
+          </tr>
+          <tr>
+            <td class="stage"><span class="st">Needs attention</span><span class="gx">manual_intervention</span></td>
+            <td><span class="chip brk">retries exhausted</span><span class="note">unknown cam_status</span></td>
+            <td><div class="stk"><span class="chip brk">1 · Action required</span><span class="chip brk">10 · Exception</span><span class="chip brk">9 · Cancelled</span></div></td>
+            <td><span class="chip brk">Rejected</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout">
+      <svg width="15" height="15" viewBox="0 0 16 16"><path d="M8 1l7 13H1z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M8 6v4M8 11.5v.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      <span class="body"><b>How the saga actually advances today.</b> The current code does <em>not</em> read SEI/Seccl status codes — it advances on (a) Morgan Lloyd status polling (<span class="mono">cam_gettransfer</span>) and (b) matching an <span class="mono">expectation</span> to realised <span class="mono">platform.transactions</span> (§04). The SEI/Seccl columns above are the <b>conceptual equivalence</b> a status-normalisation layer would implement to make this generic — see §05.</span>
+    </div>
+  </section>
+
+  <!-- 3. PER-SYSTEM REGISTERS -->
+  <section>
+    <div class="s-head"><span class="n">03</span><h2>Per-system status registers</h2>
+      <p>The full vocabulary each system exposes. Codes are verbatim from the saga, the SEI swagger specs, and the Seccl OpenAPI.</p>
+    </div>
+    <div class="regs">
+
+      <div class="reg">
+        <div class="reg-h"><span class="nm">Morgan Lloyd</span><span class="role">SIPP admin</span></div>
+        <div class="reg-b">
+          <div class="reg-grp"><div class="gt">Graphene saga state (authoritative)</div>
+            <ul>
+              <li><span class="k">·</span><span class="v"><span class="dotline"><span class="dot idle"></span><b>entered</b></span></span></li>
+              <li><span class="k">·</span><span class="v"><span class="dotline"><span class="dot live"></span><b>submitted_to_ml</b></span></span></li>
+              <li><span class="k">·</span><span class="v"><span class="dotline"><span class="dot live"></span><b>in_flight</b></span></span></li>
+              <li><span class="k">·</span><span class="v"><span class="dotline"><span class="dot live"></span><b>ml_complete</b></span></span></li>
+              <li><span class="k">·</span><span class="v"><span class="dotline"><span class="dot live"></span><b>settlement_date_advised</b></span></span></li>
+              <li><span class="k">·</span><span class="v"><span class="dotline"><span class="dot live"></span><b>sei_acr_created</b></span></span></li>
+              <li><span class="k">·</span><span class="v"><span class="dotline"><span class="dot done"></span><b>reconciled</b></span></span></li>
+              <li><span class="k">·</span><span class="v"><span class="dotline"><span class="dot done"></span><b>adviser_notified</b></span></span></li>
+              <li><span class="k">·</span><span class="v"><span class="dotline"><span class="dot brk"></span><b>manual_intervention</b></span></span></li>
+            </ul>
+          </div>
+          <div class="reg-grp"><div class="gt">Raw cam_status → mapped</div>
+            <ul>
+              <li><span class="k"></span><span class="v"><b>complete / completed / settled</b> → ml_complete</span></li>
+              <li><span class="k"></span><span class="v"><b>inflight / processing / submitted</b> → in_flight</span></li>
+              <li><span class="k"></span><span class="v"><b>unknown</b> → no advance (re-poll)</span></li>
+            </ul>
+          </div>
+          <div class="reg-grp"><div class="gt">Operations</div>
+            <ul>
+              <li><span class="v mono" style="font-size:10.5px;color:var(--ink-2)">cam_createtransfer · cam_gettransfer · cam_gettransferbypolicyno · cam_getalltransfersbysceme · PATCH cam_transfers/{id} · cam_settlementdate</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="reg">
+        <div class="reg-h"><span class="nm">SEI</span><span class="role">custody</span></div>
+        <div class="reg-b">
+          <div class="reg-grp"><div class="gt">Transfer status codes</div>
+            <ul>
+              <li><span class="k">1</span><span class="v"><span class="dotline"><span class="dot brk"></span>Action required</span></span></li>
+              <li><span class="k">2</span><span class="v"><span class="dotline"><span class="dot live"></span>In process — submitted to counterparty</span></span></li>
+              <li><span class="k">3</span><span class="v"><span class="dotline"><span class="dot live"></span>In process — received at counterparty</span></span></li>
+              <li><span class="k">4</span><span class="v"><span class="dotline"><span class="dot live"></span>Settled — awaiting cost basis</span></span></li>
+              <li><span class="k">6</span><span class="v"><span class="dotline"><span class="dot done"></span>Settled</span></span></li>
+              <li><span class="k">7</span><span class="v"><span class="dotline"><span class="dot done"></span>Complete</span></span></li>
+              <li><span class="k">9</span><span class="v"><span class="dotline"><span class="dot brk"></span>Cancelled</span></span></li>
+              <li><span class="k">10</span><span class="v"><span class="dotline"><span class="dot warn"></span>Valuation requested</span></span></li>
+            </ul>
+          </div>
+          <div class="reg-grp"><div class="gt">Asset transfer status (key)</div>
+            <ul>
+              <li><span class="k">8/9</span><span class="v">In progress / In process</span></li>
+              <li><span class="k">10</span><span class="v">Exception</span></li>
+              <li><span class="k">11</span><span class="v">Complete</span></li>
+              <li><span class="k">15/16</span><span class="v">Awaiting / requested cost basis</span></li>
+              <li><span class="k">17</span><span class="v"><b>Cost basis received &amp; matched</b></span></li>
+              <li><span class="k">13</span><span class="v">Cancelled</span></li>
+            </ul>
+          </div>
+          <div class="reg-grp"><div class="gt">Other enums</div>
+            <ul>
+              <li><span class="v">Op result: <b>SUCCESS · FAILURE · NOCHANGE</b></span></li>
+              <li><span class="v">Free movement: <b>3 Delivery · 4 Receipt · 6 Custody</b></span></li>
+              <li><span class="v">Instruction: <b>1 Full · 2 Partial · 3/4 Liquidation</b></span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="reg">
+        <div class="reg-h"><span class="nm">Seccl</span><span class="role">custody ledger</span></div>
+        <div class="reg-b">
+          <div class="reg-grp"><div class="gt">status (internal)</div>
+            <ul>
+              <li><span class="k"></span><span class="v"><span class="dotline"><span class="dot idle"></span><b>Pending</b> — drafted</span></span></li>
+              <li><span class="k"></span><span class="v"><span class="dotline"><span class="dot live"></span><b>Placed</b> — sent to ceding provider</span></span></li>
+              <li><span class="k"></span><span class="v"><span class="dotline"><span class="dot done"></span><b>Completed</b> — cash &amp; stock settled</span></span></li>
+              <li><span class="k"></span><span class="v"><span class="dotline"><span class="dot brk"></span><b>Deleted</b></span></span></li>
+            </ul>
+          </div>
+          <div class="reg-grp"><div class="gt">transferStatus (external)</div>
+            <ul>
+              <li><span class="k"></span><span class="v"><span class="dotline"><span class="dot live"></span><b>With Previous Provider</b></span></span></li>
+              <li><span class="k"></span><span class="v"><span class="dotline"><span class="dot live"></span><b>Onboarding Assets</b> — CREST re-reg</span></span></li>
+              <li><span class="k"></span><span class="v"><span class="dotline"><span class="dot done"></span><b>Completed</b></span></span></li>
+              <li><span class="k"></span><span class="v"><span class="dotline"><span class="dot brk"></span><b>Rejected</b></span></span></li>
+            </ul>
+          </div>
+          <div class="reg-grp"><div class="gt">Transfer types</div>
+            <ul>
+              <li><span class="v">Product Transfer: <b>Cash · In Specie</b></span></li>
+              <li><span class="v">Stock Transfer: <b>External · Migration · Internal</b></span></li>
+              <li><span class="v">movementType: <b>In · Out</b></span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 4. RECONCILIATION DOWN TO TRANSACTIONS -->
+  <section>
+    <div class="s-head"><span class="n">04</span><h2>Reconciliation, down to the transaction</h2>
+      <p>Every transfer carries a forecast (<span class="mono">expectation</span>). Each system's raw movements are normalised into one <span class="mono">platform.transactions</span> fact. Reconciliation is the moment the expectation's linked transactions sum to the advised amount, within a penny.</p>
+    </div>
+    <div class="card" style="padding:18px;">
+      <div class="recon-flow">
+        <div class="rstep"><div class="rbox">
+          <span class="rk">forecast</span><span class="rt">Expectation</span>
+          <span class="rd">transaction_expectations</span>
+          <span class="tbl">expectation_type<br>amount · currency<br>status: expected →<br>instructed → matched →<br><b>reconciled</b></span>
+        </div></div>
+        <div class="rarrow">&rarr;</div>
+        <div class="rstep"><div class="rbox">
+          <span class="rk">domain</span><span class="rt">Transfer</span>
+          <span class="rd">pensions.transfers</span>
+          <span class="tbl">expectation_id&nbsp;FK<br>status saga<br>advised by Morgan&nbsp;Lloyd</span>
+        </div></div>
+        <div class="rarrow">&rarr;</div>
+        <div class="rstep"><div class="rbox split">
+          <span class="rk">normalise</span><span class="rt">Sync</span>
+          <span class="rd">integrations/sync.py</span>
+          <span class="tbl">seccl · sei · morgan_lloyd<br>→ NormalisedTransaction<br>upsert on (source_system,<br>source_transaction_id)</span>
+        </div></div>
+        <div class="rarrow">&rarr;</div>
+        <div class="rstep"><div class="rbox">
+          <span class="rk">fact</span><span class="rt">Transactions</span>
+          <span class="rd">platform.transactions</span>
+          <span class="tbl">expectation_id&nbsp;FK<br>type (canonical)<br>amount · isin<br>source_system</span>
+        </div></div>
+        <div class="rarrow">&rarr;</div>
+        <div class="rstep"><div class="rbox accent">
+          <span class="rk">match ±£0.01</span><span class="rt">Reconcile</span>
+          <span class="rd">transfer_saga.py</span>
+          <span class="tbl">actual = Σ tx.amount<br>where expectation_id=e.id<br>|advised − actual| ≤ 0.01<br>→ reconciled</span>
+        </div></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px;">
+        <div>
+          <div class="eyebrow" style="margin-bottom:9px;">On mismatch → reconciliation_breaks</div>
+          <dl class="kv">
+            <dt>subject</dt><dd><b>transfer</b> · subject_id</dd>
+            <dt>break_type</dt><dd><b>settlement_value_mismatch</b></dd>
+            <dt>status</dt><dd><b>open</b> → investigating → resolved | accepted</dd>
+            <dt>graphene_value</dt><dd>what we expected (jsonb)</dd>
+            <dt>ml_value</dt><dd>what Morgan Lloyd advised (jsonb)</dd>
+            <dt>sei_value</dt><dd>what SEI actually credited (jsonb)</dd>
+          </dl>
+        </div>
+        <div>
+          <div class="eyebrow" style="margin-bottom:9px;">Idempotency → platform_links</div>
+          <dl class="kv">
+            <dt>entity_type</dt><dd><b>transfer</b> · entity_id</dd>
+            <dt>ml_transfer_ref</dt><dd>cam_createtransfer id</dd>
+            <dt>sei_acr</dt><dd>SEI cash-receipt ref</dd>
+            <dt>scheme_reference</dt><dd>ML scheme (account-level)</dd>
+            <dt class="mono" style="grid-column:1/-1;color:var(--ink-3);margin-top:6px;">unique(provider, entity_type, entity_id, link_type)</dt>
+          </dl>
+        </div>
+      </div>
+    </div>
+
+    <div class="s-head" style="margin-top:8px;"><h3 style="font-size:13px;font-weight:600;">Canonical transaction taxonomy</h3>
+      <p style="font-size:12.5px;">One <span class="mono">platform.transactions.type</span> enum (12 values); each source system's raw type/subtype is normalised into it and the raw value preserved in <span class="mono">source_type</span>/<span class="mono">source_subtype</span>.</p>
+    </div>
+    <div class="card xwrap">
+      <table class="tx">
+        <thead><tr><th>Canonical type</th><th>Seccl raw</th><th>SEI raw</th><th>Morgan Lloyd raw</th></tr></thead>
+        <tbody>
+          <tr><td class="canon">transfer_in</td><td><span class="raw">Transfer (movement In)</span></td><td><span class="raw">Transfer (Principal, in)</span></td><td><span class="raw">TransferIn</span></td></tr>
+          <tr><td class="canon">transfer_out</td><td><span class="raw">In Specie (movement Out)</span></td><td><span class="raw">Transfer (… out)</span></td><td><span class="raw">—</span></td></tr>
+          <tr><td class="canon">deposit</td><td><span class="raw">Cash · In</span></td><td><span class="raw">Contribution / Receipt</span></td><td><span class="raw">Contribution</span></td></tr>
+          <tr><td class="canon">withdrawal</td><td><span class="raw">Pension Withdrawal</span></td><td><span class="raw">Withdrawal / Drawdown / Benefit</span></td><td><span class="raw">Benefit / Drawdown / PCLS</span></td></tr>
+          <tr><td class="canon">buy / sell</td><td><span class="raw">At Best (Buy/Sell) · Reinvestment</span></td><td><span class="raw">Buy/Purchase · Sell/Redemption</span></td><td><span class="raw">—</span></td></tr>
+          <tr><td class="canon">dividend / interest</td><td><span class="raw">Dividend · Asset Interest</span></td><td><span class="raw">Income (+ Interest)</span></td><td><span class="raw">Income</span></td></tr>
+          <tr><td class="canon">fee / tax</td><td><span class="raw">Platform Fee · Tax Reclaim</span></td><td><span class="raw">Fee · Tax (component)</span></td><td><span class="raw">Charge / Fee</span></td></tr>
+          <tr><td class="canon">corporate_action</td><td><span class="raw">Merger / corp action</span></td><td><span class="raw">—</span></td><td><span class="raw">—</span></td></tr>
+          <tr><td class="canon">adjustment</td><td colspan="3"><span class="raw">fallback when no rule matches (all systems)</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 5. GENERIC WORKBENCH -->
+  <section>
+    <div class="s-head"><span class="n">05</span><h2>One workbench, three systems</h2>
+      <p>Today the workbench and backend assume one route: external SIPP&nbsp;&rarr;&nbsp;Morgan&nbsp;Lloyd&nbsp;&rarr;&nbsp;SEI. Going generic means modelling other <em>routes</em> — including transfers that live entirely inside Seccl or inside SEI — behind a route-agnostic transfer abstraction.</p>
+    </div>
+
+    <div class="routes">
+      <div class="route"><span class="tag now">live</span>
+        <span class="path"><b>External SIPP</b><span class="a">→</span><b>Morgan Lloyd</b><span class="a">→</span><b>SEI</b></span>
+        <span class="desc">Cross-system pension transfer. Three-way reconciliation. The current saga.</span></div>
+      <div class="route"><span class="tag next">next</span>
+        <span class="path"><b>Seccl a/c</b><span class="a">→</span><b>Seccl a/c</b></span>
+        <span class="desc">Intra-Seccl (Internal stock transfer / inter-account cash). Single ledger, no cross-provider recon — the <b>simplest</b> route and best first generalisation.</span></div>
+      <div class="route"><span class="tag next">next</span>
+        <span class="path"><b>SEI a/c</b><span class="a">→</span><b>SEI a/c</b></span>
+        <span class="desc">Intra-SEI free movement (transferIn/Out → settlePendedItem). Settles within SEI custody.</span></div>
+      <div class="route"><span class="tag later">later</span>
+        <span class="path"><b>External</b><span class="a">→</span><b>Seccl</b> &nbsp;/&nbsp; <b>cross-custody</b></span>
+        <span class="desc">Other ceding→receiving combinations once the abstraction is proven.</span></div>
+    </div>
+
+    <div class="card xwrap" style="margin-top:4px;">
+      <table class="eff">
+        <thead><tr><th>Workstream</th><th>Effort</th><th>Where it lands</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="ws">Canonical transfer model</span><span class="sub">Generalise ML-specific pensions.transfers → route descriptor (source/destination system, intra vs cross), provider-agnostic status, links to expectation + asset legs.</span></td>
+            <td><span class="sz m">Medium</span></td>
+            <td><span class="reuse">backend · schema (expand/contract migration)</span></td>
+          </tr>
+          <tr>
+            <td><span class="ws">Status normalisation layer</span><span class="sub">Turn §02–03 crosswalk into code: each provider adapter maps raw status → canonical, + reverse for display. Pinned by per-provider enum tests.</span></td>
+            <td><span class="sz s">Small–Med</span></td>
+            <td><span class="reuse">backend · correctness-critical</span></td>
+          </tr>
+          <tr>
+            <td><span class="ws">Per-route orchestration</span><span class="sub">The crux. Today: one hardcoded ML→SEI saga. Generic needs a saga per route (intra-Seccl: Pending→Placed→Completed; intra-SEI: initiate→settle→confirm), each with its own idempotency keys &amp; reconciliation source.</span></td>
+            <td><span class="sz l">Large</span></td>
+            <td><span class="reuse">backend · state machines + runners</span></td>
+          </tr>
+          <tr>
+            <td><span class="ws">Provider adapter / API coverage</span><span class="sub">Same shape as the workbench's ops registry, server-side: create / poll / update / settle / cancel / status per provider. Scope to the UK transfer subset.</span></td>
+            <td><span class="sz m">Medium</span></td>
+            <td><span class="reuse">backend · per provider</span></td>
+          </tr>
+          <tr>
+            <td><span class="ws">Reconciliation generalisation</span><span class="sub">Each route declares its recon source(s) and 2-way vs 3-way compare. The expectation↔transaction bridge already generalises (all sources normalise into platform.transactions).</span></td>
+            <td><span class="sz m">Medium</span></td>
+            <td><span class="reuse">backend · mostly in place</span></td>
+          </tr>
+          <tr>
+            <td><span class="ws">UI generalisation</span><span class="sub">Route-aware flow ribbon (per-route stage models), route/type selector in the composer, fewer custody legs for intra-system. Ops registry, status buckets, reconciliation panel &amp; rail already generalise.</span></td>
+            <td><span class="sz s">Small–Med</span></td>
+            <td><span class="reuse">frontend · ~70% reusable</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout" style="background:var(--live-bg);border-color:#C7CDF7;color:var(--live);">
+      <svg width="15" height="15" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M8 7.2v4M8 4.7v.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <span class="body" style="color:#1c2a8a;"><b>Bottom line.</b> The workbench is already ~70% generic — the provider-grouped ops registry, canonical status buckets and per-row stage rail are the right abstractions. The real cost is backend: a route-agnostic transfer model and a saga per route. <b>Scope "all endpoints" to the UK transfer subset</b> (SEI free movements + cash receipts + custody edits + pending status; Seccl product/stock transfers + book cost; ML transfer ops) — SEI's US recurring / withholding / disbursement surface balloons effort for little value here. <b>Start with intra-Seccl</b> (simplest lifecycle) to prove the abstraction.</span>
+    </div>
+  </section>
+
+  <div class="foot">
+    <b>Graphene Transfers</b> · status model &amp; reconciliation reference<br>
+    pensions.transfers · platform.transactions · transaction_expectations · reconciliation_breaks · platform_links
+  </div>
+</main>
+<!--ARTIFACT-END-->
+</body>
+</html>

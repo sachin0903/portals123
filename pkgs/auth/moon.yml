@@ -1,0 +1,15 @@
+layer: 'library'
+language: 'typescript'
+
+tasks:
+  lint:
+    command: 'eslint'
+    # `--cache` re-lints only the files that changed since the last run. Safe because no rule in
+    # pkgs/config/eslint.config.js is type-aware, so a file's result depends only on its own content
+    # and the config, and ESLint drops the cache when the config changes. `content`, not mtime, so a
+    # checkout or rebase that rewrites mtimes does not empty it. node_modules is gitignored, so moon's
+    # own input hash never sees the cache file.
+    args: '--cache --cache-location node_modules/.cache/eslint/ --cache-strategy content .'
+  test:
+    command: 'vitest'
+    args: 'run --passWithNoTests'

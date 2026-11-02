@@ -1,0 +1,18 @@
+{
+	"extends": "@graphene/config/tsconfig.base.json",
+	"compilerOptions": {
+		"allowJs": true,
+		"checkJs": true,
+		"sourceMap": true,
+		"paths": {
+			"$lib": ["./src/lib"],
+			"$lib/*": ["./src/lib/*"],
+			"$app/forms": ["./src/lib/test-stubs/app-forms.ts"],
+			"$app/navigation": ["./src/lib/test-stubs/app-navigation.ts"],
+			"$app/state": ["./src/lib/test-stubs/app-state.ts"]
+		}
+	},
+	"include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.svelte"],
+	"//": "Tests are excluded HERE and checked by `tsconfig.test.json` (the second pass of the `check` task), because this config's `noUncheckedIndexedAccess` turns every `rows[0].name` in a test into an error — 205 of the 206 raised by including them. They ARE checked; they are just not checked by this pass.",
+	"exclude": ["src/**/*.test.ts"]
+}

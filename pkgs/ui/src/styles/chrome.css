@@ -1,0 +1,178 @@
+/**
+ * The FLOATING chrome preset — staff-tool widgets sit as sheets on paper, not as
+ * ruled boxes. Shared by the platform and admin portals.
+ *
+ * Import AFTER theme.css and sharp.css, whose tokens it reassigns — so no component or call site
+ * changes:
+ *
+ *   @import 'tailwindcss';
+ *   @import '@graphene/ui/theme.css';
+ *   @import '@graphene/ui/sharp.css';
+ *   @import '@graphene/ui/chrome.css';
+ *
+ * BOTH staff portals import it, and that is the point rather than a convenience: platform and
+ * admin are one product and must be indistinguishable in chrome (docs/design-language.md). It
+ * shipped to platform alone for a while as a look-and-see overlay, which is precisely how the two
+ * surfaces came to differ — admin drew a hairline box around every card, panel, KPI tile and
+ * shell edge that platform had already dropped, so moving between them read as moving between two
+ * applications. The client portal deliberately does NOT import it, for the same reason it skips
+ * sharp.css: it keeps the glass look.
+ *
+ * TOGGLE IT LIVE (no rebuild, no reload) from the browser console or the devtools element pane:
+ *
+ *   document.documentElement.dataset.chrome = 'carded';   // the boxed look, for comparison
+ *   delete document.documentElement.dataset.chrome;       // floating again
+ *
+ * WHAT IT REMOVES
+ *  - the card box (`--surface-card-border`/`-divider`), which is the 1px rule around every widget;
+ *  - the `glass-panel` tile outline (width 0), so KPI tiles stay sheets;
+ *  - sharp.css's 0.25rem corners, which made a borderless card still read as a cut-out box.
+ *
+ * WHAT IT KEEPS, AND WHY
+ *  - Fill, not a drop shadow and not a hairline. White cards and white chrome sit on a
+ *    chroma-0 canvas a notch behind them. Shadow was the first experiment (floating sheets);
+ *    it either read as dirt or vanished. A staff tool is a page, not a stack of stickers.
+ *    `--elev-2/3` stay for popovers and the one card that must dominate. Dark is the same
+ *    idea inverted, with a wider notch: near-black paper, sheets at 0.19, chroma-0 ink
+ *    — no navy wash. A 0.06 mid-charcoal split reads as one slab.
+ *  - Table rules, dividers and `border-b` section edges, faded via `--border` rather than removed:
+ *    the complaint is the box AROUND a component, and a table with no row rules is a different
+ *    (and worse) question. Dark mode goes 12% -> 6%, light 0.90 -> 0.94.
+ *  - Field edges (`--input`). A text box with no boundary stops reading as somewhere to type; if
+ *    you want those gone too, uncomment the block at the bottom, which trades the outline for a
+ *    filled well.
+ *
+ * SPECIFICITY: `:root:root:root` is deliberate. A tenant's branding is injected as an inline
+ * `<style>:root:root{…}</style>` (pkgs/auth `brandingHead`), so a plain `:root` here would lose to
+ * a firm that brands its border colour. The `:not([data-chrome='carded'])` is what makes the
+ * toggle above work.
+ *
+ * Pinned by `styles/chrome.test.ts`: both staff portals import it, the client portal does not, and
+ * it is imported after the two files whose tokens it reassigns.
+ */
+
+:root:root:root:not([data-chrome='carded']) {
+	/* The box around every widget. `0` is the whole point of the experiment. */
+	--surface-card-border: 0;
+	--surface-card-divider: 0;
+
+	/* Notch behind the white sheet. Chroma 0 — a hue is a tint. Sidebar/topbar/`--card`
+	   stay white, which is what draws the chrome L and the widgets. */
+	--background: oklch(0.98 0 0);
+
+	/* No ruled edges. */
+	--glass-border: transparent;
+	--sidebar-border: transparent;
+
+	/* sharp.css squares every corner to 0.25rem so a hairline reads as a cut box; the theme's
+	   0.75rem makes a listing card look like a pill (rounded-xl = 1rem). 0.5rem is the
+	   middle — sheets lift, a full-height table does not grow a 16px bubble at each corner.
+	   Nav chrome stays capped at 0.25rem via `--radius-chrome`. */
+	--radius: 0.5rem;
+
+	/* Page cards sit on the fill, not a halo. Transparent rather than `none` so
+	   `box-shadow: var(--elev-1), …` in glass-panel stays a valid list. Overlays still lift. */
+	--elev-1: 0 0 #0000;
+	--elev-2: 0 1px 3px oklch(0 0 0 / 0.04), 0 8px 20px -6px oklch(0 0 0 / 0.08);
+	--elev-3: 0 2px 6px oklch(0 0 0 / 0.05), 0 12px 28px -8px oklch(0 0 0 / 0.1);
+	--glass-shadow: var(--elev-2);
+	--glass-panel-shadow: var(--elev-1);
+	--hero-shadow: 0 6px 20px -12px oklch(0.2 0.04 256 / 0.18);
+
+	/* Internal rules, a shade behind the paper so table rows still divide. */
+	--border: oklch(0.94 0 0);
+
+	/* Chroma 0, like everything else here — the theme's placeholder is navy-tinted and a tint is
+	   exactly what this chrome removes. A shade past `--border` so a loading bar is read as a
+	   filled block rather than mistaken for a rule. */
+	--skeleton: oklch(0.925 0 0);
+}
+
+:root:root:root.dark:not([data-chrome='carded']) {
+	/* Same rule as light, inverted — but the notch has to be wider. 0.17-on-0.23 is two
+	   mid-charcoals and the sheets vanish; near-black paper (0.12) with sheets at 0.19 is
+	   the dark equivalent of white-on-0.98. Theme dark is navy-tinted (hue 256); that wash
+	   is the dark-mode version of the cool paper we dropped, and it still sits on ink
+	   (`--foreground` / `--hero-base`) unless we zero those too. */
+	--background: oklch(0.12 0 0);
+	--card: oklch(0.19 0 0);
+	--sidebar: oklch(0.19 0 0);
+	--popover: oklch(0.21 0 0);
+	--muted: oklch(0.23 0 0);
+	--secondary: oklch(0.23 0 0);
+	--accent: oklch(0.25 0 0);
+	/* Above the 0.19 sheet by the margin the light chrome sits below its white one. */
+	--skeleton: oklch(0.28 0 0);
+	--foreground: oklch(0.93 0 0);
+	--card-foreground: oklch(0.93 0 0);
+	--popover-foreground: oklch(0.93 0 0);
+	--secondary-foreground: oklch(0.93 0 0);
+	--accent-foreground: oklch(0.93 0 0);
+	--muted-foreground: oklch(0.68 0 0);
+	--sidebar-foreground: oklch(0.93 0 0);
+	--hero-base: oklch(0.22 0 0);
+	--hero-foreground: oklch(0.96 0 0);
+	--border: oklch(1 0 0 / 8%);
+	--glass-border: transparent;
+	--sidebar-border: transparent;
+	--elev-1: 0 0 #0000;
+	--elev-2: 0 1px 4px oklch(0 0 0 / 0.22), 0 10px 22px -8px oklch(0 0 0 / 0.34);
+	--elev-3: 0 2px 6px oklch(0 0 0 / 0.26), 0 14px 32px -10px oklch(0 0 0 / 0.4);
+	--hero-shadow: 0 8px 28px -12px oklch(0 0 0 / 0.45);
+}
+
+/* `glass-panel` still declares `border: 1px solid var(--glass-border)`. Transparent is invisible
+   but it still occupies a pixel; drop the width so a KPI tile is a true sheet. Unlayered, so it
+   beats the utility. */
+:root:root:root:not([data-chrome='carded']) .glass-panel {
+	border: 0;
+}
+
+/* Listings pass `overflow-hidden` on the Card to bound a flex scroll. On the SAME node as the
+   drop shadow, Chromium clips that shadow to the border box *before* the radius — a rounded
+   sheet with a sharp-cornered shadow. The scroll clip belongs on CardContent; the sheet must
+   stay `overflow: visible` so the shadow can follow the corner. */
+:root:root:root:not([data-chrome='carded']) [data-slot='card'] {
+	overflow: visible;
+}
+
+/* Table.Root paints canvas-coloured fade strips on both edges (scroll-shadow covers
+   over `--background`). Invisible when paper and sheet were neighbours; the fill
+   split makes them a dirty shade down each side of every listing. Staff tables
+   drop columns rather than overflow-x, so the affordance is unused. */
+:root:root:root:not([data-chrome='carded']) .table-scroll-shadows {
+	background: none;
+}
+
+/* Hand-rolled `bg-card … border` panels never read `--surface-card-border`, so they kept drawing
+   a box after Card itself went borderless. Same treatment: no outline, the page fill. Fields
+   stay outlined — an unbordered textarea is invisible. */
+:root:root:root:not([data-chrome='carded'])
+	.bg-card.border:not(
+		:is(
+			input,
+			textarea,
+			select,
+			button,
+			[data-slot='input'],
+			[data-slot='textarea'],
+			[data-slot='select-trigger']
+		)
+	) {
+	border-color: transparent;
+	box-shadow: var(--elev-1);
+}
+
+/* ── Optional: borderless FIELDS ────────────────────────────────────────────────────────────
+   Uncomment to drop the outline off inputs, selects and comboboxes and give them a filled well
+   instead. Kept separate because it is a usability question, not a chrome one: an unfilled,
+   unbordered field is invisible until focused.
+
+:root:root:root:not([data-chrome='carded']) {
+	--input: transparent;
+}
+:root:root:root:not([data-chrome='carded'])
+	:is([data-slot='input'], [data-slot='select-trigger'], [data-slot='textarea']) {
+	background-color: color-mix(in oklch, var(--foreground) 4%, transparent);
+}
+*/

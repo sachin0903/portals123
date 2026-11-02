@@ -1,0 +1,5 @@
+.svelte-kit/
+build/
+*.timestamp-*.mjs
+# Static assets are served as-is: mock document fixtures + hand-tuned GrapesJS plugin JS/CSS.
+static/

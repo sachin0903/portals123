@@ -1,0 +1,90 @@
+[project]
+name = "seccl"
+version = "0.0.0"
+description = "Seccl API payload models, generated from the vendored Postman collection"
+requires-python = ">=3.13"
+dependencies = [
+  "pydantic>=2.9",
+  # The HTTP client moved here from `services/seccl` so `apps/api` can depend on a package
+  # rather than on a sync service. Same set the client already used there.
+  "pydantic-settings>=2.5",
+  "httpx>=0.27",
+  # `[crypto]`, not bare pyjwt: the client-assertion flow signs an RS256 assertion, and pyjwt
+  # raises `NotImplementedError: Algorithm 'RS256' could not be found` without `cryptography`.
+  # The package declared the bare form and authenticated only because something else in the
+  # shared workspace venv happened to pull `cryptography` in — a standalone install of this
+  # package could not have logged in. Found by the first live integration run.
+  "pyjwt[crypto]>=2.14",
+  "tenacity>=9.0",
+  "api-log",
+]
+
+[tool.uv.sources]
+api-log = { workspace = true }
+
+[dependency-groups]
+dev = [
+  "ruff>=0.6",
+  "mypy>=1.11",
+  "pytest>=8.3",
+  # For the integration suite only — the first async tests in this package.
+  "pytest-asyncio>=0.24",
+  # Generates src/seccl/models from src/seccl/schemas. A dev dependency, not a runtime one:
+  # the models are checked in, so consumers never generate anything.
+  "datamodel-code-generator>=0.71",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/seccl"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.format]
+# The models are generated, and datamodel-code-generator's own pre-formatting wraps some
+# `Annotated[...]` fields with a trailing comma and some without. ruff treats that comma as
+# an instruction to stay exploded, so the same schema could produce two equally-formatted
+# modules and the staleness gate would fail on whitespace. Ignoring it makes the output a
+# function of the schema alone.
+skip-magic-trailing-comma = true
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "ASYNC", "S", "C4"]
+
+[tool.ruff.lint.isort]
+# Paired with format.skip-magic-trailing-comma above: ruff warns if these disagree, and the
+# formatter's setting is the one the generated modules depend on.
+split-on-trailing-comma = false
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101"] # asserts are the point of a test
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+plugins = ["pydantic.mypy"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# The integration suite is the first async test in this package — every existing one is a pure
+# check over the vendored collection — so the mode had to be turned on for it. Without it
+# pytest-asyncio never adopts the async fixtures and the failure is an internal teardown
+# assertion, not anything that names the cause.
+asyncio_mode = "auto"
+# INTEGRATION TESTS ARE EXCLUDED BY DEFAULT, in `addopts` rather than in the moon task's args.
+#
+# They call the vendor's real test environment, so the default has to be the safe one wherever
+# pytest is invoked from — a developer typing `uv run pytest` in this directory, an editor's test
+# runner, a future task that forgets the flag. Excluding them in the TASK would leave every one of
+# those reaching a live counterparty.
+#
+# `moon run <project>:integration-test` passes `-m integration`, and a command-line `-m` overrides
+# this one.
+markers = ["integration: hits the vendor's real test environment; never part of a gate"]
+addopts = "-m 'not integration'"
+

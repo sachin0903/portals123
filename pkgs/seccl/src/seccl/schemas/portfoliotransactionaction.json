@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {},
+  "title": "PortfolioTransactionAction",
+  "description": "PortfolioTransactionAction as Seccl returns it -- inferred from 2 example(s) in the Postman collection.",
+  "$defs": {
+    "PortfolioTransactionActionUpdate": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "observed values: Action"
+        },
+        "firmId": {
+          "type": "string"
+        },
+        "transactionAction": {
+          "type": "string",
+          "description": "observed values: Complete"
+        },
+        "actionReason": {
+          "type": "string",
+          "description": "observed values: Mock cash received, Order executed, Payment received"
+        },
+        "completedDate": {
+          "type": "string"
+        },
+        "executionDetails": {
+          "$ref": "#/$defs/ExecutionDetails"
+        },
+        "quantity": {
+          "type": "number"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "transactionDate": {
+          "type": "string"
+        },
+        "intendedSettlementDate": {
+          "type": "string"
+        }
+      },
+      "title": "PortfolioTransactionActionUpdate",
+      "description": "Partial update to a PortfolioTransactionAction; where the endpoint takes an `updateId` it is Seccl's optimistic-concurrency token -- inferred from 8 example(s) in the Postman collection."
+    },
+    "ExecutionDetails": {
+      "type": "object",
+      "properties": {
+        "currency": {
+          "type": "string",
+          "description": "observed values: GBP"
+        },
+        "price": {
+          "type": "number"
+        },
+        "transactionTime": {
+          "type": "string",
+          "description": "observed values: 00:00:00"
+        },
+        "venue": {
+          "type": "string",
+          "description": "observed values: XLON"
+        },
+        "executionAmount": {
+          "type": "number"
+        },
+        "executedQuantity": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "currency",
+        "executedQuantity",
+        "executionAmount",
+        "price",
+        "transactionTime",
+        "venue"
+      ]
+    }
+  }
+}

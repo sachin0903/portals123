@@ -1,0 +1,196 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+    # docker-compose.local.yaml is local-dev-only (Postgres + RustFS for `moon run :dev`) — the
+    # deploy job never reads it, so a push touching only that file has nothing here to verify.
+    # paths-ignore only skips the run when EVERY changed file matches, so a commit that also
+    # touches real deploy inputs still runs normally.
+    paths-ignore:
+      - 'docker-compose.local.yaml'
+
+concurrency:
+  group: deploy-main
+  cancel-in-progress: false
+
+# Not covered here, deliberately, and tracked as follow-ups:
+#   * ROLLBACK is manual (redeploy the previous Coolify release; expand/contract means the schema
+#     stays compatible with the older code). No down-migrations are exercised.
+#   * The e2e suite does NOT run in CI (neither here nor in pr.yml): its authenticated specs need
+#     a hand-captured Playwright `storageState` (e2e/README.md), so only the public spec is
+#     machine-runnable. Until a programmatic login fixture exists, e2e stays developer-only.
+
+jobs:
+  build-migrate-and-deploy:
+    # Self-hosted runner on Proxmox: private network access, DB never exposed. The registered
+    # runner's actual custom label is `graphene` (see Settings -> Actions -> Runners), not
+    # `proxmox` -- that mismatch is why this job sat "Waiting for a runner to pick up this job"
+    # indefinitely and was never once picked up, rather than the runner being offline or missing.
+    runs-on: [self-hosted, graphene]
+    # Deploy to the `dev` GitHub Environment: MIGRATION_DATABASE_URL,
+    # COOLIFY_DEPLOY_WEBHOOK, COOLIFY_API_TOKEN, COOLIFY_API_URL and API_HEALTH_URL
+    # below resolve to their dev-scoped values (repo-level REGISTRY_* still apply).
+    # Every push to main ships dev. staging/prod come later as gated jobs.
+    environment: dev
+    steps:
+      - uses: actions/checkout@v5
+      - uses: moonrepo/setup-toolchain@v0
+        with:
+          auto-install: true
+      - run: pnpm install --frozen-lockfile
+      - run: uv sync --frozen --project apps/api
+
+      # ORDER MATTERS: build BEFORE migrating. Migrating first left the database ahead of the
+      # running code whenever the build failed — survivable in principle (migrations are
+      # expand/contract) but unverified and unrehearsed. Build first and a broken commit never
+      # touches the schema.
+      #
+      # "Build" now means: build every deployable image and PUSH it to the private registry, so the
+      # deploy target (Coolify) PULLS immutable images instead of rebuilding from source. This
+      # replaces the old `moon run :build`, which only compiled on the runner and discarded the
+      # result — Coolify then rebuilt everything itself, defeating the central-build design. The
+      # Dockerfiles run their own pnpm/uv builds, so a broken commit still fails here, before
+      # migrations touch the schema.
+      - name: Log in to the private registry
+        env:
+          REGISTRY: ${{ vars.REGISTRY_HOST || 'registry.corp.grapheneplatforms.com' }}
+          REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          if [ -z "${REGISTRY_USERNAME:-}" ] || [ -z "${REGISTRY_PASSWORD:-}" ]; then
+            echo "::error::REGISTRY_USERNAME / REGISTRY_PASSWORD are not set — the runner cannot" \
+                 "push images. Add them as repo/org secrets (the registry 'github-runner' user)."
+            exit 1
+          fi
+          echo "$REGISTRY_PASSWORD" | docker login "$REGISTRY" -u "$REGISTRY_USERNAME" --password-stdin
+
+      # Build with the HOST daemon's built-in BuildKit and push with the daemon — NOT a
+      # docker-container buildx builder. That builder runs BuildKit in its OWN container with its
+      # own (empty) trust store, so it can't verify registry.corp's step-ca TLS and the push dies
+      # with x509 "certificate signed by unknown authority". The host daemon already trusts
+      # registry.corp via /etc/docker/certs.d (installed by the infra `docker` role), so a daemon
+      # build + `docker push` just works, with no CA to smuggle into a builder container.
+      # DOCKER_BUILDKIT=1 makes `docker build` honour the Dockerfiles' `# syntax=` frontend and
+      # `--mount=type=cache` steps; the daemon keeps that layer cache between runs on this
+      # persistent runner, so the Dockerfiles' scoped COPYs still pay off (api-only change ⇒
+      # frontends stay cache-hit).
+      #
+      # One image per Dockerfile. `seccl` serves BOTH the pipeline and the gateway — same image,
+      # two `command:`s in docker-compose.yaml. The firm API (`external`) is the `api` image with
+      # command `python -m external`, not a second Dockerfile. The external compose service
+      # must receive SECRETS_MASTER_KEY, the same Fernet key as api and the worker.
+      # Each is tagged with the commit SHA
+      # (immutable) AND
+      # latest. The local tags are removed after the push (the build cache stays) so the runner's
+      # image store doesn't accumulate a tag per deploy.
+      - name: Build and push images
+        env:
+          REGISTRY: ${{ vars.REGISTRY_HOST || 'registry.corp.grapheneplatforms.com' }}
+          DOCKER_BUILDKIT: '1'
+        run: |
+          set -euo pipefail
+          # name=dockerfile[#target] — the optional #target builds one stage of a multi-target
+          # Dockerfile (services/integrations/intelliflo's deployables share one Dockerfile but
+          # need separate images, unlike seccl's one image + compose command override — only
+          # scheduler/tenant-sync are built; webhook isn't run today).
+          images="
+            api=apps/api/Dockerfile
+            render=apps/api/Dockerfile.worker
+            client=apps/client/Dockerfile
+            platform=apps/platform/Dockerfile
+            admin=apps/admin/Dockerfile
+            seccl=services/seccl/Dockerfile
+            morgan-lloyd=services/morgan-lloyd/Dockerfile
+            sei=services/sei/Dockerfile
+            intelliflo-scheduler=services/integrations/intelliflo/Dockerfile#scheduler
+            intelliflo-tenant-sync=services/integrations/intelliflo/Dockerfile#tenant-sync
+          "
+          for pair in $images; do
+            name="${pair%%=*}"; rest="${pair#*=}"
+            dockerfile="${rest%%#*}"
+            target=""
+            case "$rest" in *#*) target="${rest#*#}" ;; esac
+            sha_tag="$REGISTRY/portals/$name:${GITHUB_SHA}"
+            latest_tag="$REGISTRY/portals/$name:latest"
+            echo "::group::build and push $name ($dockerfile${target:+, target $target})"
+            if [ -n "$target" ]; then
+              docker build -f "$dockerfile" --target "$target" -t "$sha_tag" -t "$latest_tag" .
+            else
+              docker build -f "$dockerfile" -t "$sha_tag" -t "$latest_tag" .
+            fi
+            docker push "$sha_tag"
+            docker push "$latest_tag"
+            docker rmi "$sha_tag" "$latest_tag" || true
+            echo "::endgroup::"
+          done
+
+      # Migrations run with the elevated migration role and must be backwards-compatible
+      # (expand/contract) with the currently running app, which serves traffic until the release
+      # below completes.
+      - name: Run database migrations
+        env:
+          MIGRATION_DATABASE_URL: ${{ secrets.MIGRATION_DATABASE_URL }}
+        run: moon run api:migrate
+
+      - name: Trigger Coolify deploy
+        env:
+          COOLIFY_DEPLOY_WEBHOOK: ${{ secrets.COOLIFY_DEPLOY_WEBHOOK }}
+          COOLIFY_API_TOKEN: ${{ secrets.COOLIFY_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          # Coolify's deploy endpoint (/api/v1/deploy?uuid=…) authenticates with the API token as a
+          # Bearer header — without it the POST returns 401. This only ACCEPTS the deploy.
+          #
+          # We deliberately do NOT poll Coolify's deployment-status API afterwards: for a Docker
+          # Compose stack it reports a container state ("running") rather than a terminal deployment
+          # status, so it never reads as `finished` and only added a multi-minute spin for no signal.
+          # The smoke test below (/health/ready) is the single, honest readiness gate.
+          response=$(curl -fsSL -X POST -H "Authorization: Bearer $COOLIFY_API_TOKEN" "$COOLIFY_DEPLOY_WEBHOOK")
+          echo "coolify accepted the deploy: $response"
+
+      # Post-release smoke test: READINESS, not liveness — it probes the database, object storage
+      # and WorkOS config, so a release that boots against a broken dependency fails here instead
+      # of being a green check. `API_HEALTH_URL` is a repo variable, e.g.
+      # https://api.example.com/health/ready
+      #
+      # A `down` PROBE fails this step even though the endpoint answers 200. /health/ready only
+      # 503s when a probe the API cannot serve requests without is down (database, WorkOS), so
+      # everything else — object storage, the queues — lands in a 200 body with `degraded`.
+      # Accepting `degraded` wholesale is how dev ran for two days with `documents_storage: down`
+      # and a green deploy against it, while every client upload failed (infrastructure/README.md
+      # → "The bundled object store"). `disabled` is still accepted: that is a deployment
+      # deciding it does not run a capability, which is a choice, not a fault.
+      - name: Smoke-test the release
+        env:
+          API_HEALTH_URL: ${{ vars.API_HEALTH_URL }}
+        run: |
+          set -euo pipefail
+          if [ -z "${API_HEALTH_URL:-}" ]; then
+            echo "::error::API_HEALTH_URL is not set, so this deploy's outcome cannot be" \
+                 "verified. Set the repo variable to the API's /health/ready URL."
+            exit 1
+          fi
+          for attempt in $(seq 1 20); do
+            body=$(curl -fsS --max-time 10 "$API_HEALTH_URL" || true)
+            case "$body" in
+              *'"status":"ok"'*|*'"status":"degraded"'*)
+                if printf '%s' "$body" | grep -q '"status":"down"'; then
+                  echo "::error::the API is serving traffic but a dependency is DOWN, so this" \
+                       "release is not fully functional: $body"
+                  exit 1
+                fi
+                echo "release is ready: $body"; exit 0 ;;
+            esac
+            echo "attempt $attempt: not ready yet (${body:-no response})"
+            sleep 15
+          done
+          echo "::error::the API never became ready after the deploy — investigate or roll back"
+          exit 1
+
+  # Staging deploys off Coolify via the infra app_stack role, and lives in its own
+  # manually-triggered workflow (deploy-staging.yml) — it is NOT part of this auto pipeline.
+  # Native environment required-reviewers isn't available on this repo, so a manual
+  # workflow_dispatch is the approval gate. That's also where the app team owns the app's
+  # env vars + secrets (WorkOS, Seccl, SECRETS_MASTER_KEY, SERVICE_URL_*, any NEW var).

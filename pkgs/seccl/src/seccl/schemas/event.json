@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "observed values: 00PL9L"
+    }
+  },
+  "required": ["id"],
+  "title": "Event",
+  "description": "Event as Seccl returns it -- inferred from 2 example(s) in the Postman collection.",
+  "$defs": {
+    "EventCreate": {
+      "type": "object",
+      "properties": {
+        "firmId": {
+          "type": "string"
+        },
+        "eventType": {
+          "type": "string",
+          "description": "observed values: Portfolio Realign, Rebalance, Valuation Statement"
+        },
+        "accountId": {
+          "type": "string"
+        },
+        "assetAllocationId": {
+          "type": "string"
+        },
+        "confirmedDetails": {
+          "type": "object",
+          "properties": {
+            "confirmedCashAllocation": {
+              "type": "number"
+            },
+            "confirmedAllocations": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/ConfirmedAllocation"
+              }
+            }
+          },
+          "required": ["confirmedAllocations", "confirmedCashAllocation"]
+        },
+        "fromDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "toDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "clientId": {
+          "type": "string"
+        }
+      },
+      "required": ["eventType", "firmId"],
+      "title": "EventCreate",
+      "description": "Body for creating a Event -- inferred from 5 example(s) in the Postman collection."
+    },
+    "ConfirmedAllocation": {
+      "type": "object",
+      "properties": {
+        "assetId": {
+          "type": "string",
+          "description": "observed values: 26MQ9, 27HNC"
+        },
+        "percentage": {
+          "type": "number"
+        },
+        "currency": {
+          "type": "string",
+          "description": "observed values: GBP"
+        },
+        "buyPrice": {
+          "type": "number"
+        },
+        "sellPrice": {
+          "type": "number"
+        }
+      },
+      "required": ["assetId", "buyPrice", "currency", "percentage", "sellPrice"]
+    }
+  }
+}

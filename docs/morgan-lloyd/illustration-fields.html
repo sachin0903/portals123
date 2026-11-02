@@ -1,0 +1,2323 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The illustration request, field by field</title>
+    <style>
+      :root {
+        --ground: #fafbfc;
+        --surface: #ffffff;
+        --surface-2: #f3f5f8;
+        --ink: #14171c;
+        --ink-soft: #59606e;
+        --ink-faint: #8b91a0;
+        --line: #e1e5ea;
+        --line-strong: #c9d0d9;
+
+        --profile: #1d6f80;
+        --profile-bg: #e6f2f4;
+        --decide: #9a6414;
+        --decide-bg: #fbf1de;
+        --absent: #9aa1ae;
+
+        --serif:
+          ui-serif, "New York", "Iowan Old Style", Palatino, Georgia, serif;
+        --sans:
+          system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+          sans-serif;
+        --mono:
+          ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Menlo,
+          monospace;
+
+        --measure: 68ch;
+        --pad: clamp(1.15rem, 4vw, 3.25rem);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --ground: #0e1014;
+          --surface: #15181e;
+          --surface-2: #1b1f27;
+          --ink: #e7eaef;
+          --ink-soft: #949baa;
+          --ink-faint: #6f7686;
+          --line: #242a33;
+          --line-strong: #333b47;
+
+          --profile: #6fc4d4;
+          --profile-bg: #123035;
+          --decide: #e0aa5c;
+          --decide-bg: #33280f;
+          --absent: #676e7c;
+        }
+      }
+
+      :root[data-theme="dark"] {
+        --ground: #0e1014;
+        --surface: #15181e;
+        --surface-2: #1b1f27;
+        --ink: #e7eaef;
+        --ink-soft: #949baa;
+        --ink-faint: #6f7686;
+        --line: #242a33;
+        --line-strong: #333b47;
+        --profile: #6fc4d4;
+        --profile-bg: #123035;
+        --decide: #e0aa5c;
+        --decide-bg: #33280f;
+        --absent: #676e7c;
+      }
+
+      :root[data-theme="light"] {
+        --ground: #fafbfc;
+        --surface: #ffffff;
+        --surface-2: #f3f5f8;
+        --ink: #14171c;
+        --ink-soft: #59606e;
+        --ink-faint: #8b91a0;
+        --line: #e1e5ea;
+        --line-strong: #c9d0d9;
+        --profile: #1d6f80;
+        --profile-bg: #e6f2f4;
+        --decide: #9a6414;
+        --decide-bg: #fbf1de;
+        --absent: #9aa1ae;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--ground);
+        color: var(--ink);
+        font-family: var(--sans);
+        font-size: 16px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .wrap {
+        max-width: 80rem;
+        margin: 0 auto;
+        padding: 0 var(--pad) 6rem;
+      }
+
+      .masthead {
+        border-bottom: 1px solid var(--line-strong);
+        padding: clamp(3rem, 9vw, 5.5rem) 0 2rem;
+        display: grid;
+        gap: 1.6rem;
+      }
+
+      .eyebrow {
+        font-size: 0.7rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+        font-weight: 600;
+      }
+
+      h1 {
+        font-family: var(--serif);
+        font-weight: 400;
+        font-size: clamp(2rem, 5.5vw, 3.3rem);
+        line-height: 1.1;
+        letter-spacing: -0.015em;
+        margin: 0;
+        text-wrap: balance;
+        max-width: 20ch;
+      }
+
+      .standfirst {
+        font-family: var(--serif);
+        font-size: clamp(1rem, 1.6vw, 1.16rem);
+        line-height: 1.62;
+        color: var(--ink-soft);
+        max-width: var(--measure);
+        margin: 0;
+      }
+
+      .masthead-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem 2.25rem;
+        font-size: 0.78rem;
+        color: var(--ink-faint);
+        border-top: 1px solid var(--line);
+        padding-top: 1.2rem;
+      }
+
+      .masthead-meta b {
+        color: var(--ink);
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+      }
+
+      section {
+        padding-top: 3.25rem;
+      }
+
+      h2 {
+        font-family: var(--serif);
+        font-weight: 400;
+        font-size: clamp(1.45rem, 3vw, 1.95rem);
+        line-height: 1.18;
+        margin: 0 0 0.7rem;
+        letter-spacing: -0.01em;
+        text-wrap: balance;
+      }
+
+      h3 {
+        font-size: 0.75rem;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+        font-weight: 700;
+        margin: 2.25rem 0 0.7rem;
+      }
+
+      .prose {
+        font-family: var(--serif);
+        max-width: var(--measure);
+        font-size: 1rem;
+        line-height: 1.68;
+      }
+
+      .prose p {
+        margin: 0 0 0.9rem;
+      }
+      .prose p:last-child {
+        margin-bottom: 0;
+      }
+
+      code,
+      .mono {
+        font-family: var(--mono);
+        font-size: 0.855em;
+      }
+
+      code {
+        background: var(--surface-2);
+        border: 1px solid var(--line);
+        border-radius: 3px;
+        padding: 0.06em 0.34em;
+        white-space: nowrap;
+      }
+
+      a {
+        color: inherit;
+        text-underline-offset: 2px;
+        text-decoration-color: var(--line-strong);
+      }
+      a:focus-visible {
+        outline: 2px solid var(--ink);
+        outline-offset: 2px;
+        border-radius: 2px;
+      }
+
+      /* ---- tables ---- */
+
+      .scroll {
+        overflow-x: auto;
+        margin: 1.1rem 0 0;
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        min-width: 52rem;
+        font-size: 0.845rem;
+      }
+
+      th {
+        text-align: left;
+        font-size: 0.67rem;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        color: var(--ink-faint);
+        font-weight: 700;
+        padding: 0 0.8rem 0.55rem 0;
+        border-bottom: 1px solid var(--line-strong);
+        vertical-align: bottom;
+      }
+
+      td {
+        padding: 0.62rem 0.8rem 0.62rem 0;
+        border-bottom: 1px solid var(--line);
+        vertical-align: top;
+        color: var(--ink-soft);
+      }
+
+      td:first-child,
+      th:first-child {
+        padding-left: 0;
+      }
+      td.el {
+        color: var(--ink);
+        font-family: var(--mono);
+        font-size: 0.8rem;
+        white-space: nowrap;
+      }
+      td.lead {
+        color: var(--ink);
+        font-weight: 600;
+      }
+      tbody tr:hover td {
+        background: var(--surface-2);
+      }
+
+      tr.absent td {
+        color: var(--absent);
+      }
+      tr.absent td.el {
+        color: var(--absent);
+      }
+      tr.pick td {
+        background: var(--decide-bg);
+      }
+      tr.pick:hover td {
+        background: var(--decide-bg);
+      }
+
+      /* ---- chips ---- */
+
+      .chip {
+        display: inline-block;
+        font-size: 0.66rem;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        font-weight: 700;
+        padding: 0.1rem 0.42rem;
+        border-radius: 3px;
+        border: 1px solid var(--line-strong);
+        color: var(--ink-soft);
+        white-space: nowrap;
+        line-height: 1.5;
+      }
+
+      .chip.profile {
+        color: var(--profile);
+        border-color: var(--profile);
+        background: var(--profile-bg);
+      }
+      .chip.decide {
+        color: var(--decide);
+        border-color: var(--decide);
+        background: var(--decide-bg);
+      }
+      .chip.none {
+        color: var(--absent);
+        border-style: dashed;
+      }
+      .chip.rec {
+        color: var(--decide);
+        border-color: var(--decide);
+        background: var(--decide-bg);
+      }
+      .chip.derived {
+        border-style: dotted;
+      }
+
+      .m {
+        font-weight: 700;
+        color: var(--ink);
+      }
+
+      /* ---- decision blocks ---- */
+
+      .decision {
+        border: 1px solid var(--line-strong);
+        border-left: 3px solid var(--decide);
+        border-radius: 4px;
+        padding: 1.25rem 1.4rem;
+        margin-top: 1.5rem;
+        background: var(--surface);
+      }
+
+      .decision h4 {
+        margin: 0 0 0.6rem;
+        font-family: var(--serif);
+        font-weight: 400;
+        font-size: 1.2rem;
+        letter-spacing: -0.005em;
+      }
+
+      .decision .kicker {
+        display: block;
+        font-size: 0.67rem;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        font-weight: 700;
+        color: var(--decide);
+        margin-bottom: 0.4rem;
+      }
+
+      .decision p {
+        margin: 0 0 0.75rem;
+        font-family: var(--serif);
+        font-size: 0.95rem;
+        line-height: 1.62;
+        color: var(--ink-soft);
+        max-width: var(--measure);
+      }
+
+      .decision p:last-child {
+        margin-bottom: 0;
+      }
+      .decision b {
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      .note {
+        border-left: 2px solid var(--line-strong);
+        padding: 0.15rem 0 0.15rem 1rem;
+        margin: 1.5rem 0 0;
+        max-width: var(--measure);
+        font-family: var(--serif);
+        font-size: 0.95rem;
+        line-height: 1.62;
+        color: var(--ink-soft);
+      }
+
+      .note b {
+        color: var(--ink);
+        font-weight: 600;
+      }
+      .note p {
+        margin: 0 0 0.7rem;
+      }
+      .note p:last-child {
+        margin-bottom: 0;
+      }
+
+      .note-label {
+        display: block;
+        font-family: var(--sans);
+        font-size: 0.67rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-weight: 700;
+        color: var(--ink-faint);
+        margin-bottom: 0.3rem;
+      }
+
+      /* ---- figures ---- */
+
+      figure {
+        margin: 2rem 0 0;
+      }
+
+      figure svg {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        display: block;
+        color: var(--ink);
+      }
+
+      figcaption {
+        font-size: 0.8rem;
+        color: var(--ink-faint);
+        margin-top: 0.8rem;
+        max-width: var(--measure);
+        line-height: 1.55;
+      }
+
+      .legend-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.45rem 1.1rem;
+        margin-top: 1.1rem;
+        align-items: center;
+        font-size: 0.8rem;
+        color: var(--ink-soft);
+      }
+
+      footer {
+        margin-top: 5rem;
+        border-top: 1px solid var(--line-strong);
+        padding-top: 1.5rem;
+        font-size: 0.78rem;
+        color: var(--ink-faint);
+        max-width: var(--measure);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="masthead">
+        <div class="eyebrow">Graphene &middot; CTC illustration engine</div>
+        <h1>The illustration request, field by field</h1>
+        <p class="standfirst">
+          Every element the CTC1 message can carry, what the spec allows in it,
+          what we send today, and where the value comes from &mdash; the
+          client's own record, the account, the model, or the adviser typing it.
+          The annuity section is gone and the form is six questions shorter;
+          what changed and what is still open are set out first.
+        </p>
+        <div class="masthead-meta">
+          <span><b>10</b> lettered groups (a&ndash;j)</span>
+          <span><b>9</b> fields from the client profile</span>
+          <span><b>14</b> asked on the form &mdash; was 20</span>
+          <span>Last changed <b>9 Aug 2026</b></span>
+          <span><b>14</b> spec options we never send</span>
+          <span>Read against XML v1.6 Bespoke, 22 Feb 2021</span>
+        </div>
+      </header>
+
+      <section id="sources">
+        <h2>Where a value comes from</h2>
+        <div class="prose">
+          <p>
+            An illustration is assembled from four places, and only one of them
+            is the form. The adviser types the assumptions; the client's
+            identity, the fund value and the growth basis are all read from
+            records that already exist &mdash; which is why an illustration
+            fails on a missing date of birth or a model with no target return
+            rather than asking for them.
+          </p>
+        </div>
+
+        <figure>
+          <svg
+            viewBox="0 0 900 400"
+            role="img"
+            aria-label="Five sources — the client record, the account, the investment model, the adviser's form, and a house constant in the API — assemble into the six groups of a CTC1 request, which the engine returns as a PDF."
+          >
+            <defs>
+              <marker
+                id="ar"
+                viewBox="0 0 10 10"
+                refX="9"
+                refY="5"
+                markerWidth="7"
+                markerHeight="7"
+                orient="auto-start-reverse"
+              >
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor" />
+              </marker>
+              <marker
+                id="ar-d"
+                viewBox="0 0 10 10"
+                refX="9"
+                refY="5"
+                markerWidth="7"
+                markerHeight="7"
+                orient="auto-start-reverse"
+              >
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--decide)" />
+              </marker>
+            </defs>
+
+            <!-- source column -->
+            <text
+              x="16"
+              y="22"
+              font-size="11"
+              font-weight="700"
+              letter-spacing="1.4"
+              fill="currentColor"
+              opacity="0.55"
+            >
+              SOURCE
+            </text>
+
+            <rect
+              x="16"
+              y="40"
+              width="186"
+              height="46"
+              rx="4"
+              fill="none"
+              stroke="var(--profile)"
+              stroke-width="1.5"
+            />
+            <text
+              x="28"
+              y="60"
+              font-size="13"
+              font-weight="600"
+              fill="var(--profile)"
+            >
+              crm.contacts
+            </text>
+            <text
+              x="28"
+              y="76"
+              font-size="11"
+              fill="currentColor"
+              opacity="0.7"
+            >
+              the client's own record
+            </text>
+
+            <rect
+              x="16"
+              y="100"
+              width="186"
+              height="46"
+              rx="4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.2"
+              opacity="0.55"
+            />
+            <text
+              x="28"
+              y="120"
+              font-size="13"
+              font-weight="600"
+              fill="currentColor"
+            >
+              platform.accounts
+            </text>
+            <text
+              x="28"
+              y="136"
+              font-size="11"
+              fill="currentColor"
+              opacity="0.7"
+            >
+              fund value, wrapper
+            </text>
+
+            <rect
+              x="16"
+              y="160"
+              width="186"
+              height="46"
+              rx="4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.2"
+              opacity="0.55"
+            />
+            <text
+              x="28"
+              y="180"
+              font-size="13"
+              font-weight="600"
+              fill="currentColor"
+            >
+              platform.models
+            </text>
+            <text
+              x="28"
+              y="196"
+              font-size="11"
+              fill="currentColor"
+              opacity="0.7"
+            >
+              growth rate, charge
+            </text>
+
+            <rect
+              x="16"
+              y="220"
+              width="186"
+              height="46"
+              rx="4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.2"
+              opacity="0.55"
+            />
+            <text
+              x="28"
+              y="240"
+              font-size="13"
+              font-weight="600"
+              fill="currentColor"
+            >
+              the form
+            </text>
+            <text
+              x="28"
+              y="256"
+              font-size="11"
+              fill="currentColor"
+              opacity="0.7"
+            >
+              17 adviser inputs
+            </text>
+
+            <rect
+              x="16"
+              y="300"
+              width="186"
+              height="46"
+              rx="4"
+              fill="none"
+              stroke="var(--decide)"
+              stroke-width="1.5"
+              stroke-dasharray="4 3"
+            />
+            <text
+              x="28"
+              y="320"
+              font-size="13"
+              font-weight="600"
+              fill="var(--decide)"
+            >
+              house constant
+            </text>
+            <text
+              x="28"
+              y="336"
+              font-size="11"
+              fill="var(--decide)"
+              opacity="0.85"
+            >
+              in the API, not the form
+            </text>
+
+            <!-- arrows into request -->
+            <line
+              x1="202"
+              y1="63"
+              x2="356"
+              y2="88"
+              stroke="var(--profile)"
+              stroke-width="1.5"
+              marker-end="url(#ar)"
+            />
+            <line
+              x1="202"
+              y1="123"
+              x2="356"
+              y2="140"
+              stroke="currentColor"
+              stroke-width="1.2"
+              opacity="0.55"
+              marker-end="url(#ar)"
+            />
+            <line
+              x1="202"
+              y1="183"
+              x2="356"
+              y2="192"
+              stroke="currentColor"
+              stroke-width="1.2"
+              opacity="0.55"
+              marker-end="url(#ar)"
+            />
+            <line
+              x1="202"
+              y1="243"
+              x2="356"
+              y2="244"
+              stroke="currentColor"
+              stroke-width="1.2"
+              opacity="0.55"
+              marker-end="url(#ar)"
+            />
+            <line
+              x1="202"
+              y1="323"
+              x2="356"
+              y2="300"
+              stroke="var(--decide)"
+              stroke-width="1.5"
+              stroke-dasharray="4 3"
+              marker-end="url(#ar-d)"
+            />
+
+            <!-- request box -->
+            <rect
+              x="356"
+              y="40"
+              width="240"
+              height="320"
+              rx="5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+            />
+            <text
+              x="372"
+              y="22"
+              font-size="11"
+              font-weight="700"
+              letter-spacing="1.4"
+              fill="currentColor"
+              opacity="0.55"
+            >
+              CTC1 REQUEST
+            </text>
+
+            <rect
+              x="372"
+              y="70"
+              width="208"
+              height="34"
+              rx="3"
+              fill="var(--profile-bg)"
+              stroke="var(--profile)"
+              stroke-width="1.2"
+            />
+            <text
+              x="384"
+              y="92"
+              font-size="12"
+              font-family="ui-monospace, monospace"
+              fill="var(--profile)"
+            >
+              investor
+            </text>
+
+            <rect
+              x="372"
+              y="118"
+              width="208"
+              height="34"
+              rx="3"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1"
+              opacity="0.6"
+            />
+            <text
+              x="384"
+              y="140"
+              font-size="12"
+              font-family="ui-monospace, monospace"
+              fill="currentColor"
+            >
+              plan_stream &times;5
+            </text>
+
+            <rect
+              x="372"
+              y="166"
+              width="208"
+              height="34"
+              rx="3"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1"
+              opacity="0.6"
+            />
+            <text
+              x="384"
+              y="188"
+              font-size="12"
+              font-family="ui-monospace, monospace"
+              fill="currentColor"
+            >
+              premium_split
+            </text>
+
+            <rect
+              x="372"
+              y="214"
+              width="208"
+              height="34"
+              rx="3"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1"
+              opacity="0.6"
+            />
+            <text
+              x="384"
+              y="236"
+              font-size="12"
+              font-family="ui-monospace, monospace"
+              fill="currentColor"
+            >
+              withdrawals
+            </text>
+
+            <rect
+              x="372"
+              y="262"
+              width="208"
+              height="34"
+              rx="3"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1"
+              opacity="0.6"
+            />
+            <text
+              x="384"
+              y="284"
+              font-size="12"
+              font-family="ui-monospace, monospace"
+              fill="currentColor"
+            >
+              adviser_fees
+            </text>
+
+            <rect
+              x="372"
+              y="310"
+              width="208"
+              height="34"
+              rx="3"
+              fill="none"
+              stroke="var(--decide)"
+              stroke-width="1.5"
+              stroke-dasharray="4 3"
+            />
+            <text
+              x="384"
+              y="332"
+              font-size="12"
+              font-family="ui-monospace, monospace"
+              fill="var(--decide)"
+            >
+              annuity_basis
+            </text>
+
+            <!-- to engine -->
+            <line
+              x1="596"
+              y1="200"
+              x2="690"
+              y2="200"
+              stroke="currentColor"
+              stroke-width="1.5"
+              marker-end="url(#ar)"
+            />
+            <text
+              x="608"
+              y="192"
+              font-size="11"
+              fill="currentColor"
+              opacity="0.7"
+            >
+              XML
+            </text>
+
+            <rect
+              x="690"
+              y="150"
+              width="194"
+              height="100"
+              rx="5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+            />
+            <text
+              x="706"
+              y="180"
+              font-size="13"
+              font-weight="600"
+              fill="currentColor"
+            >
+              CTC engine
+            </text>
+            <text
+              x="706"
+              y="200"
+              font-size="11"
+              fill="currentColor"
+              opacity="0.7"
+            >
+              nodb=true, no credentials
+            </text>
+            <text
+              x="706"
+              y="222"
+              font-size="11"
+              fill="currentColor"
+              opacity="0.7"
+            >
+              returns a PDF URL
+            </text>
+            <text
+              x="706"
+              y="240"
+              font-size="11"
+              fill="currentColor"
+              opacity="0.7"
+            >
+              filed as a document
+            </text>
+          </svg>
+          <figcaption>
+            Five sources assemble one request, and only one of them is the form.
+            The annuity group is the odd one: it has no per-client source at
+            all, because it is a firm's standing assumption &mdash; so the API
+            supplies it, and a portal that forgets to ask cannot accidentally
+            drop it.
+          </figcaption>
+        </figure>
+
+        <div class="legend-row">
+          <span class="chip profile">Profile</span>
+          <span>read from the client record</span>
+          <span class="chip">Form</span> <span>the adviser types it</span>
+          <span class="chip">Fixed</span> <span>a constant we always send</span>
+          <span class="chip derived">Derived</span>
+          <span>computed from the other answers</span>
+          <span class="chip none">Not sent</span>
+          <span>the spec allows it; we omit it</span>
+          <span class="chip decide">Decide</span> <span>needs approval</span>
+        </div>
+      </section>
+
+      <!-- ============================ DECISIONS ============================ -->
+      <section id="decisions">
+        <h2>What changed on 9 August</h2>
+        <div class="prose">
+          <p>
+            Four changes, approved and shipped: the annuity section is gone, its
+            basis is now a house constant in the API, Weekly is back as a
+            contribution frequency, and capped drawdown is off the picker. Each
+            is recorded with the evidence behind it, because the reasoning is
+            what makes any of them reversible on purpose rather than by
+            accident.
+          </p>
+        </div>
+
+        <div class="decision">
+          <span class="kicker">Shipped &middot; 09 Aug 2026</span>
+          <h4>The annuity section is gone; the API sends the house basis</h4>
+          <p>
+            Six questions came off the form. They asked how a fund would be
+            converted to income at retirement &mdash; a
+            <b>house assumption, identical for every client of a firm</b>, so a
+            per-client form was the wrong place for it from the start.
+          </p>
+          <p>
+            The group is still sent. <code>house_annuity_basis()</code> supplies
+            it for any caller that offers none, and that constant lives in
+            <code>routers/illustrations.py</code>
+            rather than in the portal on purpose: a portal that carries the
+            constants is a portal that can forget them, and forgetting means the
+            group is omitted &mdash; which files a KFI whose projected-income
+            column reads &pound;0 on an accumulation quote.
+          </p>
+          <p>
+            <b>Omitting it is still possible, but now has to be asked for:</b>
+            <code>include_annuity_basis: false</code>. Those two intentions
+            &mdash; "no preference" and "leave it out" &mdash; used to be the
+            same request, which is exactly how the column could go to zero
+            without anyone choosing it.
+          </p>
+        </div>
+
+        <div class="decision">
+          <span class="kicker"
+            >Shipped &middot; 09 Aug 2026 &middot; states which way it
+            leans</span
+          >
+          <h4>The house basis: level, single life, monthly in advance</h4>
+          <div class="scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Element</th>
+                  <th></th>
+                  <th>Spec allows</th>
+                  <th>Now sends</th>
+                  <th>Which way it biases the figure</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="el">annuity_basis</td>
+                  <td class="m">M for a pension</td>
+                  <td>The group itself</td>
+                  <td><span class="chip">Always</span></td>
+                  <td>&mdash;</td>
+                </tr>
+                <tr>
+                  <td class="el">annuity_frequency</td>
+                  <td>O</td>
+                  <td>
+                    Monthly &middot; Quarterly &middot; Half Yearly &middot;
+                    Annually
+                  </td>
+                  <td><span class="chip">Monthly</span></td>
+                  <td>How a pension is actually paid. Neutral.</td>
+                </tr>
+                <tr>
+                  <td class="el">annuity_timing</td>
+                  <td>O</td>
+                  <td>Advance &middot; Arrears</td>
+                  <td><span class="chip">Advance</span></td>
+                  <td>Market convention. Slightly lower than arrears.</td>
+                </tr>
+                <tr>
+                  <td class="el">escalation</td>
+                  <td>O</td>
+                  <td>Fixed &middot; Level &middot; LPI &middot; RPI</td>
+                  <td><span class="chip">Level</span></td>
+                  <td>
+                    <b>Flatters.</b> Level gives the highest starting income;
+                    RPI or LPI would show a lower, inflation-protected one.
+                  </td>
+                </tr>
+                <tr class="absent">
+                  <td class="el">percent</td>
+                  <td>O</td>
+                  <td>Only with Fixed escalation</td>
+                  <td><span class="chip none">Not sent</span></td>
+                  <td>Meaningless without Fixed.</td>
+                </tr>
+                <tr class="absent">
+                  <td class="el">guaranteed_period</td>
+                  <td>O</td>
+                  <td>Years</td>
+                  <td><span class="chip none">Not sent</span></td>
+                  <td>
+                    No guarantee is the standard basis. A guarantee lowers the
+                    income.
+                  </td>
+                </tr>
+                <tr class="absent">
+                  <td class="el">spouse_percentage</td>
+                  <td>O</td>
+                  <td>Percentage</td>
+                  <td><span class="chip none">Not sent</span></td>
+                  <td>
+                    <b>Flatters.</b> A 50% spouse's pension shows materially
+                    less, and most members with a partner would buy one.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p style="margin-top: 1rem">
+            This is the conventional illustration basis and
+            <b>the highest income any basis will show</b>. That is stated in the
+            code as well as here, so nobody has to rediscover it. If the firm
+            would rather the projection erred low, the single change is
+            <code>HOUSE_ANNUITY_ESCALATION = "RPI"</code>.
+          </p>
+          <p>
+            <b>Still the right end state: per-firm configuration.</b> Nothing
+            has to move for it &mdash; a caller that supplies a basis already
+            overrides the house one wholesale, so a firm setting is a matter of
+            passing one. There is no illustration-assumptions store today, which
+            is the only reason it is not done.
+          </p>
+        </div>
+
+        <div class="decision">
+          <span class="kicker">Shipped &middot; 09 Aug 2026</span>
+          <h4>Weekly contributions in, capped drawdown out</h4>
+          <p>
+            <b>Weekly</b> is back as a contribution frequency &mdash; the spec
+            has always allowed it (CTC1 &sect;d) and rare is not the same as
+            never.
+          </p>
+          <p>
+            <b>Capped drawdown is off the picker.</b> It has been closed to new
+            members since April 2015, and offering it produced a request the
+            engine cannot compute properly: capped needs
+            <code>current_max_income</code>, <code>next_review_date</code> and
+            <code>inc_already_taken</code>, and we send none of the three. A
+            picker option that silently mis-projects is worse than an absent
+            one.
+          </p>
+          <p>
+            <b>The trap those two nearly sprang.</b> One
+            <code>FREQUENCIES</code> constant fed both the contribution and the
+            withdrawal picker &mdash; but the spec has two different sets, and
+            <b>a withdrawal may not be Weekly</b> (&sect;f allows Single,
+            Monthly, Quarterly, Half Yearly, Annually, plus
+            <code>2 Months</code> and <code>4 Months</code>). Adding Weekly to
+            the shared list would have quietly offered it as a withdrawal
+            frequency too. They are now two constants, and a test pins that
+            Weekly appears in one picker and not the other.
+          </p>
+        </div>
+
+        <div class="decision">
+          <span class="kicker"
+            >Still open &middot; recommend: pin the vocabulary</span
+          >
+          <h4>The quotation type is settled &mdash; one guard is not</h4>
+          <p>
+            <b
+              ><code>Flexi Access Drawdown</code> is a valid value and is what
+              we send.</b
+            >
+            The spec's page-10 table lists only three values, but its own
+            Example&nbsp;1 uses this one for a Self Invested Personal Pension
+            &mdash; our exact product &mdash;
+            <code>data-mapping.md</code> records all four, and a test pins that
+            the builder emits it. The table is the incomplete artefact.
+          </p>
+          <p>
+            What is left:
+            <b
+              ><code>quotation_type</code> is the one closed vocabulary the
+              builder does not put through <code>_one_of</code></b
+            >. Since CTC answers a bad value with HTTP&nbsp;200 and an HTML
+            page, a typo introduced later would reach the engine and come back
+            looking like a successful run. Add the four values as a checked
+            vocabulary alongside the others.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================ ANNUITY MECHANISM ============================ -->
+      <section id="annuity-mechanism">
+        <h2>What the annuity group actually changes</h2>
+
+        <figure>
+          <svg
+            viewBox="0 0 900 300"
+            role="img"
+            aria-label="With the annuity basis group present, an accumulation quote prints a yearly-income column of £1,590, £2,750 and £4,660; with it absent, the same column reads zero. The fund columns are identical either way, and a drawdown quote has no income column at all."
+          >
+            <defs>
+              <marker
+                id="ar2"
+                viewBox="0 0 10 10"
+                refX="9"
+                refY="5"
+                markerWidth="7"
+                markerHeight="7"
+                orient="auto-start-reverse"
+              >
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor" />
+              </marker>
+            </defs>
+
+            <rect
+              x="16"
+              y="110"
+              width="170"
+              height="70"
+              rx="4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+            />
+            <text
+              x="30"
+              y="140"
+              font-size="13"
+              font-weight="600"
+              fill="currentColor"
+            >
+              Same request
+            </text>
+            <text
+              x="30"
+              y="160"
+              font-size="11"
+              fill="currentColor"
+              opacity="0.7"
+            >
+              accumulation, one model
+            </text>
+
+            <!-- branch -->
+            <line
+              x1="186"
+              y1="132"
+              x2="292"
+              y2="70"
+              stroke="var(--decide)"
+              stroke-width="1.6"
+              marker-end="url(#ar2)"
+            />
+            <text
+              x="196"
+              y="92"
+              font-size="11"
+              font-weight="600"
+              fill="var(--decide)"
+            >
+              group present
+            </text>
+
+            <line
+              x1="186"
+              y1="158"
+              x2="292"
+              y2="222"
+              stroke="currentColor"
+              stroke-width="1.4"
+              opacity="0.65"
+              marker-end="url(#ar2)"
+            />
+            <text
+              x="196"
+              y="208"
+              font-size="11"
+              font-weight="600"
+              fill="currentColor"
+              opacity="0.75"
+            >
+              group omitted
+            </text>
+
+            <!-- present -->
+            <rect
+              x="292"
+              y="30"
+              width="580"
+              height="82"
+              rx="4"
+              fill="none"
+              stroke="var(--decide)"
+              stroke-width="1.6"
+            />
+            <text
+              x="308"
+              y="54"
+              font-size="12"
+              font-weight="700"
+              fill="var(--decide)"
+            >
+              14 pages &middot; charge &pound;6,909.37
+            </text>
+            <text x="308" y="76" font-size="12" fill="currentColor">
+              Projected fund &nbsp;&pound;49,800 &nbsp;&pound;76,000
+              &nbsp;&pound;114,000
+            </text>
+            <text
+              x="308"
+              y="98"
+              font-size="12"
+              font-weight="700"
+              fill="var(--decide)"
+            >
+              Yearly income &nbsp;&pound;1,590 &nbsp;&pound;2,750
+              &nbsp;&pound;4,660
+            </text>
+
+            <!-- omitted -->
+            <rect
+              x="292"
+              y="182"
+              width="580"
+              height="82"
+              rx="4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.4"
+              opacity="0.65"
+            />
+            <text
+              x="308"
+              y="206"
+              font-size="12"
+              font-weight="700"
+              fill="currentColor"
+              opacity="0.75"
+            >
+              14 pages &middot; charge &pound;6,909.37
+            </text>
+            <text x="308" y="228" font-size="12" fill="currentColor">
+              Projected fund &nbsp;&pound;49,800 &nbsp;&pound;76,000
+              &nbsp;&pound;114,000
+            </text>
+            <text
+              x="308"
+              y="250"
+              font-size="12"
+              font-weight="700"
+              fill="currentColor"
+              opacity="0.75"
+            >
+              Yearly income &nbsp;&pound;0 &nbsp;&pound;0 &nbsp;&pound;0
+            </text>
+
+            <text
+              x="292"
+              y="150"
+              font-size="11"
+              fill="currentColor"
+              opacity="0.6"
+            >
+              identical page count, identical charge, identical fund columns
+              &mdash; one row differs
+            </text>
+          </svg>
+          <figcaption>
+            Measured on two real PDFs off the same scenario. The annuity group
+            moves exactly one row of the document, and only on the accumulation
+            layout &mdash; a drawdown quote has no yearly-income column at all,
+            which is why the omission matrix run against a drawdown scenario
+            recorded "identical document, no effect whatsoever" and that result
+            does not generalise.
+          </figcaption>
+        </figure>
+      </section>
+
+      <!-- ============================ FIELD TABLES ============================ -->
+      <section id="fields">
+        <h2>Every element, group by group</h2>
+        <div class="prose">
+          <p>
+            M and O are the spec's own mandatory/optional markings. "We send" is
+            what the builder emits today &mdash; read from the code, not from
+            the documentation about it.
+          </p>
+        </div>
+
+        <h3>investor &mdash; repeating, one per life</h3>
+        <div class="scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Element</th>
+                <th></th>
+                <th>Spec allows</th>
+                <th>We send</th>
+                <th>Source</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="el">title</td>
+                <td>O</td>
+                <td>Free text</td>
+                <td>Yes</td>
+                <td><span class="chip profile">Profile</span></td>
+              </tr>
+              <tr>
+                <td class="el">forename</td>
+                <td>O</td>
+                <td>Max 100</td>
+                <td>Yes</td>
+                <td><span class="chip profile">Profile</span></td>
+              </tr>
+              <tr>
+                <td class="el">surname</td>
+                <td>O</td>
+                <td>Max 50</td>
+                <td>Yes</td>
+                <td><span class="chip profile">Profile</span></td>
+              </tr>
+              <tr>
+                <td class="el">date_of_birth</td>
+                <td>O</td>
+                <td><code>yyyy-mm-dd</code></td>
+                <td>Yes &mdash; refused without one</td>
+                <td><span class="chip profile">Profile</span></td>
+              </tr>
+              <tr>
+                <td class="el">sex</td>
+                <td>O</td>
+                <td>Male &middot; Female</td>
+                <td>Yes, when mapped</td>
+                <td><span class="chip profile">Profile</span></td>
+              </tr>
+              <tr>
+                <td class="el">marital_status</td>
+                <td>O</td>
+                <td>
+                  Civil Partnership &middot; Divorced &middot; Married &middot;
+                  Partnered &middot; Single &middot; Widowed &middot; Unknown
+                </td>
+                <td>Six of the seven mapped; unmapped stays absent</td>
+                <td><span class="chip profile">Profile</span></td>
+              </tr>
+              <tr>
+                <td class="el">exit_age</td>
+                <td>O</td>
+                <td>Planned retirement age</td>
+                <td>Yes &mdash; refused without one</td>
+                <td>
+                  <span class="chip profile">Profile</span>, form may override
+                </td>
+              </tr>
+              <tr>
+                <td class="el">life_type</td>
+                <td>O</td>
+                <td>
+                  Applicant &middot; Life Assured &middot; Both &middot;
+                  Dependant &middot; None
+                </td>
+                <td><code>None</code> always</td>
+                <td><span class="chip">Fixed</span></td>
+              </tr>
+              <tr class="absent">
+                <td class="el">investor &times;N</td>
+                <td>M</td>
+                <td>The group repeats &mdash; spouse, dependant, multi-life</td>
+                <td>One only</td>
+                <td><span class="chip none">Not sent</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note">
+          <span class="note-label">Why <code>Unknown</code> is not sent</span>
+          <p>
+            The spec offers it, and we deliberately leave the element out
+            instead: both fields are optional, so absence says "not recorded",
+            where <code>Unknown</code> is a claim about the client. Same rule
+            for an unmapped gender &mdash; Dynamics accepts only Male and
+            Female, so anything else is refused at the boundary rather than
+            coerced.
+          </p>
+        </div>
+
+        <h3>quotation &mdash; one per product</h3>
+        <div class="scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Element</th>
+                <th></th>
+                <th>Spec allows</th>
+                <th>We send</th>
+                <th>Source</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="el">@product_ref</td>
+                <td class="m">M</td>
+                <td>Firm-specific reference</td>
+                <td><code>SIPPEN</code></td>
+                <td><span class="chip">Fixed</span></td>
+              </tr>
+              <tr>
+                <td class="el">@product_type</td>
+                <td class="m">M</td>
+                <td>'Self Invested Personal Pension'</td>
+                <td>Yes</td>
+                <td><span class="chip">Fixed</span></td>
+              </tr>
+              <tr class="pick">
+                <td class="el">quotation_type</td>
+                <td class="m">M</td>
+                <td>
+                  Table lists Accumulation &middot; Drawdown &middot; SMPI; the
+                  example adds <b>Flexi Access Drawdown</b>
+                  <span class="chip decide">open &mdash; item 5</span>
+                </td>
+                <td>
+                  <code>Accumulation</code> or
+                  <code>Flexi Access Drawdown</code> &mdash; both valid, neither
+                  checked by the builder
+                </td>
+                <td><span class="chip">Form</span></td>
+              </tr>
+              <tr>
+                <td class="el">inflation_adjustment_indicator</td>
+                <td>O</td>
+                <td>Yes &middot; No</td>
+                <td>Yes &mdash; element name correct</td>
+                <td><span class="chip">Form</span></td>
+              </tr>
+              <tr class="absent">
+                <td class="el">current_max_income</td>
+                <td>O</td>
+                <td>GAD maximum</td>
+                <td>Never</td>
+                <td><span class="chip none">Not sent</span></td>
+              </tr>
+              <tr class="absent">
+                <td class="el">next_review_date</td>
+                <td>O</td>
+                <td>Next 3-yearly review</td>
+                <td>Never</td>
+                <td><span class="chip none">Not sent</span></td>
+              </tr>
+              <tr class="absent">
+                <td class="el">inc_already_taken</td>
+                <td>O</td>
+                <td>Income taken this review year</td>
+                <td>Never</td>
+                <td><span class="chip none">Not sent</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note">
+          <span class="note-label">The Capped drawdown trap</span>
+          <p>
+            Those last three are <b>capped drawdown only</b> and we never send
+            them &mdash; which is why the picker no longer offers Capped (09 Aug
+            2026). It offers Flexible and UFPLS. Re-adding Capped means adding
+            these three fields at the same time.
+          </p>
+        </div>
+
+        <h3>plan_stream &mdash; one per payment type</h3>
+        <div class="scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Stream</th>
+                <th>contribution_type</th>
+                <th>frequency</th>
+                <th>crystallised</th>
+                <th>Source</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="el">EXISTING</td>
+                <td>Existing Fund Value</td>
+                <td>Single &mdash; the spec allows nothing else</td>
+                <td>No</td>
+                <td>
+                  The client's other SIPPs, summed. An account's own value when
+                  one is named
+                </td>
+              </tr>
+              <tr>
+                <td class="el">INITIAL</td>
+                <td>Member <span class="chip">+ net_gross</span> Gross</td>
+                <td>Single</td>
+                <td>No &mdash; enforced</td>
+                <td><span class="chip">Form</span> &mdash; Initial payment</td>
+              </tr>
+              <tr>
+                <td class="el">TRANSFER</td>
+                <td>Transfer Value</td>
+                <td>Single &mdash; enforced</td>
+                <td>Yes only when the whole transfer is crystallised</td>
+                <td><span class="chip">Form</span> &mdash; Transfer section</td>
+              </tr>
+              <tr>
+                <td class="el">TRANSFER_CRYST</td>
+                <td>Transfer Value</td>
+                <td>Single</td>
+                <td class="lead">Yes</td>
+                <td>
+                  <span class="chip">Form</span> &mdash; the crystallised part
+                  of a drawdown transfer. Omitted when that part is the whole
+                  transfer or none of it
+                </td>
+              </tr>
+              <tr>
+                <td class="el">MEMBER</td>
+                <td>Member <span class="chip">+ net_gross</span></td>
+                <td>Monthly by default; Weekly through Annually, not Single</td>
+                <td>No &mdash; enforced</td>
+                <td><span class="chip">Form</span> &mdash; Paid by Personal</td>
+              </tr>
+              <tr>
+                <td class="el">EMPLOYER</td>
+                <td>Employer</td>
+                <td>Same picker</td>
+                <td>No &mdash; enforced</td>
+                <td>
+                  <span class="chip">Form</span> &mdash; Paid by Employer. The
+                  form sends one of these two, never both
+                </td>
+              </tr>
+              <tr class="absent">
+                <td class="el">plan_stream_start / _end</td>
+                <td colspan="2">Specified start and end dates for a stream</td>
+                <td>&mdash;</td>
+                <td><span class="chip none">Not sent</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note">
+          <span class="note-label"
+            >Two rules the builder enforces so the engine never has to</span
+          >
+          <p>
+            Only <code>Transfer Value</code> and
+            <code>Existing Fund Value</code> may be crystallised, and both must
+            be <code>Single</code>. A <code>Member</code> stream without
+            <code>net_gross</code> is rejected here rather than sent incomplete
+            &mdash; that field is mandatory for member contributions and was
+            once being left out entirely.
+          </p>
+          <p>
+            Weekly through Annually are offered on a regular contribution.
+            Single is not: a one-off into the plan is the Initial payment
+            stream. The withdrawal picker is a
+            <em>different</em> list &mdash; the spec does not allow a weekly
+            withdrawal, and it does allow a single withdrawal.
+          </p>
+        </div>
+
+        <h3>premium_split &rarr; fund_split &mdash; the growth basis</h3>
+        <div class="scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Element</th>
+                <th></th>
+                <th>Spec allows</th>
+                <th>We send</th>
+                <th>Source</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="el">fund_ref</td>
+                <td class="m">M</td>
+                <td>Fund reference code</td>
+                <td>
+                  <code>MODEL</code> &mdash; a generic fund, not a CTC catalogue
+                  code
+                </td>
+                <td><span class="chip">Fixed</span></td>
+              </tr>
+              <tr>
+                <td class="el">fund_name</td>
+                <td class="m">M</td>
+                <td>The fund's name</td>
+                <td>
+                  The model's name &mdash; printed on the client's document
+                </td>
+                <td><span class="chip">Model</span></td>
+              </tr>
+              <tr>
+                <td class="el">split_amount</td>
+                <td class="m">M</td>
+                <td>
+                  Amount, or <code>split_per</code> &mdash; one style only
+                </td>
+                <td>The total of all streams</td>
+                <td><span class="chip derived">Derived</span></td>
+              </tr>
+              <tr>
+                <td class="el">rate_of_return</td>
+                <td>O</td>
+                <td><b>The mid rate</b>; the engine derives low and high</td>
+                <td>The model's target return</td>
+                <td><span class="chip">Model</span></td>
+              </tr>
+              <tr>
+                <td class="el">management_charge</td>
+                <td>O</td>
+                <td>% management charge</td>
+                <td>
+                  The model's charge &mdash; newly wired, effect unmeasured
+                </td>
+                <td><span class="chip">Model</span></td>
+              </tr>
+              <tr>
+                <td class="el">generic_fund</td>
+                <td>O</td>
+                <td>Yes when the split carries its own return or charge</td>
+                <td>Derived &mdash; Yes</td>
+                <td><span class="chip derived">Derived</span></td>
+              </tr>
+              <tr class="absent">
+                <td class="el">initial_charge</td>
+                <td>O</td>
+                <td>% initial charge on the fund</td>
+                <td>Never</td>
+                <td><span class="chip none">Not sent</span></td>
+              </tr>
+              <tr class="absent">
+                <td class="el">fund_split &times;N</td>
+                <td class="m">M</td>
+                <td>One per fund &mdash; a real allocation</td>
+                <td>One generic fund</td>
+                <td><span class="chip none">Not sent</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note">
+          <span class="note-label"
+            >One fund, not one per holding &mdash; deliberately</span
+          >
+          <p>
+            A model's allocations name <em>our</em> instruments (ISINs, Seccl
+            asset ids); <code>fund_ref</code> names a fund in
+            <em>CTC's</em> catalogue, and no mapping between the two exists.
+            Projecting the model as a single generic fund at its target return
+            is the honest version of what we can say &mdash; and CTC prints
+            <code>fund_name</code> on the document, so the client sees the
+            model's name rather than "Cash".
+          </p>
+          <p>
+            Note the spec calls <code>rate_of_return</code> the <b>mid</b> rate.
+            On an accumulation quote the printed rates were the COBS standard
+            2/5/8% regardless, so whether a supplied mid rate displaces the
+            standard one is still unmeasured &mdash; the same open question as
+            the model charge.
+          </p>
+        </div>
+
+        <h3>withdrawals &mdash; what makes it a drawdown document</h3>
+        <div class="prose">
+          <p>
+            Listed in the order the form asks, which since 09 Aug 2026 reads as
+            the sentence an adviser would say &mdash;
+            <em>how much, how often, on what basis</em>. The drawdown type led
+            until then, putting the most technical of the three first and the
+            figure the client actually asked about third.
+          </p>
+        </div>
+        <div class="scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Element</th>
+                <th></th>
+                <th>Spec allows</th>
+                <th>We send</th>
+                <th>Source</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="el">amount</td>
+                <td>O</td>
+                <td>Per frequency, when basis is Fixed</td>
+                <td>Yes &mdash; the form asks first</td>
+                <td><span class="chip">Form</span></td>
+              </tr>
+              <tr>
+                <td class="el">frequency</td>
+                <td>O</td>
+                <td>
+                  Single &middot; Monthly &middot; Quarterly &middot; Half
+                  Yearly &middot; Annually &middot; 2 Months &middot; 4 Months
+                </td>
+                <td>
+                  Five &mdash; no Weekly (the spec does not allow it here) and
+                  no multi-month options
+                </td>
+                <td><span class="chip">Form</span></td>
+              </tr>
+              <tr>
+                <td class="el">drawdown_type</td>
+                <td class="m">M</td>
+                <td>Flexible &middot; Capped &middot; UFPLS</td>
+                <td>Flexible and UFPLS &mdash; see the note below</td>
+                <td><span class="chip">Form</span></td>
+              </tr>
+              <tr>
+                <td class="el">basis</td>
+                <td>O</td>
+                <td>
+                  Fixed &middot; Maximum GAD &middot; Percentage of Maximum GAD
+                </td>
+                <td><code>Fixed</code>, derived when an amount is given</td>
+                <td><span class="chip derived">Derived</span></td>
+              </tr>
+              <tr class="absent">
+                <td class="el">percent</td>
+                <td>O</td>
+                <td>Only with Percentage of Maximum GAD</td>
+                <td>Never</td>
+                <td><span class="chip none">Not sent</span></td>
+              </tr>
+              <tr class="absent">
+                <td class="el">start_date</td>
+                <td>O</td>
+                <td><code>yyyy-mm-dd</code></td>
+                <td>Accepted by the API, absent from the form</td>
+                <td><span class="chip none">Not asked</span></td>
+              </tr>
+              <tr class="absent">
+                <td class="el">increases &rarr; percent</td>
+                <td>O</td>
+                <td>Escalation of the withdrawal</td>
+                <td>Never</td>
+                <td><span class="chip none">Not sent</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note">
+          <span class="note-label">The group that decides the layout</span>
+          <p>
+            Omitting <code>withdrawals</code> loses the entire drawdown summary
+            &mdash; annual withdrawn, exhaustion age, pre-retirement funds, term
+            length, the year-5 and year-10 values and the whole
+            reduction-in-yield block.
+            <b
+              ><code>quotation_type</code> alone does not decide the document;
+              the presence of withdrawals does.</b
+            >
+            Which is a second reason decision&nbsp;1 matters less than it looks,
+            and a reason to test both together.
+          </p>
+        </div>
+
+        <h3>adviser_fees and product_fees</h3>
+        <div class="scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Element</th>
+                <th></th>
+                <th>Spec allows</th>
+                <th>We send</th>
+                <th>Source</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="el">fee_basis</td>
+                <td class="m">M</td>
+                <td>
+                  Adviser: Initial &middot; Ongoing. Product also allows Single
+                </td>
+                <td>Both, one fee each</td>
+                <td><span class="chip">Form</span></td>
+              </tr>
+              <tr>
+                <td class="el">fee_frequency</td>
+                <td class="m">M</td>
+                <td>
+                  Single &middot; Monthly &middot; Quarterly &middot; Half
+                  Yearly &middot; <b>Yearly</b>
+                </td>
+                <td>Monthly for ongoing, Single for initial</td>
+                <td><span class="chip">Fixed</span></td>
+              </tr>
+              <tr>
+                <td class="el">fee_timing</td>
+                <td class="m">M</td>
+                <td>
+                  In Advance &middot; In Arrears &middot; Before Growth &middot;
+                  After Growth
+                </td>
+                <td>
+                  <code>In Arrears</code> for the ongoing charge,
+                  <code>In Advance</code> for the initial charge
+                </td>
+                <td><span class="chip">Fixed</span></td>
+              </tr>
+              <tr>
+                <td class="el">fee_value_rate</td>
+                <td class="m">M</td>
+                <td>Per Annum &middot; Per Frequency</td>
+                <td>
+                  <code>Per Annum</code> for the ongoing percentage,
+                  <code>Per Frequency</code> for the initial amount
+                </td>
+                <td><span class="chip">Fixed</span></td>
+              </tr>
+              <tr>
+                <td class="el">stream_applicable</td>
+                <td class="m">M for Initial</td>
+                <td>The stream the fee attaches to</td>
+                <td>
+                  The initial payment, else the transfer, else the existing fund
+                  &mdash; always a Single stream, never a regular contribution
+                </td>
+                <td><span class="chip derived">Derived</span></td>
+              </tr>
+              <tr>
+                <td class="el">fee_start / fee_end</td>
+                <td class="m">M</td>
+                <td>Immediately / Specified Date; Maturity / Specified Date</td>
+                <td>Yes</td>
+                <td><span class="chip">Fixed</span></td>
+              </tr>
+              <tr class="absent">
+                <td class="el">plus_vat</td>
+                <td>O</td>
+                <td>Yes &middot; No</td>
+                <td>Only when set &mdash; the form never sets it</td>
+                <td><span class="chip none">Not asked</span></td>
+              </tr>
+              <tr class="absent">
+                <td class="el">fee_tiers / fee_tier_selection</td>
+                <td>O</td>
+                <td>Tiered charges by threshold</td>
+                <td>Never &mdash; flat fees only</td>
+                <td><span class="chip none">Not sent</span></td>
+              </tr>
+              <tr class="absent">
+                <td class="el">product_fees</td>
+                <td>O</td>
+                <td>The product's own charges</td>
+                <td><b>Never</b></td>
+                <td><span class="chip none">Not sent</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note">
+          <span class="note-label"
+            >Three things about fees worth knowing before anyone "fixes"
+            them</span
+          >
+          <p>
+            <b
+              >Under <code>nodb=true</code> there is no standing-data
+              fallback.</b
+            >
+            The spec warns that omitting <code>product_fees</code> makes the
+            engine use the provider's standard charges &mdash; with no database
+            attached it charges <b>zero</b> instead. So in our mode omission
+            means "no product fees", not "default fees". If we ever move off
+            <code>nodb=true</code> that reverses, and a partial fee list becomes
+            dangerous.
+          </p>
+          <p>
+            The spec's adviser-fee frequency list says <b>"Yearly"</b> where
+            every other list in the document says "Annually". We never hit it
+            &mdash; the form does not offer a frequency for adviser fees &mdash;
+            but anything that later lets an adviser pick one has to send the
+            spelling this table uses, not the one from <code>plan_stream</code>.
+          </p>
+          <p>
+            The initial charge is a one-off pound amount.
+            <code>Per Annum</code> tells the engine the figure is an annual
+            rate, and binding it to a monthly contribution stream is what made
+            the PDF print <b>Initial adviser charge</b> as monthly. It is
+            <code>Per Frequency</code>, <code>Single</code>,
+            <code>In Advance</code>, and it names a Single stream: the initial
+            payment, else the transfer, else the existing fund. The ongoing
+            percentage stays <code>Monthly</code>, <code>In Arrears</code>,
+            <code>Per Annum</code>, and is not stream-bound.
+          </p>
+        </div>
+
+        <h3>annuity_basis &mdash; now a house constant</h3>
+        <div class="prose">
+          <p>
+            The full table is in the shipped-changes section above, with the
+            bias of each choice stated. In short: the group is always sent, on a
+            level single-life monthly-in-advance basis, and
+            <code>include_annuity_basis: false</code> is the only way to omit
+            it.
+          </p>
+        </div>
+        <div class="note">
+          <span class="note-label"
+            >The element name, settled by measurement rather than by the
+            spec</span
+          >
+          <p>
+            The spec's table calls the node <code>&lt;annuity_basis&gt;</code>;
+            both of its own examples show <code>&lt;annuity&gt;</code>. We emit
+            <code>&lt;annuity_basis&gt;</code>
+            &mdash; and the measured income column proves it is the one the
+            engine reads, because sending it is what filled the column in. Worth
+            recording, since CTC answers a rejected element with HTTP 200 and
+            would not have told us.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================ FORM VS SPEC ============================ -->
+      <section id="form-vs-spec">
+        <h2>What the form offers against what the spec allows</h2>
+        <div class="prose">
+          <p>
+            The short version of every picker on the form, and the options
+            deliberately left out of each. Two of these are worth revisiting;
+            the rest are settled.
+          </p>
+        </div>
+        <div class="scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Control</th>
+                <th>Spec's full set</th>
+                <th>The form offers</th>
+                <th>Left out because</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="lead">Basis (quotation type)</td>
+                <td>
+                  Accumulation &middot; Drawdown &middot; Flexi Access Drawdown
+                  &middot; SMPI
+                </td>
+                <td>
+                  Accumulation &middot; "Drawdown" &rarr;
+                  <code>Flexi Access Drawdown</code>
+                </td>
+                <td>
+                  SMPI is a statutory statement, not a quote; plain
+                  <code>Drawdown</code> is dropped as capped drawdown, closed to
+                  new members since 2015
+                </td>
+              </tr>
+              <tr>
+                <td class="lead">Drawdown type</td>
+                <td>Flexible &middot; Capped &middot; UFPLS</td>
+                <td><code>Flexible</code> labelled FAD &middot; UFPLS</td>
+                <td>
+                  Capped is closed to new members and needs three fields we
+                  never send. The value stays CTC's Flexible
+                </td>
+              </tr>
+              <tr>
+                <td class="lead">Contribution frequency</td>
+                <td>
+                  Weekly &middot; Monthly &middot; Quarterly &middot; Half
+                  Yearly &middot; Annually &middot; Single
+                </td>
+                <td>Weekly through Annually</td>
+                <td>
+                  Single is the Initial payment, its own stream, not a frequency
+                  on a regular contribution
+                </td>
+              </tr>
+              <tr>
+                <td class="lead">Contributions</td>
+                <td>
+                  Member &middot; Employer &middot; Transfer Value &middot;
+                  Existing Fund Value
+                </td>
+                <td>
+                  One amount and one frequency, with a Personal / Employer
+                  switch
+                </td>
+                <td>
+                  The switch picks which stream that single amount is. Transfer
+                  and the existing fund are their own sections
+                </td>
+              </tr>
+              <tr>
+                <td class="lead">Net / gross</td>
+                <td>Net &middot; Gross</td>
+                <td>Both, personal only</td>
+                <td>
+                  Relief at source applies to the member's own money; an
+                  employer contribution has no net figure
+                </td>
+              </tr>
+              <tr>
+                <td class="lead">Withdrawal frequency</td>
+                <td>
+                  Seven &mdash; and <b>no Weekly</b>: Single, Monthly,
+                  Quarterly, Half Yearly, Annually, 2 Months, 4 Months
+                </td>
+                <td>Five</td>
+                <td>
+                  Two-monthly and four-monthly income are not offered by the
+                  scheme. A separate list from the contribution one since 09 Aug
+                  &mdash; sharing it would have offered Weekly here too
+                </td>
+              </tr>
+              <tr>
+                <td class="lead">Escalation</td>
+                <td>Fixed &middot; Level &middot; LPI &middot; RPI</td>
+                <td class="lead">Not asked</td>
+                <td>
+                  Fixed at <code>Level</code> in the house basis &mdash; a firm
+                  assumption, not a client question
+                </td>
+              </tr>
+              <tr>
+                <td class="lead">Client type</td>
+                <td>Individual &middot; Company &middot; Trust</td>
+                <td>Not asked &mdash; read from the record</td>
+                <td>Trust is never sent, which rules out SSAS illustrations</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="open">
+        <h2>Still open, worst first</h2>
+        <div class="prose">
+          <p>
+            Everything below is a live discrepancy between what the spec offers,
+            what the code sends, and what a client would see on the document.
+            Ranked by what it does to a KFI rather than by how hard it is to fix
+            &mdash; the first two change figures a client reads.
+          </p>
+        </div>
+
+        <div class="scroll">
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th>Issue</th>
+                <th>What the client sees</th>
+                <th>Fix</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="pick">
+                <td class="el">1</td>
+                <td class="lead"><code>product_fees</code> is never sent</td>
+                <td>
+                  <b
+                    >The scheme's own charges are missing from every
+                    illustration.</b
+                  >
+                  Under <code>nodb=true</code> there is no standing-data
+                  fallback &mdash; the spec says omission falls back to the
+                  provider's standard charges, but with no database attached the
+                  engine charges <b>zero</b>. So the projection is net of
+                  adviser fees only, and understates the true cost.
+                </td>
+                <td>
+                  Send the scheme charges. Note the group is
+                  <b>all-or-nothing</b>: a partial list replaces the lot.
+                </td>
+              </tr>
+              <tr class="pick">
+                <td class="el">2</td>
+                <td class="lead">
+                  The <code>crystallisation</code> group is never sent
+                </td>
+                <td>
+                  <b>No tax-free-cash figure on a drawdown quote.</b> TFC was
+                  inferred from <code>crystallised="Yes"</code> on a stream
+                  instead, which is a different thing &mdash; and is why the
+                  figure came back missing on the
+                  <code>drawdown_flexible</code> run.
+                </td>
+                <td>
+                  Send the group; it is a separate one from
+                  <code>withdrawals</code>.
+                </td>
+              </tr>
+              <tr>
+                <td class="el">3</td>
+                <td class="lead">Two growth inputs, neither measured</td>
+                <td>
+                  Unknown. The model's <code>management_charge</code> is newly
+                  sent and nothing has confirmed CTC applies it; separately, an
+                  accumulation quote printed the COBS standard 2/5/8% regardless
+                  of our <code>rate_of_return</code>. The spec calls that field
+                  the <b>mid</b> rate, so whether ours displaces the standard
+                  middle rate is undecided.
+                </td>
+                <td>
+                  One calibration run each, with and without, on the same
+                  scenario.
+                </td>
+              </tr>
+              <tr>
+                <td class="el">4</td>
+                <td class="lead">
+                  <code>plus_vat</code> is never set on an adviser fee
+                </td>
+                <td>
+                  Adviser charges are projected without VAT. For a firm whose
+                  ongoing charge is VATable, the cost is understated by a fifth.
+                </td>
+                <td>
+                  Ask on the form, or take it from the fee package &mdash; the
+                  catalogue already models <code>vatable</code>.
+                </td>
+              </tr>
+              <tr>
+                <td class="el">5</td>
+                <td class="lead"><code>quotation_type</code> is unvalidated</td>
+                <td>
+                  Nothing today. It is the one closed vocabulary not put through
+                  <code>_one_of</code>, and CTC answers a bad value with HTTP
+                  200, so a later typo would look like a successful run.
+                </td>
+                <td>Add the four values as a checked vocabulary.</td>
+              </tr>
+              <tr>
+                <td class="el">6</td>
+                <td class="lead">
+                  Adviser fees say <b>"Yearly"</b>, everything else says
+                  "Annually"
+                </td>
+                <td>
+                  Nothing today &mdash; the form does not offer a frequency for
+                  adviser fees. It becomes a silent rejection the moment it
+                  does.
+                </td>
+                <td>
+                  Use the adviser-fee table's spelling, not
+                  <code>plan_stream</code>'s, if that picker is ever added.
+                </td>
+              </tr>
+              <tr>
+                <td class="el">7</td>
+                <td class="lead">
+                  <code>withdrawal_start_date</code> is accepted but never asked
+                </td>
+                <td>
+                  Income is projected as starting immediately. For a client
+                  deferring drawdown, the projection is wrong from year one.
+                </td>
+                <td>
+                  One field in the Income section; the API already takes it.
+                </td>
+              </tr>
+              <tr>
+                <td class="el">8</td>
+                <td class="lead">
+                  Only one <code>investor</code>, always
+                  <code>Individual</code> or <code>Company</code>
+                </td>
+                <td>
+                  No spouse, dependant or multi-life illustrations, and
+                  <b>no SSAS</b> &mdash; <code>Trust</code> is never sent even
+                  though the spec allows it and the wrapper list includes SSAS.
+                </td>
+                <td>
+                  The record holds relationships already; the group repeats.
+                </td>
+              </tr>
+              <tr>
+                <td class="el">9</td>
+                <td class="lead">One generic fund, not a real allocation</td>
+                <td>
+                  The client sees the model's name rather than its holdings.
+                  Honest, but less than the spec allows.
+                </td>
+                <td>
+                  Blocked: no mapping from our instruments to CTC's fund
+                  catalogue.
+                </td>
+              </tr>
+              <tr>
+                <td class="el">10</td>
+                <td class="lead">
+                  Flat fees only &mdash; no <code>fee_tiers</code>
+                </td>
+                <td>
+                  A tiered charge is projected at a single rate. Seccl's
+                  register already publishes tiers, so the data exists and the
+                  request cannot carry it.
+                </td>
+                <td>
+                  The builder needs the tier shape; the spec's is a list of
+                  upper bounds.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note">
+          <span class="note-label">One follow-up that is already done</span>
+          <p>
+            <code>illustrations-report.md</code> &sect;8 still lists "validate
+            <code>exit_age</code> against DOB before calling CTC" as the
+            <b>highest priority</b> open item. It is built &mdash;
+            <code>xml_builder.Investor._check_exit_age</code> refuses a
+            retirement age that is not in the future, and one above
+            <code>MAX_EXIT_AGE</code>. A drawdown illustration for someone
+            already past that age is still produced: the quote runs to age 99
+            (<code>projection_exit_age</code>), and the recorded retirement age
+            is left as it is. The report is stale on that line, not the code.
+          </p>
+        </div>
+      </section>
+
+      <footer>
+        <p>
+          Read against <span class="mono">XML_v1.6_Bespoke.pdf</span> (the
+          vendor spec, including the <code>adviser_fees</code>,
+          <code>annuity_basis</code> and <code>results</code> pages that
+          <span class="mono">ctc-xml-schema.md</span> records as never
+          transcribed), the measured findings in
+          <span class="mono">illustrations-report.md</span> and
+          <span class="mono">ctc-xml-schema.md</span> &sect;12, and the code in
+          <span class="mono">app/integrations/ctc/xml_builder.py</span>,
+          <span class="mono">app/routers/illustrations.py</span> and
+          <span class="mono">apps/platform/src/lib/illustrations/form.ts</span>.
+          What we send was read from the builder, not from the documentation
+          describing it.
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

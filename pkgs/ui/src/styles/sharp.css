@@ -1,0 +1,69 @@
+/**
+ * The SHARP surface preset — the staff-tool look for the platform and admin portals.
+ *
+ * Import AFTER theme.css. It only reassigns tokens theme.css already reads, so no component or
+ * call site changes and nothing here has to be kept in sync with a utility body:
+ *
+ *   @import 'tailwindcss';
+ *   @import '@graphene/ui/theme.css';
+ *   @import '@graphene/ui/sharp.css';
+ *
+ * WHY: the glass treatment (a 20px backdrop blur with saturate(235%) brightness(1.12)
+ * contrast(1.1), specular sheen gradients, and three brand-coloured radial washes behind it) reads
+ * as refraction and mottled colour. On a marketing surface or the client portal that's atmosphere.
+ * On a tool an adviser reads all day it fights the data: text sits on a moving backdrop, and the
+ * washes tint the same card differently depending on where it lands on the page.
+ *
+ * So platform and admin get: opaque surfaces, a flat canvas, one honest hairline per edge, tighter
+ * corners, and shadows that describe a lift rather than a glow. The CLIENT portal deliberately does
+ * NOT import this — it keeps the glass look.
+ *
+ * Anything token-driven follows automatically. `hero-surface` is untouched on purpose: it is the one
+ * deliberate dark anchor per screen (docs/design-language.md) and is a flat ink gradient already,
+ * not a glass effect.
+ */
+
+:root {
+	/* ── No refraction ────────────────────────────────────────────────────────────────────────
+	   theme.css documents this exact combination as the way to turn glass into solid surfaces.
+	   blur 0 removes the lensing; tint 100% makes the fills fully opaque so nothing shows
+	   through; sheen 0 zeroes --glass-sheen and --glass-highlight, which collapses both the
+	   specular background-image gradients and the inset "lit edge" box-shadows to transparent. */
+	--glass-blur: 0px;
+	--glass-tint: 100%;
+	--glass-panel-tint: 100%;
+	--glass-sheen-strength: 0;
+
+	/* ── No splodges ──────────────────────────────────────────────────────────────────────────
+	   Collapses the three ambient radial washes; the canvas becomes a flat --background. */
+	--glass-canvas-strength: 0;
+
+	/* ── Bold edges ───────────────────────────────────────────────────────────────────────────
+	   With no blur or sheen, the border is the only thing separating a surface from the canvas,
+	   so it has to carry real weight. 10% reads as a smudge once the glow is gone. */
+	--glass-border: color-mix(in oklch, var(--foreground) 20%, transparent);
+
+	/* ── Sharp corners ───────────────────────────────────────────────────────────────────────
+	   0.75rem is a consumer radius. The derived --radius-sm/md/lg/xl scale off this. */
+	--radius: 0.25rem;
+
+	/* ── Definite shadows ────────────────────────────────────────────────────────────────────
+	   Tighter and less diffuse: y-offset dominant with a short blur, so a raised surface reads as
+	   a sheet with an edge rather than something emitting light. */
+	--glass-shadow: 0 2px 6px -2px oklch(0.25 0.04 256 / 0.18);
+	--elev-1: 0 1px 2px 0 oklch(0.25 0.04 256 / 0.1);
+	--elev-2: 0 2px 4px -1px oklch(0.25 0.04 256 / 0.14), 0 1px 0 0 oklch(0.25 0.04 256 / 0.06);
+	--elev-3: 0 6px 12px -4px oklch(0.25 0.04 256 / 0.18), 0 1px 0 0 oklch(0.25 0.04 256 / 0.08);
+	--hero-shadow: 0 4px 12px -4px oklch(0.2 0.04 256 / 0.3);
+}
+
+.dark {
+	/* On a dark canvas a light-tinted shadow reads as haze, so depth comes from the border and a
+	   darker, tighter shadow (the same reasoning theme.css applies to its own dark elevations). */
+	--glass-border: oklch(1 0 0 / 0.2);
+	--glass-shadow: 0 2px 6px -2px oklch(0 0 0 / 0.5);
+	--elev-1: 0 1px 2px 0 oklch(0 0 0 / 0.4);
+	--elev-2: 0 2px 4px -1px oklch(0 0 0 / 0.5), 0 1px 0 0 oklch(0 0 0 / 0.3);
+	--elev-3: 0 6px 12px -4px oklch(0 0 0 / 0.55), 0 1px 0 0 oklch(0 0 0 / 0.35);
+	--hero-shadow: 0 4px 12px -4px oklch(0 0 0 / 0.6);
+}

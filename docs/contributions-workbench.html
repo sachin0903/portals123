@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Graphene — Contributions Workbench (prototype)</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
+:root {
+  color-scheme: light;
+  --g-navy: #193560;
+  --g-navy-dark: #0B1D34;
+  --g-teal: #006388;
+  --g-teal-08: rgba(0, 99, 136, 0.08);
+  --g-teal-14: rgba(0, 99, 136, 0.14);
+  --g-blue: #1863DC;
+  --g-blue-soft: #E8F0FD;
+  --g-purple: #5B2C83;
+  --g-purple-soft: #EFE3F5;
+  --g-text: #212121;
+  --g-text-muted: #4A5568;
+  --g-text-light: #8896A6;
+  --g-bg-page: #F4F4F4;
+  --g-bg-card: #FFFFFF;
+  --g-border: #E3E6EB;
+  --g-danger: #C1272D;
+  --g-danger-soft: #FDECEC;
+  --g-warn: #C58B00;
+  --g-warn-soft: #FFF6DF;
+  --g-success: #1F7A3D;
+  --g-success-soft: #E2F4E8;
+  --g-orange: #C05628;
+  --g-orange-soft: #FCE4CC;
+  --g-font-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --g-font-display: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --g-mono: "SF Mono", Consolas, "Liberation Mono", monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--g-font-body); background: var(--g-bg-page); color: var(--g-text); line-height: 1.45; font-size: 14px; -webkit-font-smoothing: antialiased; }
+code { font-family: var(--g-mono); font-size: 0.9em; background: rgba(0,99,136,0.07); padding: 1px 5px; border-radius: 3px; color: var(--g-teal); }
+.mono { font-family: var(--g-mono); }
+a { color: var(--g-blue); }
+
+/* ---- HEADER ---- */
+header { background: linear-gradient(135deg, var(--g-navy-dark) 0%, var(--g-navy) 55%, var(--g-teal) 100%); color: white; padding: 20px 32px 22px; position: relative; overflow: hidden; }
+header::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 85% 30%, rgba(0,99,136,0.35) 0, transparent 55%); pointer-events: none; }
+.brand-logo { display: block; height: 28px; width: auto; margin-bottom: 12px; }
+header h1 { font-family: var(--g-font-display); font-size: 22px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.15; display: flex; align-items: center; gap: 12px; }
+.proto-tag { font-family: var(--g-font-body); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; background: rgba(255,255,255,0.16); border: 1px solid rgba(255,255,255,0.3); padding: 3px 9px; border-radius: 20px; }
+header .sub { font-size: 13px; opacity: 0.92; margin-top: 6px; font-weight: 400; max-width: 1040px; }
+.meta-bar { display: flex; gap: 22px; padding: 11px 32px; background: var(--g-bg-card); border-bottom: 1px solid var(--g-border); font-size: 12px; color: var(--g-text-muted); flex-wrap: wrap; align-items: center; }
+.meta-bar span strong { color: var(--g-navy); font-weight: 600; }
+.meta-bar .scheme-pill { background: var(--g-teal-08); color: var(--g-teal); padding: 3px 10px; border-radius: 6px; font-weight: 600; font-family: var(--g-mono); font-size: 11px; }
+
+/* ---- TABS ---- */
+nav.tabs { display: flex; background: var(--g-bg-card); border-bottom: 1px solid var(--g-border); padding: 0 22px; flex-wrap: wrap; position: sticky; top: 0; z-index: 30; }
+nav.tabs button { background: transparent; border: none; padding: 13px 16px; font-family: var(--g-font-body); font-size: 13px; font-weight: 600; color: var(--g-text-muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s; display: flex; align-items: center; gap: 7px; }
+nav.tabs button:hover { color: var(--g-teal); }
+nav.tabs button.active { color: var(--g-navy); border-bottom-color: var(--g-teal); }
+nav.tabs button .tab-count { background: var(--g-teal-08); color: var(--g-teal); font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 9px; min-width: 18px; text-align: center; }
+nav.tabs button.active .tab-count { background: var(--g-teal); color: white; }
+nav.tabs button .tab-count.warn { background: var(--g-warn-soft); color: #7A5600; }
+nav.tabs button .tab-count.danger { background: var(--g-danger-soft); color: var(--g-danger); }
+
+main { padding: 22px 28px 70px; max-width: 1640px; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+h2.section-title { font-family: var(--g-font-display); font-size: 18px; font-weight: 700; margin: 4px 0 8px; color: var(--g-navy); letter-spacing: -0.01em; }
+h3.sub-title { font-family: var(--g-font-display); font-size: 12px; font-weight: 700; margin: 22px 0 10px; color: var(--g-teal); text-transform: uppercase; letter-spacing: 0.07em; }
+.intro { font-size: 13px; color: var(--g-text-muted); margin-bottom: 14px; max-width: 1080px; line-height: 1.55; }
+.intro strong { color: var(--g-navy); font-weight: 600; }
+
+/* ---- ALERTS ---- */
+.alert { background: var(--g-warn-soft); border: 1px solid var(--g-warn); border-left: 4px solid var(--g-warn); border-radius: 6px; padding: 11px 15px; font-size: 12.5px; margin-bottom: 14px; color: var(--g-text); line-height: 1.5; }
+.alert strong { color: #7A5600; }
+.alert.info { background: var(--g-teal-08); border-color: var(--g-teal); }
+.alert.info strong { color: var(--g-teal); }
+.alert.danger { background: var(--g-danger-soft); border-color: var(--g-danger); }
+.alert.danger strong { color: var(--g-danger); }
+.alert.ok { background: var(--g-success-soft); border-color: var(--g-success); }
+.alert.ok strong { color: var(--g-success); }
+
+/* ---- KPI STRIP ---- */
+.kpi-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 18px; }
+.kpi { background: var(--g-bg-card); border: 1px solid var(--g-border); border-radius: 8px; padding: 13px 15px; box-shadow: 0 1px 2px rgba(11,29,52,0.04); border-top: 3px solid var(--g-navy); }
+.kpi.teal { border-top-color: var(--g-teal); }
+.kpi.warn { border-top-color: var(--g-warn); }
+.kpi.danger { border-top-color: var(--g-danger); }
+.kpi.success { border-top-color: var(--g-success); }
+.kpi.blue { border-top-color: var(--g-blue); }
+.kpi .kpi-label { font-size: 10.5px; color: var(--g-text-light); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+.kpi .kpi-value { font-family: var(--g-font-display); font-size: 25px; font-weight: 800; letter-spacing: -0.02em; color: var(--g-navy); margin-top: 3px; }
+.kpi .kpi-value small { font-size: 13px; font-weight: 600; color: var(--g-text-light); }
+.kpi .kpi-sub { font-size: 11px; color: var(--g-text-muted); margin-top: 3px; }
+.kpi .kpi-sub.up { color: var(--g-success); }
+.kpi .kpi-sub.alert { color: var(--g-danger); font-weight: 600; }
+
+/* ---- PIPELINE ---- */
+.pipeline { display: flex; gap: 0; background: var(--g-bg-card); border: 1px solid var(--g-border); border-radius: 8px; padding: 6px; margin-bottom: 18px; overflow-x: auto; box-shadow: 0 1px 2px rgba(11,29,52,0.04); }
+.pl-stage { flex: 1; min-width: 118px; position: relative; padding: 10px 8px 10px 22px; cursor: pointer; border-radius: 6px; transition: background 0.12s; }
+.pl-stage:hover { background: #FAFBFC; }
+.pl-stage.sel { background: var(--g-teal-08); }
+.pl-stage::before { content: ""; position: absolute; right: -1px; top: 14px; bottom: 14px; width: 1px; background: var(--g-border); }
+.pl-stage:last-child::before { display: none; }
+.pl-arrow { position: absolute; left: 4px; top: 50%; transform: translateY(-50%); color: var(--g-text-light); font-size: 13px; }
+.pl-stage:first-child .pl-arrow { display: none; }
+.pl-num { font-family: var(--g-font-display); font-size: 22px; font-weight: 800; color: var(--g-navy); letter-spacing: -0.02em; }
+.pl-name { font-size: 10.5px; font-weight: 700; color: var(--g-text-muted); text-transform: uppercase; letter-spacing: 0.03em; margin-top: 1px; line-height: 1.25; }
+.pl-actor { font-size: 9.5px; color: var(--g-text-light); margin-top: 2px; font-weight: 600; }
+.pl-stage.is-manual .pl-name { color: var(--g-orange); }
+.pl-stage.is-relief .pl-num { color: var(--g-teal); }
+
+/* ---- WORKBENCH LAYOUT ---- */
+.wb-layout { display: grid; grid-template-columns: 1fr 392px; gap: 16px; align-items: start; }
+@media (max-width: 1240px) { .wb-layout { grid-template-columns: 1fr; } }
+
+.panel { background: var(--g-bg-card); border: 1px solid var(--g-border); border-radius: 8px; box-shadow: 0 1px 2px rgba(11,29,52,0.04); }
+.panel-head { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--g-border); }
+.panel-head h3 { font-family: var(--g-font-display); font-size: 14px; font-weight: 700; color: var(--g-navy); }
+.panel-head .ph-right { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+.toolbar { display: flex; gap: 8px; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--g-border); flex-wrap: wrap; background: #FAFBFC; }
+.search { flex: 1; min-width: 160px; position: relative; }
+.search input { width: 100%; padding: 7px 10px 7px 30px; border: 1px solid var(--g-border); border-radius: 6px; font-family: var(--g-font-body); font-size: 12.5px; background: white; }
+.search input:focus { outline: none; border-color: var(--g-teal); box-shadow: 0 0 0 3px var(--g-teal-08); }
+.search svg { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: var(--g-text-light); }
+.filter-chip { font-size: 11.5px; font-weight: 600; color: var(--g-text-muted); padding: 6px 11px; border: 1px solid var(--g-border); border-radius: 16px; cursor: pointer; background: white; white-space: nowrap; }
+.filter-chip:hover { border-color: var(--g-teal); color: var(--g-teal); }
+.filter-chip.active { background: var(--g-navy); border-color: var(--g-navy); color: white; }
+
+/* ---- TABLE ---- */
+.tbl-scroll { overflow-x: auto; }
+table.wb { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+table.wb th, table.wb td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--g-border); vertical-align: middle; white-space: nowrap; }
+table.wb th { background: #FAFBFC; font-family: var(--g-font-display); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--g-text-muted); font-weight: 700; position: sticky; top: 0; }
+table.wb td.num, table.wb th.num { text-align: right; font-family: var(--g-mono); font-weight: 600; }
+table.wb tbody tr { cursor: pointer; transition: background 0.1s; }
+table.wb tbody tr:hover { background: var(--g-teal-08); }
+table.wb tbody tr.sel { background: var(--g-blue-soft); box-shadow: inset 3px 0 0 var(--g-blue); }
+table.wb tbody tr.row-manual { background: var(--g-danger-soft); }
+table.wb tbody tr.row-manual:hover { background: #FBDEDE; }
+.member { font-weight: 600; color: var(--g-navy); }
+.member small { display: block; font-weight: 500; color: var(--g-text-light); font-size: 10.5px; font-family: var(--g-mono); }
+.amt-gross { color: var(--g-text-light); font-size: 11px; font-weight: 500; }
+
+/* ---- PILLS / CHIPS ---- */
+.pill { display: inline-block; padding: 2px 8px; border-radius: 9px; font-size: 10px; font-weight: 700; white-space: nowrap; letter-spacing: 0.02em; }
+.type-personal { background: var(--g-blue-soft); color: var(--g-blue); }
+.type-employer { background: var(--g-purple-soft); color: var(--g-purple); }
+.freq { font-size: 9.5px; color: var(--g-text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+.tax-year { font-family: var(--g-mono); font-size: 11px; color: var(--g-text-muted); font-weight: 600; }
+
+/* status chips reflect pensions.contribution_status enum */
+.st { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 20px; font-size: 10.5px; font-weight: 600; white-space: nowrap; }
+.st::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+.st-identified { background: #EEF1F5; color: var(--g-text-muted); }
+.st-awaiting_confirmation { background: var(--g-warn-soft); color: #8A6200; }
+.st-confirmed { background: var(--g-blue-soft); color: var(--g-blue); }
+.st-ml_recorded { background: var(--g-teal-08); color: var(--g-teal); }
+.st-ras_applied { background: var(--g-teal-14); color: var(--g-teal); }
+.st-ras_received { background: #DDEBE0; color: #2C7A48; }
+.st-tax_relief_received { background: var(--g-success-soft); color: var(--g-success); }
+.st-reconciled { background: var(--g-success); color: white; }
+.st-reconciled::before { background: white; }
+.st-manual_intervention { background: var(--g-danger-soft); color: var(--g-danger); }
+
+/* ---- CLASSIFY PANEL ---- */
+.cl-empty { padding: 46px 24px; text-align: center; color: var(--g-text-light); font-size: 13px; }
+.cl-empty svg { width: 40px; height: 40px; opacity: 0.4; margin-bottom: 12px; }
+.cl-body { padding: 0; }
+.cl-member { padding: 14px 16px; border-bottom: 1px solid var(--g-border); background: linear-gradient(180deg,#FAFBFC,#fff); }
+.cl-member .cl-name { font-family: var(--g-font-display); font-size: 16px; font-weight: 700; color: var(--g-navy); }
+.cl-member .cl-ids { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+.cl-id { font-family: var(--g-mono); font-size: 10.5px; background: white; border: 1px solid var(--g-border); border-radius: 5px; padding: 2px 7px; color: var(--g-text-muted); }
+.cl-id b { color: var(--g-navy); }
+.cl-section { padding: 14px 16px; border-bottom: 1px solid var(--g-border); }
+.cl-section h4 { font-size: 10.5px; color: var(--g-text-light); font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 9px; }
+.fld { margin-bottom: 11px; }
+.fld:last-child { margin-bottom: 0; }
+.fld label { display: block; font-size: 11px; color: var(--g-text-muted); font-weight: 600; margin-bottom: 4px; }
+.seg { display: flex; border: 1px solid var(--g-border); border-radius: 7px; overflow: hidden; }
+.seg button { flex: 1; padding: 7px 6px; font-family: var(--g-font-body); font-size: 11.5px; font-weight: 600; color: var(--g-text-muted); background: white; border: none; cursor: pointer; border-right: 1px solid var(--g-border); transition: all 0.12s; }
+.seg button:last-child { border-right: none; }
+.seg button:hover { background: #FAFBFC; }
+.seg button.on { background: var(--g-navy); color: white; }
+.seg.teal button.on { background: var(--g-teal); }
+.fld select, .fld input { width: 100%; padding: 7px 9px; border: 1px solid var(--g-border); border-radius: 6px; font-family: var(--g-font-body); font-size: 12.5px; background: white; }
+.fld select:focus, .fld input:focus { outline: none; border-color: var(--g-teal); box-shadow: 0 0 0 3px var(--g-teal-08); }
+
+/* gross-up calc */
+.grossup { background: var(--g-teal-08); border: 1px solid var(--g-teal-14); border-radius: 8px; padding: 12px 14px; }
+.grossup.na { background: #F4F4F4; border-color: var(--g-border); }
+.gu-row { display: flex; justify-content: space-between; align-items: baseline; padding: 4px 0; font-size: 13px; }
+.gu-row .gu-lbl { color: var(--g-text-muted); }
+.gu-row .gu-val { font-family: var(--g-mono); font-weight: 700; color: var(--g-navy); }
+.gu-row.gu-relief .gu-val { color: var(--g-teal); }
+.gu-row.gu-total { border-top: 1px dashed var(--g-teal); margin-top: 5px; padding-top: 8px; }
+.gu-row.gu-total .gu-lbl { font-weight: 700; color: var(--g-navy); }
+.gu-row.gu-total .gu-val { font-size: 16px; color: var(--g-navy); }
+.gu-formula { font-size: 10.5px; color: var(--g-text-light); margin-top: 7px; line-height: 1.4; }
+
+.cl-actions { padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.btn { padding: 9px 14px; border-radius: 7px; font-family: var(--g-font-body); font-size: 12.5px; font-weight: 600; cursor: pointer; border: 1px solid transparent; display: flex; align-items: center; justify-content: center; gap: 7px; transition: all 0.12s; }
+.btn-primary { background: var(--g-teal); color: white; }
+.btn-primary:hover { background: #00557A; }
+.btn-secondary { background: white; color: var(--g-navy); border-color: var(--g-border); }
+.btn-secondary:hover { border-color: var(--g-navy); }
+.btn-danger { background: white; color: var(--g-danger); border-color: var(--g-danger-soft); }
+.btn-danger:hover { background: var(--g-danger-soft); }
+.btn .api-hint { font-family: var(--g-mono); font-size: 10px; opacity: 0.8; font-weight: 500; }
+
+/* ---- GENERIC GT TABLE ---- */
+table.gt { width: 100%; border-collapse: collapse; background: var(--g-bg-card); border: 1px solid var(--g-border); border-radius: 8px; overflow: hidden; font-size: 12.5px; margin-bottom: 14px; box-shadow: 0 1px 2px rgba(11,29,52,0.04); }
+table.gt th, table.gt td { padding: 10px 13px; text-align: left; border-bottom: 1px solid var(--g-border); vertical-align: top; }
+table.gt th { background: #FAFBFC; font-family: var(--g-font-display); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--g-text-muted); font-weight: 700; }
+table.gt td.num, table.gt th.num { text-align: right; font-family: var(--g-mono); font-weight: 600; }
+table.gt tr:last-child td { border-bottom: none; }
+table.gt tr.total-row td { background: var(--g-navy); color: white; font-weight: 700; font-family: var(--g-font-display); }
+table.gt tr.total-row td.num { color: white; }
+table.gt tbody tr:hover { background: #FAFBFC; }
+
+/* ---- RAS BATCH CARDS ---- */
+.batch-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 14px; margin-bottom: 18px; }
+.batch { background: var(--g-bg-card); border: 1px solid var(--g-border); border-radius: 8px; box-shadow: 0 1px 2px rgba(11,29,52,0.04); overflow: hidden; }
+.batch-head { padding: 13px 16px; border-bottom: 1px solid var(--g-border); display: flex; align-items: center; gap: 10px; }
+.batch-head .b-period { font-family: var(--g-font-display); font-size: 15px; font-weight: 700; color: var(--g-navy); }
+.batch-head .b-state { margin-left: auto; }
+.batch.cur { border-top: 3px solid var(--g-teal); }
+.batch-body { padding: 14px 16px; }
+.b-figs { display: flex; gap: 18px; margin-bottom: 12px; }
+.b-fig .bf-lbl { font-size: 10px; color: var(--g-text-light); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+.b-fig .bf-val { font-family: var(--g-font-display); font-size: 19px; font-weight: 800; color: var(--g-navy); letter-spacing: -0.01em; }
+.b-fig .bf-val.relief { color: var(--g-teal); }
+
+/* RAS mini-timeline */
+.ras-track { display: flex; flex-direction: column; gap: 0; margin-top: 4px; }
+.ras-step { display: flex; gap: 10px; position: relative; padding-bottom: 13px; }
+.ras-step:last-child { padding-bottom: 0; }
+.ras-step::before { content: ""; position: absolute; left: 8px; top: 18px; bottom: -2px; width: 2px; background: var(--g-border); }
+.ras-step:last-child::before { display: none; }
+.ras-step.done::before { background: var(--g-success); }
+.rs-dot { width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0; border: 2px solid var(--g-border); background: white; display: flex; align-items: center; justify-content: center; font-size: 10px; color: white; z-index: 1; }
+.ras-step.done .rs-dot { background: var(--g-success); border-color: var(--g-success); }
+.ras-step.cur .rs-dot { background: var(--g-teal); border-color: var(--g-teal); animation: pulse 1.8s infinite; }
+.ras-step.wait .rs-dot { border-style: dashed; }
+@keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(0,99,136,0.4);} 50% { box-shadow: 0 0 0 5px rgba(0,99,136,0);} }
+.rs-body { flex: 1; }
+.rs-title { font-size: 12px; font-weight: 600; color: var(--g-navy); }
+.rs-meta { font-size: 10.5px; color: var(--g-text-light); margin-top: 1px; }
+.rs-meta b { color: var(--g-text-muted); }
+.ras-step.cur .rs-title { color: var(--g-teal); }
+
+/* ---- 3-WAY RECON ---- */
+.recon-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid var(--g-border); border-radius: 8px; overflow: hidden; background: var(--g-bg-card); margin-bottom: 6px; }
+.recon-col { padding: 0; border-right: 1px solid var(--g-border); }
+.recon-col:last-child { border-right: none; }
+.rc-head { padding: 10px 14px; font-family: var(--g-font-display); font-size: 12px; font-weight: 700; text-align: center; color: white; }
+.rc-graphene { background: var(--g-navy); }
+.rc-sei { background: var(--g-purple); }
+.rc-ml { background: var(--g-teal); }
+.rc-fig { padding: 14px; text-align: center; }
+.rc-fig .rcf-val { font-family: var(--g-mono); font-size: 19px; font-weight: 700; color: var(--g-navy); }
+.rc-fig .rcf-lbl { font-size: 10.5px; color: var(--g-text-light); margin-top: 2px; }
+.rc-vs { text-align: center; font-size: 11px; color: var(--g-text-light); padding: 8px; font-weight: 600; }
+
+.swatch-dot { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+
+/* ---- FLOW / REFERENCE ---- */
+.flow-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px,1fr)); gap: 12px; margin-bottom: 18px; }
+.flow-step { background: var(--g-bg-card); border: 1px solid var(--g-border); border-radius: 8px; padding: 14px; box-shadow: 0 1px 2px rgba(11,29,52,0.04); position: relative; border-top: 3px solid var(--g-navy); }
+.flow-step .fs-n { position: absolute; top: -11px; left: 13px; width: 22px; height: 22px; border-radius: 50%; background: var(--g-navy); color: white; font-family: var(--g-font-display); font-weight: 800; font-size: 12px; display: flex; align-items: center; justify-content: center; }
+.flow-step .fs-actor { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin: 4px 0 6px; }
+.flow-step .fs-txt { font-size: 12.5px; color: var(--g-text); line-height: 1.45; }
+.flow-step .fs-api { margin-top: 8px; font-family: var(--g-mono); font-size: 10.5px; background: var(--g-teal-08); color: var(--g-teal); padding: 4px 7px; border-radius: 5px; display: inline-block; }
+.actor-client { border-top-color: var(--g-success); }   .actor-client .fs-actor { color: var(--g-success); }
+.actor-graphene { border-top-color: var(--g-orange); }   .actor-graphene .fs-actor { color: var(--g-orange); }
+.actor-ml { border-top-color: var(--g-teal); }           .actor-ml .fs-actor { color: var(--g-teal); }
+.actor-sei { border-top-color: var(--g-purple); }        .actor-sei .fs-actor { color: var(--g-purple); }
+
+.rule-list { list-style: none; }
+.rule-list li { padding: 10px 0 10px 26px; border-bottom: 1px dashed var(--g-border); font-size: 13px; line-height: 1.5; position: relative; color: var(--g-text); }
+.rule-list li:last-child { border-bottom: none; }
+.rule-list li::before { content: "§"; position: absolute; left: 4px; top: 10px; color: var(--g-teal); font-weight: 700; }
+.rule-list li b { color: var(--g-navy); }
+
+.state-flow { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; background: var(--g-bg-card); border: 1px solid var(--g-border); border-radius: 8px; padding: 14px; margin-bottom: 14px; }
+.state-node { font-family: var(--g-mono); font-size: 11.5px; padding: 5px 10px; border-radius: 6px; font-weight: 600; }
+.state-arrow { color: var(--g-text-light); font-size: 13px; }
+
+.note-foot { font-size: 11.5px; color: var(--g-text-light); margin-top: 18px; line-height: 1.55; border-top: 1px solid var(--g-border); padding-top: 14px; max-width: 1080px; }
+.note-foot strong { color: var(--g-text-muted); }
+.legend-inline { display: flex; gap: 16px; flex-wrap: wrap; margin: 8px 0 16px; font-size: 11.5px; color: var(--g-text-muted); }
+.legend-inline span { display: flex; align-items: center; }
+/* ---- STATUS MAPPINGS ---- */
+.map-table td { white-space: normal; }
+.map-table td.nowrap { white-space: nowrap; }
+.tbc { font-style: italic; color: var(--g-text-muted); }
+.tbc-tag { font-family: var(--g-font-body); font-style: normal; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; background: var(--g-warn-soft); color: #7A5600; padding: 1px 6px; border-radius: 4px; margin-left: 5px; vertical-align: middle; }
+.ok-tag { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; background: var(--g-success-soft); color: var(--g-success); padding: 1px 6px; border-radius: 4px; margin-left: 5px; vertical-align: middle; }
+.code-badge { font-family: var(--g-mono); font-size: 10px; background: #EEF1F5; color: var(--g-text-muted); padding: 1px 6px; border-radius: 4px; font-weight: 700; white-space: nowrap; }
+.code-badge.sei { background: var(--g-purple-soft); color: var(--g-purple); }
+.code-badge.done { background: var(--g-success-soft); color: var(--g-success); }
+.code-badge.hold { background: var(--g-warn-soft); color: #7A5600; }
+.code-badge.bad { background: var(--g-danger-soft); color: var(--g-danger); }
+.dash { color: var(--g-text-light); }
+.leg-head { display: inline-flex; align-items: center; gap: 7px; font-family: var(--g-font-display); font-size: 13px; font-weight: 700; padding: 8px 0; }
+.leg-head .leg-dot { width: 11px; height: 11px; border-radius: 3px; }
+.enum-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; align-items: start; }
+.prov-note { font-size: 11px; color: var(--g-text-muted); margin-top: 4px; }
+.toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--g-navy); color: white; padding: 11px 20px; border-radius: 8px; font-size: 13px; font-weight: 500; box-shadow: 0 8px 24px rgba(11,29,52,0.28); opacity: 0; pointer-events: none; transition: all 0.25s; z-index: 100; display: flex; align-items: center; gap: 9px; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast .api-hint { font-family: var(--g-mono); font-size: 11px; opacity: 0.75; }
+</style>
+</head>
+<body>
+<header>
+  <svg class="brand-logo" role="img" aria-label="Graphene Platforms" viewBox="0 0 1741 312" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g clip-path="url(#g_clip)">
+      <path d="M328.5 107.199H324.5H313H268.9H173.7L200.5 153.599H300.7L331.6 204.799L356.6 155.699L328.5 107.199Z" fill="#fff"/>
+      <path d="M241.1 265.8H117.2L53.4 157.8L117.7 46.2L293.3 46.5L266.5 0H91.3L0 157.8L89 312H269.7L305.5 241.2L277.9 193.4L241.1 265.8Z" fill="#fff"/>
+      <path d="M419.8 156.499V155.999C419.8 111.199 454.1 73.1992 502.4 73.1992C550.7 73.1992 547.5 80.9992 563.9 94.8992L546.1 116.199C533.7 105.699 521.6 98.9992 501.3 98.9992C471.8 98.9992 449.4 124.799 449.4 155.499V155.999C449.4 188.899 471.1 213.199 503.8 213.199C536.5 213.199 532.6 208.399 542.5 201.099V171.099H501.6L487.1 146.599H569.8V213.899C554 227.399 531.4 238.799 503 238.799C452.9 238.799 420 203.099 420 156.399L419.8 156.499Z" fill="white"/>
+      <path d="M672.5 155.298C692.6 155.298 705.4 144.798 705.4 128.498V127.998C705.4 110.798 693 101.498 672.2 101.498H631.3V155.298H672.5ZM603.2 75.8984H674.6C694.7 75.8984 710.5 81.7984 720.8 91.8984C729.3 100.598 734.1 112.498 734.1 126.398V126.898C734.1 153.198 718.3 168.998 695.9 175.398L739.1 235.998H705.9L666.6 180.198H631.4V235.998H603.3V75.8984H603.2Z" fill="white"/>
+      <path d="M870.3 172.998L842.6 108.898L815.1 172.998H870.3ZM830.1 75.3984H856.2L926.7 236.698H897L880.8 197.998H805.1L788.6 236.698H759.8L830.3 75.3984H830.1Z" fill="white"/>
+      <path d="M1011.7 159.198C1033 159.198 1046.2 147.298 1046.2 130.598V130.098C1046.2 111.298 1032.7 101.498 1011.7 101.498H979V159.098H1011.7V159.198ZM950.9 75.8984H1014C1051.3 75.8984 1074.9 97.1984 1074.9 129.398V129.898C1074.9 165.798 1046.1 184.598 1010.8 184.598H979V236.098H950.9V75.9984V75.8984Z" fill="white"/>
+      <path d="M1421.5 75.8984H1447.6L1533.4 186.698V75.8984H1561.1V236.098H1537.5L1449.2 122.098V236.098H1421.5V75.8984Z" fill="white"/>
+      <path d="M1599.1 75.8984H1740.4L1728.1 101.098H1627.2V142.698H1718.4L1707.5 167.898H1627.2V210.898H1728L1715.3 236.098H1599.1V75.8984Z" fill="white"/>
+      <path d="M1102.7 75.8984H1130.8V142.498H1207.2V75.8984H1235.4V236.098H1207.2V168.598H1130.8V236.098H1102.7V75.8984Z" fill="white"/>
+      <path d="M1257.8 75.8984H1399.1L1386.8 101.098H1285.9V142.698H1377.1L1366.2 167.898H1285.9V210.898H1386.7L1374 236.098H1257.8V75.8984Z" fill="white"/>
+    </g>
+    <defs><clipPath id="g_clip"><rect width="1740.4" height="312" fill="white"/></clipPath></defs>
+  </svg>
+  <h1>Contributions Workbench <span class="proto-tag">Prototype · Ops / Admin portal</span></h1>
+  <div class="sub">Detect client pension payments into the SEI ML accounts, <strong>classify them for HMRC</strong> (personal vs employer, net vs gross, tax year, relief-at-source gross-up), record them to Morgan Lloyd, then <strong>monitor the basic-rate tax relief</strong> flowing back HMRC&nbsp;→&nbsp;Morgan&nbsp;Lloyd&nbsp;→&nbsp;SEI until each contribution is three-way reconciled.</div>
+</header>
+
+<div class="meta-bar">
+  <span><strong>Scheme administrator:</strong> Morgan Lloyd</span>
+  <span><strong>Custody:</strong> SEI (SWP)</span>
+  <span class="scheme-pill">Tenant · Tavistock</span>
+  <span><strong>Today:</strong> Thu 25 Jun 2026</span>
+  <span><strong>RAS reclaim window:</strong> May 2026 — claim due 19 Jun, relief due ~21 Jul</span>
+  <span><strong>Tax year:</strong> 2026/27</span>
+</div>
+
+<nav class="tabs">
+  <button class="active" data-tab="workbench">Workbench <span class="tab-count" id="tc-queue">8</span></button>
+  <button data-tab="relief">RAS &amp; tax relief <span class="tab-count warn" id="tc-relief">3</span></button>
+  <button data-tab="recon">Reconciliation <span class="tab-count danger" id="tc-breaks">2</span></button>
+  <button data-tab="statusmap">Status mappings</button>
+  <button data-tab="reference">Flow &amp; reference</button>
+</nav>
+
+<main>
+
+<!-- ===================== WORKBENCH ===================== -->
+<section class="tab-content active" id="workbench">
+  <div class="kpi-strip">
+    <div class="kpi teal">
+      <div class="kpi-label">Received this month</div>
+      <div class="kpi-value">£287,440</div>
+      <div class="kpi-sub">24 contributions · net</div>
+    </div>
+    <div class="kpi warn">
+      <div class="kpi-label">Awaiting classification</div>
+      <div class="kpi-value">3</div>
+      <div class="kpi-sub alert">needs Ops action</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Recorded to ML</div>
+      <div class="kpi-value">19</div>
+      <div class="kpi-sub">via cam_createpensioncontribution</div>
+    </div>
+    <div class="kpi blue">
+      <div class="kpi-label">Relief in transit</div>
+      <div class="kpi-value">£14,210</div>
+      <div class="kpi-sub">HMRC → ML → SEI</div>
+    </div>
+    <div class="kpi success">
+      <div class="kpi-label">Reconciled</div>
+      <div class="kpi-value">14</div>
+      <div class="kpi-sub up">3-way matched</div>
+    </div>
+    <div class="kpi danger">
+      <div class="kpi-label">Manual intervention</div>
+      <div class="kpi-value">1</div>
+      <div class="kpi-sub alert">see Reconciliation</div>
+    </div>
+  </div>
+
+  <!-- pipeline mirrors pensions.contribution_status -->
+  <div class="pipeline" id="pipeline"></div>
+
+  <div class="wb-layout">
+    <!-- QUEUE -->
+    <div class="panel">
+      <div class="toolbar">
+        <div class="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input type="text" id="q-search" placeholder="Search member, SEI account, scheme ref…">
+        </div>
+        <div class="filter-chip active" data-filter="all">All</div>
+        <div class="filter-chip" data-filter="action">Needs action</div>
+        <div class="filter-chip" data-filter="personal">Personal</div>
+        <div class="filter-chip" data-filter="employer">Employer</div>
+      </div>
+      <div class="tbl-scroll">
+        <table class="wb">
+          <thead>
+            <tr>
+              <th>Member / account</th>
+              <th>Received</th>
+              <th class="num">Net received</th>
+              <th>Type</th>
+              <th>Source</th>
+              <th class="num">RAS relief</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="queue-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CLASSIFY PANEL -->
+    <div class="panel" id="classify-panel">
+      <div class="panel-head">
+        <h3>Classify &amp; record</h3>
+        <div class="ph-right"><span class="st st-awaiting_confirmation" id="cl-status-chip" style="display:none"></span></div>
+      </div>
+      <div id="classify-empty" class="cl-empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 3h18v4H3zM3 10h18v11H3z"/><path d="M8 14h8M8 17h5"/></svg>
+        <div>Select a contribution from the queue<br>to classify it and record it to Morgan Lloyd.</div>
+      </div>
+      <div id="classify-body" class="cl-body" style="display:none"></div>
+    </div>
+  </div>
+
+  <div class="note-foot">
+    <strong>How detection works:</strong> contributions are surfaced from the daily SEI credit feed — the SWP/Boxi transaction report of all credits into the ML SEI bank accounts in the last 24h — joined to the canonical book. Each becomes a <code>pensions.contributions</code> row at <code>identified</code>; Ops classifies and confirms it, the API records it to ML (<code>cam_createpensioncontribution</code>), and the row advances through the relief-at-source lifecycle to <code>reconciled</code>. Regular contributions arrive by standing order to SEI <span class="mono">40-05-30 / 13695581</span>.
+  </div>
+</section>
+
+<!-- ===================== RAS & TAX RELIEF ===================== -->
+<section class="tab-content" id="relief">
+  <h2 class="section-title">Relief at Source — reclaim &amp; relief monitor</h2>
+  <p class="intro">
+    Personal contributions are paid <strong>net of 20% basic-rate tax</strong>; the scheme reclaims the relief from HMRC. <strong>Morgan Lloyd</strong> aggregates the month's personal contributions and reclaims the basic-rate relief from HMRC; once received, ML remits a <strong>bulk payment + a per-client breakdown</strong> to SEI. Graphene raises <strong>one bulk Additional Cash Receipt (ACR)</strong> on SEI and sends the breakdown spreadsheet; <strong>SEI's loader credits the individual member accounts</strong>. This page tracks each monthly batch and the relief that is still in transit.
+  </p>
+  <div class="alert info"><strong>Manual touchpoint (go-live):</strong> the contributions integration ships automated; the only residual manual step is the <strong>bulk-ACR reclaim</strong> — Ops raises one ACR on SEI and uploads the breakdown. As volume grows this becomes upload-driven, then a fully automated ACR + breakdown ingest.</div>
+
+  <h3 class="sub-title">Monthly reclaim batches</h3>
+  <div class="batch-grid" id="batch-grid"></div>
+
+  <h3 class="sub-title">Relief in transit — expected vs received (per member)</h3>
+  <p class="intro">The forecast relief for each recorded personal contribution, netted against what has actually landed from HMRC. In-transit relief is what reconciliation nets out so it doesn't raise a false cash break.</p>
+  <div class="tbl-scroll">
+    <table class="gt" id="relief-table"></table>
+  </div>
+</section>
+
+<!-- ===================== RECONCILIATION ===================== -->
+<section class="tab-content" id="recon">
+  <h2 class="section-title">Three-way reconciliation — contributions</h2>
+  <p class="intro">
+    Daily check of the <strong>Graphene book</strong> vs <strong>SEI custody</strong> vs the <strong>Morgan Lloyd scheme</strong> across contribution cash. Tolerances and as-of alignment apply; in-flight items (<strong>RAS relief in transit</strong>, contributions recorded to ML but not yet credited) are netted so the control doesn't cry wolf. Unresolved differences become <code>platform.reconciliation_breaks</code>.
+  </p>
+
+  <h3 class="sub-title">Contribution cash — June 2026 month-to-date</h3>
+  <div class="recon-grid">
+    <div class="recon-col">
+      <div class="rc-head rc-graphene">Graphene book</div>
+      <div class="rc-fig"><div class="rcf-val">£287,440</div><div class="rcf-lbl">net contributions identified</div></div>
+    </div>
+    <div class="recon-col">
+      <div class="rc-head rc-sei">SEI custody</div>
+      <div class="rc-fig"><div class="rcf-val">£285,960</div><div class="rcf-lbl">credits posted to member accounts</div></div>
+    </div>
+    <div class="recon-col">
+      <div class="rc-head rc-ml">Morgan Lloyd scheme</div>
+      <div class="rc-fig"><div class="rcf-val">£287,440</div><div class="rcf-lbl">received contributions recorded</div></div>
+    </div>
+  </div>
+  <p class="intro" style="margin-top:8px"><span class="swatch-dot" style="background:var(--g-warn)"></span><strong>£1,480 difference</strong> Graphene/ML vs SEI — fully explained by one in-flight item (Eleanor Voss, awaiting credit) plus relief in transit; no unexplained break on cash. Sources: SEI <code>RetrieveTransactionsForClientAccount</code> / <code>NetAvailableCurrencyBalance</code>; ML <code>cam_getreceivedcontributions</code>.</p>
+
+  <h3 class="sub-title">Open breaks <span style="color:var(--g-danger)">(2)</span></h3>
+  <div class="tbl-scroll">
+    <table class="gt" id="breaks-table"></table>
+  </div>
+
+  <h3 class="sub-title">Reconciliation inputs</h3>
+  <table class="gt">
+    <thead><tr><th>Leg</th><th>Source</th><th>API / feed</th><th>Keyed on</th></tr></thead>
+    <tbody>
+      <tr><td><span class="swatch-dot" style="background:var(--g-navy)"></span>Graphene book</td><td>Canonical ledger</td><td><code>platform.transactions</code> / <code>pensions.contributions</code></td><td>account_id · expectation_id</td></tr>
+      <tr><td><span class="swatch-dot" style="background:var(--g-purple)"></span>SEI custody</td><td>SWP / Boxi daily credits</td><td><code>RetrieveTransactionsForClientAccount</code>, <code>NetAvailableCurrencyBalance</code></td><td>accountNumber · valueDate</td></tr>
+      <tr><td><span class="swatch-dot" style="background:var(--g-teal)"></span>Morgan Lloyd</td><td>SIPP scheme record</td><td><code>cam_getreceivedcontributions</code>, <code>cam_getbanktransactions</code>, <code>cam_getschemebyschemref</code></td><td>Scheme Reference No.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ===================== STATUS MAPPINGS ===================== -->
+<section class="tab-content" id="statusmap">
+  <h2 class="section-title">Status mappings</h2>
+  <p class="intro">
+    How one contribution's status reads across the three systems. The workbench tracks the canonical <code>pensions.contribution_status</code> enum; each value corresponds to a <strong>Morgan Lloyd</strong> contribution status and to the <strong>SEI</strong> transaction status of <em>two distinct cash legs</em> — the member's <strong>initial contribution payment</strong> and the <strong>tax-relief payment</strong>. A contribution and its relief are posted to SEI as separate cash receipts, so each carries its own SEI activity status.
+  </p>
+  <div class="alert"><strong>Provenance — read before using.</strong> The <span class="leg-head" style="padding:0"><span class="leg-dot" style="background:var(--g-navy)"></span></span> <b>workbench</b> column is authoritative (the DB enum). The <span class="code-badge sei">SEI</span> columns are verbatim from the SEI OpenAPI specs. The <span class="leg-head" style="padding:0"><span class="leg-dot" style="background:var(--g-teal)"></span></span> <b>Morgan Lloyd</b> contribution status <b>option-set is not yet documented</b>: only <code>"Received"</code> is evidenced (a <code>cam_getreceivedcontributions</code> response). Values tagged <span class="tbc-tag">TBC</span> are inferred from the workflow + the transfers analogue and <b>must be confirmed against the live ML sandbox</b>. The ML status field name (<code>cam_status</code> vs Dataverse <code>statuscode</code>/<code>statecode</code>) is likewise TBC.</div>
+
+  <!-- ===== 1. ML ===== -->
+  <h3 class="sub-title"><span class="swatch-dot" style="background:var(--g-teal)"></span>1 · Contribution status — workbench ↔ Morgan Lloyd</h3>
+  <p class="intro">Our lifecycle vs ML's contribution record. ML only carries a status once the contribution is recorded (step 3 of the flow); before that it lives only in the workbench. Employer contributions skip the RAS rows (<code>ml_recorded → reconciled</code>).</p>
+  <div class="tbl-scroll">
+  <table class="gt map-table">
+    <thead><tr><th>Workbench status</th><th>Meaning</th><th>Morgan Lloyd contribution status</th><th>Set / advanced by</th></tr></thead>
+    <tbody>
+      <tr><td class="nowrap"><span class="st st-identified">identified</span></td><td>Credit seen in the SEI daily feed; not yet sent to ML</td><td><span class="dash">— not in ML</span></td><td class="nowrap"><code>RetrieveTransactionsForClientAccount</code></td></tr>
+      <tr><td class="nowrap"><span class="st st-awaiting_confirmation">awaiting_confirmation</span></td><td>Surfaced to Ops to classify (type, net/gross, tax year, payer)</td><td><span class="dash">— not in ML</span></td><td>workbench</td></tr>
+      <tr><td class="nowrap"><span class="st st-confirmed">confirmed</span></td><td>Classified; ready to record</td><td><span class="dash">— not in ML</span></td><td>workbench</td></tr>
+      <tr><td class="nowrap"><span class="st st-ml_recorded">ml_recorded</span></td><td>Contribution created on the ML scheme</td><td><code>Received</code><span class="ok-tag">evidenced</span> → ML-internal processing</td><td class="nowrap"><code>cam_createpensioncontribution</code></td></tr>
+      <tr><td class="nowrap"><span class="st st-ras_applied">ras_applied</span></td><td>ML has applied to HMRC for basic-rate relief (personal only)</td><td><span class="tbc">RAS Applied</span><span class="tbc-tag">TBC</span></td><td class="nowrap">poll <code>cam_updatecontributionpension_status</code></td></tr>
+      <tr><td class="nowrap"><span class="st st-ras_received">ras_received</span></td><td>ML has received the relief from HMRC</td><td><span class="tbc">RAS Received</span><span class="tbc-tag">TBC</span></td><td class="nowrap">poll <code>cam_updatecontributionpension_status</code></td></tr>
+      <tr><td class="nowrap"><span class="st st-tax_relief_received">tax_relief_received</span></td><td>Relief posted to the member's account at SEI <small class="prov-note">≡ design-doc <code>TaxReliefReceivedAtSEI</code></small></td><td><span class="tbc">Paid to SEI</span><span class="tbc-tag">TBC</span></td><td class="nowrap">SEI bulk ACR + loader</td></tr>
+      <tr><td class="nowrap"><span class="st st-reconciled">reconciled</span></td><td>Three-way matched (Graphene · SEI · ML)</td><td><span class="tbc">terminal</span><span class="tbc-tag">TBC</span></td><td class="nowrap"><code>ml_recon</code> (daily)</td></tr>
+      <tr><td class="nowrap"><span class="st st-manual_intervention">manual_intervention</span></td><td>Off-ramp on any failure → recon break</td><td><span class="dash">—</span></td><td class="nowrap"><code>platform.reconciliation_breaks</code></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="prov-note">ML status field follows the transfers analogue: <code>transfer_runner.py</code> reads <code>cam_status</code>/<code>status</code> and maps <code>complete</code>/<code>completed</code>/<code>settled</code> → <i>complete</i> and <code>inflight</code>/<code>processing</code>/<code>submitted</code> → <i>in_flight</i>. The contribution runner will follow the same pattern once ML's option-set is confirmed.</p>
+
+  <!-- ===== 2. SEI initial payment ===== -->
+  <h3 class="sub-title"><span class="swatch-dot" style="background:var(--g-purple)"></span>2 · SEI transaction status — initial contribution payment</h3>
+  <p class="intro">The member's funds reach SEI by bank transfer / standing order (<span class="mono">40-05-30 / 13695581</span>). SEI records the incoming credit as a cash-receipt <strong>activity</strong>; by the time it surfaces in the daily feed it is normally already posted. Where funds land in a collection account and Graphene allocates them to the member, the cash-receipt <code>requestStatus</code> path applies. Status values are verbatim from <code>RetrieveActivityState</code> / <code>CashReceiptsDirectPosting</code>.</p>
+  <div class="tbl-scroll">
+  <table class="gt map-table">
+    <thead><tr><th>At workbench status</th><th>SEI cash-receipt <code>requestStatus</code></th><th>SEI <code>activityStatus</code></th><th>Transaction level</th></tr></thead>
+    <tbody>
+      <tr><td class="nowrap"><span class="st st-identified">identified</span></td><td>credit received externally — <span class="dash">n/a</span>; or <span class="code-badge">1 Requested</span> → <span class="code-badge">2 Created</span> → <span class="code-badge">3 Validated</span> if Graphene allocates</td><td><span class="code-badge sei">3 Scheduled</span> → <span class="code-badge sei">7 In Process</span></td><td>appears in <code>RetrieveTransactionsForClientAccount</code>; <code>reversalFlag=false</code></td></tr>
+      <tr><td class="nowrap"><span class="st st-ml_recorded">ml_recorded</span> +</td><td><span class="code-badge">3 Validated</span></td><td><span class="code-badge done">5 Complete</span></td><td>posted; <code>settlementDate</code> set</td></tr>
+      <tr><td class="nowrap"><span class="st st-reconciled">reconciled</span></td><td><span class="dash">—</span></td><td><span class="code-badge done">5 Complete</span></td><td>amount matched vs ML &amp; Graphene book</td></tr>
+      <tr><td class="nowrap"><span class="st st-manual_intervention">manual_intervention</span></td><td><span class="dash">—</span></td><td><span class="code-badge hold">9 Exception</span> · <span class="code-badge hold">12 On Hold</span> · <span class="code-badge bad">13 Reversed</span></td><td><code>reversalFlag</code> / <code>adjustmentFlag</code> true</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <!-- ===== 3. SEI relief payment ===== -->
+  <h3 class="sub-title"><span class="swatch-dot" style="background:var(--g-purple)"></span>3 · SEI transaction status — tax-relief payment</h3>
+  <p class="intro">The relief is a <strong>Graphene-driven</strong> posting: ML remits the relief in bulk; Graphene raises <strong>one bulk ACR</strong> (<code>CashReceiptsDirectPosting</code>, with a distinct <code>descriptionCodeId</code> / <code>treatmentCodeId</code> so it reads as relief, not a new contribution) and uploads the per-client breakdown; SEI's <strong>loader</strong> credits each member account. Only personal contributions have a relief leg — employer contributions show <span class="dash">n/a</span> here.</p>
+  <div class="tbl-scroll">
+  <table class="gt map-table">
+    <thead><tr><th>Step</th><th>SEI <code>requestStatus</code></th><th>SEI <code>activityStatus</code></th><th>Drives workbench status</th></tr></thead>
+    <tbody>
+      <tr><td>Bulk ACR submitted to SEI</td><td><span class="code-badge">1 Requested</span> → <span class="code-badge">2 Created</span></td><td><span class="dash">—</span></td><td><span class="st st-ras_received">ras_received</span></td></tr>
+      <tr><td>ACR validated (direct posting)</td><td><span class="code-badge">3 Validated</span></td><td><span class="code-badge sei">3 Scheduled</span></td><td><span class="st st-ras_received">ras_received</span></td></tr>
+      <tr><td>Loader crediting member accounts (per breakdown row)</td><td><span class="dash">—</span></td><td><span class="code-badge sei">7 In Process</span></td><td><span class="st st-ras_received">ras_received</span></td></tr>
+      <tr><td>Relief posted to the member's account</td><td><span class="dash">—</span></td><td><span class="code-badge done">5 Complete</span></td><td><span class="st st-tax_relief_received">tax_relief_received</span></td></tr>
+      <tr><td>If the approval route is used (<code>CreateOrMaintainCashReceipts</code>, not direct posting)</td><td><span class="dash">—</span></td><td><span class="code-badge hold">10 Authorization</span> · <span class="code-badge hold">11 Manual Step</span> until approved</td><td><span class="st st-ras_received">ras_received</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <!-- ===== 4. reference enums ===== -->
+  <h3 class="sub-title">Reference — source enums (verbatim)</h3>
+  <div class="enum-cols">
+    <div>
+      <div class="leg-head"><span class="leg-dot" style="background:var(--g-purple)"></span>SEI activity status <code>RetrieveActivityState.activityStatus</code></div>
+      <table class="gt" style="margin-bottom:0">
+        <thead><tr><th class="num">Code</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td>Waiting for Parent Dependency</td></tr>
+          <tr><td class="num">2</td><td>Waiting for Dependency</td></tr>
+          <tr><td class="num">3</td><td>Scheduled</td></tr>
+          <tr><td class="num">4</td><td>Cancelled</td></tr>
+          <tr><td class="num">5</td><td>Complete</td></tr>
+          <tr><td class="num">6</td><td>Ready</td></tr>
+          <tr><td class="num">7</td><td>In Process</td></tr>
+          <tr><td class="num">9</td><td>Exception</td></tr>
+          <tr><td class="num">10</td><td>Authorization</td></tr>
+          <tr><td class="num">11</td><td>Manual Step</td></tr>
+          <tr><td class="num">12</td><td>On Hold</td></tr>
+          <tr><td class="num">13</td><td>Reversed</td></tr>
+          <tr><td class="num">14</td><td>Review</td></tr>
+          <tr><td class="num">16</td><td>Partially Reversed</td></tr>
+          <tr><td class="num">17</td><td>Partially Complete</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="leg-head"><span class="leg-dot" style="background:var(--g-purple)"></span>SEI cash-receipt request status <code>CashReceiptsDirectPosting.requestStatus</code></div>
+      <table class="gt">
+        <thead><tr><th class="num">Code</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td>Requested</td></tr>
+          <tr><td class="num">2</td><td>Created</td></tr>
+          <tr><td class="num">3</td><td>Validated <small class="prov-note">direct posting → no pending-approval state</small></td></tr>
+        </tbody>
+      </table>
+      <div class="leg-head"><span class="leg-dot" style="background:var(--g-purple)"></span>SEI transaction flags <code>RetrieveTransactionsForClientAccount</code></div>
+      <table class="gt" style="margin-bottom:0">
+        <thead><tr><th>Flag</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td class="nowrap"><code>reversalFlag</code></td><td>transaction is a reversal</td></tr>
+          <tr><td class="nowrap"><code>adjustmentFlag</code></td><td>transaction is an adjustment</td></tr>
+          <tr><td class="nowrap"><code>suppressionFlag</code></td><td>suppressed from statements / advices</td></tr>
+        </tbody>
+      </table>
+      <p class="prov-note">No explicit "posted/settled" enum at transaction level — settlement is implied by presence + <code>settlementDate</code>; reversal/adjustment carried by the flags.</p>
+    </div>
+    <div>
+      <div class="leg-head"><span class="leg-dot" style="background:var(--g-teal)"></span>Morgan Lloyd contribution status <span class="tbc-tag">provisional</span></div>
+      <table class="gt" style="margin-bottom:0">
+        <thead><tr><th>Value</th><th>Source / confidence</th></tr></thead>
+        <tbody>
+          <tr><td class="nowrap"><code>Received</code></td><td>evidenced — <code>cam_getreceivedcontributions</code> response<span class="ok-tag">ok</span></td></tr>
+          <tr><td class="nowrap"><span class="tbc">RAS Applied</span></td><td>inferred from workflow<span class="tbc-tag">TBC</span></td></tr>
+          <tr><td class="nowrap"><span class="tbc">RAS Received</span></td><td>inferred from workflow<span class="tbc-tag">TBC</span></td></tr>
+          <tr><td class="nowrap"><span class="tbc">Paid to SEI</span></td><td>inferred from workflow<span class="tbc-tag">TBC</span></td></tr>
+        </tbody>
+      </table>
+      <p class="prov-note">Field name <code>cam_status</code> / <code>statuscode</code> / <code>statecode</code> — TBC. Confirm the full option-set against the ML sandbox (<code>dev.api.morgan-lloyd.co.uk</code>) before wiring the poller.</p>
+    </div>
+  </div>
+
+  <p class="note-foot">
+    <strong>One contribution, three clocks.</strong> The workbench status is the single source of truth Ops works from; it is <em>derived</em> from the ML contribution status (advanced by polling <code>cam_updatecontributionpension_status</code> hourly) and the two SEI cash-receipt activity statuses (read via <code>RetrieveActivityState</code> / <code>RetrieveTransactionsForClientAccount</code>). Three-way reconciliation is exactly the check that these three clocks agree once in-transit relief is netted out; a disagreement past tolerance becomes a <code>platform.reconciliation_breaks</code> row and the contribution drops to <code>manual_intervention</code>.
+  </p>
+</section>
+
+<!-- ===================== FLOW & REFERENCE ===================== -->
+<section class="tab-content" id="reference">
+  <h2 class="section-title">Contribution flow — the five steps</h2>
+  <p class="intro">From the Morgan Lloyd <em>Contribution Work Flow</em> (19 May 26). Actor colour follows the ML legend: <span style="color:var(--g-success);font-weight:600">Client/Adviser</span> · <span style="color:var(--g-orange);font-weight:600">Graphene</span> · <span style="color:var(--g-teal);font-weight:600">Morgan Lloyd</span> · <span style="color:var(--g-purple);font-weight:600">SEI</span>.</p>
+  <div class="flow-steps">
+    <div class="flow-step actor-client">
+      <div class="fs-n">1</div><div class="fs-actor">Client / Adviser → SEI</div>
+      <div class="fs-txt">Adviser/client sends funds to the SEI ML bank account, confirming <b>single or regular</b>. Adviser sets the expectation via a Zendesk ticket; Graphene confirms with the adviser whether paid by <b>client or third party</b>.</div>
+    </div>
+    <div class="flow-step actor-graphene">
+      <div class="fs-n">2</div><div class="fs-actor">Graphene (detect)</div>
+      <div class="fs-txt">Daily report of funds received into the SEI ML accounts, built from the SWP/Boxi transaction report of all credits in the last 24h (FTP drop). Each credit becomes a contribution to classify.</div>
+      <span class="fs-api">SEI · RetrieveTransactionsForClientAccount</span>
+    </div>
+    <div class="flow-step actor-graphene">
+      <div class="fs-n">3</div><div class="fs-actor">Graphene → Morgan Lloyd (API)</div>
+      <div class="fs-txt">API call to ML to <b>create the pension contribution</b> against the member's Scheme Reference, carrying the classification (type, net/gross, tax year).</div>
+      <span class="fs-api">ML · cam_createpensioncontribution</span>
+    </div>
+    <div class="flow-step actor-ml">
+      <div class="fs-n">4</div><div class="fs-actor">Morgan Lloyd</div>
+      <div class="fs-txt">ML records the contribution and <b>reclaims the basic-rate tax relief from HMRC where necessary</b> (personal contributions only; employer contributions are gross, no reclaim).</div>
+      <span class="fs-api">HMRC · RAS monthly claim</span>
+    </div>
+    <div class="flow-step actor-ml">
+      <div class="fs-n">5</div><div class="fs-actor">Morgan Lloyd → SEI</div>
+      <div class="fs-txt">Once relief is received, ML sends funds to SEI: a <b>bulk payment + per-client breakdown</b>. Graphene raises <b>one bulk ACR</b> on SEI + the breakdown; SEI's loader credits member accounts.</div>
+      <span class="fs-api">SEI · CashReceiptsDirectPosting (loader)</span>
+    </div>
+  </div>
+
+  <h2 class="section-title">Status lifecycle</h2>
+  <p class="intro">The workbench tracks the canonical <code>pensions.contribution_status</code> enum. <span style="color:var(--g-orange);font-weight:600">Orange</span> stages are the relief-at-source leg; <code>manual_intervention</code> is the off-ramp for anything that breaks.</p>
+  <div class="state-flow">
+    <span class="state-node st-identified">identified</span><span class="state-arrow">→</span>
+    <span class="state-node st-awaiting_confirmation">awaiting_confirmation</span><span class="state-arrow">→</span>
+    <span class="state-node st-confirmed">confirmed</span><span class="state-arrow">→</span>
+    <span class="state-node st-ml_recorded">ml_recorded</span><span class="state-arrow">→</span>
+    <span class="state-node st-ras_applied">ras_applied</span><span class="state-arrow">→</span>
+    <span class="state-node st-ras_received">ras_received</span><span class="state-arrow">→</span>
+    <span class="state-node st-tax_relief_received">tax_relief_received</span><span class="state-arrow">→</span>
+    <span class="state-node st-reconciled">reconciled</span>
+    <span class="state-arrow" style="margin-left:8px">⤷</span>
+    <span class="state-node st-manual_intervention">manual_intervention</span>
+  </div>
+
+  <h2 class="section-title">Relief at source</h2>
+  <p class="intro">British SIPP, relief-at-source only — no net-pay/salary-sacrifice arrangements. The workbench does not run an eligibility check.</p>
+  <ul class="rule-list">
+    <li><b>Employer contributions are paid gross.</b> No tax relief is reclaimed — the employer takes the corporation-tax deduction. Captured as <b>Gross Single / Gross Regular</b>.</li>
+    <li><b>Personal contributions</b> are made <b>net of basic-rate tax relief</b>; the scheme claims the relief at basic rate (20%) from HMRC. Captured as <b>Net Single / Net Regular</b>. Gross = net ÷ 0.80; relief = gross − net.</li>
+  </ul>
+
+  <h2 class="section-title">System &amp; API map</h2>
+  <table class="gt">
+    <thead><tr><th>Action</th><th>System</th><th>Operation</th></tr></thead>
+    <tbody>
+      <tr><td>Adviser sets expectation</td><td>Zendesk → <code>transaction_expectations</code></td><td>expectation_type = <code>contribution</code></td></tr>
+      <tr><td>Detect credit</td><td>SEI (SWP/Boxi)</td><td><code>RetrieveTransactionsForClientAccount</code> · <code>NetAvailableCurrencyBalance</code></td></tr>
+      <tr><td>Resolve member/scheme</td><td>Morgan Lloyd</td><td><code>cam_getschemebyschemref</code> (Contact ID · Scheme Reference)</td></tr>
+      <tr><td>Record contribution</td><td>Morgan Lloyd</td><td><code>cam_createpensioncontribution</code> · <code>cam_uploadpensioncontributions</code> (bulk) — <code>contributiontype</code> = <code>Member</code> | <code>Employer</code></td></tr>
+      <tr><td>Poll / advance ML status</td><td>Morgan Lloyd</td><td><code>cam_updatecontributionpension_status</code> — hourly in business hours (<code>ml_contributions_poll</code>)</td></tr>
+      <tr><td>Read recorded contributions</td><td>Morgan Lloyd</td><td><code>cam_getreceivedcontributions</code></td></tr>
+      <tr><td>Post relief / bulk ACR to SEI</td><td>SEI</td><td><code>CashReceiptsDirectPosting</code> · distinct <code>descriptionCodeId</code> / <code>treatmentCodeId</code> for relief vs contribution; SEI loader credits accounts</td></tr>
+    </tbody>
+  </table>
+
+  <p class="note-foot">
+    <strong>Prototype scope.</strong> Mock data, no live API calls — actions log the operation they would invoke. Terminology is pinned to the canonical schema (<code>pensions.contributions</code>, <code>pensions.contribution_status</code>, <code>platform.transaction_expectations</code>, <code>platform.reconciliation_breaks</code>), the Morgan Lloyd <code>cam_*</code> OData surface (<code>contributiontype</code> on the ML side is <code>Member</code>/<code>Employer</code>; this app stores <code>personal</code>/<code>employer</code>), and the SEI cash-receipt APIs. RAS/recon run as scheduled jobs (<code>ml_contributions_poll</code> hourly, <code>ml_recon</code> daily). <strong>Custodian note:</strong> Seccl (the alternative custodian) has no first-class relief-at-source or net/gross fields — contributions are plain cash movements — so the RAS lifecycle is owned by this app's <code>pensions.contributions</code> schema regardless of custodian. Open items from the ML workflow review: exact ML payload for <code>cam_createpensioncontribution</code>, and ML's confirmed RAS reclaim timing into SEI.
+  </p>
+</section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ---------------------------------------------------------------- DATA
+// status order mirrors the pensions.contribution_status enum
+const STATUSES = ['identified','awaiting_confirmation','confirmed','ml_recorded','ras_applied','ras_received','tax_relief_received','reconciled'];
+const STATUS_LABEL = {
+  identified:'Identified', awaiting_confirmation:'Awaiting confirmation', confirmed:'Confirmed',
+  ml_recorded:'Recorded to ML', ras_applied:'RAS applied', ras_received:'RAS received',
+  tax_relief_received:'Relief credited', reconciled:'Reconciled', manual_intervention:'Manual intervention'
+};
+// pipeline grouping (8 visible stages) -> mapped statuses + actor + flow step
+const PIPELINE = [
+  { key:'identified',     name:'Identified',    actor:'SEI feed',   statuses:['identified'] },
+  { key:'awaiting',       name:'Awaiting confirm', actor:'Graphene', statuses:['awaiting_confirmation'] },
+  { key:'confirmed',      name:'Classified',    actor:'Graphene',   statuses:['confirmed'] },
+  { key:'ml_recorded',    name:'Recorded to ML',actor:'Morgan Lloyd',statuses:['ml_recorded'] },
+  { key:'ras',            name:'RAS reclaim',   actor:'ML → HMRC',  statuses:['ras_applied','ras_received'], relief:true },
+  { key:'relief',         name:'Relief credited',actor:'ML → SEI',  statuses:['tax_relief_received'], relief:true, manual:true },
+  { key:'reconciled',     name:'Reconciled',    actor:'Graphene',   statuses:['reconciled'] },
+];
+
+const CONTRIBS = [
+  { id:101, member:'Margaret Whitfield', sei:'USB0042817', scheme:'SR-104852', date:'24 Jun', net:8000, type:'personal', freq:'one_off', source:'Client', taxYear:'2026/27', status:'awaiting_confirmation', earnings:74000, age:58, protection:false },
+  { id:102, member:'Eleanor Voss',       sei:'USB0039104', scheme:'SR-101277', date:'24 Jun', net:40000, type:'personal', freq:'one_off', source:'Client', taxYear:'2026/27', status:'awaiting_confirmation', earnings:128000, age:49, protection:false },
+  { id:103, member:'David Brennan',      sei:'USB0044620', scheme:'SR-106018', date:'23 Jun', net:2880, type:'personal', freq:'one_off', source:'Third party', taxYear:'2026/27', status:'awaiting_confirmation', earnings:0, age:41, protection:false },
+  { id:104, member:'Pinnacle Joinery Ltd → S. Pryce', sei:'USB0041188', scheme:'SR-103940', date:'23 Jun', net:15000, type:'employer', freq:'one_off', source:'Employer', taxYear:'2026/27', status:'confirmed', earnings:52000, age:55, protection:false },
+  { id:105, member:'James Okafor',       sei:'USB0040551', scheme:'SR-102665', date:'21 Jun', net:480, type:'personal', freq:'regular', source:'Client', taxYear:'2026/27', status:'ml_recorded', earnings:61000, age:44, protection:false },
+  { id:106, member:'Priya Nadarajah',    sei:'USB0043302', scheme:'SR-105471', date:'18 Jun', net:12000, type:'personal', freq:'one_off', source:'Client', taxYear:'2026/27', status:'ras_applied', earnings:96000, age:52, protection:false },
+  { id:107, member:'Aileen Forsyth',     sei:'USB0038890', scheme:'SR-100934', date:'14 Jun', net:6400, type:'personal', freq:'one_off', source:'Client', taxYear:'2026/27', status:'ras_received', earnings:70000, age:60, protection:false },
+  { id:108, member:'Hugh Castellano',    sei:'USB0042003', scheme:'SR-104110', date:'09 Jun', net:9600, type:'personal', freq:'one_off', source:'Client', taxYear:'2026/27', status:'tax_relief_received', earnings:88000, age:47, protection:false },
+  { id:109, member:'Rosalind Achebe',    sei:'USB0039771', scheme:'SR-101902', date:'05 Jun', net:3200, type:'personal', freq:'regular', source:'Client', taxYear:'2026/27', status:'reconciled', earnings:54000, age:39, protection:false },
+  { id:110, member:'Bartholomew Greaves',sei:'USB0045010', scheme:'SR-106533', date:'03 Jun', net:20000, type:'personal', freq:'one_off', source:'Client', taxYear:'2026/27', status:'reconciled', earnings:215000, age:62, protection:true },
+];
+
+const RELIEF_RATE = 0.20; // basic rate 2026/27
+const fmt = n => '£' + Number(n).toLocaleString('en-GB', {minimumFractionDigits:0, maximumFractionDigits:2});
+const grossOf = c => c.type === 'personal' ? c.net / (1 - RELIEF_RATE) : c.net;
+const reliefOf = c => c.type === 'personal' ? grossOf(c) - c.net : 0;
+
+// ---------------------------------------------------------------- STATE
+let selectedId = null;
+let activeFilter = 'all';
+let searchTerm = '';
+
+// ---------------------------------------------------------------- PIPELINE
+function renderPipeline() {
+  const el = document.getElementById('pipeline');
+  el.innerHTML = PIPELINE.map(stage => {
+    const n = CONTRIBS.filter(c => stage.statuses.includes(c.status)).length;
+    const cls = ['pl-stage'];
+    if (stage.relief) cls.push('is-relief');
+    if (stage.manual) cls.push('is-manual');
+    return `<div class="${cls.join(' ')}" data-stages="${stage.statuses.join(',')}">
+      <span class="pl-arrow">→</span>
+      <div class="pl-num">${n}</div>
+      <div class="pl-name">${stage.name}</div>
+      <div class="pl-actor">${stage.actor}</div>
+    </div>`;
+  }).join('');
+  el.querySelectorAll('.pl-stage').forEach(s => s.addEventListener('click', () => {
+    const stages = s.dataset.stages.split(',');
+    // toggle a status filter via search-by-status
+    const already = s.classList.contains('sel');
+    el.querySelectorAll('.pl-stage').forEach(x => x.classList.remove('sel'));
+    if (!already) { s.classList.add('sel'); window._stageFilter = stages; }
+    else { window._stageFilter = null; }
+    renderQueue();
+  }));
+}
+
+// ---------------------------------------------------------------- QUEUE
+function statusChip(status) {
+  return `<span class="st st-${status}">${STATUS_LABEL[status]}</span>`;
+}
+function rowMatches(c) {
+  if (window._stageFilter && !window._stageFilter.includes(c.status)) return false;
+  if (activeFilter === 'action' && !['identified','awaiting_confirmation'].includes(c.status)) return false;
+  if (activeFilter === 'personal' && c.type !== 'personal') return false;
+  if (activeFilter === 'employer' && c.type !== 'employer') return false;
+  if (searchTerm) {
+    const hay = (c.member + ' ' + c.sei + ' ' + c.scheme).toLowerCase();
+    if (!hay.includes(searchTerm.toLowerCase())) return false;
+  }
+  return true;
+}
+function renderQueue() {
+  const body = document.getElementById('queue-body');
+  const rows = CONTRIBS.filter(rowMatches);
+  if (!rows.length) {
+    body.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--g-text-light);padding:28px">No contributions match.</td></tr>`;
+    return;
+  }
+  body.innerHTML = rows.map(c => {
+    const relief = reliefOf(c);
+    const isManual = c.status === 'manual_intervention';
+    return `<tr data-id="${c.id}" class="${c.id===selectedId?'sel':''} ${isManual?'row-manual':''}">
+      <td><span class="member">${c.member}<small>${c.sei} · ${c.scheme}</small></span></td>
+      <td>${c.date}</td>
+      <td class="num">${fmt(c.net)}<div class="amt-gross">gross ${fmt(grossOf(c))}</div></td>
+      <td><span class="pill type-${c.type}">${c.type==='personal'?'Personal':'Employer'}</span><div class="freq">${c.freq==='one_off'?'Single':'Regular'}</div></td>
+      <td>${c.source}</td>
+      <td class="num">${relief>0?fmt(relief):'<span style="color:var(--g-text-light)">—</span>'}</td>
+      <td>${statusChip(c.status)}</td>
+    </tr>`;
+  }).join('');
+  body.querySelectorAll('tr[data-id]').forEach(tr => tr.addEventListener('click', () => selectContrib(+tr.dataset.id)));
+}
+
+// ---------------------------------------------------------------- CLASSIFY PANEL
+function renderClassify(c) {
+  document.getElementById('classify-empty').style.display = 'none';
+  const body = document.getElementById('classify-body');
+  body.style.display = 'block';
+  const chip = document.getElementById('cl-status-chip');
+  chip.style.display = 'inline-flex';
+  chip.className = 'st st-' + c.status;
+  chip.textContent = STATUS_LABEL[c.status];
+
+  const gross = grossOf(c), relief = reliefOf(c);
+  const recordable = ['identified','awaiting_confirmation','confirmed'].includes(c.status);
+
+  const grossupHtml = c.type === 'personal' ? `
+    <div class="grossup">
+      <div class="gu-row"><span class="gu-lbl">Net received (member pays)</span><span class="gu-val">${fmt(c.net)}</span></div>
+      <div class="gu-row gu-relief"><span class="gu-lbl">Basic-rate relief reclaimed (20%)</span><span class="gu-val">+ ${fmt(relief)}</span></div>
+      <div class="gu-row gu-total"><span class="gu-lbl">Gross contribution invested</span><span class="gu-val">${fmt(gross)}</span></div>
+      <div class="gu-formula">gross = net ÷ 0.80 = ${fmt(c.net)} ÷ 0.80 · relief = gross − net · reclaimed from HMRC via relief at source</div>
+    </div>` : `
+    <div class="grossup na">
+      <div class="gu-row"><span class="gu-lbl">Gross contribution (employer, paid gross)</span><span class="gu-val">${fmt(c.net)}</span></div>
+      <div class="gu-formula">Employer contribution — no relief reclaimed.</div>
+    </div>`;
+
+  body.innerHTML = `
+    <div class="cl-member">
+      <div class="cl-name">${c.member}</div>
+      <div class="cl-ids">
+        <span class="cl-id">SEI a/c <b>${c.sei}</b></span>
+        <span class="cl-id">Scheme ref <b>${c.scheme}</b></span>
+        <span class="cl-id">Received <b>${c.date}</b></span>
+      </div>
+    </div>
+
+    <div class="cl-section">
+      <h4>Classification</h4>
+      <div class="fld">
+        <label>Contribution type</label>
+        <div class="seg" data-grp="type">
+          <button class="${c.type==='personal'?'on':''}" data-v="personal">Personal · Net</button>
+          <button class="${c.type==='employer'?'on':''}" data-v="employer">Employer · Gross</button>
+        </div>
+      </div>
+      <div class="fld">
+        <label>Frequency</label>
+        <div class="seg teal" data-grp="freq">
+          <button class="${c.freq==='one_off'?'on':''}" data-v="one_off">Single</button>
+          <button class="${c.freq==='regular'?'on':''}" data-v="regular">Regular</button>
+        </div>
+      </div>
+      <div class="fld">
+        <label>Paid by</label>
+        <select id="cl-source">
+          <option ${c.source==='Client'?'selected':''}>Client</option>
+          <option ${c.source==='Third party'?'selected':''}>Third party</option>
+          <option ${c.source==='Employer'?'selected':''}>Employer</option>
+        </select>
+      </div>
+      <div class="fld">
+        <label>Tax year</label>
+        <select id="cl-ty"><option>2026/27</option><option>2025/26</option></select>
+      </div>
+    </div>
+
+    <div class="cl-section">
+      <h4>Relief-at-source gross-up</h4>
+      ${grossupHtml}
+    </div>
+
+    <div class="cl-actions">
+      ${recordable ? `
+        <button class="btn btn-primary" id="act-record">
+          Confirm &amp; record to Morgan Lloyd
+          <span class="api-hint">cam_createpensioncontribution</span>
+        </button>
+        <button class="btn btn-secondary" id="act-hold">Hold — query with adviser</button>
+        <button class="btn btn-danger" id="act-manual">Flag for manual intervention</button>
+      ` : `
+        <div class="alert info" style="margin:0">This contribution is at <b>${STATUS_LABEL[c.status]}</b> — past the classification stage. Track its relief on the <b>RAS &amp; tax relief</b> tab.</div>
+      `}
+    </div>
+  `;
+
+  // segmented control behaviour
+  body.querySelectorAll('.seg').forEach(seg => {
+    seg.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => {
+      seg.querySelectorAll('button').forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+      const grp = seg.dataset.grp, v = btn.dataset.v;
+      if (grp === 'type') c.type = v;
+      if (grp === 'freq') c.freq = v;
+      renderClassify(c); renderQueue();
+    }));
+  });
+  const recBtn = body.querySelector('#act-record');
+  if (recBtn) recBtn.addEventListener('click', () => advance(c, 'ml_recorded', 'Recorded to Morgan Lloyd', 'cam_createpensioncontribution'));
+  const holdBtn = body.querySelector('#act-hold');
+  if (holdBtn) holdBtn.addEventListener('click', () => { c.status='awaiting_confirmation'; toast('Held — adviser query raised','zendesk.ticket.update'); refresh(); });
+  const manBtn = body.querySelector('#act-manual');
+  if (manBtn) manBtn.addEventListener('click', () => advance(c, 'manual_intervention', 'Flagged for manual intervention', 'reconciliation_breaks.insert'));
+}
+
+function advance(c, to, msg, api) { c.status = to; toast(msg, api); refresh(); }
+function selectContrib(id) { selectedId = id; refresh(); }
+function refresh() {
+  renderPipeline();
+  renderQueue();
+  const c = CONTRIBS.find(x => x.id === selectedId);
+  if (c) renderClassify(c);
+  updateCounts();
+}
+
+// ---------------------------------------------------------------- RAS BATCHES
+const BATCHES = [
+  { period:'June 2026', state:'ml_recorded', count:8, relief:14210, accruing:true, steps:[
+      ['done','Personal contributions recorded to ML','8 contributions · cam_createpensioncontribution'],
+      ['cur','Accruing for June RAS claim','claim window closes 30 Jun'],
+      ['wait','ML reclaims from HMRC','claim due by 19 Jul'],
+      ['wait','Relief received → bulk payment + breakdown','expected ~21 Aug'],
+      ['wait','Bulk ACR on SEI + breakdown upload','SEI loader credits accounts'],
+  ]},
+  { period:'May 2026', state:'ras_applied', count:11, relief:18940, cur:true, steps:[
+      ['done','Personal contributions recorded to ML','11 contributions'],
+      ['done','ML reclaimed from HMRC','claim submitted 18 Jun'],
+      ['cur','Awaiting relief from HMRC','due ~21 Jul · 6 working days'],
+      ['wait','Bulk ACR on SEI + breakdown','CashReceiptsDirectPosting'],
+      ['wait','SEI loader credits member accounts',''],
+  ]},
+  { period:'April 2026', state:'reconciled', count:9, relief:11380, steps:[
+      ['done','Recorded to ML','9 contributions'],
+      ['done','ML reclaimed from HMRC','submitted 17 May'],
+      ['done','Relief received from HMRC','21 Jun · £11,380'],
+      ['done','Bulk ACR raised on SEI + breakdown','ACR #ACR-2026-04 · £11,380'],
+      ['done','SEI loader credited 9 accounts','3-way reconciled'],
+  ]},
+];
+function batchStateChip(s){ return `<span class="st st-${s}">${STATUS_LABEL[s]}</span>`; }
+function renderBatches() {
+  document.getElementById('batch-grid').innerHTML = BATCHES.map(b => `
+    <div class="batch ${b.cur?'cur':''}">
+      <div class="batch-head">
+        <span class="b-period">${b.period}</span>
+        <span class="b-state">${batchStateChip(b.state)}</span>
+      </div>
+      <div class="batch-body">
+        <div class="b-figs">
+          <div class="b-fig"><div class="bf-lbl">Personal conts</div><div class="bf-val">${b.count}</div></div>
+          <div class="b-fig"><div class="bf-lbl">Relief ${b.accruing?'accruing':'claimed'}</div><div class="bf-val relief">${fmt(b.relief)}</div></div>
+        </div>
+        <div class="ras-track">
+          ${b.steps.map(s => `<div class="ras-step ${s[0]}">
+            <span class="rs-dot">${s[0]==='done'?'✓':''}</span>
+            <div class="rs-body"><div class="rs-title">${s[1]}</div>${s[2]?`<div class="rs-meta">${s[2]}</div>`:''}</div>
+          </div>`).join('')}
+        </div>
+      </div>
+    </div>`).join('');
+}
+function renderReliefTable() {
+  const personal = CONTRIBS.filter(c => c.type === 'personal' && STATUSES.indexOf(c.status) >= STATUSES.indexOf('ml_recorded'));
+  let totExp = 0, totRec = 0;
+  const reliefStatus = c => {
+    if (c.status === 'reconciled' || c.status === 'tax_relief_received') return ['received', reliefOf(c), 'st-tax_relief_received'];
+    if (c.status === 'ras_received') return ['at ML', reliefOf(c), 'st-ras_received'];
+    return ['in transit', 0, 'st-ras_applied'];
+  };
+  const rows = personal.map(c => {
+    const exp = reliefOf(c); const [lbl, rec, cls] = reliefStatus(c);
+    totExp += exp; totRec += rec;
+    return `<tr>
+      <td><span class="member">${c.member}<small>${c.scheme}</small></span></td>
+      <td><span class="tax-year">${c.taxYear}</span></td>
+      <td class="num">${fmt(c.net)}</td>
+      <td class="num" style="color:var(--g-teal)">${fmt(exp)}</td>
+      <td class="num">${rec?fmt(rec):'—'}</td>
+      <td><span class="st ${cls}">${lbl}</span></td>
+    </tr>`;
+  }).join('');
+  document.getElementById('relief-table').innerHTML = `
+    <thead><tr><th>Member</th><th>Tax year</th><th class="num">Net cont.</th><th class="num">Relief expected</th><th class="num">Relief received</th><th>State</th></tr></thead>
+    <tbody>${rows}
+      <tr class="total-row"><td>In-transit total</td><td></td><td></td><td class="num">${fmt(totExp)}</td><td class="num">${fmt(totRec)}</td><td>${fmt(totExp-totRec)} outstanding</td></tr>
+    </tbody>`;
+}
+
+// ---------------------------------------------------------------- BREAKS
+const BREAKS = [
+  { subj:'contribution #102', member:'Eleanor Voss', scope:'graphene-vs-SEI', type:'cash_not_credited', detail:'£40,000 recorded to ML & expected by SEI but not yet on the member account at SEI', age:1, status:'investigating' },
+  { subj:'contribution #103', member:'David Brennan', scope:'graphene-vs-ML', type:'expectation_mismatch', detail:'Third-party payment £2,880 — no matching Zendesk expectation; payer needs confirming before record to ML', age:2, status:'open' },
+];
+function renderBreaks() {
+  document.getElementById('breaks-table').innerHTML = `
+    <thead><tr><th>Subject</th><th>Member</th><th>Scope</th><th>Break type</th><th>Detail</th><th class="num">Age</th><th>Status</th></tr></thead>
+    <tbody>${BREAKS.map(b => `<tr>
+      <td class="mono" style="color:var(--g-blue);font-weight:600">${b.subj}</td>
+      <td>${b.member}</td>
+      <td class="mono" style="font-size:11px;color:var(--g-text-muted)">${b.scope}</td>
+      <td><code>${b.type}</code></td>
+      <td style="white-space:normal;max-width:340px">${b.detail}</td>
+      <td class="num">${b.age}d</td>
+      <td><span class="st st-${b.status==='open'?'manual_intervention':'awaiting_confirmation'}">${b.status}</span></td>
+    </tr>`).join('')}</tbody>`;
+}
+
+// ---------------------------------------------------------------- COUNTS / TABS
+function updateCounts() {
+  const action = CONTRIBS.filter(c => ['identified','awaiting_confirmation'].includes(c.status)).length;
+  document.getElementById('tc-queue').textContent = CONTRIBS.length;
+}
+function toast(msg, api) {
+  const t = document.getElementById('toast');
+  t.innerHTML = msg + (api?` <span class="api-hint">${api}</span>`:'');
+  t.classList.add('show');
+  clearTimeout(window._tt); window._tt = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+// tabs
+document.querySelectorAll('nav.tabs button').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(btn.dataset.tab).classList.add('active');
+}));
+// filters
+document.querySelectorAll('.filter-chip').forEach(chip => chip.addEventListener('click', () => {
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  activeFilter = chip.dataset.filter;
+  renderQueue();
+}));
+document.getElementById('q-search').addEventListener('input', e => { searchTerm = e.target.value; renderQueue(); });
+
+// init
+renderPipeline();
+renderQueue();
+renderBatches();
+renderReliefTable();
+renderBreaks();
+updateCounts();
+</script>
+</body>
+</html>

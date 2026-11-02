@@ -1,0 +1,70 @@
+# pkgs/sei owns the bare id (the SWP API client); this is the file-drop sync service on
+# top of it, mirroring pkgs/seccl + services/seccl and pkgs/morgan-lloyd + services/morgan-lloyd.
+id: 'sei-sync'
+
+layer: 'application'
+language: 'python'
+
+# Python runs as plain uv command-tasks (moon's python toolchain is still
+# unstable in v2). `uv` is provided by proto via .prototools.
+tasks:
+  install:
+    command: 'uv sync'
+    toolchain: 'system'
+    inputs: []
+    options: { cache: false }
+  # The pipeline daemon (8100 seccl, 8102 ml, 8103 sei): serve --no-apply, then one full POST /runs.
+  # CronTrigger still waits until the next slot; the startup run is the boot.
+  dev:
+    command: 'uv'
+    args: 'run python -m book_sink.startup_run --host 127.0.0.1 --port 8103 --allow-open --no-apply'
+    preset: 'server'
+    options: { envFile: ['/.env', '.env'] }
+  # SFTP pull -> {core}/sei/sftp -> PGP decrypt -> {core}/sei/staged. The MANUAL door:
+  # a scheduled run does this through the `raw.files` model at the head of the DAG, so
+  # the reports cannot read a drop that was never fetched (docs/sei.md §1).
+  # Needs the SEI SFTP allowlist, so it never runs in CI.
+  pull:
+    command: 'uv'
+    args: 'run sei-sync pull'
+    options: { cache: false, runInCI: false, envFile: ['/.env', '.env'] }
+  # Re-profile the staged corpus and regenerate the declared column types. Needs the
+  # staged objects, so it never runs in CI; review the diff it produces.
+  profile-schema:
+    command: 'uv'
+    args: 'run python scripts/profile_schema.py'
+    options: { cache: false, runInCI: false, envFile: ['/.env', '.env'] }
+  # Regenerate models/raw_reports.py from the declared schema. Pure codegen — no
+  # warehouse or object store needed. `sei:test` fails if the checked-in module is stale.
+  generate-models:
+    command: 'uv'
+    args: 'run python scripts/generate_raw_models.py'
+    options: { cache: false }
+  plan:
+    command: 'uv'
+    args: 'run interlace plan'
+    options: { cache: false, envFile: ['/.env', '.env'] }
+  apply:
+    command: 'uv'
+    args: 'run interlace apply'
+    options: { cache: false, envFile: ['/.env', '.env'] }
+  run:
+    command: 'uv'
+    args: 'run interlace run'
+    options: { cache: false, envFile: ['/.env', '.env'] }
+  lint:
+    command: 'uv'
+    args: 'run ruff check .'
+  format:
+    command: 'uv'
+    args: 'run ruff format --check .'
+  typecheck:
+    command: 'uv'
+    # `models` as well as `src`: the models ARE this service — the extractors, the conformed
+    # SQL and the per-tenant chain registration all live there, outside `src/`, so `mypy src`
+    # never saw the transformation layer at all. They pass today; what this stops is the next
+    # change to them landing unchecked.
+    args: 'run mypy src models'
+  test:
+    command: 'uv'
+    args: 'run pytest'

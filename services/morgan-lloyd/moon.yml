@@ -1,0 +1,59 @@
+# pkgs/morgan-lloyd owns the bare id; this is the sync service on top of it.
+id: 'morgan-lloyd-sync'
+
+layer: 'application'
+language: 'python'
+
+# Python runs as plain uv command-tasks (moon's python toolchain is still
+# unstable in v2). `uv` is provided by proto via .prototools.
+tasks:
+  install:
+    command: 'uv sync'
+    toolchain: 'system'
+    inputs: []
+    options: { cache: false }
+  # The pipeline daemon: serve --no-apply, then one full POST /runs.
+  dev:
+    command: 'uv'
+    args: 'run python -m book_sink.startup_run --host 127.0.0.1 --port 8102 --allow-open --no-apply'
+    preset: 'server'
+    options: { envFile: ['/.env', '.env'] }
+  plan:
+    command: 'uv'
+    args: 'run interlace plan'
+    options: { cache: false, envFile: ['/.env', '.env'] }
+  apply:
+    command: 'uv'
+    args: 'run interlace apply'
+    options: { cache: false, envFile: ['/.env', '.env'] }
+  run:
+    command: 'uv'
+    args: 'run interlace run'
+    options: { cache: false, envFile: ['/.env', '.env'] }
+  # Seed the Morgan Lloyd dev CRM with deterministic test data.
+  populate:
+    command: 'uv'
+    args: 'run python scripts/populate_test_data.py'
+    options: { cache: false, runInCI: false }
+  # CTC1 illustration XML + local PDFs (.data/illustrations) + benefit
+  # applications whose ssoUrl opens the member drawdown journey.
+  illustrations:
+    command: 'uv'
+    args: 'run python scripts/generate_illustrations.py'
+    options: { cache: false, runInCI: false }
+  lint:
+    command: 'uv'
+    args: 'run ruff check .'
+  format:
+    command: 'uv'
+    args: 'run ruff format --check .'
+  typecheck:
+    command: 'uv'
+    # `models` as well as `src`: the models ARE this service — the extractors, the conformed
+    # SQL and the per-tenant chain registration all live there, outside `src/`, so `mypy src`
+    # never saw the transformation layer at all. They pass today; what this stops is the next
+    # change to them landing unchecked.
+    args: 'run mypy src models scripts'
+  test:
+    command: 'uv'
+    args: 'run pytest'

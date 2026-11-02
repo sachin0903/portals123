@@ -1,0 +1,1065 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "firmId": {
+      "type": "string",
+      "description": "observed values: FIRM001, SDEMO, SECCI"
+    },
+    "clientId": {
+      "type": "string"
+    },
+    "wrapperType": {
+      "type": "string",
+      "description": "observed values: GIA, ISA"
+    },
+    "feeStructures": {
+      "$ref": "#/$defs/FeeStructures"
+    },
+    "updateId": {
+      "type": "string"
+    },
+    "nodeId": {
+      "type": "string",
+      "description": "observed values: 0, 1"
+    },
+    "name": {
+      "type": "string"
+    },
+    "currency": {
+      "type": "string",
+      "description": "observed values: GBP"
+    },
+    "accountType": {
+      "type": "string",
+      "description": "observed values: Wrapper"
+    },
+    "status": {
+      "type": "string",
+      "description": "observed values: Active, Pending"
+    },
+    "wrapperDetail": {
+      "$ref": "#/$defs/WrapperDetail"
+    },
+    "adviserCharge": {
+      "type": "number"
+    },
+    "clientName": {
+      "type": "string"
+    },
+    "nodeName": {
+      "type": "string",
+      "description": "observed values: Firm Name, Seccl Demo, Seccl Invest"
+    },
+    "_name": {
+      "type": "string"
+    },
+    "auditDetails": {
+      "$ref": "#/$defs/AuditDetails"
+    },
+    "clientNationalInsuranceNo": {
+      "type": "string",
+      "description": "observed values: AB576470C, AB813641C, PC955833D"
+    },
+    "clients": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Client"
+      }
+    },
+    "updateHistory": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/UpdateHistory"
+      }
+    },
+    "recurringOrders": {
+      "$ref": "#/$defs/RecurringOrders"
+    },
+    "recurringPayment": {
+      "type": "boolean"
+    },
+    "clientNames": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "observed values: Wilma Flintstone"
+      }
+    },
+    "positions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Position"
+      }
+    },
+    "completeTransactions": {
+      "type": "array",
+      "items": {}
+    },
+    "currentValue": {
+      "type": "number"
+    },
+    "uninvestedCash": {
+      "type": "number"
+    },
+    "openingValue": {
+      "type": "number"
+    },
+    "openingStockValue": {
+      "type": "number"
+    },
+    "openingCashValue": {
+      "type": "number"
+    },
+    "bookValue": {
+      "type": "number"
+    },
+    "transferBookValue": {
+      "type": "number"
+    },
+    "nonTransferBookValue": {
+      "type": "number"
+    },
+    "growth": {
+      "type": "number"
+    },
+    "adjustedGrowth": {
+      "type": "number"
+    },
+    "closingCashValue": {
+      "type": "number"
+    },
+    "closingStockValue": {
+      "type": "number"
+    },
+    "growthPercent": {
+      "type": "number"
+    },
+    "adjustedGrowthPercent": {
+      "type": "number"
+    },
+    "transferValue": {
+      "type": "number"
+    },
+    "cgtData": {
+      "$ref": "#/$defs/CgtData"
+    },
+    "disclaimers": {
+      "type": "array",
+      "items": {}
+    },
+    "recurringPayments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/RecurringPayment"
+      }
+    },
+    "autoDisinvest": {
+      "type": "string",
+      "description": "observed values: Largest, Proportional"
+    }
+  },
+  "title": "Account",
+  "description": "Account as Seccl returns it -- inferred from 31 example(s) in the Postman collection.",
+  "$defs": {
+    "AccountCreate": {
+      "type": "object",
+      "properties": {
+        "firmId": {
+          "type": "string",
+          "description": "observed values: SECCI"
+        },
+        "nodeId": {
+          "type": "string",
+          "description": "observed values: 0, 1, 5"
+        },
+        "accountType": {
+          "type": "string",
+          "description": "observed values: Wrapper"
+        },
+        "name": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "description": "observed values: Active, Pending"
+        },
+        "currency": {
+          "type": "string",
+          "description": "observed values: GBP"
+        },
+        "clientId": {
+          "type": "string"
+        },
+        "wrapperDetail": {
+          "$ref": "#/$defs/WrapperDetail"
+        },
+        "recurringOrders": {
+          "$ref": "#/$defs/RecurringOrders"
+        },
+        "recurringPayments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RecurringPayment"
+          }
+        },
+        "discretionaryManagementCharge": {
+          "type": "number"
+        },
+        "adviserTieredCharges": {
+          "$ref": "#/$defs/AdviserTieredCharges"
+        },
+        "adviserCharge": {
+          "type": "number"
+        },
+        "clients": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Client"
+          }
+        },
+        "productDetail": {
+          "$ref": "#/$defs/ProductDetail"
+        },
+        "portfolioGroups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PortfolioGroup"
+          }
+        },
+        "decisionMakerLei": {
+          "type": "string"
+        },
+        "bankDetails": {
+          "$ref": "#/$defs/BankDetails"
+        },
+        "advisorCharge": {
+          "type": "number"
+        },
+        "accountId": {
+          "type": "string",
+          "description": "observed values: 0355D6J"
+        },
+        "paymentMethods": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "observed values: Bank Transfer, Direct Debit"
+          }
+        },
+        "autoDisinvest": {
+          "type": "string",
+          "description": "observed values: Largest"
+        }
+      },
+      "required": ["firmId"],
+      "title": "AccountCreate",
+      "description": "Body for creating a Account -- inferred from 18 example(s) in the Postman collection."
+    },
+    "AccountUpdate": {
+      "type": "object",
+      "properties": {
+        "updateId": {
+          "type": "string"
+        },
+        "nominatedForAccounts": {
+          "properties": {
+            "group": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "type": ["object", "null"]
+        },
+        "updateAction": {
+          "type": "string",
+          "description": "observed values: AmendStatus, VerifyBankDetails"
+        },
+        "updateReason": {
+          "type": "string"
+        },
+        "updateData": {
+          "$ref": "#/$defs/UpdateData"
+        },
+        "feeStructures": {
+          "$ref": "#/$defs/FeeStructures"
+        },
+        "recurringPayments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RecurringPayment"
+          }
+        },
+        "name": {
+          "type": "string",
+          "description": "observed values: New account name"
+        },
+        "recurringPayment": {
+          "$ref": "#/$defs/RecurringPayment"
+        },
+        "recurringOrders": {
+          "$ref": "#/$defs/RecurringOrders"
+        },
+        "autoDisinvest": {
+          "type": "string",
+          "description": "observed values: Largest"
+        }
+      },
+      "title": "AccountUpdate",
+      "description": "Partial update to a Account; where the endpoint takes an `updateId` it is Seccl's optimistic-concurrency token -- inferred from 14 example(s) in the Postman collection."
+    },
+    "AdviserTieredCharges": {
+      "type": "object",
+      "properties": {
+        "fromDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "toDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "minimumAmount": {
+          "type": "number"
+        },
+        "maximumAmount": {
+          "type": "number"
+        },
+        "instrumentTypes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "observed values: ETF, Equity"
+          }
+        },
+        "tiers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Tier"
+          }
+        }
+      },
+      "required": [
+        "fromDate",
+        "instrumentTypes",
+        "maximumAmount",
+        "minimumAmount",
+        "tiers",
+        "toDate"
+      ]
+    },
+    "AssetTaxDetail": {
+      "type": "object",
+      "properties": {
+        "taxDomicile": {
+          "type": "string",
+          "description": "observed values: GB"
+        },
+        "taxCalculation": {
+          "type": "string",
+          "description": "observed values: GROSS"
+        },
+        "reportCategory": {
+          "type": "string",
+          "description": "observed values: UK Dividend"
+        }
+      },
+      "required": ["reportCategory", "taxCalculation", "taxDomicile"]
+    },
+    "AuditDetails": {
+      "type": "object",
+      "properties": {
+        "updateDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "userFirmId": {
+          "type": "string",
+          "description": "observed values: BACKGROUND, SCUST, SECCI, SECCL"
+        },
+        "userId": {
+          "type": "string",
+          "description": "observed values: 00031L, 019B3F3, 029B3F4, 029B3GJ, 029B844, Background, TESTUSER"
+        },
+        "version": {
+          "type": "integer"
+        },
+        "application": {
+          "type": "string",
+          "description": "observed values: InstrumentProcessor, PfolioAPI, PfolioEventAPI, PortfolioProcessor"
+        }
+      },
+      "required": [
+        "application",
+        "updateDate",
+        "userFirmId",
+        "userId",
+        "version"
+      ]
+    },
+    "BankDetails": {
+      "type": "object",
+      "properties": {
+        "sortCode": {
+          "type": "string",
+          "description": "observed values: 123123, 654321"
+        },
+        "accountNumber": {
+          "type": "string",
+          "description": "observed values: 12321312, 87654321"
+        }
+      },
+      "required": ["accountNumber", "sortCode"]
+    },
+    "CgtData": {
+      "type": "object",
+      "properties": {
+        "realisedProfitLoss": {
+          "type": "number"
+        },
+        "unrealisedProfitLoss": {
+          "type": "number"
+        }
+      },
+      "required": ["realisedProfitLoss", "unrealisedProfitLoss"]
+    },
+    "Client": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "observed values: 02693F2, 02693G1, 03BB94G, 03BBB8G, Client1, Client2"
+        },
+        "decisionMaker": {
+          "type": "boolean"
+        },
+        "owner": {
+          "type": "number"
+        },
+        "isLeadClient": {
+          "type": "boolean"
+        }
+      },
+      "required": ["id"]
+    },
+    "ClosingPrice": {
+      "type": "object",
+      "properties": {
+        "assetId": {
+          "type": "string",
+          "description": "observed values: 286D7, 29F55"
+        },
+        "priceDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "ask": {
+          "type": "number"
+        },
+        "mid": {
+          "type": "number"
+        },
+        "bid": {
+          "type": "number"
+        },
+        "quoteUnit": {
+          "type": "number"
+        },
+        "minimumTransferUnit": {
+          "type": "number"
+        },
+        "currency": {
+          "type": "string",
+          "description": "observed values: GBP"
+        },
+        "exchangeRates": {
+          "type": "array",
+          "items": {}
+        },
+        "instrumentType": {
+          "type": "string",
+          "description": "observed values: Equity, Fund"
+        },
+        "ocfCalculated": {
+          "type": "number"
+        },
+        "id": {
+          "type": "string",
+          "description": "observed values: 66b40af5f01864527b4774d2"
+        },
+        "insertDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "auditDetails": {
+          "$ref": "#/$defs/AuditDetails"
+        },
+        "firmId": {
+          "type": "string",
+          "description": "observed values: SECCL"
+        },
+        "updateId": {
+          "type": "string",
+          "description": "observed values: 66b4707ee1bb04dbe09f2b7d"
+        }
+      },
+      "required": [
+        "ask",
+        "assetId",
+        "bid",
+        "currency",
+        "exchangeRates",
+        "instrumentType",
+        "mid",
+        "minimumTransferUnit",
+        "priceDate",
+        "quoteUnit"
+      ]
+    },
+    "Detail": {
+      "type": "object",
+      "properties": {
+        "assetId": {
+          "type": "string",
+          "description": "observed values: 26MPD, 27426, 284JP"
+        },
+        "percentage": {
+          "type": "number"
+        },
+        "assetName": {
+          "type": "string"
+        },
+        "currency": {
+          "type": "string",
+          "description": "observed values: GBP"
+        }
+      },
+      "required": ["assetId", "percentage"]
+    },
+    "FeeStructures": {
+      "type": "object",
+      "properties": {
+        "adviserFeeId": {
+          "type": "string",
+          "description": "observed values: 64f1a2b3c4d5e6f7a8b9c0d1"
+        }
+      },
+      "required": ["adviserFeeId"]
+    },
+    "FromData": {
+      "type": "object",
+      "properties": {
+        "wrapperDetail": {
+          "$ref": "#/$defs/WrapperDetail"
+        }
+      },
+      "required": ["wrapperDetail"]
+    },
+    "Nomination": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "observed values:  "
+        },
+        "firstName": {
+          "type": "string",
+          "description": "observed values: Bamm-Bamm, Pebble"
+        },
+        "surname": {
+          "type": "string",
+          "description": "observed values: Rubble"
+        },
+        "beneficiaryRelationship": {
+          "type": "string",
+          "description": "observed values: DAUGHTER"
+        },
+        "beneficiaryProportion": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "beneficiaryProportion",
+        "beneficiaryRelationship",
+        "firstName",
+        "surname",
+        "title"
+      ]
+    },
+    "PortfolioGroup": {
+      "type": "object",
+      "properties": {
+        "groupIntent": {
+          "type": "string",
+          "description": "observed values: Pension Account Group"
+        },
+        "groupType": {
+          "type": "string",
+          "description": "observed values: Crystallised, CrystallisedTransfer"
+        },
+        "name": {
+          "type": "string",
+          "description": "observed values: Old Pension Provider Account"
+        }
+      },
+      "required": ["groupIntent", "groupType"]
+    },
+    "Position": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "accountId": {
+          "type": "string",
+          "description": "observed values: 0000619, 031B7H5, A05WQ3V, A05X9TD"
+        },
+        "accountName": {
+          "type": "string"
+        },
+        "accountType": {
+          "type": "string",
+          "description": "observed values: Wrapper"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "auditDetails": {
+          "$ref": "#/$defs/AuditDetails"
+        },
+        "currency": {
+          "type": "string",
+          "description": "observed values: GBP"
+        },
+        "firmId": {
+          "type": "string",
+          "description": "observed values: SECCI"
+        },
+        "nodeId": {
+          "type": "string",
+          "description": "observed values: 0"
+        },
+        "positionType": {
+          "type": "string",
+          "description": "observed values: Cash, Stock"
+        },
+        "updateId": {
+          "type": "string"
+        },
+        "currentValue": {
+          "type": "number"
+        },
+        "assetId": {
+          "type": "string",
+          "description": "observed values: 2848P, 286D7, 29F55"
+        },
+        "assetName": {
+          "type": "string"
+        },
+        "isin": {
+          "type": "string",
+          "description": "observed values: GB0003101523, GB00B2PDGW16, GB00BZ82ZW98"
+        },
+        "quantity": {
+          "type": "number"
+        },
+        "prices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Price"
+          }
+        },
+        "closingPrice": {
+          "$ref": "#/$defs/ClosingPrice"
+        },
+        "currentPrice": {
+          "type": "number"
+        },
+        "currentSellPrice": {
+          "type": "number"
+        },
+        "instrumentType": {
+          "type": "string",
+          "description": "observed values: Equity, Fund"
+        },
+        "minimumTransferUnit": {
+          "type": "number"
+        },
+        "currentPriceDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "assetInstrumentType": {
+          "type": "string",
+          "description": "observed values: Equity, Fund"
+        },
+        "assetCountryOfIssue": {
+          "type": "string",
+          "description": "observed values: GB"
+        },
+        "assetTaxDetails": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AssetTaxDetail"
+          }
+        },
+        "growth": {
+          "type": "number"
+        },
+        "growthPercent": {
+          "type": "number"
+        },
+        "adjustedGrowth": {
+          "type": "number"
+        },
+        "adjustedGrowthPercent": {
+          "type": "number"
+        },
+        "openingValue": {
+          "type": "number"
+        },
+        "allocation": {
+          "type": "number"
+        },
+        "disclaimers": {
+          "type": "array",
+          "items": {}
+        },
+        "bookValue": {
+          "type": "number"
+        },
+        "transferBookValue": {
+          "type": "number"
+        },
+        "nonTransferBookValue": {
+          "type": "number"
+        },
+        "transferValue": {
+          "type": "number"
+        },
+        "cgtData": {
+          "$ref": "#/$defs/CgtData"
+        }
+      },
+      "required": [
+        "accountId",
+        "accountName",
+        "accountType",
+        "auditDetails",
+        "currency",
+        "currentValue",
+        "firmId",
+        "id",
+        "nodeId",
+        "positionType",
+        "updateId"
+      ]
+    },
+    "Price": {
+      "type": "object",
+      "properties": {
+        "assetId": {
+          "type": "string",
+          "description": "observed values: 2848P, 286D7, 29F55"
+        },
+        "priceDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "ask": {
+          "type": "number"
+        },
+        "mid": {
+          "type": "number"
+        },
+        "bid": {
+          "type": "number"
+        },
+        "quoteUnit": {
+          "type": "number"
+        },
+        "minimumTransferUnit": {
+          "type": "number"
+        },
+        "currency": {
+          "type": "string",
+          "description": "observed values: GBP"
+        },
+        "exchangeRates": {
+          "type": "array",
+          "items": {}
+        },
+        "instrumentType": {
+          "type": "string",
+          "description": "observed values: Equity, Fund"
+        },
+        "ocfCalculated": {
+          "type": "number"
+        },
+        "insertDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "id": {
+          "type": "string",
+          "description": "observed values: 66b40af5f01864527b4774d2"
+        },
+        "auditDetails": {
+          "$ref": "#/$defs/AuditDetails"
+        },
+        "firmId": {
+          "type": "string",
+          "description": "observed values: SECCL"
+        },
+        "updateId": {
+          "type": "string",
+          "description": "observed values: 66b4707ee1bb04dbe09f2b7d"
+        }
+      },
+      "required": [
+        "ask",
+        "assetId",
+        "bid",
+        "currency",
+        "exchangeRates",
+        "instrumentType",
+        "mid",
+        "minimumTransferUnit",
+        "priceDate",
+        "quoteUnit"
+      ]
+    },
+    "ProductDetail": {
+      "type": "object",
+      "properties": {
+        "flexiAccessDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "flexibleBenefitsAccessed": {
+          "type": "boolean"
+        },
+        "pensionOptOut": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "flexiAccessDate",
+        "flexibleBenefitsAccessed",
+        "pensionOptOut"
+      ]
+    },
+    "RecurringOrders": {
+      "type": "object",
+      "properties": {
+        "movementType": {
+          "type": "string",
+          "description": "observed values: Invest"
+        },
+        "investmentType": {
+          "type": "string",
+          "description": "observed values: Bespoke"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Detail"
+          }
+        },
+        "orderDay": {
+          "type": "number"
+        }
+      },
+      "required": ["details", "investmentType", "movementType", "orderDay"]
+    },
+    "RecurringPayment": {
+      "type": "object",
+      "properties": {
+        "paymentDay": {
+          "type": "number"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "movementType": {
+          "type": "string",
+          "description": "observed values: In, Out"
+        },
+        "method": {
+          "type": "string",
+          "description": "observed values: BACS Credit, Bank Transfer, Direct Debit"
+        },
+        "paymentType": {
+          "type": "string",
+          "description": "observed values: Employee"
+        },
+        "autoInvest": {
+          "type": "boolean"
+        }
+      },
+      "required": ["amount", "paymentDay"]
+    },
+    "Tier": {
+      "type": "object",
+      "properties": {
+        "fromAmount": {
+          "type": "number"
+        },
+        "toAmount": {
+          "type": "number"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "rate": {
+          "type": "number"
+        }
+      },
+      "required": ["amount", "fromAmount", "rate", "toAmount"]
+    },
+    "ToData": {
+      "type": "object",
+      "properties": {
+        "wrapperDetail": {
+          "$ref": "#/$defs/WrapperDetail"
+        },
+        "recurringOrders": {
+          "$ref": "#/$defs/RecurringOrders"
+        },
+        "recurringPayments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RecurringPayment"
+          }
+        },
+        "autoDisinvest": {
+          "type": "string",
+          "description": "observed values: Largest, Proportional"
+        }
+      }
+    },
+    "UpdateData": {
+      "type": "object",
+      "properties": {
+        "fromData": {
+          "$ref": "#/$defs/FromData"
+        },
+        "toData": {
+          "$ref": "#/$defs/ToData"
+        },
+        "bankDetails": {
+          "$ref": "#/$defs/BankDetails"
+        },
+        "status": {
+          "type": "string",
+          "description": "observed values: Suspended"
+        }
+      }
+    },
+    "UpdateHistory": {
+      "type": "object",
+      "properties": {
+        "updateId": {
+          "type": "number"
+        },
+        "updateDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updateData": {
+          "$ref": "#/$defs/UpdateData"
+        },
+        "updatedFields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["updateData", "updateDate", "updateId", "updatedFields"]
+    },
+    "WrapperDetail": {
+      "type": "object",
+      "properties": {
+        "wrapperType": {
+          "type": "string",
+          "description": "observed values: GIA, ISA, JISA, PENSION"
+        },
+        "discretionary": {
+          "type": "boolean"
+        },
+        "advised": {
+          "type": "boolean"
+        },
+        "trust": {
+          "type": "boolean"
+        },
+        "clientProductId": {
+          "type": "string"
+        },
+        "declarationAcceptedDate": {
+          "type": "string",
+          "description": "observed values: 2025-01-01, 2025-01-01T08:21:30.521Z"
+        },
+        "schemeProductId": {
+          "type": "string",
+          "description": "observed values: 004P4"
+        },
+        "productDetail": {
+          "$ref": "#/$defs/ProductDetail"
+        },
+        "assetAllocationId": {
+          "type": "string",
+          "description": "observed values: 04DGH, 251GF, 264GJ"
+        },
+        "assetAllocationName": {
+          "type": "string",
+          "description": "observed values: 8-FEB, High-growth model "
+        },
+        "acceptedProviderTerms": {
+          "type": "boolean"
+        },
+        "acceptedProviderTermsDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "nominations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Nomination"
+          }
+        },
+        "externalId": {
+          "type": "string",
+          "description": "observed values: ABC123456"
+        },
+        "externalIds": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "idType": {
+                "type": "string",
+                "description": "observed values: ExternalIdType"
+              },
+              "value": {
+                "type": "string",
+                "description": "observed values: 01ABC"
+              }
+            },
+            "required": ["idType", "value"]
+          }
+        },
+        "decisionMakerId": {
+          "type": "string"
+        }
+      },
+      "required": ["wrapperType"]
+    }
+  }
+}

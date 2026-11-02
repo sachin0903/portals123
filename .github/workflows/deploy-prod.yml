@@ -1,0 +1,107 @@
+name: Deploy prod
+
+# Prod is off Coolify: the infra `app_stack` Ansible role deploys the portals stack to
+# the prod app hosts. This is a MANUAL gate — prod never deploys on its own; you trigger
+# it from the Actions tab ("Run workflow"). Native environment required-reviewers isn't
+# available on this repo, so this manual dispatch IS the approval gate.
+#
+# The image for the chosen commit must already be built + pushed by deploy.yml (which runs
+# on every push to main). Deploy the current branch HEAD, or pin a specific built SHA via
+# the image_tag input.
+#
+# This job's Environment (`prod`) is where the app team owns the app's env vars +
+# secrets (WorkOS, Seccl, the Fernet SECRETS_MASTER_KEY, INTERNAL_API_TOKEN, SERVICE_URL_*,
+# feature flags, any NEW var — reference `${NEW}` in docker-compose.yaml and set it here, no
+# infra change). render_app_env.py forwards them; infra keeps DB, the object-store endpoint
+# and secret, and the image tag in its vault and renders those last, so they win. The
+# object-store secret is NOT in this Environment — the bucket step below reads it from
+# the infra vault. app_stack runs the expand/contract migrations before release.
+#
+# APP_STAGE is not set here. Infra renders the literal word `production` (the app's guards
+# check that exact word). This environment is named `prod`.
+#
+# Prereqs — `prod` Environment secrets: ANSIBLE_VAULT_PASSWORD (decrypts the infra vault)
+# and INFRA_REPO_TOKEN (reads the infrastructure repo). The self-hosted runner has ansible +
+# the automation SSH identity baked in (infra `github_runner` role).
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Image tag (git SHA) to deploy. Blank = HEAD of the branch you run this from."
+        required: false
+        default: ""
+
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
+jobs:
+  deploy-prod:
+    runs-on: [self-hosted, graphene]
+    environment: prod
+    steps:
+      - uses: actions/checkout@v5           # portals: docker-compose.yaml + render_app_env.py
+      - name: Check out the infrastructure repo (playbooks + roles)
+        uses: actions/checkout@v5
+        with:
+          repository: Graphene-Platforms/infrastructure
+          token: ${{ secrets.INFRA_REPO_TOKEN }}
+          path: .infra
+
+      # Turn THIS Environment's vars + secrets into the app env fragment app_stack merges
+      # (infra-reserved keys are dropped — infra renders those from vault).
+      - name: Render the app env fragment from this Environment
+        env:
+          VARS_JSON: ${{ toJSON(vars) }}
+          SECRETS_JSON: ${{ toJSON(secrets) }}
+        run: python3 scripts/render_app_env.py > app.env
+
+      - name: Resolve the image tag (input override, else this commit)
+        id: tag
+        run: |
+          tag="${{ inputs.image_tag }}"
+          echo "sha=${tag:-$GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy the stack via app_stack (Ansible)
+        env:
+          ANSIBLE_VAULT_PASSWORD: ${{ secrets.ANSIBLE_VAULT_PASSWORD }}
+          # Bucket NAMES live in this Environment. The endpoint and secret do not
+          # (render_app_env.py drops them); the playbook reads those from the vault.
+          S3_CORE_BUCKET: ${{ vars.S3_CORE_BUCKET }}
+          S3_DOCUMENTS_BUCKET: ${{ vars.S3_DOCUMENTS_BUCKET }}
+          S3_INTEGRATIONS_BUCKET: ${{ vars.S3_INTEGRATIONS_BUCKET }}
+        run: |
+          set -euo pipefail
+          umask 077
+          printf '%s' "$ANSIBLE_VAULT_PASSWORD" > "$RUNNER_TEMP/vault_pass"
+          # Re-stage the mounted automation key at 0600 under this job's uid: SSH refuses a
+          # group/world-readable key it owns, and myoung34 may run the job as root.
+          install -m 600 /home/runner/.ssh/id_deploy "$RUNNER_TEMP/deploy_key"
+          export ANSIBLE_PRIVATE_KEY_FILE="$RUNNER_TEMP/deploy_key"
+          trap 'rm -f "$RUNNER_TEMP/vault_pass" "$RUNNER_TEMP/deploy_key"' EXIT
+          cd .infra/ansible
+          # Bucket names default to the compose ones when the Environment leaves them blank.
+          core="${S3_CORE_BUCKET:-}"; [ -n "$core" ] || core=platforms
+          documents="${S3_DOCUMENTS_BUCKET:-}"; [ -n "$documents" ] || documents=portals-documents
+          integrations="${S3_INTEGRATIONS_BUCKET:-}"; [ -n "$integrations" ] || integrations=integrations
+          # On the pipeline host, before the stack: createbucket only reaches the bundled
+          # RustFS, which prod does not start. rustfs/rc lists then creates (idempotent).
+          ansible-playbook -i inventory/hosts.yml \
+            "${GITHUB_WORKSPACE}/scripts/ensure_prod_buckets.yml" \
+            -e ansible_user=automation \
+            -e "core_bucket=${core}" \
+            -e "documents_bucket=${documents}" \
+            -e "integrations_bucket=${integrations}" \
+            --vault-password-file "$RUNNER_TEMP/vault_pass"
+          # Connect as the `automation` identity (ADR 0004): the runner mounts its private
+          # key and its public half is authorized estate-wide. inventory pins
+          # ansible_user=giomxx (a person) and inventory beats -u/env, so override with -e.
+          # hosts defaults to app_staging; -l only narrows that, so prod is selected with
+          # -e target=app_prod (a -l app_prod run matches nothing).
+          ansible-playbook -i inventory/hosts.yml playbooks/apps.yml \
+            -e target=app_prod \
+            -e ansible_user=automation \
+            -e portals_image_tag="${{ steps.tag.outputs.sha }}" \
+            -e app_stack_compose_src="${GITHUB_WORKSPACE}/docker-compose.yaml" \
+            -e app_stack_app_env_file="${GITHUB_WORKSPACE}/app.env" \
+            --vault-password-file "$RUNNER_TEMP/vault_pass"

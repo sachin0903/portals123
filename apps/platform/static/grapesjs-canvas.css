@@ -1,0 +1,477 @@
+/* Canvas background. The page (body) is centred with text-align + an inline-block body
+   rather than flexbox `align-items:center`: a body wider than the viewport (e.g. a
+   landscape sheet) stays centred, whereas flex centring clips the overflowing edge and
+   leaves the page hugging one side. */
+html {
+	background: #e2e8f0;
+	min-height: 100%;
+	padding: 24px 16px;
+	box-sizing: border-box;
+	overflow-y: auto;
+	text-align: center;
+	scrollbar-width: thin;
+	scrollbar-color: #94a3b8 transparent;
+}
+
+html::-webkit-scrollbar {
+	width: 5px;
+}
+html::-webkit-scrollbar-track {
+	background: transparent;
+}
+html::-webkit-scrollbar-thumb {
+	background: #94a3b8;
+	border-radius: 99px;
+}
+html::-webkit-scrollbar-thumb:hover {
+	background: #64748b;
+}
+
+/* Body is just a container — pages are .page divs inside it.
+   position:relative makes it the containing block for the box-model overlay
+   (position:absolute children), so absolute coords use body origin not viewport. */
+body {
+	/* inline-block + the html `text-align:center` above centres the sheet horizontally at
+     any width (see the html comment). text-align:left resets alignment for page content;
+     vertical-align:top removes the inline-block baseline gap. Width is overridden per
+     document by applyPageLayout (sized to the widest page). */
+	display: inline-block;
+	vertical-align: top;
+	text-align: left;
+	width: 210mm;
+	height: auto;
+	min-height: 0;
+	overflow: visible;
+	margin: 0;
+	/* Transparent so the grey canvas shows between/around the page sheets — the
+     pages themselves carry the white background. */
+	background: transparent;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 13px;
+	line-height: 1.5;
+	color: #111827;
+	padding: 0;
+	position: relative;
+}
+
+/* Suppress GJS hover/selection chrome on the body wrapper — it is not a
+   user-selectable component; showing it is just visual noise. */
+body.gjs-hovered {
+	outline: none !important;
+	box-shadow: none !important;
+}
+body.gjs-selected {
+	outline: none !important;
+	box-shadow: none !important;
+}
+
+/* Heading scale — browser UA defaults vary; pin so editor and PDF match */
+h1 {
+	font-size: 24px;
+	font-weight: 700;
+	line-height: 1.2;
+	margin: 0 0 12px;
+}
+h2 {
+	font-size: 18px;
+	font-weight: 600;
+	line-height: 1.3;
+	margin: 0 0 8px;
+}
+h3 {
+	font-size: 15px;
+	font-weight: 600;
+	line-height: 1.4;
+	margin: 0 0 6px;
+}
+h4,
+h5,
+h6 {
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 1.5;
+	margin: 0 0 4px;
+}
+
+/* A4 page — each .page div is one document page */
+.page {
+	min-height: 297mm;
+	padding: 72px;
+	padding-bottom: 40px;
+	box-sizing: border-box;
+	position: relative;
+	background: #ffffff;
+	page-break-after: always;
+	margin-bottom: 32px;
+}
+
+/* Footer — always pinned to the page bottom regardless of content length.
+   left/right use negative values to counteract the .page's 72px padding so
+   the footer spans the full page width. */
+footer.tmpl-footer,
+.tmpl-footer {
+	position: absolute !important;
+	bottom: 0;
+	left: -72px;
+	right: -72px;
+	padding: 8px 72px !important;
+	border-top: 1px solid rgba(0, 0, 0, 0.12);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-size: 10px;
+	color: inherit;
+	background: transparent;
+	box-sizing: border-box;
+}
+
+footer.tmpl-footer > span,
+.tmpl-footer > span {
+	flex: 1;
+	min-width: 0;
+}
+
+footer.tmpl-footer > span:first-child,
+.tmpl-footer > span:first-child {
+	text-align: left;
+}
+footer.tmpl-footer > span:nth-child(2),
+.tmpl-footer > span:nth-child(2) {
+	text-align: center;
+}
+footer.tmpl-footer > span:last-child,
+.tmpl-footer > span:last-child {
+	text-align: right;
+}
+
+header.tmpl-header,
+.tmpl-header {
+	position: absolute !important;
+	top: 0;
+	left: -72px;
+	right: -72px;
+	padding: 8px 72px !important;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-size: 10px;
+	color: inherit;
+	background: transparent;
+	box-sizing: border-box;
+}
+
+header.tmpl-header > span,
+.tmpl-header > span {
+	flex: 1;
+	min-width: 0;
+}
+
+header.tmpl-header > span:first-child,
+.tmpl-header > span:first-child {
+	text-align: left;
+}
+header.tmpl-header > span:nth-child(2),
+.tmpl-header > span:nth-child(2) {
+	text-align: center;
+}
+header.tmpl-header > span:last-child,
+.tmpl-header > span:last-child {
+	text-align: right;
+}
+
+/* ── Section / column system ─────────────────────────────────────────────────
+   doc-section + doc-col are the primary layout primitives.
+   They also carry gjs-row/gjs-cell classes so the col-resizer and existing
+   flex rules continue to work without duplication. */
+
+/* Column row wrapper.
+   blocksBasic injects .gjs-row { padding:10px } via the GJS style manager.
+   We override just the padding here — padding on rows breaks percentage-based
+   cell widths. The !important is intentional and scoped to padding only. */
+.gjs-row {
+	display: flex;
+	align-items: stretch;
+	flex-wrap: nowrap;
+	padding: 0 !important;
+	min-height: 24px;
+	border-radius: 3px;
+	box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.25);
+}
+
+.gjs-row:hover:not(.gjs-selected) {
+	background: rgba(231, 255, 170, 0.3);
+	box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.25);
+}
+
+.gjs-row.gjs-selected {
+	box-shadow: inset 0 0 0 2px rgba(163, 230, 53, 0.9);
+}
+
+/* Individual cells — flex:1 makes equal-width by default.
+   Inline styles (e.g. flex:0 0 30%) from fixed-width layouts override this cleanly
+   because no !important is used here. */
+.gjs-cell {
+	flex: 1;
+	min-width: 0;
+	min-height: 24px;
+	position: relative;
+	box-sizing: border-box;
+	overflow: hidden;
+	border-radius: 3px;
+	box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.2);
+	padding: 6px;
+}
+
+/* All direct children of a cell must respect the cell width */
+.gjs-cell > * {
+	max-width: 100%;
+	box-sizing: border-box;
+}
+
+/* Tables always fill cell width and never exceed it */
+.gjs-cell table,
+table {
+	table-layout: fixed;
+	max-width: 100%;
+	width: 100%;
+	word-break: break-word;
+}
+
+/* Cells/columns within tables auto-size within the fixed layout */
+.gjs-cell td,
+.gjs-cell th,
+td,
+th {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 0; /* required for text-overflow to work in fixed-layout tables */
+}
+
+/* Images and media never overflow their container */
+img,
+video,
+iframe,
+embed,
+object {
+	max-width: 100%;
+	height: auto;
+	display: block;
+}
+
+/* Hover: pastel fill (suppressed when selected) */
+.gjs-cell:nth-child(1):hover:not(.gjs-selected) {
+	background: rgba(253, 232, 232, 0.55);
+}
+.gjs-cell:nth-child(2):hover:not(.gjs-selected) {
+	background: rgba(219, 234, 254, 0.55);
+}
+.gjs-cell:nth-child(3):hover:not(.gjs-selected) {
+	background: rgba(209, 250, 229, 0.55);
+}
+.gjs-cell:nth-child(4):hover:not(.gjs-selected) {
+	background: rgba(237, 233, 254, 0.55);
+}
+.gjs-cell:nth-child(5):hover:not(.gjs-selected) {
+	background: rgba(254, 243, 199, 0.55);
+}
+.gjs-cell:nth-child(6):hover:not(.gjs-selected) {
+	background: rgba(252, 231, 243, 0.55);
+}
+
+/* Selected: coloured inset shadow (avoids GrapesJS outline !important override) */
+.gjs-cell:nth-child(1).gjs-selected {
+	box-shadow: inset 0 0 0 2px #fca5a5;
+}
+.gjs-cell:nth-child(2).gjs-selected {
+	box-shadow: inset 0 0 0 2px #93c5fd;
+}
+.gjs-cell:nth-child(3).gjs-selected {
+	box-shadow: inset 0 0 0 2px #6ee7b7;
+}
+.gjs-cell:nth-child(4).gjs-selected {
+	box-shadow: inset 0 0 0 2px #c4b5fd;
+}
+.gjs-cell:nth-child(5).gjs-selected {
+	box-shadow: inset 0 0 0 2px #fcd34d;
+}
+.gjs-cell:nth-child(6).gjs-selected {
+	box-shadow: inset 0 0 0 2px #f9a8d4;
+}
+
+/* Empty cell placeholder — editor only */
+.gjs-cell:empty {
+	min-height: 40px;
+	background: repeating-linear-gradient(
+		-45deg,
+		transparent,
+		transparent 5px,
+		rgba(148, 163, 184, 0.08) 5px,
+		rgba(148, 163, 184, 0.08) 10px
+	);
+}
+
+.gjs-cell:empty::before {
+	content: 'Drop blocks here';
+	display: block;
+	text-align: center;
+	padding: 10px 4px;
+	color: rgba(148, 163, 184, 0.5);
+	font-size: 10px;
+	font-style: italic;
+	pointer-events: none;
+}
+
+/* Textual placeholder — faded in editor only; opacity preserves colour so
+   page text-colour and RTE foreColor still work correctly */
+[data-tmpl-ph] {
+	opacity: 0.55;
+	font-style: italic;
+}
+
+/* Force GrapesJS-classed elements to inherit colour from the .page container.
+   Specificity (0,1,1) beats GrapesJS component class rules (0,1,0), so the
+   text-colour set via Page Settings propagates to all blocks.
+   User RTE inline colours (specificity 1,0,0) still win. */
+body [class] {
+	color: inherit;
+}
+.page [class] {
+	color: inherit;
+}
+
+/* Chart / table placeholders — must not overflow their containing cell */
+[data-comp-id] {
+	max-width: 100% !important;
+	box-sizing: border-box !important;
+	overflow: hidden;
+}
+
+/* Variable tokens render as plain inherited text — highlighting is disabled
+   for now because the tinted inline span disturbed surrounding formatting
+   (notably flex layouts). Any span left over from an earlier draft inherits
+   the parent's styling instead of standing out as a chip. */
+.jinja-var {
+	display: inline;
+	background: transparent;
+	color: inherit;
+	padding: 0;
+	border-radius: 0;
+	font-style: inherit;
+}
+
+/* Component condition indicator — amber dashed outline + expression badge */
+[data-comp-cond] {
+	outline: 2px dashed #f59e0b !important;
+	outline-offset: 3px;
+	position: relative !important;
+}
+[data-comp-cond]::before {
+	content: '⚡ IF: ' attr(data-comp-cond);
+	position: absolute;
+	top: -14px;
+	left: 0;
+	background: #f59e0b;
+	color: #ffffff;
+	font-size: 9px;
+	font-weight: 700;
+	padding: 1px 6px;
+	border-radius: 3px;
+	font-family: monospace;
+	white-space: nowrap;
+	z-index: 999;
+	pointer-events: none;
+	letter-spacing: 0.02em;
+}
+
+/* Jinja table (doc-jtable) — styling lives here (not inline in the template) so the raw
+   jinja/HTML source stays clean. Per-table design is layered on via CSS custom properties
+   and modifier classes set on the <table> tag (see jdesignTableAttrs), leaving these rules
+   as the fallback defaults. Applied in the editor canvas; the same rules ship with the
+   exported document stylesheet. */
+.doc-jtable-inner {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: var(--jt-font, 13px);
+	color: var(--jt-body-fg, #374151);
+	line-height: 1.45;
+}
+.doc-jtable-inner th,
+.doc-jtable-inner td {
+	border: 1px solid var(--jt-border, #e2e8f0);
+	padding: 7px 10px;
+	text-align: var(--jt-align, left);
+	vertical-align: top;
+}
+.doc-jtable-inner td {
+	background: var(--jt-row-bg, transparent);
+}
+.doc-jtable-inner th {
+	background: var(--jt-header-bg, #f1f5f9);
+	color: var(--jt-header-fg, #1e293b);
+	font-weight: 600;
+	border-bottom: 2px solid var(--jt-border, #e2e8f0);
+}
+/* Border modes: rows-only (horizontal rules) or borderless. */
+.doc-jtable-inner.jt-border-rows th,
+.doc-jtable-inner.jt-border-rows td {
+	border-left: 0;
+	border-right: 0;
+}
+.doc-jtable-inner.jt-border-none th,
+.doc-jtable-inner.jt-border-none td {
+	border: 0;
+}
+/* Zebra striping on body rows. */
+.doc-jtable-inner.jt-striped tbody tr:nth-child(even) td {
+	background: var(--jt-stripe, #f8fafc);
+}
+
+/* The data table's `{% else %}` row — the canvas copy of the DOC_JTABLE_CSS rule.
+   Table styling lives in both files and they change together (component-types.ts). */
+.doc-jtable-inner tr.jt-empty td {
+	text-align: center;
+	color: #94a3b8;
+	font-style: italic;
+}
+
+/* THE CHART HOST FILLS ITS FRAME. Editor chrome, and only here: this stylesheet is loaded into the
+   canvas iframe (`create.ts`'s `canvas.styles`) and never reaches the PDF.
+
+   The frame is the resizable thing and the chart inside it is `resizable: false`, so the chart's
+   height was content-driven: dragging the frame taller left the chart at its placeholder floor with
+   dead space beneath it, and `renderedH` — which `toHTML` exports as `data-height` and the worker
+   draws at — reported that floor rather than the box the author had just drawn. Filling the frame
+   makes the measurement agree with the drawing, which is the whole point of the stretch.
+
+   Not a default component STYLE, deliberately: `toHTML` reads `style.height` for `data-height`, so
+   a `height:100%` there would export the string `100%` and the worker would fall back to canonical
+   (`components.py::_size`). A canvas rule leaves the component's own styles empty.
+
+   IT FILLS BY FLEX, NOT BY `height: 100%`. A percentage height resolves against the parent only when
+   the parent's own height is DEFINITE, and a chart frame's very often is not: an author who sets Min
+   height rather than Height, or who lets the frame take its height from padding and content, leaves
+   the frame `height: auto` — at which point `height: 100%` here computes to `auto` too, the chart
+   collapses onto its 210px floor, and the frame grows around it. That is the "it stops getting
+   taller at a certain point and leaves white space underneath" defect, and then the clipping one
+   after it: the drawing is measured from a box that stopped growing while `overflow: hidden` trims
+   whatever exceeds it. A flex child fills its parent's content box however that height was arrived
+   at, so all three ways of sizing a frame now agree. */
+[data-gjs-type='chart-frame'] {
+	display: flex;
+	flex-direction: column;
+}
+
+[data-gjs-type='chart-frame'] > [data-gjs-type='chart'] {
+	flex: 1 1 auto;
+	box-sizing: border-box;
+	/* A DON'T-VANISH GUARD, not a layout number. A chart is dropped with a real `height` on its frame
+	   (`blocks.ts`), so this is never the operative figure — it exists only for the frame whose height
+	   an author has CLEARED, where an auto-height column would otherwise leave nothing on screen big
+	   enough to select and give a height back to. It was 210px, which competed with the author's own
+	   Height and made the chart appear to stop growing.
+	   `overflow: hidden` is the belt: the card can no longer exceed this box, and if anything ever
+	   does, it is clipped rather than painted over a neighbour. */
+	min-height: 48px;
+	overflow: hidden;
+}

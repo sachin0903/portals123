@@ -1,0 +1,32 @@
+{
+  "name": "graphene-platform",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "pnpm@11.5.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "moon run :dev",
+    "build": "moon run :build",
+    "lint": "moon run :lint",
+    "format": "moon run :format",
+    "check": "moon run :check",
+    "test": "moon run :test",
+    "db:up": "moon run api:db-up",
+    "db:down": "moon run api:db-down",
+    "db:reset": "moon run api:db-reset",
+    "db:bootstrap": "moon run api:bootstrap-dev",
+    "storage:up": "node scripts/ensure-graphene-dev-network.mjs && docker compose -f docker-compose.local.yaml up -d --wait rustfs && docker compose -f docker-compose.local.yaml up rustfs-init",
+    "storage:down": "node scripts/ensure-graphene-dev-network.mjs && docker compose -f docker-compose.local.yaml rm -sf rustfs rustfs-init",
+    "worker:up": "node scripts/ensure-graphene-dev-network.mjs && docker compose -f docker-compose.local.yaml up -d --build render",
+    "worker:down": "node scripts/ensure-graphene-dev-network.mjs && docker compose -f docker-compose.local.yaml rm -sf render",
+    "worker:restart": "node scripts/ensure-graphene-dev-network.mjs && docker compose -f docker-compose.local.yaml restart render",
+    "worker:logs": "node scripts/ensure-graphene-dev-network.mjs && docker compose -f docker-compose.local.yaml logs -f render",
+    "prepare": "moon sync vcs-hooks || true"
+  },
+  "devDependencies": {
+    "prettier": "^3.9.6",
+    "prettier-plugin-svelte": "^4.1.1"
+  }
+}

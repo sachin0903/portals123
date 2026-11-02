@@ -1,0 +1,65 @@
+# Ported from the `sei_reports` repo's `src/integrations` (branch feat/porting-integrations-from-platform).
+# Three deployables from one package — mirrors sei_reports' Dockerfile_Integrations' three stages.
+id: 'intelliflo-sync'
+
+layer: 'application'
+language: 'python'
+
+tasks:
+  install:
+    command: 'uv sync'
+    toolchain: 'system'
+    inputs: []
+    options: { cache: false }
+  # The cron scheduler: loads approved+enabled integrations from `integrations.platforms` and runs
+  # each feature (Clients, Valuations, Transactions, IncomeStatements, IncomeStatementItems) on its
+  # own cron (INTELLIFLO_<FEATURE>_CRON), deduped per data_date against `integrations.job_runs`.
+  dev-scheduler:
+    command: 'uv'
+    args: 'run intelliflo-engine'
+    options: { cache: false, envFile: ['/.env', '.env'] }
+  # Tenant sync: discovers every tenant the Intelliflo app is installed for and upserts
+  # `integrations.platforms` rows for them, on its own schedule (INTELLIFLO_TENANT_SYNC_CRON).
+  dev-tenant-sync:
+    command: 'uv'
+    args: 'run intelliflo-tenant-sync'
+    options: { cache: false, envFile: ['/.env', '.env'] }
+  # The central webhook receiver (port 4000) — auto-mounts providers/<name>/webhook.py; today
+  # that's only Intelliflo's WebSub subscription (appinstalled/appuninstalled).
+  dev-webhook:
+    command: 'uv'
+    args: 'run intelliflo-engine-webhook'
+    options: { cache: false, envFile: ['/.env', '.env'] }
+  # Run every due feature once and exit, instead of blocking on the scheduler — for a manual
+  # backfill or a one-off re-run (RUN_PROVIDER / RUN_FEATURE / DATA_DATE env filters apply).
+  run-once:
+    command: 'uv'
+    args: 'run intelliflo-engine-run'
+    options: { cache: false, runInCI: false, envFile: ['/.env', '.env'] }
+  # Tenant sync's one-off (intelliflo-tenant-sync-run — a pyproject.toml script with no moon task
+  # of its own until now), for a manual backfill/re-run, same as run-once above.
+  run-once-tenant-sync:
+    command: 'uv'
+    args: 'run intelliflo-tenant-sync-run'
+    options: { cache: false, runInCI: false, envFile: ['/.env', '.env'] }
+  # Both one-offs together for local dev convenience — tenant sync first, so a tenant it
+  # discovers this run is immediately available to the feature sync that follows. Production
+  # never combines them: they stay two separately-scheduled deployables (dev-scheduler /
+  # dev-tenant-sync), each on its own cron.
+  run-once-all:
+    command: 'uv'
+    args: 'run intelliflo-engine-run'
+    deps: ['run-once-tenant-sync']
+    options: { cache: false, runInCI: false, envFile: ['/.env', '.env'] }
+  lint:
+    command: 'uv'
+    args: 'run ruff check .'
+  format:
+    command: 'uv'
+    args: 'run ruff format --check .'
+  typecheck:
+    command: 'uv'
+    args: 'run mypy src'
+  test:
+    command: 'uv'
+    args: 'run pytest'

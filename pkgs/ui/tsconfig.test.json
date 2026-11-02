@@ -1,0 +1,11 @@
+{
+	"//": "TYPE-CHECKS THE TESTS, which tsconfig.json cannot. Two overrides, both load-bearing. `noUncheckedIndexedAccess: false` \u2014 that one flag turned every `rows[0].name` after an asserted length into an error and accounted for 205 of the 206 raised by simply including these files; what survives is the class that matters, a fixture carrying a field the type no longer has or missing one it now requires. And `exclude: []` \u2014 `extends` inherits `exclude` too, and tsconfig.json excludes exactly these files, so without it the program was EMPTY and the pass exited 0 having checked nothing (measured: 0 files vs 332). Run through svelte-check rather than plain tsc: a test that imports a component imports a .svelte file, and tsc reports every one of those as a missing exported member.",
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"noUncheckedIndexedAccess": false,
+		"lib": ["ES2023", "DOM", "DOM.Iterable"]
+	},
+	"exclude": [],
+	"include": ["src/**/*.test.ts", "src/**/*.d.ts"],
+	"//lib": "ES2023, where the base config targets ES2022: the tests call `toSorted`, which is ES2023 and which Node 24 has at run time \u2014 so vitest was green while the type system said the method did not exist, and each call took its callback parameters down with it as implicit `any`. Raising it here rather than in the base config, because the SOURCE ships to browsers and its target is a deliberate floor; a test only ever runs on the pinned Node."
+}

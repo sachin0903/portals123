@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Project Starlight (Futura) — Analysis &amp; Recommendations</title>
+<style>
+  :root{
+    --navy:#193560; --navy-2:#24487d; --teal:#006388; --teal-2:#0a7ea6;
+    --reuse:#0E8F6E; --net:#E8590C; --amber:#C58B00; --danger:#C1272D;
+    --ink:#1a2230; --muted:#5c6675; --line:#e4e8ee; --bg:#f6f8fb; --card:#ffffff;
+    --shadow:0 1px 2px rgba(20,40,80,.05),0 4px 16px rgba(20,40,80,.06);
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    font-size:15.5px; line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:980px; margin:0 auto; padding:0 22px}
+  a{color:var(--teal-2); text-decoration:none}
+  a:hover{text-decoration:underline}
+  code{font-family:'SF Mono',ui-monospace,'Cascadia Code',Menlo,Consolas,monospace; font-size:.86em; background:#eef1f6; padding:.1em .4em; border-radius:5px; color:var(--navy)}
+
+  /* Hero */
+  header.hero{background:linear-gradient(135deg,var(--navy) 0%,#0f2547 60%,#0c1f3d 100%); color:#fff; padding:52px 0 40px}
+  .brand{display:flex; align-items:center; gap:11px; font-weight:800; letter-spacing:.14em; font-size:13px; text-transform:uppercase; color:#9fc0e6}
+  .brand .dot{width:11px;height:11px;border-radius:3px;background:linear-gradient(135deg,#2ea3c7,#0a7ea6);display:inline-block}
+  h1{font-size:33px; line-height:1.15; margin:18px 0 10px; font-weight:800; letter-spacing:-.02em}
+  .hero .sub{font-size:16.5px; color:#c9d8ec; max-width:70ch; margin:0}
+  .hero .meta{display:flex; flex-wrap:wrap; gap:10px 22px; margin-top:22px; font-size:13px; color:#a9c1e0}
+  .hero .meta b{color:#e8f0fb; font-weight:600}
+  .tag{display:inline-block; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.16); padding:3px 10px; border-radius:999px; font-size:12px; color:#dce8f7}
+
+  /* TL;DR stat band */
+  .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:-26px 0 8px}
+  .stat{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:16px 16px 14px; box-shadow:var(--shadow)}
+  .stat .n{font-size:26px; font-weight:800; color:var(--navy); letter-spacing:-.02em; line-height:1.1}
+  .stat .n.net{color:var(--net)} .stat .n.reuse{color:var(--reuse)}
+  .stat .l{font-size:12.5px; color:var(--muted); margin-top:3px}
+
+  main{padding:30px 0 10px}
+  section{margin:34px 0}
+  h2{font-size:22px; font-weight:800; color:var(--navy); letter-spacing:-.01em; margin:0 0 4px; display:flex; align-items:center; gap:10px}
+  h2 .idx{font-size:13px; font-weight:700; color:#fff; background:var(--teal); width:26px;height:26px;border-radius:8px; display:inline-flex;align-items:center;justify-content:center; flex:none}
+  h2 + .lede{color:var(--muted); margin:2px 0 16px; font-size:15px}
+  h3{font-size:15.5px; font-weight:700; color:var(--navy); margin:22px 0 8px}
+  p{margin:0 0 12px}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:20px 22px; box-shadow:var(--shadow)}
+  .card + .card{margin-top:14px}
+
+  ul.clean{margin:6px 0 12px; padding-left:20px} ul.clean li{margin:5px 0}
+  .kv{display:flex; gap:8px; margin:3px 0} .kv b{color:var(--navy); min-width:150px; font-weight:600} .kv span{color:var(--ink)}
+
+  /* Callout */
+  .callout{border-left:4px solid var(--teal); background:#f0f7fa; padding:13px 16px; border-radius:0 10px 10px 0; margin:14px 0; font-size:14.5px}
+  .callout.warn{border-color:var(--net); background:#fdf2ea}
+  .callout.key{border-color:var(--navy); background:#eef2f8}
+  .callout b{color:var(--navy)}
+
+  /* Table */
+  .tbl{width:100%; border-collapse:collapse; font-size:13.6px; margin:6px 0}
+  .tbl th{text-align:left; background:var(--navy); color:#fff; padding:9px 11px; font-weight:600; font-size:12.5px}
+  .tbl th:first-child{border-radius:8px 0 0 0} .tbl th:last-child{border-radius:0 8px 0 0}
+  .tbl td{padding:8px 11px; border-bottom:1px solid var(--line); vertical-align:top}
+  .tbl tr:last-child td{border-bottom:none}
+  .tbl tr:nth-child(even) td{background:#fafbfd}
+  .scroll{overflow-x:auto; border:1px solid var(--line); border-radius:12px}
+  .scroll .tbl{margin:0}
+  .scroll .tbl th:first-child,.scroll .tbl th:last-child{border-radius:0}
+
+  .pill{display:inline-block; padding:2px 9px; border-radius:999px; font-size:11.5px; font-weight:700; white-space:nowrap}
+  .pill.reuse{background:#e2f4ee; color:#0b6b52} .pill.net{background:#fdece1; color:#b8480f}
+  .pill.mix{background:#eef2f8; color:#2c4a7a}
+  .pill.good{background:#e6f5ec;color:#1c7a3f}.pill.bad{background:#fbe6e6;color:#a02020}.pill.warn{background:#fdf3e0;color:#8a6100}
+
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+  .verdict{display:flex; gap:14px; align-items:flex-start}
+  .verdict .bar{flex:none;width:5px;border-radius:3px;align-self:stretch}
+  .did h3{margin-top:0}
+  .did .lnk{font-size:13px;color:var(--muted);margin-top:8px}
+  .did .lnk code{background:#eef1f6}
+
+  footer{border-top:1px solid var(--line); margin-top:44px; padding:22px 0 46px; color:var(--muted); font-size:13px}
+  footer b{color:var(--navy)}
+
+  @media (max-width:720px){
+    .stats{grid-template-columns:repeat(2,1fr)} .grid2{grid-template-columns:1fr}
+    h1{font-size:26px} .kv{flex-direction:column;gap:0} .kv b{min-width:0}
+  }
+  @media print{
+    body{background:#fff;font-size:11pt} .stat,.card,.scroll{box-shadow:none}
+    header.hero{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    section{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="brand"><span class="dot"></span> Graphene · Technology</div>
+    <h1>Project Starlight (Futura) — analysis &amp; recommendations</h1>
+    <p class="sub">How Project&nbsp;Starlight relates to the multi-tenant portals build, whether the PS Jira backlog is worth keeping, and the changes made to the roadmap, TECH Jira and the Technology Confluence space to represent the duplicated development style.</p>
+    <div class="meta">
+      <span><b>Prepared:</b> 5 Jul 2026</span>
+      <span><b>Scope:</b> Confluence (Technology + PS), Jira (PS · TECH · DEV), roadmap-v2</span>
+      <span class="tag">Internal · for review</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="stats">
+    <div class="stat"><div class="n">= Futura</div><div class="l">Starlight is the Futura engagement — a named client</div></div>
+    <div class="stat"><div class="n reuse">~75–80%</div><div class="l">of the Starlight build is REUSE of the portals</div></div>
+    <div class="stat"><div class="n">~78%</div><div class="l">of the PS story backlog is auto-generated skeleton</div></div>
+    <div class="stat"><div class="n net">47</div><div class="l">TECH Jira issues created to mirror the roadmap</div></div>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <section>
+    <h2><span class="idx">TL</span> In one paragraph</h2>
+    <div class="card">
+      <p><b>Project Starlight is the Futura build</b> — a signed engagement (~£350k ex VAT, 16-week Phase 1) to deliver <b>Futura Financial Services Group</b> a <b>single-tenant, Futura-branded</b> digital advice operating system with the same client / adviser / admin surfaces as the Graphene portals. It is not a literal copy of the multi-tenant codebase; it is the <b>single-tenant, branded sibling</b> that <b>reuses ~75–80% of the shared portals engineering</b> (auth, data model, workflow, fact-find, risk, documents, the three portals). The genuinely Futura-specific work is small: SmartSearch ID/AML, the Futura letter/suitability templates, branding, and the single-tenant deploy + pilot.</p>
+      <p style="margin-bottom:0">The <b>PS Jira board is bimodal</b>: the 14-epic spine and the discovery/POC work are real, valuable BA output, but the ~83 build stories are largely auto-generated skeleton (only 21 of ~110 issues carry acceptance criteria). The deeper issue is scope: PS frames Starlight as a <b>from-scratch standalone app</b>, duplicating capabilities the portals already provide. <b>Recommendation: build Starlight as a single-tenant config/branding overlay on the portals</b> — represented now in the roadmap, TECH Jira and Confluence.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="idx">1</span> What Starlight actually is</h2>
+    <p class="lede">Confirmed across both Confluence (PS space, 7 pages read in full) and Jira (PS project).</p>
+    <div class="card">
+      <div class="kv"><b>Client / brand</b><span>Futura Financial Services Group — trading styles Whitefriars, CB Financial Advisers, Futura Wealth Management, Bulley Davey.</span></div>
+      <div class="kv"><b>Tenancy</b><span>Single-tenant, Futura-owned (<i>"Futura owns the operating system &amp; IP"</i>) — the single-tenant analogue of the multi-tenant portals.</span></div>
+      <div class="kv"><b>Branding</b><span>Futura primary throughout; trading sub-brands only on the "Your Adviser" card; invites from <code>portal@futurafs.com</code>; unified admin chrome.</span></div>
+      <div class="kv"><b>Commercials</b><span>Contract signed. ~£350k ex VAT, 5 monthly instalments. 16 weeks total (4 wks discovery + 12 wks dev). Phase 1 = digital onboarding + LVP advice.</span></div>
+      <div class="kv"><b>Delivery</b><span>Graphene-side (Andy Gaunt / Lou McArthur seeded the backlog; Stuart Luckhurst / Andy Gaunt authored the specs). Sign-off with Futura (Frankie / Bridget / Natasha); compliance lead Owen Sharp.</span></div>
+      <div class="kv"><b>State</b><span>Live, not dormant — discovery Done; several build epics In&nbsp;Development.</span></div>
+      <div class="callout key" style="margin-bottom:0"><b>The key connection:</b> Starlight is already carried in <code>roadmap-v2.html</code> as the <code>futura</code> group. "Rebuild PS into the roadmap" therefore means reframing that group from a vague "customisable workflow" into an explicit single-tenant instance that reuses the shared build — which is what was done.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="idx">2</span> Is the PS board "generated waste"?</h2>
+    <p class="lede">Bimodal — real planning on top, auto-expanded skeleton underneath.</p>
+    <div class="scroll">
+    <table class="tbl">
+      <thead><tr><th>Layer</th><th>Verdict</th><th style="width:34%">Evidence</th></tr></thead>
+      <tbody>
+        <tr><td><b>14-epic spine + discovery</b> (PS-1…PS-20)</td><td><span class="pill good">keep</span> Real BA work</td><td>Goal / AC / dependencies / timeline; records the £350k budget, 25-screen POC, named stakeholders.</td></tr>
+        <tr><td><b>Confluence portal specs</b> (Client / Adviser / Admin)</td><td><span class="pill good">keep</span> Rich &amp; real</td><td>Thousands of words, dated decisions, a <i>reversed</i> AML decision (CreditSafe → SmartSearch). This is the true handover.</td></tr>
+        <tr><td><b>The ~83 build stories</b> (PS-22 →)</td><td><span class="pill bad">bin / regenerate</span> ~78% skeleton</td><td>Only 21 of ~110 issues carry any AC — none of the build stories do; 13 are empty; the rest restate their titles ("Design and implement a flexible framework…"). No estimates, no labels, ~90% unassigned; bulk-entered in two batches (17 Feb, 16 Mar).</td></tr>
+        <tr><td><b>"Dev Handover" page</b></td><td><span class="pill warn">empty stub</span></td><td>The page you linked has an empty body ("pending content"). The real handover lives in the portal spec pages.</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="callout warn"><b>The real problem isn't ticket quality — it's scope.</b> PS scopes Starlight as a from-scratch standalone app (its own scaffolding, auth, RBAC, audit, workflow engine). That duplicates ~70–80% of what the portals build already provides — the most expensive possible reading of "branded copy".</div>
+  </section>
+
+  <section>
+    <h2><span class="idx">3</span> The duplication map <span style="font-weight:600;font-size:14px;color:var(--muted)">— the core insight</span></h2>
+    <p class="lede">Each Starlight epic against the portals capability it mirrors, and whether it should be built once (reuse) or is genuinely Futura-specific.</p>
+    <div class="scroll">
+    <table class="tbl">
+      <thead><tr><th>Starlight epic</th><th>Portals capability</th><th style="width:20%">Build</th></tr></thead>
+      <tbody>
+        <tr><td>Core platform · auth · RBAC · logging</td><td>FND-* shell + WorkOS orgs + <code>auth_core</code></td><td><span class="pill reuse">REUSE</span> (multi→single-tenant config)</td></tr>
+        <tr><td>Client record &amp; data model</td><td><code>platform</code>/<code>crm</code> schema, AD-2</td><td><span class="pill reuse">REUSE</span></td></tr>
+        <tr><td>Workflow + task engine</td><td>the customisable workflow / applications engine</td><td><span class="pill reuse">REUSE</span></td></tr>
+        <tr><td>Fact-find engine</td><td>FT-EN1 / <code>forms</code> (shared with Chester Rose LVP)</td><td><span class="pill reuse">REUSE</span></td></tr>
+        <tr><td>Risk profiling</td><td>FT-EN2 in-house profiler</td><td><span class="pill reuse">REUSE</span></td></tr>
+        <tr><td>ID/AML — SmartSearch</td><td><code>compliance</code> + integrations framework</td><td><span class="pill net">NET-NEW</span> provider (portals uses iDenfy)</td></tr>
+        <tr><td>Suitability + letter suite + illustrations</td><td><code>documents</code> framework</td><td><span class="pill mix">MIXED</span> framework reuse · Futura templates net-new</td></tr>
+        <tr><td>E-signature</td><td><code>documents</code>/<code>sharing</code></td><td><span class="pill reuse">REUSE</span></td></tr>
+        <tr><td>Client / Adviser / Admin portals</td><td>CL-* / AD-* / AM-*</td><td><span class="pill mix">MIXED</span> reuse + Futura branding</td></tr>
+        <tr><td>Infra readiness &amp; go-live</td><td>—</td><td><span class="pill net">NET-NEW</span> single-tenant deploy + pilot</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p style="margin-top:12px;margin-bottom:0"><b>Genuinely Futura-specific (net-new):</b> SmartSearch AML, the Futura letter/suitability templates, branding, and the single-tenant deploy + pilot. Everything else should be <i>the same code</i>, deployed single-tenant and re-skinned.</p>
+  </section>
+
+  <section>
+    <h2><span class="idx">4</span> What was changed</h2>
+    <p class="lede">Applied across the roadmap (local), TECH Jira and the Technology Confluence space. The PS board was left untouched, as instructed.</p>
+
+    <div class="grid2">
+      <div class="card did">
+        <h3>A · <code>roadmap-v2.html</code> <span class="pill good">done</span></h3>
+        <ul class="clean">
+          <li><b>+3rd product developer</b> (joins ~9 Jul) on a dedicated adviser stream → <b>adviser MVP lands 17 Aug</b>, before Tavistock (was ~31 Aug). Everything now lands before the go-lives except the front-loaded ML chain (drawdown ~21 Aug).</li>
+          <li><b>Futura → "Project Starlight — Futura"</b> breakdown: single-tenant/branded framing, commercial context, REUSE-vs-NET-NEW on all 10 epics (7 reuse + 3 net-new: SmartSearch AML, Futura letters, single-tenant go-live), and the build-as-overlay recommendation.</li>
+          <li>Totals: <b>MVP 27.5 · Core 49.5 · Full 82</b> ew.</li>
+        </ul>
+        <div class="lnk">Local file · <code>docs/roadmap-v2.html</code></div>
+      </div>
+
+      <div class="card did">
+        <h3>B · TECH Jira <span class="pill good">done</span></h3>
+        <p style="margin-bottom:8px">47 new issues mirroring the roadmap — nothing existing touched. 7 workstream Epics + 40 capability Stories:</p>
+        <ul class="clean">
+          <li><a href="https://grapheneplatforms.atlassian.net/browse/TECH-24">TECH-24</a> Foundation · <a href="https://grapheneplatforms.atlassian.net/browse/TECH-27">TECH-27</a> Data platform</li>
+          <li><a href="https://grapheneplatforms.atlassian.net/browse/TECH-28">TECH-28</a> Morgan Lloyd SIPP</li>
+          <li><a href="https://grapheneplatforms.atlassian.net/browse/TECH-29">TECH-29</a> Client · <a href="https://grapheneplatforms.atlassian.net/browse/TECH-30">TECH-30</a> Adviser · <a href="https://grapheneplatforms.atlassian.net/browse/TECH-31">TECH-31</a> Admin+Settings</li>
+          <li><a href="https://grapheneplatforms.atlassian.net/browse/TECH-32">TECH-32</a> Project Starlight — Futura</li>
+        </ul>
+        <div class="lnk">Stories <code>TECH-25…TECH-70</code>, all parented</div>
+      </div>
+
+      <div class="card did">
+        <h3>C · Technology Confluence <span class="pill good">done</span></h3>
+        <ul class="clean">
+          <li>New <a href="https://grapheneplatforms.atlassian.net/wiki/spaces/Technology/pages/273350658">Project Starlight (Futura)</a> page under Projects.</li>
+          <li>Template renamed <code>Product requirement</code> → <b>Product / capability doc</b>; product-doc "requirement" → <b>"documentation"</b> across Products, Projects, Templates (regulatory "requirements" untouched).</li>
+          <li>TECH-epic links added to Client, Adviser, Admin, SIPP, Data-platform &amp; Portals-rebuild pages.</li>
+        </ul>
+        <div class="lnk">Space key <code>Technology</code></div>
+      </div>
+
+      <div class="card did">
+        <h3>PS board <span class="pill warn">untouched</span></h3>
+        <p style="margin-bottom:0">Left exactly as-is, as instructed. If revisited later: keep the 14 epics + discovery + Confluence specs; regenerate or close the ~83 skeleton stories; re-point the reuse epics at the shared build.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="idx">5</span> Recommendations &amp; open decisions</h2>
+    <div class="card">
+      <div class="verdict" style="margin-bottom:14px"><div class="bar" style="background:var(--reuse)"></div><div>
+        <b>1 · Build Starlight as an overlay, not a rebuild.</b> Deploy the shared portals engineering single-tenant + re-skinned for Futura. Only SmartSearch, the Futura templates, branding and the single-tenant deploy/pilot are net-new. This is the £-saving decision — not the ticket cleanup.
+      </div></div>
+      <div class="verdict" style="margin-bottom:14px"><div class="bar" style="background:var(--amber)"></div><div>
+        <b>2 · Treat the PS story layer as waste.</b> The epics and specs are real; the ~83 build stories can't drive a sprint (no AC / estimates / owners). Regenerate against real engineering tasks or close them.
+      </div></div>
+      <div class="verdict" style="margin-bottom:14px"><div class="bar" style="background:var(--net)"></div><div>
+        <b>3 · Check the commercial vs scope fit.</b> 14 epics / ~83 stories (two portals + workflow engine + suitability + e-sign + go-live) is multi-quarter scope priced/timed as one 16-week phase. Confirm Phase 1 ⊂ that scope.
+      </div></div>
+      <div class="verdict"><div class="bar" style="background:var(--navy)"></div><div>
+        <b>4 · Housekeeping.</b> TECH stories were created at <code>To&nbsp;Do</code> (real state is in each description) — transition the ~12 in-progress/foundation ones to match the roadmap when convenient. The <code>roadmap-v2.html</code> edit is uncommitted, for review.
+      </div></div>
+    </div>
+  </section>
+
+  <footer>
+    <p><b>Sources analysed.</b> Confluence — Technology space (≈50 pages) and Project Starlight (PS) space (≈50 pages, 7 read in full). Jira — PS (~110 issues), TECH (22 → now 69), DEV (60), GRP roadmap origin. Local — <code>roadmap-v2.html</code>. Figures reconciled across three independent readers; the PS issue count (100–111) and epic count (14–15) vary by whether the POC-iteration epic is included.</p>
+    <p style="margin-bottom:0"><b>Graphene Platforms · Technology</b> — internal analysis, for review. Not legal or compliance advice.</p>
+  </footer>
+
+</main>
+</body>
+</html>

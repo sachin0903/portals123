@@ -1,0 +1,244 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    }
+  },
+  "required": ["id"],
+  "title": "PortfolioTransactionGroup",
+  "description": "PortfolioTransactionGroup as Seccl returns it -- inferred from 14 example(s) in the Postman collection.",
+  "$defs": {
+    "PortfolioTransactionGroupCreate": {
+      "type": "object",
+      "properties": {
+        "firmId": {
+          "type": "string"
+        },
+        "accountId": {
+          "type": "string",
+          "description": "observed values: 0352GDJ"
+        },
+        "transactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Transaction"
+          }
+        }
+      },
+      "required": ["accountId", "firmId", "transactions"],
+      "title": "PortfolioTransactionGroupCreate",
+      "description": "Body for creating a PortfolioTransactionGroup -- inferred from 44 example(s) in the Postman collection."
+    },
+    "PayUkDetails": {
+      "type": "object",
+      "properties": {
+        "earlyClosureWaiver": {
+          "type": "boolean"
+        },
+        "accountDesignation": {
+          "type": "string",
+          "description": "observed values: 3928293848"
+        }
+      },
+      "required": ["accountDesignation", "earlyClosureWaiver"]
+    },
+    "Transaction": {
+      "type": "object",
+      "properties": {
+        "firmId": {
+          "type": "string"
+        },
+        "transactionType": {
+          "type": "string",
+          "description": "observed values: Cash, Cash Transfer, Order, Payment, Product Transfer, Stock Transfer"
+        },
+        "transactionSubType": {
+          "type": "string"
+        },
+        "movementType": {
+          "type": "string",
+          "description": "observed values: In, Invest, Out, Raise, Sell"
+        },
+        "accountId": {
+          "type": "string",
+          "description": "observed values: 0352GDJ"
+        },
+        "previousProvider": {
+          "type": "string",
+          "description": "observed values: 021FC19"
+        },
+        "previousProviderRef": {
+          "type": "string"
+        },
+        "previousProviderAccountType": {
+          "type": "string",
+          "description": "observed values: Cash"
+        },
+        "transferAccountAddress": {
+          "$ref": "#/$defs/TransferAccountAddress"
+        },
+        "payUkDetails": {
+          "$ref": "#/$defs/PayUkDetails"
+        },
+        "partialTransfer": {
+          "type": "boolean"
+        },
+        "amountToTake": {
+          "type": "number"
+        },
+        "subscriptionAppliesTo": {
+          "type": "string",
+          "description": "observed values: Current Year, Previous Year"
+        },
+        "currency": {
+          "type": "string",
+          "description": "observed values: GBP"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "method": {
+          "type": "string",
+          "description": "observed values: BACS Credit, Bank Transfer, Bulk Bank Transfer, Direct Debit, Transfer"
+        },
+        "assetId": {
+          "type": "string",
+          "description": "observed values: 26NHB, 275F1, 284PF, 286Q5"
+        },
+        "chargeAccount": {
+          "type": "string"
+        },
+        "companyRegNo": {
+          "type": "string"
+        },
+        "externalReference": {
+          "type": "string",
+          "description": "observed values: <externalReference>"
+        },
+        "autoInvest": {
+          "type": "boolean"
+        },
+        "quantity": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "percentage": {
+          "type": "number"
+        },
+        "autoDisinvest": {
+          "type": "string",
+          "description": "observed values: Full, Largest, Proportional"
+        },
+        "autoDisinvestSellType": {
+          "type": "string",
+          "description": "observed values: Amount"
+        },
+        "providerRef": {
+          "type": "string",
+          "description": "observed values: AB00001234"
+        },
+        "transferValue": {
+          "type": "number"
+        },
+        "isPensionTransfer": {
+          "type": "boolean"
+        },
+        "productDrawdownStatus": {
+          "type": "string",
+          "description": "observed values: No Drawdown"
+        },
+        "primaryClientId": {
+          "type": "string",
+          "description": "observed values: ABC123"
+        },
+        "receivingProvider": {
+          "type": "string"
+        },
+        "receivingProviderRef": {
+          "type": "string",
+          "description": "observed values: ABC324234234, test"
+        },
+        "bankRef": {
+          "type": "string",
+          "description": "observed values: Bank Ref, Testing"
+        },
+        "receivingProviderId": {
+          "type": "string"
+        },
+        "uploadedFileDetailsId": {
+          "type": "string"
+        },
+        "transferFee": {
+          "type": "object",
+          "properties": {
+            "feeType": {
+              "type": "string",
+              "description": "observed values: Adviser Initial Fee"
+            },
+            "ratePercentage": {
+              "type": "number"
+            }
+          },
+          "required": ["feeType", "ratePercentage"]
+        },
+        "destinationAccount": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "accountId",
+        "firmId",
+        "movementType",
+        "transactionSubType",
+        "transactionType"
+      ]
+    },
+    "TransferAccountAddress": {
+      "type": "object",
+      "properties": {
+        "flatNumber": {
+          "type": "string",
+          "description": "observed values: 34, FIRST FLOOR FLAT"
+        },
+        "buildingNumber": {
+          "type": "string",
+          "description": "observed values: 22, 69"
+        },
+        "address1": {
+          "type": "string",
+          "description": "observed values: CORONATION ROAD, Rocky Way"
+        },
+        "address2": {
+          "type": "string",
+          "description": "observed values: BRISTOL, Bedrock"
+        },
+        "country": {
+          "type": "string",
+          "description": "observed values: GB"
+        },
+        "postCode": {
+          "type": "string",
+          "description": "observed values: BD7 O77, BS3 1AT"
+        }
+      },
+      "required": [
+        "address1",
+        "address2",
+        "buildingNumber",
+        "country",
+        "postCode"
+      ]
+    }
+  }
+}

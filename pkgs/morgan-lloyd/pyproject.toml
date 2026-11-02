@@ -1,0 +1,63 @@
+[project]
+name = "morgan-lloyd"
+version = "0.0.0"
+description = "Morgan Lloyd (Clifton Asset Management) CRM API client — Dynamics 365 Web API with typed option-set enums"
+requires-python = ">=3.13"
+dependencies = [
+  "httpx>=0.27",
+  "pydantic>=2.9",
+  "pydantic-settings>=2.5",
+  "tenacity>=8.5",
+  # pkgs/api-log — `_base.py` imports it for the audit hook at the HTTP choke point. Undeclared
+  # until now, which worked only because the uv workspace installs every member into one venv:
+  # this package is meant to be usable as an SDK on its own, and `pkgs/seccl` already declared it.
+  "api-log",
+]
+
+[tool.uv.sources]
+api-log = { workspace = true }
+
+[dependency-groups]
+dev = [
+  "ruff>=0.6",
+  "mypy>=1.11",
+  "pytest>=8.3",
+  "pytest-asyncio>=0.24",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/morgan_lloyd"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "ASYNC", "S", "C4"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101", "S105", "S106"] # asserts + dummy credentials are fine in tests
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+plugins = ["pydantic.mypy"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+# INTEGRATION TESTS ARE EXCLUDED BY DEFAULT, in `addopts` rather than in the moon task's args.
+#
+# They call the vendor's real test environment, so the default has to be the safe one wherever
+# pytest is invoked from — a developer typing `uv run pytest` in this directory, an editor's test
+# runner, a future task that forgets the flag. Excluding them in the TASK would leave every one of
+# those reaching a live counterparty.
+#
+# `moon run <project>:integration-test` passes `-m integration`, and a command-line `-m` overrides
+# this one.
+markers = ["integration: hits the vendor's real test environment; never part of a gate"]
+addopts = "-m 'not integration'"
+

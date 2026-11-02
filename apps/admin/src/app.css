@@ -1,0 +1,26 @@
+@import 'tailwindcss';
+@import '@graphene/ui/theme.css';
+/* The sharp staff-tool surface preset: opaque panels, flat canvas, bold hairlines,
+   tight corners. Must come AFTER theme.css — it only reassigns theme tokens. The client
+   portal deliberately does not import this and keeps the glass look. */
+@import '@graphene/ui/sharp.css';
+/* The floating chrome look — widgets as sheets, no 1px box. Shared with the platform portal, which
+   is the point: the two staff portals must be indistinguishable in chrome. Toggle it live with
+   `document.documentElement.dataset.chrome = 'carded'`. */
+@import '@graphene/ui/chrome.css';
+
+/* Tailwind v4 ignores node_modules, so point it at the shared component source
+   to discover the utility classes used in @graphene/ui. Path is relative to this file. */
+@source '../../../pkgs/ui/src/**/*.{svelte,ts}';
+
+/* Spotlight's edge — the in-firm book palette is the same glass surface as the platform SearchBar.
+   See apps/platform/src/app.css for why these two tokens live outside the theme. */
+.spotlight-glass {
+	--glass-border: color-mix(in oklch, var(--foreground) 38%, transparent);
+	--glass-shadow: 0 28px 64px -24px color-mix(in oklch, var(--hero-base) 60%, transparent);
+}
+
+.dark .spotlight-glass {
+	--glass-border: color-mix(in oklch, var(--foreground) 30%, transparent);
+	--glass-shadow: 0 28px 64px -20px oklch(0 0 0 / 0.72);
+}

@@ -1,0 +1,56 @@
+# interlace v2 project config. Unset keys use the defaults:
+#   state_path: .interlace/state.db   (SQLite control plane)
+#
+# Warehouse: a DuckLake catalogue hosted in the `datalakes` Postgres database
+# (metadata schema `sei`), with parquet in the core bucket's datalake zone
+# (s3://platforms/datalake/sei/ — docs/storage.md, docs/datalake.md). The
+# ${VARS} interpolate from the environment; the moon tasks load them from .env
+# (see .env.example). Unset vars leave the literal ${...} in place — interlace
+# then fails loudly on connect rather than writing somewhere surprising.
+#
+# Unlike Seccl and Morgan Lloyd (both API-driven), SEI's source is a nightly
+# SFTP drop of pipe-delimited reports. The fetch is itself a model — `raw.files`,
+# the head of this DAG — which lands the encrypted files under sei/sftp/ and the
+# decrypted ones under sei/staged/; the generated raw.* models depend on it and
+# read the staged objects with read_csv. `sei-sync pull` is the manual door.
+#
+# Those models are Python, not SQL, and open their own connection with their own S3
+# credential (SEI_S3_* — see sei_sync.raw_read) rather than using the core_s3 secret
+# below: they need the bucket from settings at run time, and ${VAR} interpolation
+# applies to this file only, never to model SQL. core_s3 is what interlace itself uses
+# for the warehouse's parquet.
+name: sei
+model_paths:
+  - models
+
+# The warehouse DSN and the object-store credential are SHARED, not per-provider: every provider
+# writes parquet into the same core bucket and catalogues it in the same `datalakes` Postgres. So
+# they interpolate the CANONICAL names (`DATALAKE_WRITER_DSN`, `S3_*`) that the API and every other
+# service already set — one value, not one per provider.
+#
+# Worth doing because of how the alternative fails, not because it is untidy: a wrong endpoint does
+# not raise. The parquet lands where the reader never looks, so it reads as "the catalogue is empty",
+# which is indistinguishable from "this provider has no data here".
+#
+# Only the parquet PREFIX and the metadata schema are this provider's own, and both are literals
+# below rather than variables: they are facts about this file, not about the deployment.
+database: 'ducklake:postgres:${DATALAKE_WRITER_DSN}'
+data_path: 's3://${S3_CORE_BUCKET}/datalake/sei/'
+metadata_schema: sei
+# The portals database, ATTACHed so the per-tenant staging models can DELIVER into it
+# (`materialise: table`, target `book.inbound.{uid}__{entity}`). This is T0 federation: the SQL still
+# runs in DuckDB, which writes through its postgres extension.
+#
+# It connects as `book_writer`, NOT as the API's app role and NOT as service_role. That credential
+# reaches the merged relations and nothing else (migration 0062): a compromised daemon cannot read a
+# client's identity documents or a firm's screening outcomes. BYPASSRLS is unavoidable for a writer
+# that spans tenants and is stated plainly there rather than argued away.
+attach:
+  book: 'postgres:${BOOK_WRITER_DSN}'
+secrets:
+  core_s3:
+    key_id: '${S3_ACCESS_KEY_ID}'
+    secret: '${S3_SECRET_ACCESS_KEY}'
+    endpoint: '${S3_ENDPOINT_HOST}' # host[:port], no scheme
+    url_style: path
+    use_ssl: false # local RustFS; flip when the endpoint is https

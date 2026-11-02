@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "firmId": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "description": "observed values: High-growth model, High-growth model "
+    },
+    "riskRating": {
+      "type": "number"
+    },
+    "modelType": {
+      "type": "string",
+      "description": "observed values: Advisory, Discretionary"
+    },
+    "productType": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "observed values: GIA, ISA, JISA, PENSION"
+      }
+    },
+    "aim": {
+      "type": "string",
+      "description": "observed values: Invest ethically"
+    },
+    "modelCharge": {
+      "type": "number"
+    },
+    "vatable": {
+      "type": "boolean"
+    },
+    "suspendRebalances": {
+      "type": "boolean"
+    },
+    "availableToNodeId": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "observed values: 0"
+      }
+    },
+    "allocations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Allocation"
+      }
+    },
+    "investmentDecision": {
+      "type": "object",
+      "properties": {
+        "firmLei": {
+          "type": "string",
+          "description": "observed values: 82787287HFJEE9393892"
+        },
+        "firmCountry": {
+          "type": "string",
+          "description": "observed values: GB"
+        },
+        "personId": {
+          "type": "string",
+          "description": "observed values: PC893898C"
+        },
+        "personIdType": {
+          "type": "string",
+          "description": "observed values: NINO"
+        },
+        "personCountry": {
+          "type": "string",
+          "description": "observed values: GB"
+        }
+      },
+      "required": [
+        "firmCountry",
+        "firmLei",
+        "personCountry",
+        "personId",
+        "personIdType"
+      ]
+    },
+    "assetMix": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/AssetMix"
+      }
+    }
+  },
+  "required": [
+    "aim",
+    "allocations",
+    "assetMix",
+    "availableToNodeId",
+    "firmId",
+    "modelType",
+    "name",
+    "productType",
+    "riskRating",
+    "suspendRebalances"
+  ],
+  "title": "ModelCreate",
+  "description": "Body for creating a Model -- inferred from 2 example(s) in the Postman collection.",
+  "$defs": {
+    "ModelUpdate": {
+      "type": "object",
+      "properties": {
+        "updateId": {
+          "type": "string"
+        },
+        "allocations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Allocation"
+          }
+        },
+        "cashAllocation": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": ["updateId"],
+      "title": "ModelUpdate",
+      "description": "Partial update to a Model; where the endpoint takes an `updateId` it is Seccl's optimistic-concurrency token -- inferred from 2 example(s) in the Postman collection."
+    },
+    "Allocation": {
+      "type": "object",
+      "properties": {
+        "assetId": {
+          "type": "string",
+          "description": "observed values: 26MPM, 2756G, 275F1, 27HNC"
+        },
+        "percentage": {
+          "type": "number"
+        }
+      },
+      "required": ["assetId", "percentage"]
+    },
+    "AssetMix": {
+      "type": "object",
+      "properties": {
+        "instrumentType": {
+          "type": "string",
+          "description": "observed values: Cash, Corporate bonds, Equity, Gilts, Other"
+        },
+        "instrumentRateType": {
+          "type": "number"
+        }
+      },
+      "required": ["instrumentRateType", "instrumentType"]
+    }
+  }
+}

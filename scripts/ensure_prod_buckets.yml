@@ -1,0 +1,105 @@
+---
+# Create the prod object-store buckets before app_stack starts the pipelines.
+#
+# createbucket in docker-compose.yaml only talks to the bundled RustFS, and prod
+# does not start that job. The GitHub Environment does not hold the object-store
+# secret either: render_app_env.py drops S3_ENDPOINT_* / S3_ACCESS_KEY_ID /
+# S3_SECRET_ACCESS_KEY, and app_stack renders them from this inventory's vault.
+#
+# Runs on the pipeline host (it can reach s3-prod; the build runner may not).
+# Credentials go in a mode-0600 env file, never on the docker command line.
+# rustfs/rc is pinned to the same tag as the compose one-shot — an unpinned
+# minio/mc pull is what previously broke this step.
+- name: Ensure the prod object-store buckets
+  hosts: app_prod
+  gather_facts: false
+  become: true
+  vars:
+    # Extra-vars from deploy-prod override these. Names match the compose defaults.
+    core_bucket: platforms
+    documents_bucket: portals-documents
+    integrations_bucket: integrations
+  tasks:
+    - name: List and create the core buckets
+      when: inventory_hostname == app_stack_pipeline_host
+      block:
+        - name: Refuse a blank endpoint or bucket name
+          ansible.builtin.assert:
+            that:
+              - portals_s3_endpoint_url | length > 0
+              - portals_s3_access_key_id | length > 0
+              - vault_portals_s3_secret_key | length > 0
+              - core_bucket | length > 0
+              - documents_bucket | length > 0
+            fail_msg: >-
+              Need portals_s3_endpoint_url, portals_s3_access_key_id,
+              vault_portals_s3_secret_key, core_bucket and documents_bucket.
+            quiet: true
+
+        - name: Stage the rc env file
+          ansible.builtin.copy:
+            dest: /run/portals-ensure-buckets.env
+            mode: "0600"
+            content: |
+              S3_ENDPOINT_URL={{ portals_s3_endpoint_url }}
+              S3_ACCESS_KEY_ID={{ portals_s3_access_key_id }}
+              S3_SECRET_ACCESS_KEY={{ vault_portals_s3_secret_key }}
+              S3_CORE_BUCKET={{ core_bucket }}
+              S3_DOCUMENTS_BUCKET={{ documents_bucket }}
+              S3_INTEGRATIONS_BUCKET={{ integrations_bucket }}
+          no_log: true
+
+        - name: Stage the rc script
+          ansible.builtin.copy:
+            dest: /run/portals-ensure-buckets.sh
+            # The image does not run as root. 0700 is unreadable inside the
+            # container (`/bin/sh: can't open '/ensure.sh': Permission denied`).
+            # The script holds no credentials; those stay in the 0600 env file,
+            # which dockerd reads on the host.
+            mode: "0644"
+            content: |
+              #!/bin/sh
+              set -eu
+              # alias set can echo the credential; keep that off the deploy log.
+              rc alias set fs "$S3_ENDPOINT_URL" "$S3_ACCESS_KEY_ID" "$S3_SECRET_ACCESS_KEY" >/dev/null 2>&1 \
+                || { echo "rc alias set failed"; exit 1; }
+              rc ping fs
+              rc mb --ignore-existing "fs/$S3_DOCUMENTS_BUCKET"
+              rc mb --ignore-existing "fs/$S3_CORE_BUCKET"
+              if [ -n "${S3_INTEGRATIONS_BUCKET:-}" ]; then
+                rc mb --ignore-existing "fs/$S3_INTEGRATIONS_BUCKET"
+              fi
+              echo "buckets on ${S3_ENDPOINT_URL}:"
+              rc ls fs
+
+        - name: Create any missing buckets and list them
+          ansible.builtin.command:
+            argv:
+              - docker
+              - run
+              - --rm
+              - --network
+              - host
+              - --env-file
+              - /run/portals-ensure-buckets.env
+              - --volume
+              - /run/portals-ensure-buckets.sh:/ensure.sh:ro
+              - --entrypoint
+              - /bin/sh
+              - rustfs/rc:v0.1.35
+              - /ensure.sh
+          register: buckets
+          changed_when: "'created' in buckets.stdout"
+
+        - name: Show the buckets on the prod endpoint
+          ansible.builtin.debug:
+            msg: "{{ buckets.stdout_lines }}"
+
+      always:
+        - name: Remove the rc credential file
+          ansible.builtin.file:
+            path: "{{ item }}"
+            state: absent
+          loop:
+            - /run/portals-ensure-buckets.env
+            - /run/portals-ensure-buckets.sh

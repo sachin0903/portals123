@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Project Starlight — Futura · Phase 1 Delivery Roadmap</title>
+<style>
+  :root{
+    --ink:#0a0a0a; --panel:#111214; --card:#fff; --bg:#f4f5f7; --line:#e5e7eb; --line2:#d8dbe0;
+    --muted:#6b7280; --sub:#9aa2ad; --ok:#16a34a; --okbg:#e8f6ed; --amber:#d97706; --info:#2563eb;
+    --done:#16a34a; --prog:#2563eb; --next:#d97706; --back:#9ca3af;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"DM Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);background:var(--bg);line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 22px 60px}
+  header{background:linear-gradient(135deg,#0a0a0a,#1a1a1e);color:#fff;padding:34px 0 30px}
+  header .wrap{padding-bottom:0}
+  .brow{display:flex;align-items:center;gap:14px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#8b93a1;font-weight:600}
+  .brow .x{color:#5b626e}
+  h1{font-size:27px;margin:14px 0 4px;font-weight:700;letter-spacing:-.01em}
+  .subttl{color:#c3c9d4;font-size:15.5px;font-weight:500}
+  .hdr-row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:18px;margin-top:20px}
+  .meta{display:flex;flex-wrap:wrap;gap:22px;font-size:13px;color:#b9c0cc}
+  .meta b{color:#fff;font-weight:700}
+  .rag{display:inline-flex;align-items:center;gap:9px;background:rgba(22,163,74,.14);border:1px solid rgba(22,163,74,.4);
+    color:#7ee2a8;border-radius:999px;padding:8px 15px;font-size:13px;font-weight:700}
+  .dot{width:9px;height:9px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 0 rgba(34,197,94,.6);animation:p 2s infinite}
+  @keyframes p{0%{box-shadow:0 0 0 0 rgba(34,197,94,.55)}70%{box-shadow:0 0 0 8px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+  .milestone{background:var(--panel);color:#fff;border-radius:12px;padding:18px 22px;margin-top:22px;display:flex;
+    flex-wrap:wrap;justify-content:space-between;align-items:center;gap:14px}
+  .milestone .l .k{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#8b93a1;font-weight:700}
+  .milestone .l .v{font-size:19px;font-weight:700;margin-top:3px}
+  .milestone .l .d{color:#b9c0cc;font-size:13px;margin-top:2px}
+  .milestone .r{text-align:right}
+  .milestone .r .big{font-size:30px;font-weight:800;line-height:1}
+  .milestone .r .cap{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#8b93a1;margin-top:4px}
+  section{margin-top:32px}
+  h2{font-size:18px;margin:0 0 14px;font-weight:700;color:var(--ink)}
+  h2 .em{color:var(--muted);font-weight:500;font-size:14px;margin-left:8px}
+  p.lead{color:var(--muted);font-size:14.5px;max-width:860px;margin:0 0 16px}
+  .strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+  .chip{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--done);border-radius:8px;padding:11px 13px}
+  .chip .t{font-size:13px;font-weight:600;color:var(--ink)} .chip .s{font-size:11.5px;color:var(--ok);font-weight:700;margin-top:3px}
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:14px}
+  thead th{background:#0a0a0a;color:#fff;text-align:left;padding:11px 14px;font-size:12px;letter-spacing:.03em;font-weight:600}
+  tbody td{padding:12px 14px;border-top:1px solid var(--line);vertical-align:top}
+  tbody tr:nth-child(even){background:#fafbfc}
+  .we{white-space:nowrap;font-weight:700} .we small{display:block;font-weight:500;color:var(--muted);font-size:11px;margin-top:2px}
+  tr.past .we{color:var(--ok)} tr.now{background:#eef4ff!important} tr.now .we{color:var(--prog)}
+  tr.golive{background:var(--okbg)!important} tr.golive .we,tr.golive .theme{color:var(--ok)}
+  .theme{font-weight:700}
+  .epk{display:inline-block;font-size:10.5px;font-weight:700;color:#374151;background:#eef0f3;border-radius:4px;padding:1px 6px;margin:0 4px 3px 0}
+  .demo{color:var(--prog);font-size:12.5px;margin-top:6px} .demo b{color:var(--prog)}
+  .mstone{color:var(--ok);font-size:12.5px;margin-top:6px;font-weight:600}
+  .steer{color:var(--amber);font-size:11.5px;font-weight:700;margin-top:5px}
+  .er{width:100%;border-collapse:collapse;font-size:13px;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .er th{background:#f0f1f3;text-align:left;padding:9px 13px;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:#4b5563}
+  .er td{padding:9px 13px;border-top:1px solid var(--line)}
+  .st{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap}
+  .st.done{background:#e8f6ed;color:var(--done)} .st.prog{background:#e7effe;color:var(--prog)}
+  .st.next{background:#fdf1e3;color:var(--next)} .st.back{background:#f1f2f4;color:#6b7280}
+  .note{background:#fff;border:1px solid var(--line);border-radius:10px;padding:15px 17px;font-size:13.5px;color:#374151}
+  .note b{color:var(--ink)}
+  .foot{margin-top:34px;padding-top:16px;border-top:1px solid var(--line2);color:var(--sub);font-size:12px}
+  @media(max-width:640px){thead{display:none}tbody td{display:block;padding:4px 14px}tbody tr{display:block;padding:8px 0;border-top:1px solid var(--line)}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="brow">Futura <span class="x">&times;</span> Graphene <span class="x">·</span> Confidential</div>
+    <h1>Project Starlight — Phase 1 Delivery Roadmap</h1>
+    <div class="subttl">Client Onboarding &amp; Advice Platform — the weekly path to go-live</div>
+    <div class="hdr-row">
+      <div class="meta">
+        <span><b>Phase:</b> 1 — Onboarding &amp; Advice</span>
+        <span><b>Cadence:</b> weekly build · monthly Steering Committee</span>
+        <span><b>Reporting:</b> from Jira (PS board)</span>
+      </div>
+      <span class="rag"><span class="dot"></span> On Track — Delivery Confidence</span>
+    </div>
+    <div class="milestone">
+      <div class="l">
+        <div class="k">Next major milestone</div>
+        <div class="v">Phase 1 Go-Live</div>
+        <div class="d">Full onboarding &amp; advice journey live for Futura advisers and clients, following a real-client pilot.</div>
+      </div>
+      <div class="r"><div class="big">29 Aug</div><div class="cap">2026 · target</div></div>
+    </div>
+  </div>
+</header>
+<div class="wrap">
+
+  <section>
+    <h2>Where we are <span class="em">as at end June 2026</span></h2>
+    <p class="lead">Discovery is complete and the requirements baseline is agreed; the platform is built out and screen development is underway. From here the team delivers a demonstrable increment every week through to the 29 August go-live, on the established weekly cadence with monthly Steering Committee checkpoints.</p>
+    <div class="strip">
+      <div class="chip"><div class="t">Discovery &amp; workshops</div><div class="s">✓ Complete (EPIC 0)</div></div>
+      <div class="chip"><div class="t">Interactive POC — 25 screens</div><div class="s">✓ Complete · 3 roles</div></div>
+      <div class="chip"><div class="t">Requirements baseline</div><div class="s">✓ Documented &amp; agreed</div></div>
+      <div class="chip"><div class="t">Infrastructure</div><div class="s">✓ Established</div></div>
+      <div class="chip"><div class="t">UI scaffolding</div><div class="s">✓ In place · screens building</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Weekly delivery targets <span class="em">to go-live</span></h2>
+    <p class="lead">Each week ends with a demonstrable increment. Week-ending dates (Sundays); demos are indicative and confirmed at the weekly check-in.</p>
+    <table>
+      <thead><tr><th style="width:104px">Week ending</th><th style="width:200px">Theme</th><th>Delivered &amp; demo</th></tr></thead>
+      <tbody>
+        <tr class="now">
+          <td class="we">28 Jun<small>this week</small></td>
+          <td class="theme">Core platform &amp; client record</td>
+          <td>Requirements baseline confirmed and the board re-baselined for burn-down / velocity tracking. Platform scaffolding, authentication, role-based access (T1/T2/T3), logging &amp; feature flags <span class="epk">E1</span>; client entity, personal details, relationships, adviser/firm association, immutable audit history <span class="epk">E2</span>.
+            <div class="demo"><b>Demo:</b> platform foundation + create a Futura client &amp; case.</div></td>
+        </tr>
+        <tr>
+          <td class="we">5 Jul</td>
+          <td class="theme">Workflow, tasks &amp; ID/AML</td>
+          <td>Advice workflow — stages, mandatory checkpoints, blockers, vulnerability-flag handling <span class="epk">E3</span>; task management — auto-generation, assignment, ageing, escalation <span class="epk">E4</span>; SmartSearch ID/AML integration with status state-machine, workflow blocking &amp; manual review <span class="epk">E7</span>.
+            <div class="demo"><b>Demo:</b> open a case → workflow + tasks + AML check.</div></td>
+        </tr>
+        <tr>
+          <td class="we">12 Jul</td>
+          <td class="theme">Fact-find &amp; risk profiling</td>
+          <td>Modular digital fact-find with adviser notes, client self-completion, mandatory fields &amp; progress tracking <span class="epk">E5</span>; risk-profiling engine — questionnaire, scoring, client-friendly outcome, structured storage <span class="epk">E6</span>.
+            <div class="demo"><b>Demo:</b> complete a fact-find + generate a risk outcome.</div>
+            <div class="steer">◆ Monthly Steering Committee</div></td>
+        </tr>
+        <tr>
+          <td class="we">19 Jul</td>
+          <td class="theme">Suitability</td>
+          <td>Suitability report builder — template framework, auto-population from the fact-find &amp; risk data, editable narrative, version control, PDF generation, compliance validation <span class="epk">E8</span>.
+            <div class="demo"><b>Demo:</b> generate a draft suitability report.</div></td>
+        </tr>
+        <tr>
+          <td class="we">26 Jul</td>
+          <td class="theme">Letter suite &amp; illustrations</td>
+          <td>Futura letter suite — engagement letter, client agreement, privacy notice, suitability covering letter — plus illustration upload/linking <span class="epk">E9</span>.
+            <div class="demo"><b>Demo:</b> generate the Futura letter pack for a case.</div></td>
+        </tr>
+        <tr>
+          <td class="we">2 Aug</td>
+          <td class="theme">E-signature &amp; client portal</td>
+          <td>E-signature — request issuance, state tracking, auto-filing, immutable audit <span class="epk">E10</span>; client portal — invite access, workflow-driven onboarding journey, progress tracker, document view/sign, secure messaging, contact preferences <span class="epk">E11</span>.
+            <div class="demo"><b>Demo:</b> a client completing onboarding + e-signature end-to-end.</div>
+            <div class="steer">◆ Monthly Steering Committee</div></td>
+        </tr>
+        <tr>
+          <td class="we">9 Aug</td>
+          <td class="theme">Adviser &amp; admin experience</td>
+          <td>Adviser case dashboard &amp; pipeline, client/case views; admin operations dashboard, central task queue &amp; bulk actions, blocker alerting, configurability <span class="epk">E12</span>.
+            <div class="demo"><b>Demo:</b> the adviser and admin journeys end-to-end.</div></td>
+        </tr>
+        <tr>
+          <td class="we">16 Aug</td>
+          <td class="theme">Integration &amp; UAT</td>
+          <td>Full end-to-end integration across the journey; user-acceptance testing with Futura; performance, security &amp; accessibility hardening <span class="epk">E13</span>.
+            <div class="mstone">◆ Milestone: UAT sign-off.</div></td>
+        </tr>
+        <tr>
+          <td class="we">23 Aug</td>
+          <td class="theme">Pilot &amp; readiness</td>
+          <td>Pilot with 5–10 real clients; standard operating procedures; adviser &amp; admin training; support model; operational readiness review <span class="epk">E13</span>.
+            <div class="mstone">◆ Milestone: pilot complete + readiness sign-off.</div></td>
+        </tr>
+        <tr class="golive">
+          <td class="we">29 Aug<small>go-live</small></td>
+          <td class="theme">Phase 1 Go-Live</td>
+          <td>Phase 1 live — the full onboarding &amp; advice journey available to Futura advisers and clients.
+            <div class="mstone">◆ Milestone: Phase 1 live.</div></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Phase 1 EPIC roadmap</h2>
+    <table class="er">
+      <thead><tr><th style="width:52px">Epic</th><th>Capability</th><th style="width:96px">Target</th><th style="width:120px">Status</th></tr></thead>
+      <tbody>
+        <tr><td>0</td><td>Discovery &amp; Technical Workshop</td><td>Mar 2026</td><td><span class="st done">Done</span></td></tr>
+        <tr><td>0b</td><td>POC Iteration &amp; UX Sign-off</td><td>Jun</td><td><span class="st prog">Completing</span></td></tr>
+        <tr><td>1</td><td>Core Platform &amp; Application Foundation</td><td>28 Jun</td><td><span class="st prog">In Development</span></td></tr>
+        <tr><td>2</td><td>Client Record &amp; Data Model</td><td>28 Jun</td><td><span class="st prog">In Development</span></td></tr>
+        <tr><td>3</td><td>Workflow Engine</td><td>5 Jul</td><td><span class="st prog">In Development</span></td></tr>
+        <tr><td>4</td><td>Task Management &amp; Operational Controls</td><td>5 Jul</td><td><span class="st next">Next</span></td></tr>
+        <tr><td>7</td><td>ID/AML Integration (SmartSearch)</td><td>5 Jul</td><td><span class="st prog">In Development</span></td></tr>
+        <tr><td>5</td><td>Fact-Find Engine (digital &amp; modular)</td><td>12 Jul</td><td><span class="st next">Next</span></td></tr>
+        <tr><td>6</td><td>Risk Profiling Engine</td><td>12 Jul</td><td><span class="st next">Next</span></td></tr>
+        <tr><td>8</td><td>Suitability Report Engine</td><td>19 Jul</td><td><span class="st back">Backlog</span></td></tr>
+        <tr><td>9</td><td>Letter Suite &amp; Illustration Handling</td><td>26 Jul</td><td><span class="st back">Backlog</span></td></tr>
+        <tr><td>10</td><td>E-Signature Service</td><td>2 Aug</td><td><span class="st back">Backlog</span></td></tr>
+        <tr><td>11</td><td>Client Portal Experience</td><td>2 Aug</td><td><span class="st prog">In Development</span></td></tr>
+        <tr><td>12</td><td>Adviser &amp; Admin Experience</td><td>9 Aug</td><td><span class="st back">Backlog</span></td></tr>
+        <tr><td>13</td><td>Infrastructure Readiness &amp; Go-Live <span style="color:#6b7280">(incl. pilot with 5–10 clients)</span></td><td>29 Aug</td><td><span class="st back">Backlog</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Governance &amp; assurance</h2>
+    <div class="note">
+      <b>Weekly working software.</b> Every week delivers a demonstrable increment against the agreed baseline, so progress is visible rather than back-loaded to a single release. <b>A weekly update</b> (from the Jira board, with burn-down/velocity) reports done / next / risks; a <b>monthly Steering Committee</b> confirms alignment. A <b>real-client pilot (5–10 clients)</b> proves the end-to-end journey before go-live, followed by an operational readiness review. <b>Later phases</b> (servicing, full lifecycle and further enhancements) are captured in a day-2/3 backlog and sequenced after Phase 1.
+    </div>
+  </section>
+
+  <div class="foot">
+    Futura &times; Graphene · Project Starlight · Phase 1 Delivery Roadmap · Confidential. Dates are week-ending and indicative, confirmed at the weekly check-in; the 29 August go-live is the target date. Source: Jira (PS board).
+  </div>
+</div>
+</body>
+</html>

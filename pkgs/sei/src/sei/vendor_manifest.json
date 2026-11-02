@@ -1,0 +1,835 @@
+{
+  "source": "Select-Marlborough_API_sheet_v2 151025.xlsx",
+  "services": [
+    {
+      "name": "HeartBeat(Apigee connectivity)",
+      "method": "GET",
+      "path": "heartbeatapiproxy/status",
+      "category": "Infrastructure",
+      "product": "Swp_SI_Connectivity"
+    },
+    {
+      "name": "Retrieve OAuth Access Token",
+      "method": "POST",
+      "path": "oauthsecurity/access_token",
+      "category": "Infrastructure",
+      "product": "Swp_SI_Connectivity"
+    },
+    {
+      "name": "Retrieve Platform Availability",
+      "method": "GET",
+      "path": "platformavailabilityservices/sysmon/platformAvailability",
+      "category": "Infrastructure",
+      "product": "Swp_SI_Connectivity"
+    },
+    {
+      "name": "Initiate the Creation of a New Account",
+      "method": "POST",
+      "path": "accountservice/accounts",
+      "category": "Client Management",
+      "product": "Initiate Enrollment New - SWP",
+      "fields": [
+        {
+          "name": "data.type",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.firmId",
+          "type": "int"
+        },
+        {
+          "name": "data.attributes.usedBy",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.bypassApproval",
+          "type": "bool"
+        }
+      ],
+      "repeating": [
+        "data.attributes.accountList[]",
+        "data.attributes.clientList[]"
+      ],
+      "depth": 7
+    },
+    {
+      "name": "Retrieve the Enrollment BPM Status",
+      "method": "GET",
+      "path": "enrollmentstatus/enrollment",
+      "category": "Client Management",
+      "product": "Initiate Enrollment New - SWP"
+    },
+    {
+      "name": "Initiate the Update of Client Basic Profile",
+      "method": "POST",
+      "path": "updateclientbasicsprofileservice/updateClientBasicProfile",
+      "category": "Client Management",
+      "product": "Set Client Basic Profile - SWP",
+      "fields": [
+        {
+          "name": "data.type",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.firmId",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.platformUser",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.endClientIdentifiers.externalPartyId",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.clientBasicsUpdateData.clientRestriction",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.clientBasicsUpdateData.maritalStatus",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.clientBasicsUpdateData.firstCountryPassport.countryOfCitizenship1",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.clientBasicsUpdateData.firstCountryPassport.firstPassportNumber",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.clientBasicsUpdateData.politicalExposureIndicator",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.clientBasicsUpdateData.initialSourceOfFunds",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.clientBasicsUpdateData.employer",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.clientBasicsUpdateData.occupation",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.clientBasicsUpdateData.dateDeceased",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.clientBasicsUpdateData.clientSinceDate",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.clientBasicsUpdateData.highRisk",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.clientBasicsUpdateData.clientRiskRating",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.clientBasicsUpdateData.title",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.clientBasicsUpdateData.formalSalutation",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.clientBasicsUpdateData.mailingLabelName",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.clientBasicsUpdateData.vulnerableClientFlag",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.clientBasicsUpdateData.organizationType",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.clientBasicsUpdateData.baseCurrency",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.clientBasicsUpdateData.gender",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.clientBasicsUpdateData.dateOfBirth",
+          "type": "string"
+        }
+      ],
+      "repeating": [],
+      "depth": 5
+    },
+    {
+      "name": "Initiate the Update of Basic Account Details",
+      "method": "POST",
+      "path": "accountbasicdetail/updateAccountBasicDetails",
+      "category": "Client Management",
+      "product": "Account Profile Update - SWP",
+      "fields": [
+        {
+          "name": "data.type",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.firmId",
+          "type": "int"
+        },
+        {
+          "name": "data.attributes.accountNumber",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.accountBasicUpdateDetails.accountDisplayName",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.accountBasicUpdateDetails.accountRegistrationName",
+          "type": "string"
+        }
+      ],
+      "repeating": [],
+      "depth": 4
+    },
+    {
+      "name": "Initiate the Creation of a Client Communication Group",
+      "method": "POST",
+      "path": "createclientcommgroupservice/createCommGroup",
+      "category": "Client Management",
+      "product": "Client Communication Group - SWP",
+      "fields": [],
+      "repeating": ["data[]"],
+      "depth": 3
+    },
+    {
+      "name": "Initiate the Update of a Client Communication Group",
+      "method": "POST",
+      "path": "updateclientcommgroupservice/addAccountsToCommGroup",
+      "category": "Client Management",
+      "product": "Client Communication Group - SWP",
+      "fields": [],
+      "repeating": ["data[]"],
+      "depth": 3
+    },
+    {
+      "name": "Initiate the Creation of a Cash Receipt",
+      "method": "POST",
+      "path": "currencyreceiptservices/createCurrencyReceipt",
+      "category": "Cash",
+      "product": "Currency Receipt Services - SWP",
+      "fields": [],
+      "repeating": ["data[]"],
+      "depth": 5
+    },
+    {
+      "name": "Initiate the Update of DSR Tags",
+      "method": "POST",
+      "path": "dsrdetailsupdateservice/dsrDetails/update",
+      "category": "Client Management",
+      "product": "Maintain DSR Tags - SWP",
+      "fields": [
+        {
+          "name": "data.attributes.searchCriteria.accountNumber",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.firmId",
+          "type": "string"
+        }
+      ],
+      "repeating": ["data.attributes.dsrDetails[]"],
+      "depth": 4
+    },
+    {
+      "name": "Initiate the Addition of Allowable Currencies",
+      "method": "POST",
+      "path": "addallowablecurrencyservice/allowableCurrencies/addAllowableCurrencyToAccount",
+      "category": "Client Management",
+      "product": "Add Allowable Currencies - SWP",
+      "fields": [
+        {
+          "name": "data.attributes.accountNumber",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.fXOrderProcessing",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.firmId",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.preferredSettlementCurrency",
+          "type": "string"
+        },
+        {
+          "name": "data.type",
+          "type": "string"
+        }
+      ],
+      "repeating": ["data.attributes.allowableCurrenciesList[]"],
+      "depth": 4
+    },
+    {
+      "name": "Retrieve Client or Third Party Details",
+      "method": "POST",
+      "path": "getpartydetailsservice/retrievePartyDetails",
+      "category": "Client Management",
+      "product": "Retrieve Party Details - SWP",
+      "fields": [
+        {
+          "name": "data.type",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.firmId",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.externalPartyId",
+          "type": "string"
+        }
+      ],
+      "repeating": [],
+      "depth": 3
+    },
+    {
+      "name": "Retrieve Transaction Details",
+      "method": "GET",
+      "path": "transactiondetailsservice/transactions",
+      "category": "Client Management",
+      "product": "Retrieve Transaction Details - SWP"
+    },
+    {
+      "name": "Retrieve Account Details",
+      "method": "POST",
+      "path": "retrieveaccountdetailsservice/retrieveAccountDetails",
+      "category": "Client Management",
+      "product": "Retrieve Account Details - SWP",
+      "fields": [
+        {
+          "name": "data.type",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.firmId",
+          "type": "int"
+        },
+        {
+          "name": "data.attributes.accountNumber",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.includeRelationships",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.includePayToRecipients",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.includePayForRecipients",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.includePayers",
+          "type": "string"
+        }
+      ],
+      "repeating": [],
+      "depth": 3
+    },
+    {
+      "name": "Retrieve Account Characteristics",
+      "method": "POST",
+      "path": "getaccountdetailswithdsrfeegoalservice/getAccountDetailsInfo",
+      "category": "Client Management",
+      "product": "Retrieve Account Characteristics - SWP",
+      "fields": [
+        {
+          "name": "data.type",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.firmId",
+          "type": "int"
+        },
+        {
+          "name": "data.attributes.accountNumber",
+          "type": "string"
+        }
+      ],
+      "repeating": [],
+      "depth": 3
+    },
+    {
+      "name": "Retrieve Activity State and Status",
+      "method": "GET",
+      "path": "activitymanagementservices/activity",
+      "category": "Client Management",
+      "product": "Activity State Retrieval - SWP"
+    },
+    {
+      "name": "Initiate the Update of Client Contact Details",
+      "method": "POST",
+      "path": "updateclientcontactservice/clientContact",
+      "category": "Client Management",
+      "product": "Maintain Contact Detail - SWP",
+      "fields": [
+        {
+          "name": "firmId",
+          "type": "int"
+        },
+        {
+          "name": "externalPartyId",
+          "type": "string"
+        },
+        {
+          "name": "bypassApproval",
+          "type": "string"
+        },
+        {
+          "name": "contactDetailType",
+          "type": "string"
+        },
+        {
+          "name": "profilePrimaryIndicator",
+          "type": "string"
+        },
+        {
+          "name": "updateClientContactEmail.emailAddress",
+          "type": "string"
+        },
+        {
+          "name": "updateClientContactEmail.emailType",
+          "type": "string"
+        }
+      ],
+      "repeating": [],
+      "depth": 2
+    },
+    {
+      "name": "Initiate the Change of an Account Status",
+      "method": "POST",
+      "path": "swpaccountstatuschangeservice/accountStatusChange",
+      "category": "Client Management",
+      "product": "Account Status Change - SWP",
+      "fields": [
+        {
+          "name": "data.type",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.firmId",
+          "type": "int"
+        },
+        {
+          "name": "data.attributes.accountNumber",
+          "type": "string"
+        }
+      ],
+      "repeating": [],
+      "depth": 3
+    },
+    {
+      "name": "Initiate the Creation or Removal of a Cash Recipient Profile",
+      "method": "POST",
+      "path": "currencyrecipientforaccountservicesv2service/createpaytorecipientforaccount2",
+      "category": "Client Management",
+      "product": "Currency Recipient Services- SWP",
+      "fields": [
+        {
+          "name": "createPayToRecipientForAccount2.CreatePayToRecipientRequest2.usedBy",
+          "type": "string"
+        },
+        {
+          "name": "createPayToRecipientForAccount2.CreatePayToRecipientRequest2.accountNumber",
+          "type": "string"
+        },
+        {
+          "name": "createPayToRecipientForAccount2.CreatePayToRecipientRequest2.firmId",
+          "type": "string"
+        },
+        {
+          "name": "createPayToRecipientForAccount2.CreatePayToRecipientRequest2.newPartyIndicator",
+          "type": "string"
+        },
+        {
+          "name": "createPayToRecipientForAccount2.CreatePayToRecipientRequest2.newPartyType",
+          "type": "string"
+        },
+        {
+          "name": "createPayToRecipientForAccount2.CreatePayToRecipientRequest2.newPartyIndividualFirstName",
+          "type": "string"
+        },
+        {
+          "name": "createPayToRecipientForAccount2.CreatePayToRecipientRequest2.newPartyIndividualLastName",
+          "type": "string"
+        },
+        {
+          "name": "createPayToRecipientForAccount2.CreatePayToRecipientRequest2.newPartyAddressLine1",
+          "type": "string"
+        },
+        {
+          "name": "createPayToRecipientForAccount2.CreatePayToRecipientRequest2.newPartyCity",
+          "type": "string"
+        },
+        {
+          "name": "createPayToRecipientForAccount2.CreatePayToRecipientRequest2.newPartyAdministrativeArea",
+          "type": "string"
+        },
+        {
+          "name": "createPayToRecipientForAccount2.CreatePayToRecipientRequest2.newPartyCountryCode",
+          "type": "string"
+        },
+        {
+          "name": "createPayToRecipientForAccount2.CreatePayToRecipientRequest2.newPartyPostalCode",
+          "type": "string"
+        },
+        {
+          "name": "createPayToRecipientForAccount2.CreatePayToRecipientRequest2.newPartyPostalCodeInFrontIndicator",
+          "type": "string"
+        },
+        {
+          "name": "createPayToRecipientForAccount2.CreatePayToRecipientRequest2.paymentMethod",
+          "type": "string"
+        },
+        {
+          "name": "createPayToRecipientForAccount2.CreatePayToRecipientRequest2.bacsInfo.bacsAccountName",
+          "type": "string"
+        },
+        {
+          "name": "createPayToRecipientForAccount2.CreatePayToRecipientRequest2.bacsInfo.bacsBeneficiaryReferenceRollNumber",
+          "type": "string"
+        },
+        {
+          "name": "createPayToRecipientForAccount2.CreatePayToRecipientRequest2.bacsInfo.bacsDestinationSortCode",
+          "type": "string"
+        },
+        {
+          "name": "createPayToRecipientForAccount2.CreatePayToRecipientRequest2.bacsInfo.bacsPayToAccountNumber",
+          "type": "string"
+        },
+        {
+          "name": "createPayToRecipientForAccount2.CreatePayToRecipientRequest2.byPassApproval",
+          "type": "string"
+        }
+      ],
+      "repeating": [],
+      "depth": 4
+    },
+    {
+      "name": "Initiate the Creation or Maintenance of a Cash Disbursement",
+      "method": "POST",
+      "path": "currencydisbursementservices/createcashdisbursement",
+      "category": "Cash",
+      "product": "Currency Disbursement - SWP",
+      "fields": [
+        {
+          "name": "createCashDisbursement.CreateCashDisbursementRequest.MemoDisbursement.accountNumber",
+          "type": "string"
+        },
+        {
+          "name": "createCashDisbursement.CreateCashDisbursementRequest.MemoDisbursement.portfolioId",
+          "type": "string"
+        },
+        {
+          "name": "createCashDisbursement.CreateCashDisbursementRequest.MemoDisbursement.descriptionTypeCode",
+          "type": "int"
+        },
+        {
+          "name": "createCashDisbursement.CreateCashDisbursementRequest.MemoDisbursement.treatmentTypeCode",
+          "type": "int"
+        },
+        {
+          "name": "createCashDisbursement.CreateCashDisbursementRequest.MemoDisbursement.currencyCode",
+          "type": "string"
+        },
+        {
+          "name": "createCashDisbursement.CreateCashDisbursementRequest.MemoDisbursement.amountType.grossValue",
+          "type": "string"
+        },
+        {
+          "name": "createCashDisbursement.CreateCashDisbursementRequest.MemoDisbursement.byPassApprovalRequired",
+          "type": "string"
+        },
+        {
+          "name": "createCashDisbursement.CreateCashDisbursementRequest.MemoDisbursement.notesToClient",
+          "type": "string"
+        },
+        {
+          "name": "createCashDisbursement.CreateCashDisbursementRequest.MemoDisbursement.furtherCreditTo",
+          "type": "string"
+        },
+        {
+          "name": "createCashDisbursement.CreateCashDisbursementRequest.MemoDisbursement.acatsFlg",
+          "type": "string"
+        },
+        {
+          "name": "createCashDisbursement.CreateCashDisbursementRequest.MemoDisbursement.beneficiaryValueDate",
+          "type": "string"
+        },
+        {
+          "name": "createCashDisbursement.CreateCashDisbursementRequest.firmId",
+          "type": "int"
+        }
+      ],
+      "repeating": [],
+      "depth": 5
+    },
+    {
+      "name": "Initiate the Creation/Maintenance of a Cash Transfer",
+      "method": "POST",
+      "path": "currencytransferservices/currencytransfercreate",
+      "category": "Cash",
+      "product": "Create and Maintain Cash Transfers - SWP",
+      "fields": [
+        {
+          "name": "CreateCurrencyTransferRequest.usedBy",
+          "type": "string"
+        },
+        {
+          "name": "CreateCurrencyTransferRequest.CurrencyTransferFrom.debitAccountNumber",
+          "type": "string"
+        },
+        {
+          "name": "CreateCurrencyTransferRequest.CurrencyTransferFrom.debitPortfolioId",
+          "type": "int"
+        },
+        {
+          "name": "CreateCurrencyTransferRequest.CurrencyTransferFrom.currencyCode",
+          "type": "string"
+        },
+        {
+          "name": "CreateCurrencyTransferRequest.CurrencyTransferFrom.debitDescriptionTypeCode",
+          "type": "int"
+        },
+        {
+          "name": "CreateCurrencyTransferRequest.CurrencyTransferFrom.debitTreatmentTypeCode",
+          "type": "int"
+        },
+        {
+          "name": "CreateCurrencyTransferRequest.CurrencyTransferFrom.transferAmount.amountType",
+          "type": "int"
+        },
+        {
+          "name": "CreateCurrencyTransferRequest.CurrencyTransferFrom.transferAmount.amount",
+          "type": "int"
+        },
+        {
+          "name": "CreateCurrencyTransferRequest.CurrencyTransferFrom.transactionSuppressionCode",
+          "type": "int"
+        },
+        {
+          "name": "CreateCurrencyTransferRequest.CurrencyTransferFrom.externalReference",
+          "type": "string"
+        },
+        {
+          "name": "CreateCurrencyTransferRequest.CurrencyTransferFrom.additionalNotes",
+          "type": "string"
+        },
+        {
+          "name": "CreateCurrencyTransferRequest.CurrencyTransferTo.creditAccountNumber",
+          "type": "string"
+        },
+        {
+          "name": "CreateCurrencyTransferRequest.CurrencyTransferTo.creditPortfolioId",
+          "type": "int"
+        },
+        {
+          "name": "CreateCurrencyTransferRequest.CurrencyTransferTo.creditDescriptionTypeCode",
+          "type": "int"
+        },
+        {
+          "name": "CreateCurrencyTransferRequest.CurrencyTransferTo.creditTreatmentTypeCode",
+          "type": "int"
+        },
+        {
+          "name": "CreateCurrencyTransferRequest.processingScheduleDetails.once.processingDate",
+          "type": "string"
+        },
+        {
+          "name": "CreateCurrencyTransferRequest.byPassApproval",
+          "type": "bool"
+        },
+        {
+          "name": "CreateCurrencyTransferRequest.firmId",
+          "type": "int"
+        },
+        {
+          "name": "CreateCurrencyTransferRequest.externalSystemTxnId",
+          "type": "string"
+        }
+      ],
+      "repeating": [],
+      "depth": 4
+    },
+    {
+      "name": "Initiate the Update of a Cash Receipt",
+      "method": "POST",
+      "path": "modifycashreceipteventservice/cashReceipt/modify",
+      "category": "Cash",
+      "product": "Modify Cash Receipt - SWP",
+      "fields": [
+        {
+          "name": "data.type",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.accountNumber",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.firmId",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.activityId",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.notes",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.effectiveDate",
+          "type": "string"
+        },
+        {
+          "name": "data.attributes.preventStreetSideMsg",
+          "type": "int"
+        }
+      ],
+      "repeating": [],
+      "depth": 3
+    },
+    {
+      "name": "Initiate the Assignment of a PME Implementation Model",
+      "method": "POST",
+      "path": "pmemodelassignmentservices/PSM/model/assignment/implementation",
+      "category": "Portfolio and Model Management",
+      "product": "PME Model Assignment Services - SWP",
+      "fields": [
+        {
+          "name": "firmId",
+          "type": "int"
+        },
+        {
+          "name": "accountNumber",
+          "type": "string"
+        },
+        {
+          "name": "portfolioName",
+          "type": "string"
+        },
+        {
+          "name": "modelId",
+          "type": "string"
+        },
+        {
+          "name": "toleranceMultiplier",
+          "type": "decimal"
+        },
+        {
+          "name": "eventProcessingId",
+          "type": "int"
+        }
+      ],
+      "repeating": [],
+      "depth": 1
+    },
+    {
+      "name": "Initiate the Assignment of a PME Asset Allocation Model",
+      "method": "POST",
+      "path": "pmemodelassignmentservices/PSM/model/assignment/allocation",
+      "category": "Portfolio and Model Management",
+      "product": "PME Model Assignment Services - SWP",
+      "fields": [
+        {
+          "name": "firmId",
+          "type": "int"
+        },
+        {
+          "name": "accountNumber",
+          "type": "string"
+        },
+        {
+          "name": "portfolioName",
+          "type": "string"
+        },
+        {
+          "name": "modelId",
+          "type": "string"
+        },
+        {
+          "name": "toleranceMultiplier",
+          "type": "decimal"
+        },
+        {
+          "name": "eventProcessingId",
+          "type": "int"
+        }
+      ],
+      "repeating": [],
+      "depth": 1
+    },
+    {
+      "name": "Initiate the Maintenance of Client Communication Preferences",
+      "method": "POST",
+      "path": "deliverymethodstoelectronicservice/deliveryMethodsToElectronic",
+      "category": "Client Management",
+      "product": "Update to Electronic Delivery Method - SWP",
+      "fields": [
+        {
+          "name": "firmId",
+          "type": "int"
+        },
+        {
+          "name": "externalEntityId",
+          "type": "string"
+        },
+        {
+          "name": "updateDeliveryMethodAndEventsFlag",
+          "type": "bool"
+        },
+        {
+          "name": "updateProspectusProxyCommunicationFlag",
+          "type": "bool"
+        },
+        {
+          "name": "updateTaxFormDeliveryMethodFlag",
+          "type": "bool"
+        },
+        {
+          "name": "emailAddress",
+          "type": "string"
+        },
+        {
+          "name": "emailType",
+          "type": "int"
+        },
+        {
+          "name": "emailDescription",
+          "type": "string"
+        },
+        {
+          "name": "emailPin",
+          "type": "int"
+        },
+        {
+          "name": "bypassApprovalFlag",
+          "type": "bool"
+        }
+      ],
+      "repeating": [],
+      "depth": 1
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string",
+      "description": "observed values: https://example.com/hook"
+    },
+    "types": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "observed values: account.created.v1, account.updated.v1"
+      }
+    },
+    "enabled": {
+      "type": "boolean"
+    }
+  },
+  "title": "Webhook",
+  "description": "Webhook as Seccl returns it -- inferred from 8 example(s) in the Postman collection.",
+  "$defs": {
+    "WebhookCreate": {
+      "type": "object",
+      "properties": {
+        "firmId": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "description": "observed values: https://example.com/hook"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "secret": {
+          "type": "string",
+          "description": "observed values: ahfuirwhfueirdhuoe"
+        },
+        "types": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "observed values: account.created.v1, account.updated.v1"
+          }
+        }
+      },
+      "required": ["enabled", "firmId", "secret", "types", "url"],
+      "title": "WebhookCreate",
+      "description": "Body for creating a Webhook -- inferred from 1 example(s) in the Postman collection."
+    },
+    "WebhookUpdate": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "observed values: <your webhook url>, https://example.com/new-hook"
+        },
+        "types": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "observed values: account.created.v1"
+          }
+        },
+        "secret": {
+          "type": "string",
+          "description": "observed values: <your secret>, dshu;[]ewhuifew56533he"
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "title": "WebhookUpdate",
+      "description": "Partial update to a Webhook; where the endpoint takes an `updateId` it is Seccl's optimistic-concurrency token -- inferred from 9 example(s) in the Postman collection."
+    }
+  }
+}

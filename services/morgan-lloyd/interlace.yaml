@@ -1,0 +1,75 @@
+# interlace v2 project config. Unset keys use the defaults:
+#   state_path: .interlace/state.db   (SQLite control plane)
+#
+# Warehouse: a DuckLake catalogue hosted in the `datalakes` Postgres database
+# (metadata schema `morgan_lloyd`), with parquet in the core bucket's staged zone
+# (s3://platforms/datalake/ml/ — docs/storage.md §2, docs/datalake.md). The
+# ${VARS} interpolate from the environment; the moon tasks load them from .env
+# (see .env.example). Unset vars leave the literal ${...} in place — interlace
+# then fails loudly on connect rather than writing somewhere surprising.
+name: morgan_lloyd
+model_paths:
+  - models
+
+# The warehouse DSN and the object-store credential are SHARED, not per-provider: every provider
+# writes parquet into the same core bucket and catalogues it in the same `datalakes` Postgres. So
+# they interpolate the CANONICAL names (`DATALAKE_WRITER_DSN`, `S3_*`) that the API and every other
+# service already set — one value, not one per provider.
+#
+# Worth doing because of how the alternative fails, not because it is untidy: a wrong endpoint does
+# not raise. The parquet lands where the reader never looks, so it reads as "the catalogue is empty",
+# which is indistinguishable from "this provider has no data here".
+#
+# Only the parquet PREFIX and the metadata schema are this provider's own, and both are literals
+# below rather than variables: they are facts about this file, not about the deployment.
+#
+# THE METADATA SCHEMA IS `morgan_lloyd`, NOT `ml` (0134). It was the last place a provider had a
+# second name: `providers.provider_schema()` and `book_sink.register` each carried a
+# `{"morgan-lloyd": "ml"}` map so every reader could find this catalogue, and a map is a thing to
+# forget — `materialise._read_conformed` once read the bare provider name and reported an entire
+# tenant's slice as unavailable, which reads as "this firm has no data here". Both derive it now
+# (`code.replace('-', '_')`, because a hyphen is not a legal unquoted SQL identifier).
+#
+# CHANGING THIS VALUE STRANDS THE STATE STORE, and that is what actually cost a morning. The
+# control plane is a LOCAL SQLite database (`.interlace/state.db`) keyed by model fingerprint, with
+# no notion of which catalogue a snapshot was built into — so pointing `metadata_schema` at a
+# different schema leaves interlace believing every model is current while the new catalogue holds
+# none of them. It then rebuilds nothing, promotes nothing, and the first model that READS a
+# promoted relation fails with `schema "platform" does not exist`. That reads like an ordering bug
+# in the DAG and is not one: a genuinely fresh catalogue WITH a fresh state store applies clean on
+# the first pass, which is the control that settles it.
+#
+# So the deploy step for the 0134 rename is `ALTER SCHEMA ml RENAME TO morgan_lloyd`, not a new
+# empty schema — a rename carries the physical tables with it, which is exactly what keeps the state
+# store's references valid. If a schema is ever repointed rather than renamed, delete
+# `.interlace/state.db` in the same breath, or the catalogue and the control plane disagree in the
+# one direction that fails silently.
+#
+# THE PARQUET PREFIX DELIBERATELY STAYS `datalake/ml/`. DuckLake records an absolute path per data
+# file in its own metadata, so the prefix is where the existing files ARE rather than a name a
+# reader derives — changing it would strand every one of them for a tidier-looking string. It is
+# not what `provider_schema()` returns and nothing computes it.
+database: 'ducklake:postgres:${DATALAKE_WRITER_DSN}'
+data_path: 's3://${S3_CORE_BUCKET}/datalake/ml/'
+metadata_schema: morgan_lloyd
+# The portals database, ATTACHed so the per-tenant staging models can DELIVER into it
+# (`materialise: table`, target `book.inbound.{uid}__{entity}`). This is T0 federation: the SQL still
+# runs in DuckDB, which writes through its postgres extension.
+#
+# It connects as `book_writer`, NOT as the API's app role and NOT as service_role. That credential
+# reaches the merged relations and nothing else (migration 0062): a compromised daemon cannot read a
+# client's identity documents or a firm's screening outcomes. BYPASSRLS is unavoidable for a writer
+# that spans tenants and is stated plainly there rather than argued away.
+#
+# No `alias:` for the warehouse here, unlike Seccl's: that one exists because DuckDB cannot bind
+# `seccl.clients` when `seccl` is both the catalogue and the consumption schema. This project
+# catalogues as `morgan_lloyd` and consumes from `platform`, so there is nothing to disambiguate.
+attach:
+  book: 'postgres:${BOOK_WRITER_DSN}'
+secrets:
+  core_s3:
+    key_id: '${S3_ACCESS_KEY_ID}'
+    secret: '${S3_SECRET_ACCESS_KEY}'
+    endpoint: '${S3_ENDPOINT_HOST}' # host[:port], no scheme
+    url_style: path
+    use_ssl: false # local RustFS; flip when the endpoint is https

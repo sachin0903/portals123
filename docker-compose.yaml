@@ -1,0 +1,852 @@
+# Production stack for Coolify. See infrastructure/README.md.
+#
+# IMAGES ARE PULLED, NOT BUILT HERE. CI (.github/workflows/deploy.yml) builds every image on the
+# self-hosted runner and pushes it to the private registry; Coolify pulls immutable images and
+# never builds. Two prerequisites in Coolify for this to work:
+#   * PORTALS_IMAGE_TAG must be set (e.g. `latest`, or the exact commit SHA the deploy pushed —
+#     the SHA is what makes a release immutable). Every `image:` below fails the deploy fast if
+#     it is unset, the same `:?` convention this file uses for required secrets.
+#     **Every service therefore declares `pull_policy: always`**, and it must stay. The deployment
+#     runs on `latest`, a tag whose STRING never changes while the digest behind it does — so a
+#     resolved-by-name-and-tag image is already present locally and Compose reuses it, leaving the
+#     previous release running. That failure is silent and reads as "the code was never fixed":
+#     CI is green (it only POSTs Coolify's webhook, and the `/health/ready` smoke test is answered
+#     by the OUTGOING container in a couple of seconds), the containers are "running", and the only
+#     way to see it is to ask the live API what it serves. It cost a morning before a client demo:
+#     three commits' worth of API changes were on `main`, green, and not deployed.
+#   * a registry credential for registry.corp.grapheneplatforms.com (the `coolify` user) must be
+#     configured, and Coolify's Docker must trust that registry's TLS (infra: playbooks/
+#     registry-trust.yml). Without it every pull 401s / x509-fails.
+#
+# PostgreSQL is NOT part of this stack: it is a separate Coolify resource (or managed DB) on the
+# private network. The deploy pipeline runs migrations against it — with the elevated role —
+# BEFORE this stack is released.
+#
+# ── ONE VARIABLE PER FACT ──────────────────────────────────────────────────────────────────────
+# Coolify gives the whole stack a single environment list, so a value several services need must
+# be set ONCE there and fanned out by this file — never asked for twice under two names. The
+# anchors below (`x-*`) are that fan-out: an S3 credential, a WorkOS app, a Seccl login and an
+# observability block each exist once and merge into every service that needs them.
+#
+# These are DERIVED here and must NOT appear in the Coolify list:
+#   SECCL_S3_* / ML_S3_* / SEI_S3_*, {PROVIDER}_WAREHOUSE_DSN,
+#   {PROVIDER}_WAREHOUSE_DATA_PATH                                    ← gone entirely: every
+#     provider's interlace.yaml and runtime settings now read DATALAKE_WRITER_DSN + S3_* directly,
+#     with the prefixed form left only as a per-provider override
+#   ALLOWED_ORIGINS, OPERATIONS_PORTAL_URL, CLIENT_PORTAL_BASE_URL,
+#   SECCL_WEBHOOK_URL                                                 ← Coolify's SERVICE_URL_*
+#   API_URL, RENDER_SERVICE_URL, INTERLACE_SECCL_URL,
+#   GATEWAY_INTERLACE_URL, SECCL_STATE_PATH, SECCL_STREAM_PATH        ← internal hostnames/paths
+# Setting any of them by hand is how the list grew two spellings of one secret.
+#
+# A `:?message` modifier fails the deploy fast when a required value is missing. Anything with a
+# `:-default` modifier is optional — leave it OUT of the list rather than setting it blank, so the list
+# shows what this deployment actually decides.
+
+# ── shared environment blocks ──────────────────────────────────────────────────────────────────
+
+# The WorkOS application. Every portal presents the same one; per-TENANT WorkOS projects are
+# resolved at runtime from the API (`/internal/env-config`), which is what INTERNAL_API_TOKEN buys.
+x-workos: &workos
+  WORKOS_CLIENT_ID: ${WORKOS_CLIENT_ID:?set in Coolify}
+  WORKOS_API_KEY: ${WORKOS_API_KEY:?set in Coolify}
+  WORKOS_COOKIE_PASSWORD: ${WORKOS_COOKIE_PASSWORD:?set in Coolify}
+  INTERNAL_API_TOKEN: ${INTERNAL_API_TOKEN:?set in Coolify}
+
+# Every SvelteKit portal runs identically. Host-keyed shared portals: ONE deployment serves MANY
+# tenant hosts, so we can't pin a single ORIGIN — that makes SvelteKit reject form POSTs from every
+# other host with "Cross-site POST forbidden". Deriving the origin per-request from the proxy's
+# forwarded headers (Coolify/Traefik terminate TLS and set these) makes the CSRF origin check match
+# the real public host + scheme for each tenant. Safe because the app is only reachable via that
+# trusted proxy. (Do NOT also set ORIGIN — it would override these.)
+x-portal: &portal
+  NODE_ENV: production
+  PORT: "3000"
+  HOST: 0.0.0.0
+  PROTOCOL_HEADER: x-forwarded-proto
+  HOST_HEADER: x-forwarded-host
+  # The session list stores whatever getClientAddress() returned at sign-in. Without
+  # ADDRESS_HEADER the node adapter uses the TCP peer, which on Coolify is Traefik on the
+  # Docker network, so every session showed that internal address. Depth 1 is the rightmost
+  # X-Forwarded-For hop — the one this proxy appended. A second proxy in front (Cloudflare)
+  # would make that hop Cloudflare's address instead; do not raise the depth to chase it.
+  ADDRESS_HEADER: x-forwarded-for
+  XFF_DEPTH: "1"
+  # Every browser call is same-origin to its portal. REST and realtime SSE are both forwarded
+  # server-side over this private compose-network address; the API needs no browser-facing origin.
+  API_URL: http://api:8000
+  # Request-body ceiling for the node adapter (`env('BODY_SIZE_LIMIT', '512K')` in its handler.js).
+  # It is enforced BEFORE any form action runs, so the default 512 KB rejects every real upload with a
+  # bare "Payload Too Large" — documents, supporting files, client request fulfilment, chat
+  # attachments, and a branding logo near its own 512 KiB cap. `vite dev` has no such ceiling, which
+  # is why uploads work locally and 413 on a deployment. Sized above the API's own multi-file ceiling
+  # (`documents.py::MAX_UPLOAD_BODY_BYTES` = 25 MiB x 10 + 1 MiB headroom = 251 MiB) so the API is the
+  # one that refuses an over-size drop — its message names the real limit, this one cannot.
+  # Cost: a portal form action buffers the whole multipart body in memory before forwarding it.
+  BODY_SIZE_LIMIT: ${BODY_SIZE_LIMIT:-256M}
+  # The same name the API uses. The admin tenant page shows the outbound-email restriction when
+  # this is dev or staging, and hides it on every other stage including production.
+  APP_STAGE: ${APP_STAGE:-production}
+
+# Object storage (S3-compatible) — docs/storage.md. ONE endpoint + credential (the PLATFORM ROOT
+# credential) serves ALL buckets: it provisions the per-tenant `t-{uid}` buckets and performs the
+# API's own writes. Defaults to the bundled `rustfs` service below, so documents work end to end
+# out of the box. To use an EXTERNAL provider (AWS S3 / R2 / B2), set S3_ENDPOINT_URL +
+# S3_ENDPOINT_HOST + the credential pair. (Local dev gets its own RustFS from
+# docker-compose.local.yaml.)
+x-s3: &s3
+  S3_ENDPOINT_URL: ${S3_ENDPOINT_URL:-http://rustfs:9000}
+  S3_REGION: ${S3_REGION:-auto}
+  S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-portals}
+  S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:?set in Coolify — object storage secret}
+  # Canned ACL for uploads: `public-read` on providers with object ACLs (AWS S3, MinIO, RustFS);
+  # blank on R2 / B2 (use a bucket policy). Force addressing style if a provider or custom domain
+  # needs it (true=path, false=virtual).
+  S3_ACL: ${S3_ACL:-}
+  S3_FORCE_PATH_STYLE: ${S3_FORCE_PATH_STYLE:-true}
+  # PRIVATE documents (uploads + rendered PDFs). Bytes reach the browser via the API's
+  # presign/proxy, never a public URL.
+  S3_DOCUMENTS_BUCKET: ${S3_DOCUMENTS_BUCKET:-portals-documents}
+
+x-observability: &observability
+  # app/logging.py resolves a blank LOG_FORMAT to text on APP_STAGE=dev and json otherwise;
+  # SENTRY_DSN off => failures still reach the structured log at ERROR.
+  LOG_FORMAT: ${LOG_FORMAT:-}
+  LOG_LEVEL: ${LOG_LEVEL:-INFO}
+  SENTRY_DSN: ${SENTRY_DSN:-}
+  # Traces. An empty endpoint means the process exports nothing (local compose still boots).
+  # The collector and the sampler ratio live in the environment, not in this file.
+  OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
+  OTEL_EXPORTER_OTLP_PROTOCOL: ${OTEL_EXPORTER_OTLP_PROTOCOL:-}
+  OTEL_TRACES_SAMPLER: ${OTEL_TRACES_SAMPLER:-}
+  OTEL_TRACES_SAMPLER_ARG: ${OTEL_TRACES_SAMPLER_ARG:-}
+  OTEL_RESOURCE_ATTRIBUTES: ${OTEL_RESOURCE_ATTRIBUTES:-}
+  PORTALS_OTEL_KEEP_ERRORS: ${PORTALS_OTEL_KEEP_ERRORS:-}
+  PORTALS_OTEL_SLOW_REQUEST_MS: ${PORTALS_OTEL_SLOW_REQUEST_MS:-}
+
+# The ComplyCube account behind AML and identity checks (docs/aml.md). The firm API receives the
+# webhook and runs partner checks, the worker drains the events and routes the results, and the API
+# runs the screens and decisions from the AML console, so all three present it.
+x-complycube: &complycube
+  SCREENING_API_KEY: ${SCREENING_API_KEY:-}
+  SCREENING_WEBHOOK_SECRET: ${SCREENING_WEBHOOK_SECRET:-}
+
+# The Seccl login, presented identically by the pipeline and the gateway.
+x-seccl-auth: &seccl-auth
+  SECCL_API_URL: ${SECCL_API_URL:?set in Coolify}
+  SECCL_FIRM_ID: ${SECCL_FIRM_ID:?set in Coolify}
+  # private_key_jwt (production M2M) | client_secret (staging)
+  SECCL_AUTH_TYPE: ${SECCL_AUTH_TYPE:-private_key_jwt}
+  SECCL_AUTH0_DOMAIN: ${SECCL_AUTH0_DOMAIN:?set in Coolify}
+  SECCL_AUDIENCE: ${SECCL_AUDIENCE:-}
+  SECCL_CLIENT_ID: ${SECCL_CLIENT_ID:?set in Coolify}
+  SECCL_KID: ${SECCL_KID:-}
+  SECCL_CLIENT_SECRET: ${SECCL_CLIENT_SECRET:-}
+  # The PEM registered with Seccl, base64-encoded — an env value, not a file. It used to be a bind
+  # mount from a fixed host path (`/opt/graphene/secrets/seccl.pem`) because Coolify refuses a
+  # volume source containing `${`, which made it the one secret in this stack that could not be set
+  # in the env list at all. `private_key_b64` takes precedence over `private_key_path` in
+  # seccl_sync.settings, so this replaces the mount outright.
+  SECCL_PRIVATE_KEY_B64: ${SECCL_PRIVATE_KEY_B64:-}
+
+# The Morgan Lloyd (Clifton) Dynamics 365 service principal. MORGAN_LLOYD_TENANT_ID is the Azure
+# DIRECTORY id — the OAuth token URL and the `ml_tenant_id` slice key — and is NOT the adviser firm
+# id, which is an `accounts` record and the value the vendor issues under three different field
+# names (`cam_financialadviser_Account`, Create Adviser's `accountId`, Create Investment's
+# `provider`). Without the adviser firm id a synced contact is unattached and every later
+# `cam_createscheme` 403s, so `sync-to-morgan-lloyd` warns up front rather than half-succeeding.
+# The two option-set values are firm-specific with no documented labels: blank means scheme
+# creation refuses by name instead of guessing a number.
+x-morgan-lloyd-auth: &morgan-lloyd-auth
+  MORGAN_LLOYD_RESOURCE_URL: ${MORGAN_LLOYD_RESOURCE_URL:-}
+  MORGAN_LLOYD_TENANT_ID: ${MORGAN_LLOYD_TENANT_ID:-}
+  MORGAN_LLOYD_CLIENT_ID: ${MORGAN_LLOYD_CLIENT_ID:-}
+  MORGAN_LLOYD_CLIENT_SECRET: ${MORGAN_LLOYD_CLIENT_SECRET:-}
+  MORGAN_LLOYD_ADVISER_FIRM_ID: ${MORGAN_LLOYD_ADVISER_FIRM_ID:-}
+  MORGAN_LLOYD_ADVISER_CONTACT_ID: ${MORGAN_LLOYD_ADVISER_CONTACT_ID:-}
+  MORGAN_LLOYD_SCHEME_TYPE: ${MORGAN_LLOYD_SCHEME_TYPE:-}
+  MORGAN_LLOYD_SIPP_TYPE: ${MORGAN_LLOYD_SIPP_TYPE:-}
+  MORGAN_LLOYD_INVESTMENT_PROVIDER_ID: ${MORGAN_LLOYD_INVESTMENT_PROVIDER_ID:-}
+  ML_SYNC_ADVISER_EMAILS: ${ML_SYNC_ADVISER_EMAILS:-}
+
+# SEI: three stacked credential sets, because the drop and the API are different doors.
+#   * SFTP — the nightly encrypted report drop. SEI restricts by SOURCE IP, so this only works
+#     from an allowlisted host; auth failing from anywhere else is expected, not a bad password.
+#   * PGP — the drop is encrypted; without the key and passphrase every file lands and none reads.
+#   * mTLS + OAuth + AppKey — the SWP REST API.
+# The BASE64 forms are deliberate: a container cannot mount a PKCS#12 or a key file, and Coolify
+# refuses a volume source containing `${`. Both take precedence over their `_PATH` fallbacks.
+x-sei-auth: &sei-auth
+  SEI_ENV: ${SEI_ENV:-}
+  SEI_SFTP_HOST: ${SEI_SFTP_HOST:-}
+  SEI_SFTP_PORT: ${SEI_SFTP_PORT:-22}
+  SEI_SFTP_USERNAME: ${SEI_SFTP_USERNAME:-}
+  SEI_SFTP_PASSWORD: ${SEI_SFTP_PASSWORD:-}
+  SEI_SFTP_REMOTE_DIR: ${SEI_SFTP_REMOTE_DIR:-}
+  SEI_PGP_PRIVATE_KEY_BASE64: ${SEI_PGP_PRIVATE_KEY_BASE64:-}
+  SEI_PGP_PASSPHRASE: ${SEI_PGP_PASSPHRASE:-}
+  SEI_API_BASE_URL: ${SEI_API_BASE_URL:-}
+  SEI_OAUTH_USERNAME: ${SEI_OAUTH_USERNAME:-}
+  SEI_OAUTH_PASSWORD: ${SEI_OAUTH_PASSWORD:-}
+  SEI_APPKEY: ${SEI_APPKEY:-}
+  SEI_APPSECRET: ${SEI_APPSECRET:-}
+  SEI_PFX_BASE64: ${SEI_PFX_BASE64:-}
+  SEI_PFX_PASSWORD: ${SEI_PFX_PASSWORD:-}
+  SEI_API_LOOKBACK_DAYS: ${SEI_API_LOOKBACK_DAYS:-}
+
+# Intelliflo Office API — this provider's own OAuth client (services/integrations/intelliflo,
+# ported from sei_reports). CLIENT_ID/SECRET/API_KEY are required: every one of the three
+# processes below imports providers/intelliflo/config.py at startup. The rest have the same
+# defaults as the code's own.
+x-intelliflo-auth: &intelliflo-auth
+  INTELLIFLO_CLIENT_ID: ${INTELLIFLO_CLIENT_ID:?set in Coolify}
+  INTELLIFLO_CLIENT_SECRET: ${INTELLIFLO_CLIENT_SECRET:?set in Coolify}
+  INTELLIFLO_API_KEY: ${INTELLIFLO_API_KEY:?set in Coolify}
+  INTELLIFLO_APP_ID: ${INTELLIFLO_APP_ID:-}
+  INTELLIFLO_TENANT_ID: ${INTELLIFLO_TENANT_ID:-12551}
+  # One INTELLIFLO_SCOPE in Coolify overrides the scope for BOTH the sync services and the API (see
+  # x-intelliflo-api below). The default here is providers/intelliflo/config.py's own, so an unset
+  # variable changes nothing; it is spelled out because compose would otherwise pass an EMPTY scope,
+  # which would override the code's default rather than fall back to it.
+  INTELLIFLO_SCOPE: ${INTELLIFLO_SCOPE:-openid hub client_data client_financial_data firm_data fund_data apps app_data}
+  # The product provider the tenant sync gives a tenant row: on insert, and on an existing row only
+  # where its value is blank (a value already there is never overwritten). Nothing reads these at run
+  # time. Defaults are Graphene's.
+  INTELLIFLO_DEFAULT_PROVIDER_ID: ${INTELLIFLO_DEFAULT_PROVIDER_ID:-5261}
+  INTELLIFLO_DEFAULT_PROVIDER_NAME: ${INTELLIFLO_DEFAULT_PROVIDER_NAME:-Graphene Platforms Ltd}
+  # Valuations use a SEPARATE Intelliflo app registration/OAuth client from everything else
+  # (confirmed against the real dev tenant: the main client_id 400s on this scope) — falls back
+  # to the main client id/secret when unset (providers/intelliflo/config.py's own default), but
+  # the real dev/prod tenant needs its own.
+  INTELLIFLO_VALUATION_CLIENT_ID: ${INTELLIFLO_VALUATION_CLIENT_ID:-}
+  INTELLIFLO_VALUATION_CLIENT_SECRET: ${INTELLIFLO_VALUATION_CLIENT_SECRET:-}
+  INTELLIFLO_WEBHOOK_SECRET: ${INTELLIFLO_WEBHOOK_SECRET:-}
+  # Off this service's own Coolify domain — same SERVICE_URL_* pattern as SECCL_WEBHOOK_URL /
+  # SERVICE_URL_SECCL_GATEWAY. Don't set this one by hand.
+  INTELLIFLO_WEBHOOK_CALLBACK_URL: ${SERVICE_URL_INTELLIFLO_WEBHOOK:-}
+  # Per-feature cron overrides (Europe/London); an unset one falls back to INTELLIFLO_CRON.
+  INTELLIFLO_CRON: ${INTELLIFLO_CRON:-30 9 * * 1-5}
+  INTELLIFLO_VALUATIONS_CRON: ${INTELLIFLO_VALUATIONS_CRON:-}
+  INTELLIFLO_TRANSACTIONS_CRON: ${INTELLIFLO_TRANSACTIONS_CRON:-}
+  INTELLIFLO_INCOME_STATEMENTS_CRON: ${INTELLIFLO_INCOME_STATEMENTS_CRON:-}
+  INTELLIFLO_INCOME_STATEMENT_ITEMS_CRON: ${INTELLIFLO_INCOME_STATEMENT_ITEMS_CRON:-}
+  INTELLIFLO_TENANT_SYNC_CRON: ${INTELLIFLO_TENANT_SYNC_CRON:-0 6 * * *}
+  # Ops notifications on sync failure — this service's own var names (shared/config.py), not
+  # api/render's RESEND_API_KEY/EMAIL_ALLOWLIST. RESEND_EMAIL_API_KEY is the SAME Resend account
+  # as RESEND_API_KEY, fanned out under the name this service reads rather than duplicated.
+  SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL:-}
+  RESEND_EMAIL_API_KEY: ${RESEND_API_KEY:-}
+  INTEGRATION_NOTIFY_EMAIL_TO: ${INTEGRATION_NOTIFY_EMAIL_TO:-}
+
+# intelliflo-sync's own Postgres login: the `integrations` schema on the SAME managed `portals`
+# database DATABASE_URL already points at. This service reads discrete PG_HOST/PG_PORT/PG_DBNAME/
+# PG_USER/PG_PASSWORD/PG_SET_ROLE env vars rather than a DSN (ported as-is from sei_reports,
+# predates the DSN convention the other three provider services use) — named INTELLIFLO_PG_* on
+# the Coolify side only to avoid colliding with some other service's idea of a bare PG_HOST, and
+# mapped onto the plain names below that the app actually reads.
+x-intelliflo-pg: &intelliflo-pg
+  PG_HOST: ${INTELLIFLO_PG_HOST:?set in Coolify — same host as DATABASE_URL}
+  PG_PORT: ${INTELLIFLO_PG_PORT:-5432}
+  PG_DBNAME: ${INTELLIFLO_PG_DBNAME:-portals}
+  PG_USER: ${INTELLIFLO_PG_USER:?set in Coolify}
+  PG_PASSWORD: ${INTELLIFLO_PG_PASSWORD:?set in Coolify}
+  PG_SET_ROLE: ${INTELLIFLO_PG_SET_ROLE:-service_role}
+
+# Read-only against the shared SEI core catalogue (docs/datalake.md) — DATALAKE_CATALOG_DSN as
+# lake_reader, never *warehouse's DATALAKE_WRITER_DSN/BOOK_WRITER_DSN, which this reader has no
+# business holding. The S3_* values are the SAME core-bucket credential *warehouse uses below,
+# fanned out here under the same names rather than duplicated under new ones.
+# The API's OWN Intelliflo access (pkgs/intelliflo): the admin Clients/Accounts dropdowns and plan
+# link/unlink call IO from the api container, not from the scheduler. It is the SAME Intelliflo app
+# as the sync services, so it reads the SAME Coolify variables: INTELLIFLO_CLIENT_ID / _CLIENT_SECRET
+# / _API_KEY / _TENANT_ID are set once and used by both. The two things that differ for the API
+# (the tenant grant and the /v2 base URL) are fixed below, and the scope defaults to the one the API
+# needs (incl. firm_data.incomestatements) but is overridable with the same INTELLIFLO_SCOPE the sync
+# services read. There is deliberately no INTELLIFLO_API_* override. None of the credentials is
+# required, so an API without IO access still starts (those screens then answer 502).
+x-intelliflo-api: &intelliflo-api
+  INTELLIFLO_CLIENT_ID: ${INTELLIFLO_CLIENT_ID:-}
+  INTELLIFLO_CLIENT_SECRET: ${INTELLIFLO_CLIENT_SECRET:-}
+  INTELLIFLO_API_KEY: ${INTELLIFLO_API_KEY:-}
+  INTELLIFLO_TENANT_ID: ${INTELLIFLO_TENANT_ID:-12551}
+  INTELLIFLO_GRANT_TYPE: tenant_client_credentials
+  INTELLIFLO_SCOPE: ${INTELLIFLO_SCOPE:-client_data client_financial_data firm_data fund_data openid profile myprofile apps firm_data.incomestatements}
+  INTELLIFLO_BASE_URL: https://api.gb.intelliflo.net/v2
+
+x-intelliflo-lake: &intelliflo-lake
+  DATALAKE_CATALOG_DSN: ${DATALAKE_CATALOG_DSN:?set in Coolify — libpq DSN for lake_reader}
+  S3_CORE_BUCKET: ${S3_CORE_BUCKET:-platforms}
+  S3_ENDPOINT_HOST: ${S3_ENDPOINT_HOST:-rustfs:9000}
+  S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-portals}
+  S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:?set in Coolify — object storage secret}
+  S3_USE_SSL: ${S3_USE_SSL:-false}
+
+# The warehouse + object store, under the names every service now reads: `services/*/interlace.yaml`
+# interpolates these straight from the container environment, and the runtime settings accept them
+# with the `{PROVIDER}_*` form left as an override. So the translation layer that used to sit here
+# (a SECCL_S3_* copy of each S3_* value) is gone — there is one name per fact.
+#
+# S3_ENDPOINT_HOST is a second FORM of the one endpoint, not a second endpoint: the DuckDB secret
+# takes host[:port] with no scheme, and compose cannot strip one off S3_ENDPOINT_URL.
+x-warehouse: &warehouse
+  DATALAKE_WRITER_DSN: ${DATALAKE_WRITER_DSN:?set in Coolify — libpq DSN for lake_writer}
+  # `book_writer` on the PORTALS database — the per-tenant merge's own login (0062), the narrowest
+  # credential in the stack: it reaches the merged relations, platform.merge_rejects, auth.tenants,
+  # platform.tenant_platforms and storage.tenants, and nothing else. Libpq KEYWORD form, because
+  # interlace interpolates it into `postgres:${BOOK_WRITER_DSN}` for DuckDB's postgres extension.
+  #
+  # REQUIRED, not optional: unset, `book_sink.tenants.enabled()` logs a warning and returns [], so
+  # the daemon registers NO tenant models — no slice, no staging, no merge — and still serves and
+  # reports healthy. A firm's book simply never fills, which is indistinguishable from a firm with
+  # no data at this custodian. It belongs in this shared block rather than per service because all
+  # three daemons need the same value (docs/provider-pipeline.md §7).
+  BOOK_WRITER_DSN: ${BOOK_WRITER_DSN:?set in Coolify — libpq keyword DSN for book_writer}
+  S3_CORE_BUCKET: ${S3_CORE_BUCKET:-platforms}
+  # NOTHING READS THIS. No module in apps/, pkgs/ or services/ resolves it — the API's own
+  # `s3_integrations_bucket` setting had no reader and has been removed. The bucket is still
+  # created below and the value still passed, because an existing bucket may hold bytes and
+  # silently ceasing to provision one is not a cleanup. Delete both once its contents are
+  # accounted for.
+  S3_INTEGRATIONS_BUCKET: ${S3_INTEGRATIONS_BUCKET:-integrations}
+  S3_ENDPOINT_HOST: ${S3_ENDPOINT_HOST:-rustfs:9000}
+  S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-portals}
+  S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:?set in Coolify — object storage secret}
+
+x-portal-healthcheck: &portal-healthcheck
+  test:
+    [
+      "CMD",
+      "node",
+      "-e",
+      "fetch('http://localhost:3000/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+    ]
+  interval: 30s
+  timeout: 3s
+  retries: 3
+  start_period: 15s
+
+services:
+  api:
+    image: registry.corp.grapheneplatforms.com/portals/api:${PORTALS_IMAGE_TAG:?set in Coolify}
+    pull_policy: always
+    restart: unless-stopped
+    environment:
+      <<: [*workos, *s3, *observability, *complycube, *intelliflo-api]
+      # App role: DML-only, RLS-bound (NOT the migration role).
+      DATABASE_URL: ${DATABASE_URL:?set in Coolify}
+      # Which stage this deployment is: dev | staging | production. One stage per instance
+      # (dev/staging/prod are separate deployments, each its own DB); tenant WorkOS configs are
+      # stamped with it.
+      APP_STAGE: ${APP_STAGE:-production}
+      WORKOS_ISSUER: ${WORKOS_ISSUER:-}
+      # Allowed browser origins — fed straight off the Coolify "Domains" fields via its magic
+      # SERVICE_URL_* vars (the PRIMARY domain per service), so this isn't maintained by hand.
+      # Extra tenant domains (a service with several domains, e.g. selectplatform.co.uk) are
+      # covered by ALLOWED_ORIGIN_REGEX. Empty entries are ignored by the parser.
+      ALLOWED_ORIGINS: ${SERVICE_URL_CLIENT},${SERVICE_URL_PLATFORM},${SERVICE_URL_ADMIN}
+      # Host-keyed shared portals: match ALL tenant portal origins by regex (the SERVICE_URL_*
+      # above only carry each service's primary domain). e.g.
+      #   ^https://(client|platform|admin)\.dev\.fra\.corp\..+$
+      ALLOWED_ORIGIN_REGEX: ${ALLOWED_ORIGIN_REGEX:-}
+      # Fernet key that encrypts per-tenant WorkOS environment secrets at rest. The API is the
+      # sole holder; blank => secret handling fails closed. Generate with Fernet.generate_key().
+      SECRETS_MASTER_KEY: ${SECRETS_MASTER_KEY:?set in Coolify}
+      # Bootstrap break-glass: WorkOS user ids treated as Graphene system admins (comma-separated).
+      # Resend (transactional email) — we send invites / password-set / verification emails
+      # ourselves instead of AuthKit's hosted emails. Blank => email is skipped (provisioning
+      # still returns the link to copy). Disable WorkOS's own emails in the dashboard.
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      # The delivery webhook's Svix signing secret, from the endpoint's page in the Resend
+      # dashboard (`whsec_…`, pasted whole). BLANK DISABLES THE ROUTE — it answers
+      # `not_configured` and no delivery event is ever applied, so a message stays at `sent` for
+      # ever. Not fatal: `COMMS_POLL_SECONDS` is the net that asks the provider directly, so
+      # delivery states still arrive, up to one poll interval late. See docs/comms.md.
+      RESEND_WEBHOOK_SECRET: ${RESEND_WEBHOOK_SECRET:-}
+      EMAIL_FROM: ${EMAIL_FROM:-Graphene <no-reply@grapheneplatforms.com>}
+      # On APP_STAGE=dev and APP_STAGE=staging a recipient is mailed only if it matches
+      # EMAIL_ALLOWLIST. The guard ships on, and an unset list is @grapheneplatforms.com, so a
+      # staging deploy that inherits a working Resend key still cannot mail real clients. An
+      # explicit blank list suppresses every send on those two stages. Every other stage mails
+      # freely. Quoted because a bare @ is not a legal YAML plain scalar once
+      # Compose has interpolated the default. The render service below carries the same two lines:
+      # the outbox and the task notifier send from there.
+      EMAIL_NONPROD_GUARD: ${EMAIL_NONPROD_GUARD:-true}
+      EMAIL_ALLOWLIST: "${EMAIL_ALLOWLIST:-@grapheneplatforms.com}"
+      # Address autocomplete (Postcoder). The portals' /api/postcoder BFFs forward here; blank ⇒
+      # GET /ref/postcoder/* answers 503 and the user types the address by hand.
+      POSTCODER_API_KEY: ${POSTCODER_API_KEY:-}
+      # Portal base URLs, for building ops set-password links and shareable /share/{token} links.
+      # Fed off each service's Coolify domain, so they track the "Domains" fields.
+      OPERATIONS_PORTAL_URL: ${SERVICE_URL_ADMIN}
+      CLIENT_PORTAL_BASE_URL: ${SERVICE_URL_CLIENT}
+      # GET /metrics is out of the OpenAPI schema; set a token to require `x-metrics-token`.
+      METRICS_ENABLED: ${METRICS_ENABLED:-true}
+      METRICS_TOKEN: ${METRICS_TOKEN:-}
+      # The LEGACY shared public branding bucket (fallback while a tenant bucket has no public
+      # prefix); the base URL is browser-reachable INCLUDING the bucket — path style, e.g.
+      # https://s3.<domain>/branding.
+      S3_BUCKET: ${S3_BUCKET:-}
+      S3_PUBLIC_BASE_URL: ${S3_PUBLIC_BASE_URL:-}
+      # Core bucket (raw/staged provider data + the parquet zones; Graphene-internal) and the
+      # tenant bucket prefix (AWS names are global — namespace it per deployment, e.g.
+      # graphene-prod-t-). S3_KIND overrides the store kind recorded in the tenant registry.
+      S3_CORE_BUCKET: ${S3_CORE_BUCKET:-platforms}
+      S3_TENANT_BUCKET_PREFIX: ${S3_TENANT_BUCKET_PREFIX:-t-}
+      S3_KIND: ${S3_KIND:-}
+      # DuckLake catalogue DB (docs/datalake.md): lake_writer URL for provisioning (blank =>
+      # catalogue step skipped) + lake_reader libpq DSN for app/lake attaches (blank => lake
+      # queries unavailable). External managed Postgres, like DATABASE_URL.
+      DATALAKE_DATABASE_URL: ${DATALAKE_DATABASE_URL:-}
+      DATALAKE_CATALOG_DSN: ${DATALAKE_CATALOG_DSN:-}
+      DATALAKE_OLTP_DSN: ${DATALAKE_OLTP_DSN:-}
+      # Template previews render on the SAME engine as generation — the worker — reached by service
+      # name on the internal network. So a preview is byte-identical to the generated document and
+      # this image needn't carry the native render stack just for previews.
+      RENDER_SERVICE_URL: http://render:8001
+      # The interlace daemons behind admin /platforms (models, lineage, runs, the SQL console).
+      # Internal hostnames, so they track the services rather than hand-set URLs.
+      #
+      # ALL THREE, because an unset one is invisible in the worst way: `platforms.service_url`
+      # returns "", the provider reports `service: unconfigured`, and every sync / refresh /
+      # rebuild for it answers 503 — while its pages still render. SEI and Morgan Lloyd were
+      # absent here (and had no container at all), so two of the three custodians had no live
+      # surface whatsoever.
+      INTERLACE_SECCL_URL: http://seccl-pipeline:8100
+      INTERLACE_MORGAN_LLOYD_URL: http://morgan-lloyd-pipeline:8102
+      INTERLACE_SEI_URL: http://sei-pipeline:8103
+      FLOWS_ORCHESTRATOR_V2: ${FLOWS_ORCHESTRATOR_V2:-}
+      # ── The flow engine's AI gates (app/flows/ai.py) ────────────────────────────────────────
+      # BLANK MEANS THE FEATURE DOES NOT EXIST: publish refuses a flow naming `classify` or
+      # `draft_message`, nothing calls out, and no client is constructed. This is the FIRST of two
+      # switches — the second is per firm (`flows.ai_tenants`, at admin → the firm → AI), because a
+      # configured deployment must not mean an enabled firm. Neither action can decide or send.
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      AI_MODEL: ${AI_MODEL:-claude-opus-5}
+      # The ceiling stamped on a NEW per-firm row — a default, not the bound. The bound is the
+      # row's own column, per firm.
+      AI_DEFAULT_MONTHLY_TOKEN_CAP: ${AI_DEFAULT_MONTHLY_TOKEN_CAP:-1000000}
+      # ── CTC (the Morgan Lloyd SIPP illustration engine) ─────────────────────────────────────
+      # CTC_ENABLED off => a marked PLACEHOLDER PDF is filed instead of a quotation. The engine
+      # takes no credentials; it identifies the caller by CTC_AGENT_NAME, so a blank name with
+      # CTC_ENABLED=true is a request the vendor cannot attribute.
+      CTC_ENABLED: ${CTC_ENABLED:-false}
+      CTC_AGENT_NAME: ${CTC_AGENT_NAME:-}
+      # ── Morgan Lloyd (Dynamics 365) ────────────────────────────────────────────────────────
+      # Drawdown sessions, contact/scheme sync and cam_contribution all run from the API, so the
+      # credentials belong here — not only in the sync service. MORGAN_LLOYD_ADVISER_FIRM_ID is a
+      # prerequisite for scheme creation: without it a contact is unattached and every later
+      # cam_createscheme 403s, so the sync warns up front.
+      MORGAN_LLOYD_RESOURCE_URL: ${MORGAN_LLOYD_RESOURCE_URL:-}
+      MORGAN_LLOYD_TENANT_ID: ${MORGAN_LLOYD_TENANT_ID:-}
+      MORGAN_LLOYD_CLIENT_ID: ${MORGAN_LLOYD_CLIENT_ID:-}
+      MORGAN_LLOYD_CLIENT_SECRET: ${MORGAN_LLOYD_CLIENT_SECRET:-}
+      MORGAN_LLOYD_ADVISER_FIRM_ID: ${MORGAN_LLOYD_ADVISER_FIRM_ID:-}
+      MORGAN_LLOYD_SCHEME_TYPE: ${MORGAN_LLOYD_SCHEME_TYPE:-}
+      MORGAN_LLOYD_SIPP_TYPE: ${MORGAN_LLOYD_SIPP_TYPE:-}
+      # ── SEI SWP (Anticipated Cash Receipts for booked contributions) ────────────────────────
+      # mTLS + OAuth + an app-gateway AppKey, all three needed. The certificate arrives base64 in
+      # SEI_PFX_BASE64 — the file form would need a bind mount this deployment model has nowhere
+      # to put. SEI also restricts by SOURCE IP, so correct credentials are necessary but not
+      # sufficient: the call must leave the allowlisted host.
+      SEI_ENVIRONMENT: ${SEI_ENVIRONMENT:-i31}
+      SEI_OAUTH_USERNAME: ${SEI_OAUTH_USERNAME:-}
+      SEI_OAUTH_PASSWORD: ${SEI_OAUTH_PASSWORD:-}
+      SEI_APPKEY: ${SEI_APPKEY:-}
+      SEI_APPSECRET: ${SEI_APPSECRET:-}
+      SEI_PFX_BASE64: ${SEI_PFX_BASE64:-}
+      SEI_PFX_PASSWORD: ${SEI_PFX_PASSWORD:-}
+      # SEI's own withdrawal rail fee — the same for every firm, so a deployment setting rather
+      # than something a firm configures. BACS carries none, hence no BACS key here. Defaults are
+      # today's published rates; change these if SEI's pricing changes, no deploy needed.
+      SEI_FASTER_PAYMENT_FEE: ${SEI_FASTER_PAYMENT_FEE:-0.50}
+      SEI_SWIFT_FEE: ${SEI_SWIFT_FEE:-15.00}
+    expose:
+      - "8000"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health').status==200 else 1)",
+        ]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+
+  # Firm API (Litestar). Same image as `api`, different command — the seccl-gateway pattern.
+  # Firms call this process directly, so it takes a public domain. The portal API stays internal.
+  # EXTERNAL_STUB defaults to true in the process; this deployment turns it off unless the
+  # environment already sets the variable (an explicit true keeps the stub).
+  external:
+    image: registry.corp.grapheneplatforms.com/portals/api:${PORTALS_IMAGE_TAG:?set in Coolify}
+    pull_policy: always
+    restart: unless-stopped
+    command: ["python", "-m", "external"]
+    working_dir: /app/apps/api
+    environment:
+      # Object storage: a firm's uploaded identity documents go to its document bucket.
+      <<: [*complycube, *s3, *observability]
+      DATABASE_URL: ${DATABASE_URL:?set in Coolify}
+      # The same stage as the api: it is the `graphene_env` stamped on a partner's ComplyCube
+      # clients, and the console's Run it again 409s when the two disagree.
+      APP_STAGE: ${APP_STAGE:-production}
+      EXTERNAL_HOST: 0.0.0.0
+      EXTERNAL_PORT: "8010"
+      EXTERNAL_STUB: ${EXTERNAL_STUB:-false}
+      # Webhook signing secrets are Fernet ciphertext. Same key as api and the worker.
+      # Blank fails PUT /webhook closed.
+      SECRETS_MASTER_KEY: ${SECRETS_MASTER_KEY:?set in Coolify}
+    expose:
+      - "8010"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8010/health').status==200 else 1)",
+        ]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+
+  # DocumentWorker: drains documents.render_jobs and renders generated documents (Jinja2 +
+  # WeasyPrint) — the Linux-native render stack the API can't run. Without this service,
+  # POST /documents/generate enqueues jobs that are never rendered (documents stay 'queued').
+  render:
+    image: registry.corp.grapheneplatforms.com/portals/render:${PORTALS_IMAGE_TAG:?set in Coolify}
+    pull_policy: always
+    restart: unless-stopped
+    environment:
+      <<: [*workos, *s3, *observability, *complycube]
+      # The worker connects with the elevated role and does SET LOCAL ROLE service_role per job
+      # (it has no HTTP principal; it stamps each write with the job's tenant_id — the 0001 pattern).
+      MIGRATION_DATABASE_URL: ${MIGRATION_DATABASE_URL:?set in Coolify}
+      APP_STAGE: ${APP_STAGE:-production}
+      # Without these the task notifier is unconditionally dead in production — an invisible
+      # failure until the July 2026 audit.
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      # The delivery safety net's cadence, in seconds (0 disables it). Only the WORKER runs it —
+      # the API has no such loop — and it is on by default, because the webhook is the half that
+      # stops silently: a deleted endpoint, a rotated secret, a deploy that lost the variable.
+      COMMS_POLL_SECONDS: ${COMMS_POLL_SECONDS:-20}
+      # Background identity reconcile belongs to the worker so a slow WorkOS response cannot
+      # starve uvicorn. Enabled identically in staging and production; 0 explicitly disables it.
+      WORKOS_SYNC_POLL_SECONDS: ${WORKOS_SYNC_POLL_SECONDS:-60}
+      EMAIL_FROM: ${EMAIL_FROM:-}
+      # Same guard as the API's, and the worker needs it in its own right: the outbox dispatcher
+      # and the task notifier send from HERE, so an allowlist set only on the API would deliver an
+      # invite and silently swallow every notification that follows it. Unset means
+      # @grapheneplatforms.com; an explicit blank suppresses every dev and staging send.
+      EMAIL_NONPROD_GUARD: ${EMAIL_NONPROD_GUARD:-true}
+      EMAIL_ALLOWLIST: "${EMAIL_ALLOWLIST:-@grapheneplatforms.com}"
+      # The firm webhook sender (`_firm_webhooks_loop`) signs each delivery with the firm's secret,
+      # which is Fernet ciphertext under this key. Without it no delivery can be signed.
+      SECRETS_MASTER_KEY: ${SECRETS_MASTER_KEY:?set in Coolify}
+    # Synchronous preview-render endpoint (app.render_service), reached by the API at
+    # RENDER_SERVICE_URL=http://render:8001 on the internal network. Internal only — never published.
+    expose:
+      - "8001"
+    healthcheck:
+      # The worker serves no public HTTP: each loop (render, outbox, notifier, WorkOS sync,
+      # ComplyCube events) stamps a heartbeat and this reads it. Unhealthy => a loop is wedged, or
+      # the process died before its first iteration.
+      test: ["CMD", "python", "-m", "app.worker", "--healthcheck"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # ── Object storage (private documents) ─────────────────────────────────────────────────────────
+  # RustFS — S3-compatible object storage for PRIVATE documents (uploaded files + rendered PDFs),
+  # so Coolify runs the whole generate → render → store → view path with no external S3 dependency.
+  # Internal-only (no published domain): the api + render worker reach it by service name, and bytes
+  # reach the browser through the API's presign/proxy. Persists to a named volume. To use an
+  # EXTERNAL bucket instead, set S3_ENDPOINT_URL + creds and this service just sits idle.
+  rustfs:
+    image: rustfs/rustfs:latest
+    restart: unless-stopped
+    # UNGATED, DELIBERATELY. This carried `profiles: ["bundled-storage"]` for two days (d3b45267,
+    # to keep it out of the external-S3 deploys "cleanly") and the cost was out of all proportion
+    # to the tidiness: a deploy target that runs a plain `docker compose up` has nowhere to pass
+    # `--profile`, so dev simply stopped having an object store — while `S3_ENDPOINT_URL` went on
+    # defaulting to `http://rustfs:9000`, leaving a perfectly valid configuration aimed at a host
+    # that no longer existed. Nothing failed at boot; every client upload and every PDF render did.
+    # A deployment on an external store runs this as an idle spare container, which is the whole
+    # price of not being able to lose it again.
+    environment:
+      # Same credentials the api/worker present.
+      RUSTFS_ACCESS_KEY: ${S3_ACCESS_KEY_ID:-portals}
+      RUSTFS_SECRET_KEY: ${S3_SECRET_ACCESS_KEY:?set in Coolify — object storage secret}
+      RUSTFS_ADDRESS: ":9000"
+    command: /data
+    expose:
+      - "9000"
+    volumes:
+      - graphene-rustfs-data:/data
+    healthcheck:
+      # Same probe as local compose; createbucket waits on healthy, not merely started.
+      test: ['CMD-SHELL', 'curl -sf http://localhost:9000/health || exit 1']
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+  # One-shot: wait for RustFS, create the documents + core buckets (idempotent), then exit. Uses
+  # RustFS's own client (`rc`) — MinIO archived `mc` and Docker Hub now denies `minio/mc`, which
+  # is what broke Coolify's `compose pull`. The image is Alpine (has `/bin/sh`); its default
+  # ENTRYPOINT is `rc`, so this script must replace it. It does NOT gate the api/render services
+  # (they degrade gracefully and the worker retries render jobs), so a storage hiccup never takes
+  # the platform down — but it FAILS LOUDLY on an empty bucket name, since Coolify does not always
+  # apply compose `${VAR:-default}` fallbacks.
+  # ($$ escapes to a literal $ so the container shell — not compose — expands these.)
+  # Pinned: `latest` on a CLI we do not control is how `minio/mc` vanished under us.
+  createbucket:
+    image: rustfs/rc:v0.1.35
+    restart: "no"
+    # Ungated with `rustfs` above, for the same reason. It targets the bundled store, so on a
+    # deployment using an external one it exits having created buckets nothing reads.
+    # Prod creates documents/platforms/integrations on the external endpoint from
+    # deploy-prod (scripts/ensure_prod_buckets.yml) before the stack starts.
+    # Per-tenant buckets still come from the API.
+    depends_on:
+      rustfs:
+        condition: service_healthy
+    environment:
+      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-portals}
+      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:?set in Coolify — object storage secret}
+      S3_DOCUMENTS_BUCKET: ${S3_DOCUMENTS_BUCKET:-portals-documents}
+      # The core bucket holds raw/staged provider data AND the DuckLake parquet zones, so the
+      # Seccl pipeline cannot write a thing until it exists.
+      S3_CORE_BUCKET: ${S3_CORE_BUCKET:-platforms}
+      # Non-platform integrations (ComplyCube/CTC/Postcoder/Resend). Created empty on purpose —
+      # nothing writes it yet; it exists so the next integration does not borrow the provider
+      # bucket and quietly become provider data. Not fatal-if-blank for that reason.
+      S3_INTEGRATIONS_BUCKET: ${S3_INTEGRATIONS_BUCKET:-integrations}
+    entrypoint: >
+      /bin/sh -c "
+      set -e;
+      if [ -z \"$$S3_DOCUMENTS_BUCKET\" ]; then echo 'FATAL: S3_DOCUMENTS_BUCKET is empty — set it in Coolify (e.g. portals-documents)'; exit 1; fi;
+      if [ -z \"$$S3_CORE_BUCKET\" ]; then echo 'FATAL: S3_CORE_BUCKET is empty — set it in Coolify (e.g. platforms)'; exit 1; fi;
+      until rc alias set fs http://rustfs:9000 \"$$S3_ACCESS_KEY_ID\" \"$$S3_SECRET_ACCESS_KEY\" && rc ping fs; do echo 'waiting for rustfs...'; sleep 2; done;
+      rc mb --ignore-existing fs/\"$$S3_DOCUMENTS_BUCKET\";
+      rc mb --ignore-existing fs/\"$$S3_CORE_BUCKET\";
+      if [ -n \"$$S3_INTEGRATIONS_BUCKET\" ]; then rc mb --ignore-existing fs/\"$$S3_INTEGRATIONS_BUCKET\"; fi;
+      echo \"buckets $$S3_DOCUMENTS_BUCKET + $$S3_CORE_BUCKET ready\";
+      "
+
+  client:
+    image: registry.corp.grapheneplatforms.com/portals/client:${PORTALS_IMAGE_TAG:?set in Coolify}
+    pull_policy: always
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      <<: [*portal, *workos]
+    expose:
+      - "3000"
+    healthcheck: *portal-healthcheck
+
+  platform:
+    image: registry.corp.grapheneplatforms.com/portals/platform:${PORTALS_IMAGE_TAG:?set in Coolify}
+    pull_policy: always
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      <<: [*portal, *workos]
+    expose:
+      - "3000"
+    healthcheck: *portal-healthcheck
+
+  admin:
+    image: registry.corp.grapheneplatforms.com/portals/admin:${PORTALS_IMAGE_TAG:?set in Coolify}
+    pull_policy: always
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    # NETWORK-LOCK THIS SERVICE in Coolify: no public domain — reach it only via the corp VPN /
+    # IP allowlist / Cloudflare Access / Tailscale.
+    environment:
+      <<: [*portal, *workos]
+    expose:
+      - "3000"
+    healthcheck: *portal-healthcheck
+
+  # --- Seccl sync (services/seccl): interlace pipeline + webhook gateway ------------------------
+  # One image, two processes (see services/seccl/Dockerfile).
+  seccl-pipeline:
+    image: registry.corp.grapheneplatforms.com/portals/seccl:${PORTALS_IMAGE_TAG:?set in Coolify}
+    pull_policy: always
+    restart: unless-stopped
+    command: ["python", "-m", "book_sink.startup_run", "--host", "0.0.0.0", "--port", "8100", "--allow-open", "--no-apply"]
+    environment:
+      <<: [*seccl-auth, *warehouse]
+      # interlace.yaml interpolates the warehouse block from the CONTAINER env — a value set in
+      # Coolify but absent from this service never reaches the daemon. Since interlaced 2.0.0a3 the
+      # default engine opens in the startup lifespan and an unresolved placeholder is fatal, so a
+      # missing value means an unhealthy container and a failed deploy (they used to be read at
+      # first engine open, which hid the gap). The parquet PREFIX and the catalogue schema are
+      # literals in that file — facts about the provider, not about the deployment.
+      #
+      # docs/datalake.md; migrations/bootstrap/03-datalakes.sql must have been applied to the
+      # managed instance.
+      # state/stream SQLite live on the persistent volume below.
+      SECCL_STATE_PATH: /app/services/seccl/.interlace/state.db
+      SECCL_STREAM_PATH: /app/services/seccl/.interlace/streams.db
+    volumes:
+      # DuckLake warehouse + state/stream SQLite live here; must persist.
+      - seccl-warehouse:/app/services/seccl/.interlace
+    expose:
+      - "8100"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8100/health').status==200 else 1)",
+        ]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 15s
+
+  seccl-gateway:
+    # Same image as seccl-pipeline (services/seccl/Dockerfile), different command.
+    image: registry.corp.grapheneplatforms.com/portals/seccl:${PORTALS_IMAGE_TAG:?set in Coolify}
+    pull_policy: always
+    restart: unless-stopped
+    command:
+      [
+        "uvicorn",
+        "seccl_sync.gateway:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8101",
+      ]
+    depends_on:
+      seccl-pipeline:
+        condition: service_healthy
+    environment:
+      # Enrichment calls back into the Seccl API with the same credentials, and client documents
+      # pulled from Seccl land in the core bucket's raw zone (docs/storage.md).
+      <<: [*seccl-auth, *warehouse]
+      # HMAC secret shared with Seccl (webhook-signature verification).
+      SECCL_WEBHOOK_SECRET: ${SECCL_WEBHOOK_SECRET:?set in Coolify}
+      # Public URL of this gateway, used by `python -m seccl_sync.webhooks_setup` — off this
+      # service's own Coolify domain.
+      SECCL_WEBHOOK_URL: ${SERVICE_URL_SECCL_GATEWAY:-}
+      GATEWAY_INTERLACE_URL: http://seccl-pipeline:8100
+      GATEWAY_INTERLACE_API_KEY: ${GATEWAY_INTERLACE_API_KEY:-}
+    expose:
+      - "8101"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8101/health').status==200 else 1)",
+        ]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 15s
+
+  # --- Morgan Lloyd sync (services/morgan-lloyd): interlace pipeline -----------------------------
+  # Poll-only (Dataverse OData + custom actions), so one process and no gateway.
+  morgan-lloyd-pipeline:
+    image: registry.corp.grapheneplatforms.com/portals/morgan-lloyd:${PORTALS_IMAGE_TAG:?set in Coolify}
+    pull_policy: always
+    restart: unless-stopped
+    command: ["python", "-m", "book_sink.startup_run", "--host", "0.0.0.0", "--port", "8102", "--allow-open", "--no-apply"]
+    environment:
+      <<: [*morgan-lloyd-auth, *warehouse]
+    volumes:
+      # DuckLake state/stream SQLite live here; must persist. interlace.yaml leaves both at their
+      # defaults under `.interlace/`, so the whole directory is the mount.
+      - morgan-lloyd-warehouse:/app/services/morgan-lloyd/.interlace
+    expose:
+      - "8102"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8102/health').status==200 else 1)",
+        ]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 15s
+
+  # --- SEI sync (services/sei): interlace pipeline -----------------------------------------------
+  # A file-drop custodian: the nightly SFTP pull is `raw.files`, the HEAD of this project's DAG,
+  # which all 47 report models depend on — so it is not a separate cron and there is no gateway.
+  sei-pipeline:
+    image: registry.corp.grapheneplatforms.com/portals/sei:${PORTALS_IMAGE_TAG:?set in Coolify}
+    pull_policy: always
+    restart: unless-stopped
+    command: ["python", "-m", "book_sink.startup_run", "--host", "0.0.0.0", "--port", "8103", "--allow-open", "--no-apply"]
+    environment:
+      <<: [*sei-auth, *warehouse]
+    volumes:
+      - sei-warehouse:/app/services/sei/.interlace
+    expose:
+      - "8103"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8103/health').status==200 else 1)",
+        ]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 15s
+
+  # --- Intelliflo sync (services/integrations/intelliflo) -----------------------------------------
+  # Two of its three deployables (its own Dockerfile build targets, unlike seccl's one image +
+  # command override) — scheduler (cron, loads due features from integrations.platforms) and
+  # tenant-sync (discovers installed tenants on its own schedule). The third, webhook (WebSub
+  # receiver), is not run — not needed today. Read-only against the shared SEI lake; writes only
+  # to its own `integrations.*` OLTP schema.
+  intelliflo-scheduler:
+    image: registry.corp.grapheneplatforms.com/portals/intelliflo-scheduler:${PORTALS_IMAGE_TAG:?set in Coolify}
+    pull_policy: always
+    restart: unless-stopped
+    environment:
+      <<: [*intelliflo-auth, *intelliflo-pg, *intelliflo-lake, *observability]
+    healthcheck:
+      # No HTTP surface (a plain cron loop, unlike the interlace daemons' `interlace serve`) and
+      # no heartbeat file either — nothing to probe yet. Restart-on-crash is the only signal today.
+      disable: true
+
+  intelliflo-tenant-sync:
+    image: registry.corp.grapheneplatforms.com/portals/intelliflo-tenant-sync:${PORTALS_IMAGE_TAG:?set in Coolify}
+    pull_policy: always
+    restart: unless-stopped
+    environment:
+      <<: [*intelliflo-auth, *intelliflo-pg, *intelliflo-lake, *observability]
+    healthcheck:
+      disable: true
+
+volumes:
+  # Persists the private documents bucket (uploads + rendered PDFs) across redeploys.
+  graphene-rustfs-data:
+  # DuckLake warehouse + state/stream SQLite for the Seccl sync service.
+  seccl-warehouse:
+  # The same, for the other two provider daemons.
+  morgan-lloyd-warehouse:
+  sei-warehouse:

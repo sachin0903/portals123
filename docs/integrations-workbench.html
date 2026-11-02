@@ -1,0 +1,1443 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Integrations workbench · Graphene</title>
+</head>
+<body>
+<!--ARTIFACT-START-->
+<style>
+  /* ============ tokens (extends the app's achromatic zinc system) ============ */
+  :root{
+    --ground:#FAFAFA;        /* near-white paper */
+    --surface:#FFFFFF;       /* cards */
+    --surface-2:#F4F4F5;     /* muted panels, table head */
+    --ink:#18181B;           /* text — zinc-900 */
+    --ink-2:#52525B;         /* muted text — zinc-600 */
+    --ink-3:#A1A1AA;         /* faint — zinc-400 */
+    --line:#E4E4E7;          /* borders — zinc-200 */
+    --line-2:#D4D4D8;        /* stronger hairline */
+
+    --live:#2540D8;          /* the one chromatic signal: data in motion */
+    --live-bg:#EEF0FE;
+    --break:#DC2626;         /* failed / broken */
+    --break-bg:#FEF2F2;
+    --warn:#B45309;          /* needs attention (used sparingly) */
+    --warn-bg:#FEF6E7;
+    --ok:#18181B;            /* healthy = solid ink stamp */
+
+    --radius:0.625rem;
+    --radius-sm:0.4375rem;
+    --radius-xs:0.3125rem;
+
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,"SF Mono","Cascadia Mono","Roboto Mono",Menlo,Consolas,"Liberation Mono",monospace;
+
+    --shadow:0 1px 2px rgba(24,24,27,.04),0 1px 3px rgba(24,24,27,.06);
+    --shadow-lg:0 8px 24px -8px rgba(24,24,27,.18),0 2px 6px rgba(24,24,27,.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --ground:#09090B; --surface:#131316; --surface-2:#1D1D21;
+      --ink:#F4F4F5; --ink-2:#A1A1AA; --ink-3:#63636B;
+      --line:#26262B; --line-2:#3A3A41;
+      --live:#7C8FF2; --live-bg:#1A2149;
+      --break:#F26D6D; --break-bg:#301416;
+      --warn:#E0A33E; --warn-bg:#2B200C;
+      --ok:#F4F4F5;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 1px 3px rgba(0,0,0,.5);
+      --shadow-lg:0 8px 24px -8px rgba(0,0,0,.7),0 2px 6px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="light"]{
+    --ground:#FAFAFA; --surface:#FFFFFF; --surface-2:#F4F4F5;
+    --ink:#18181B; --ink-2:#52525B; --ink-3:#A1A1AA;
+    --line:#E4E4E7; --line-2:#D4D4D8;
+    --live:#2540D8; --live-bg:#EEF0FE;
+    --break:#DC2626; --break-bg:#FEF2F2;
+    --warn:#B45309; --warn-bg:#FEF6E7;
+    --ok:#18181B;
+    --shadow:0 1px 2px rgba(24,24,27,.04),0 1px 3px rgba(24,24,27,.06);
+    --shadow-lg:0 8px 24px -8px rgba(24,24,27,.18),0 2px 6px rgba(24,24,27,.06);
+  }
+  :root[data-theme="dark"]{
+    --ground:#09090B; --surface:#131316; --surface-2:#1D1D21;
+    --ink:#F4F4F5; --ink-2:#A1A1AA; --ink-3:#63636B;
+    --line:#26262B; --line-2:#3A3A41;
+    --live:#7C8FF2; --live-bg:#1A2149;
+    --break:#F26D6D; --break-bg:#301416;
+    --warn:#E0A33E; --warn-bg:#2B200C;
+    --ok:#F4F4F5;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 1px 3px rgba(0,0,0,.5);
+    --shadow-lg:0 8px 24px -8px rgba(0,0,0,.7),0 2px 6px rgba(0,0,0,.4);
+  }
+
+  *,*::before,*::after{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;background:var(--ground);color:var(--ink);
+    font-family:var(--sans);font-size:14px;line-height:1.5;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  }
+  h1,h2,h3,p,ul,figure{margin:0;}
+  ul{list-style:none;padding:0;}
+  button{font-family:inherit;font-size:inherit;cursor:pointer;color:inherit;}
+  :focus-visible{outline:2px solid var(--live);outline-offset:2px;border-radius:var(--radius-xs);}
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation:none!important;transition:none!important;}
+  }
+
+  .mono{font-family:var(--mono);font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;}
+  .num{font-family:var(--mono);font-variant-numeric:tabular-nums;}
+  .eyebrow{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--ink-3);font-weight:500;
+  }
+
+  /* ============ masthead ============ */
+  .mast{
+    display:flex;align-items:center;gap:20px;
+    padding:0 24px;height:56px;
+    background:var(--surface);border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:40;
+  }
+  .brand{display:flex;align-items:center;gap:10px;flex:0 0 auto;}
+  .brand svg{display:block;}
+  .brand .hex-o{stroke:var(--ink);}
+  .brand .hex-i{stroke:var(--live);}
+  .brand .wm{font-family:var(--mono);font-weight:600;letter-spacing:.04em;font-size:13px;}
+  .brand .wm b{color:var(--ink);}
+  .brand .wm span{color:var(--ink-3);}
+  .mast .scope{
+    font-family:var(--mono);font-size:11px;color:var(--ink-2);
+    border:1px solid var(--line);border-radius:999px;padding:3px 10px;
+    display:inline-flex;align-items:center;gap:7px;white-space:nowrap;
+  }
+  .mast .scope::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--live);}
+  .search{flex:1 1 auto;display:flex;align-items:center;gap:8px;max-width:420px;
+    background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius-sm);
+    padding:7px 11px;color:var(--ink-2);}
+  .search svg{flex:0 0 auto;color:var(--ink-3);}
+  .search input{border:0;background:transparent;outline:none;width:100%;
+    font-family:var(--mono);font-size:12px;color:var(--ink);}
+  .search input::placeholder{color:var(--ink-3);}
+  .mast .asof{margin-left:auto;text-align:right;flex:0 0 auto;}
+  .mast .asof .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--ink-3);text-transform:uppercase;}
+  .mast .asof .v{font-family:var(--mono);font-size:12px;color:var(--ink-2);}
+
+  /* ============ layout ============ */
+  main{max-width:1380px;margin:0 auto;padding:22px 24px 64px;display:flex;flex-direction:column;gap:18px;}
+
+  /* ============ platform board ============ */
+  .board{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+  .board-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding:16px 18px 4px;flex-wrap:wrap;}
+  .board-head h2{font-size:13px;font-weight:600;letter-spacing:-.01em;display:flex;align-items:center;gap:10px;}
+  .board-head .sub{color:var(--ink-2);font-size:12px;}
+
+  .platforms{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;padding:12px 18px 16px;}
+  .plat{
+    position:relative;text-align:left;background:var(--surface);border:1px solid var(--line);
+    border-radius:var(--radius-sm);padding:13px 14px 11px;display:flex;flex-direction:column;gap:9px;
+    transition:border-color .12s, background .12s;
+  }
+  .plat:hover{border-color:var(--line-2);background:var(--surface-2);}
+  .plat[aria-pressed="true"]{border-color:var(--live);box-shadow:0 0 0 1px var(--live);}
+  .plat .top{display:flex;align-items:center;gap:8px;}
+  .plat .pname{font-size:13.5px;font-weight:650;letter-spacing:-.01em;}
+  .plat .prole{font-size:11px;color:var(--ink-2);margin-top:-6px;}
+  .health{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;}
+  .health .dot{width:8px;height:8px;border-radius:50%;}
+  .health.ok{color:var(--ink-2);}   .health.ok .dot{background:var(--ok);}
+  .health.live{color:var(--live);}  .health.live .dot{background:var(--live);box-shadow:0 0 0 3px var(--live-bg);animation:pulse 2.4s infinite;}
+  .health.warn{color:var(--warn);}  .health.warn .dot{background:var(--warn);box-shadow:0 0 0 3px var(--warn-bg);}
+  .health.brk{color:var(--break);}  .health.brk .dot{background:var(--break);box-shadow:0 0 0 3px var(--break-bg);}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 3px var(--live-bg);}50%{box-shadow:0 0 0 5px var(--live-bg);}}
+
+  .chips{display:flex;flex-wrap:wrap;gap:5px;}
+  .chip{font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;
+    border:1px solid var(--line);border-radius:999px;padding:2px 8px;color:var(--ink-2);}
+  .chip.live{border-color:var(--live);color:var(--live);background:var(--live-bg);}
+
+  .plat .mode{font-size:11.5px;color:var(--ink-2);}
+  .plat .mode b{color:var(--ink);font-weight:600;}
+
+  .plat .spark{display:flex;align-items:flex-end;gap:10px;}
+  .plat .spark svg{flex:1 1 auto;display:block;}
+  .plat .spark .sk{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);
+    writing-mode:initial;flex:0 0 auto;max-width:74px;line-height:1.4;text-align:right;}
+  .spark .ln{fill:none;stroke:var(--ink-2);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round;}
+  .spark .ar{fill:var(--ink-2);opacity:.08;}
+  .spark .ep{fill:var(--live);}
+
+  .feedlist{display:flex;flex-wrap:wrap;gap:4px 10px;border-top:1px dashed var(--line);padding-top:8px;}
+  .feed{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;color:var(--ink-2);}
+  .feed::before{content:"";width:5px;height:5px;border-radius:1.5px;background:var(--ink-3);}
+  .feed.ok::before{background:var(--ok);}
+  .feed.warn{color:var(--warn);} .feed.warn::before{background:var(--warn);}
+  .feed.brk{color:var(--break);} .feed.brk::before{background:var(--break);}
+
+  .plat .foot{display:flex;justify-content:space-between;align-items:baseline;gap:8px;}
+  .plat .foot .cnt{font-family:var(--mono);font-size:10.5px;color:var(--ink-2);}
+  .plat .foot .cnt b{color:var(--ink);font-weight:600;}
+  .plat .foot .flag{font-family:var(--mono);font-size:10px;color:var(--warn);}
+  .plat .foot .flag.brk{color:var(--break);}
+
+  .plat.ghost{border-style:dashed;justify-content:center;align-items:center;gap:8px;color:var(--ink-3);min-height:180px;}
+  .plat.ghost:hover{color:var(--ink-2);}
+  .plat.ghost .plus{width:30px;height:30px;border:1.5px dashed var(--line-2);border-radius:50%;
+    display:grid;place-items:center;font-size:17px;line-height:1;}
+  .plat.ghost .gt{font-size:12px;font-weight:550;color:var(--ink-2);}
+  .plat.ghost .gs{font-size:11px;text-align:center;max-width:200px;line-height:1.45;}
+
+  .stats{display:flex;gap:0;border-top:1px solid var(--line);overflow-x:auto;}
+  .stat{flex:1 1 0;min-width:130px;padding:13px 18px;display:flex;flex-direction:column;gap:3px;border-right:1px solid var(--line);}
+  .stat:last-child{border-right:0;}
+  .stat .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);}
+  .stat .v{font-family:var(--mono);font-size:19px;font-weight:600;letter-spacing:-.02em;}
+  .stat .meta{font-size:11px;color:var(--ink-2);}
+  .stat.alarm .v{color:var(--break);}
+  .stat.warn .v{color:var(--warn);}
+  .stat.live .v{color:var(--live);}
+
+  /* ============ work area ============ */
+  .work{display:grid;grid-template-columns:minmax(0,1.38fr) minmax(0,1fr);gap:18px;align-items:start;}
+  @media (max-width:980px){.work{grid-template-columns:1fr;}}
+
+  .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+  .panel-head{display:flex;align-items:center;gap:14px;padding:11px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap;}
+  .tabs{display:flex;gap:2px;background:var(--surface-2);border-radius:var(--radius-sm);padding:3px;}
+  .tab{border:0;background:none;padding:5px 12px;border-radius:var(--radius-xs);font-size:12px;font-weight:500;color:var(--ink-2);display:flex;align-items:center;gap:6px;white-space:nowrap;}
+  .tab[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow);}
+  .tab .pill{font-family:var(--mono);font-size:10px;background:var(--warn);color:#fff;border-radius:999px;padding:1px 6px;line-height:1.4;}
+  .panel-head .scopechip{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--ink-2);
+    border:1px solid var(--line);border-radius:999px;padding:3px 9px;display:none;align-items:center;gap:6px;}
+  .panel-head .scopechip.on{display:inline-flex;}
+  .panel-head .scopechip button{border:0;background:none;padding:0;color:var(--ink-3);font-size:12px;line-height:1;}
+  .panel-head .scopechip button:hover{color:var(--ink);}
+
+  .subctl{display:flex;align-items:center;gap:8px;padding:9px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap;background:var(--surface);}
+  .seg{display:flex;gap:2px;background:var(--surface-2);border-radius:var(--radius-sm);padding:2px;}
+  .seg button{border:0;background:none;padding:4px 10px;border-radius:var(--radius-xs);font-size:11.5px;font-weight:500;color:var(--ink-2);}
+  .seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow);}
+  .subctl .lbl{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);}
+  .toggle{margin-left:auto;display:inline-flex;align-items:center;gap:7px;font-size:11.5px;color:var(--ink-2);border:0;background:none;padding:2px 0;}
+  .toggle .tk{width:26px;height:15px;border-radius:999px;background:var(--line-2);position:relative;transition:background .12s;}
+  .toggle .tk::after{content:"";position:absolute;top:2px;left:2px;width:11px;height:11px;border-radius:50%;background:var(--surface);transition:left .12s;}
+  .toggle[aria-pressed="true"] .tk{background:var(--warn);}
+  .toggle[aria-pressed="true"] .tk::after{left:13px;}
+
+  /* activity rows */
+  .colhead{display:grid;grid-template-columns:72px 84px minmax(0,1.5fr) 96px minmax(0,1fr) 74px;gap:10px;
+    padding:7px 14px;border-bottom:1px solid var(--line);background:var(--surface-2);
+    font-family:var(--mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);}
+  .colhead .r{text-align:right;}
+  .rows{max-height:520px;overflow-y:auto;}
+  .row{display:grid;grid-template-columns:72px 84px minmax(0,1.5fr) 96px minmax(0,1fr) 74px;gap:10px;align-items:center;
+    width:100%;text-align:left;padding:9px 14px;border:0;border-bottom:1px solid var(--line);background:none;
+    font-size:12px;transition:background .1s;}
+  .row:hover{background:var(--surface-2);}
+  .row[aria-pressed="true"]{background:var(--live-bg);}
+  .row .t{font-family:var(--mono);font-size:11px;color:var(--ink-2);}
+  .row .plat-tag{font-family:var(--mono);font-size:10px;letter-spacing:.05em;color:var(--ink-2);
+    border:1px solid var(--line);border-radius:var(--radius-xs);padding:1.5px 6px;text-transform:uppercase;justify-self:start;}
+  .row .what{min-width:0;}
+  .row .what .f{display:block;font-weight:550;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .row .what .s{display:block;font-size:11px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .trig{font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2);
+    display:inline-flex;align-items:center;gap:5px;}
+  .trig::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ink-3);}
+  .trig.webhook{color:var(--live);} .trig.webhook::before{background:var(--live);}
+  .trig.schedule::before{background:var(--ink-3);}
+  .trig.push{color:var(--ink);} .trig.push::before{background:var(--ink);}
+  .trig.retry::before{background:var(--warn);}
+  .trig.manual::before{background:var(--ink-2);}
+  .row .vol{font-family:var(--mono);font-size:11px;color:var(--ink-2);text-align:left;}
+  .row .vol b{color:var(--ink);font-weight:600;}
+  .row .vol .q{color:var(--warn);}
+  .badge{justify-self:end;font-family:var(--mono);font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;
+    border-radius:999px;padding:2px 8px;border:1px solid var(--line);color:var(--ink-2);}
+  .badge.ok{border-color:transparent;background:var(--surface-2);color:var(--ink-2);}
+  .badge.run{border-color:var(--live);color:var(--live);background:var(--live-bg);}
+  .badge.part{border-color:var(--warn);color:var(--warn);background:var(--warn-bg);}
+  .badge.fail{border-color:var(--break);color:var(--break);background:var(--break-bg);}
+
+  /* explorer table */
+  .xwrap{overflow-x:auto;}
+  table.x{border-collapse:collapse;width:100%;min-width:640px;font-size:12px;}
+  table.x th{position:sticky;top:0;background:var(--surface-2);text-align:left;font-family:var(--mono);
+    font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:500;
+    padding:7px 12px;border-bottom:1px solid var(--line);white-space:nowrap;}
+  table.x td{padding:8px 12px;border-bottom:1px solid var(--line);white-space:nowrap;}
+  table.x tbody tr{cursor:pointer;transition:background .1s;}
+  table.x tbody tr:hover{background:var(--surface-2);}
+  table.x tbody tr[aria-selected="true"]{background:var(--live-bg);}
+  td.id{font-family:var(--mono);font-size:11px;color:var(--ink-2);}
+  .linkcell{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;}
+  .linkcell .dot{width:6px;height:6px;border-radius:50%;background:var(--ok);flex:0 0 auto;}
+  .linkcell.un .dot{background:var(--warn);}
+  .linkcell.un{color:var(--warn);}
+  .linkcell.na{color:var(--ink-3);}
+  .linkcell.na .dot{background:var(--line-2);}
+
+  /* matching grid */
+  .mlegend{display:flex;flex-wrap:wrap;gap:6px 14px;padding:8px 14px;border-bottom:1px solid var(--line);
+    font-size:10.5px;color:var(--ink-2);align-items:center;}
+  .mlegend .li{display:inline-flex;align-items:center;gap:5px;}
+  .mrow{display:grid;grid-template-columns:minmax(0,1.6fr) repeat(3,84px);gap:8px;align-items:center;
+    width:100%;text-align:left;padding:9px 14px;border:0;border-bottom:1px solid var(--line);background:none;font-size:12px;}
+  .mrow:hover{background:var(--surface-2);}
+  .mrow[aria-pressed="true"]{background:var(--live-bg);}
+  .mrow .who .n{font-weight:550;}
+  .mrow .who .tn{font-size:11px;color:var(--ink-2);}
+  .mhead{display:grid;grid-template-columns:minmax(0,1.6fr) repeat(3,84px);gap:8px;padding:7px 14px;
+    border-bottom:1px solid var(--line);background:var(--surface-2);
+    font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);}
+  .lk{justify-self:start;display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;
+    border-radius:var(--radius-xs);padding:2.5px 7px;border:1px solid transparent;}
+  .lk.linked{color:var(--ink-2);background:var(--surface-2);}
+  .lk.manual{color:var(--ink-2);background:var(--surface-2);border-style:dashed;border-color:var(--line-2);}
+  .lk.conflict{color:var(--warn);background:var(--warn-bg);}
+  .lk.pushq{color:var(--live);background:var(--live-bg);}
+  .lk.pushfail{color:var(--break);background:var(--break-bg);}
+  .lk.unmatched{color:var(--warn);border-color:var(--warn);}
+  .lk.na{color:var(--ink-3);}
+
+  /* ============ lakes / transforms / deliveries ============ */
+  .subhead{display:flex;align-items:baseline;gap:8px;padding:9px 14px 7px;border-bottom:1px solid var(--line);background:var(--surface-2);}
+  .subhead .st{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);}
+  .subhead .ss{font-size:11px;color:var(--ink-2);}
+  .gchip{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9.5px;border:1px solid var(--line);border-radius:var(--radius-xs);padding:2px 7px;color:var(--ink-2);white-space:nowrap;}
+  .gchip b{color:var(--ink);font-weight:600;}
+  .gchip.mgr{border-style:dashed;}
+  .lrow,.trow,.drow,.rrow{width:100%;text-align:left;padding:9px 14px;border:0;border-bottom:1px solid var(--line);background:none;font-size:12px;display:grid;gap:10px;align-items:center;transition:background .1s;}
+  .lrow:hover,.trow:hover,.drow:hover,.rrow:hover{background:var(--surface-2);}
+  .lrow[aria-pressed="true"],.trow[aria-pressed="true"],.drow[aria-pressed="true"],.rrow[aria-pressed="true"]{background:var(--live-bg);}
+  .lrow{grid-template-columns:minmax(0,1.05fr) minmax(0,1.7fr) 92px 76px 72px;}
+  .lrow .tn .n{font-weight:550;display:block;}
+  .lrow .tn .b{font-family:var(--mono);font-size:10px;color:var(--ink-3);}
+  .lrow .grants{display:flex;flex-wrap:wrap;gap:4px;}
+  .lrow .m{font-family:var(--mono);font-size:11px;color:var(--ink-2);}
+  .trow{grid-template-columns:minmax(0,1.6fr) 96px minmax(0,1fr) 96px 72px;}
+  .trow .nm .n{font-weight:550;display:block;font-family:var(--mono);font-size:11.5px;}
+  .trow .nm .l{display:block;font-size:10.5px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .trow .m{font-family:var(--mono);font-size:11px;color:var(--ink-2);}
+  .scopechip2{font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--line);border-radius:999px;padding:1.5px 7px;color:var(--ink-2);justify-self:start;}
+  .scopechip2.tenant{border-color:var(--live);color:var(--live);}
+  .grains{display:flex;flex-wrap:wrap;gap:3px;}
+  .grain{font-family:var(--mono);font-size:9px;letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--line);border-radius:999px;padding:1px 6px;color:var(--ink-3);}
+  .drow{grid-template-columns:minmax(0,1.7fr) 70px 88px 96px 62px;}
+  .drow .nm .n{font-weight:550;display:block;}
+  .drow .nm .c{font-family:var(--mono);font-size:10px;color:var(--ink-3);}
+  .drow .m{font-family:var(--mono);font-size:11px;color:var(--ink-2);}
+  .rrow{grid-template-columns:minmax(0,1.5fr) minmax(0,.9fr) 80px minmax(0,.9fr) 72px;}
+  .rrow .nm .n{font-weight:550;display:block;}
+  .rrow .nm .q{font-family:var(--mono);font-size:10px;color:var(--ink-3);}
+  .rrow .m{font-family:var(--mono);font-size:11px;color:var(--ink-2);}
+  .heat{display:flex;gap:2px;align-items:center;}
+  .heat i{width:8px;height:8px;border-radius:2px;background:var(--line);}
+  .heat i.ok{background:var(--ink-3);}
+  .heat i.fail{background:var(--break);}
+  .sqlprev{font-family:var(--mono);font-size:10.5px;background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius-xs);padding:9px 11px;white-space:pre;overflow-x:auto;color:var(--ink-2);line-height:1.55;}
+
+  /* ============ focus panel ============ */
+  .focus{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);
+    min-height:420px;position:sticky;top:74px;overflow:hidden;display:flex;flex-direction:column;}
+  .focus-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+    color:var(--ink-3);text-align:center;font-size:12.5px;padding:40px 24px;}
+  .fhead{display:flex;align-items:flex-start;gap:10px;padding:14px 16px 12px;border-bottom:1px solid var(--line);}
+  .fhead .fh-t{font-size:13.5px;font-weight:650;letter-spacing:-.01em;}
+  .fhead .fh-s{font-size:11.5px;color:var(--ink-2);margin-top:1px;}
+  .fhead .badge{margin-left:auto;flex:0 0 auto;}
+  .fbody{padding:14px 16px 16px;display:flex;flex-direction:column;gap:14px;overflow-y:auto;max-height:640px;}
+
+  .fsec .fsec-t{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);margin-bottom:7px;}
+
+  /* pipeline steps (run detail) */
+  .steps{display:flex;flex-direction:column;}
+  .step{display:grid;grid-template-columns:16px minmax(0,1fr) 58px;gap:10px;align-items:flex-start;padding:6px 0;}
+  .step .nd{width:9px;height:9px;border-radius:50%;border:2px solid var(--line-2);background:var(--surface);margin-top:4px;justify-self:center;position:relative;}
+  .step.done .nd{border-color:var(--ok);background:var(--ok);}
+  .step.warn .nd{border-color:var(--warn);background:var(--warn);}
+  .step.fail .nd{border-color:var(--break);background:var(--break);}
+  .step .sn{font-size:12px;font-weight:550;}
+  .step .sm{font-family:var(--mono);font-size:10.5px;color:var(--ink-2);word-break:break-word;}
+  .step .ms{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);text-align:right;}
+
+  /* key-value blocks */
+  .kv{display:grid;grid-template-columns:minmax(96px,auto) 1fr;gap:4px 14px;font-size:12px;}
+  .kv .k{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);padding-top:1px;}
+  .kv .v{font-family:var(--mono);font-size:11.5px;color:var(--ink);word-break:break-word;}
+  .kv .v.dim{color:var(--ink-2);}
+
+  /* quarantine / issue list */
+  .qlist{display:flex;flex-direction:column;gap:8px;}
+  .qitem{border:1px solid var(--line);border-left:3px solid var(--warn);border-radius:var(--radius-xs);
+    padding:8px 11px;font-size:11.5px;background:var(--surface);}
+  .qitem.brk{border-left-color:var(--break);}
+  .qitem .qt{font-family:var(--mono);font-size:11px;font-weight:600;}
+  .qitem .qr{color:var(--ink-2);margin-top:2px;}
+
+  /* record-360 platform blocks */
+  .p360{border:1px solid var(--line);border-radius:var(--radius-sm);overflow:hidden;}
+  .p360 + .p360{margin-top:8px;}
+  .p360 .ph{display:flex;align-items:center;gap:8px;padding:8px 11px;background:var(--surface-2);border-bottom:1px solid var(--line);}
+  .p360 .ph .pn{font-size:12px;font-weight:600;}
+  .p360 .ph .dir{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);}
+  .p360 .ph .lk{margin-left:auto;}
+  .p360 .pb{padding:9px 11px;display:flex;flex-direction:column;gap:8px;}
+  .drift{border:1px dashed var(--warn);border-radius:var(--radius-xs);padding:7px 10px;background:var(--warn-bg);font-size:11.5px;}
+  .drift .dt{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--warn);margin-bottom:4px;}
+  .drift .pair{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-family:var(--mono);font-size:11px;}
+  .drift .pair .w{color:var(--ink-3);}
+
+  .actions{display:flex;flex-wrap:wrap;gap:7px;}
+  .btn{border:1px solid var(--line);background:var(--surface);border-radius:var(--radius-sm);
+    padding:5.5px 12px;font-size:12px;font-weight:500;display:inline-flex;align-items:center;gap:6px;transition:background .1s,border-color .1s;}
+  .btn:hover{background:var(--surface-2);border-color:var(--line-2);}
+  .btn.live{background:var(--live);border-color:var(--live);color:#fff;}
+  .btn.live:hover{filter:brightness(1.08);}
+  .btn.ghosty{border-style:dashed;color:var(--ink-2);}
+
+  /* footer */
+  .srcfoot{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 10px;padding:2px 6px;color:var(--ink-3);font-size:11px;}
+  .srcfoot b{color:var(--ink-2);font-weight:600;}
+  .srcfoot i{font-style:normal;color:var(--ink-3);}
+  .srcfoot .sep{color:var(--line-2);}
+
+  /* toasts */
+  .toast-wrap{position:fixed;bottom:18px;right:18px;display:flex;flex-direction:column;gap:8px;z-index:80;}
+  .toast{background:var(--ink);color:var(--ground);border-radius:var(--radius-sm);box-shadow:var(--shadow-lg);
+    padding:10px 14px;font-size:12.5px;max-width:340px;animation:tin .18s ease-out;}
+  @keyframes tin{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+</style>
+
+<header class="mast">
+  <div class="brand" title="Graphene">
+    <svg width="22" height="24" viewBox="0 0 22 24" aria-hidden="true">
+      <polygon class="hex-o" points="11,1 20.5,6.5 20.5,17.5 11,23 1.5,17.5 1.5,6.5" fill="none" stroke-width="1.5"/>
+      <polygon class="hex-i" points="11,6 16,9 16,15 11,18 6,15 6,9" fill="none" stroke-width="1.5"/>
+    </svg>
+    <span class="wm"><b>GRAPHENE</b> <span>/ INTEGRATIONS</span></span>
+  </div>
+  <span class="scope">Ops console · all platforms</span>
+  <label class="search">
+    <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <input id="search" type="search" placeholder="Search contact, account, platform id, run…" aria-label="Search integrations">
+  </label>
+  <div class="asof">
+    <div class="k">As of</div>
+    <div class="v">07 Jul 2026 · 09:12</div>
+  </div>
+</header>
+
+<main>
+  <!-- ===== platform board ===== -->
+  <section class="board" aria-label="Platform health">
+    <div class="board-head">
+      <h2><span class="eyebrow">Platform health</span> What's connected, and how it's flowing</h2>
+      <span class="sub">Select a platform to scope the workbench below</span>
+    </div>
+    <div class="platforms" id="platforms"></div>
+    <div class="stats" id="stats"></div>
+  </section>
+
+  <!-- ===== work area ===== -->
+  <section class="work">
+    <div class="panel">
+      <div class="panel-head">
+        <div class="tabs" role="tablist" aria-label="Workbench view">
+          <button class="tab" role="tab" data-view="activity" aria-pressed="true">Sync activity</button>
+          <button class="tab" role="tab" data-view="data" aria-pressed="false">Platform data</button>
+          <button class="tab" role="tab" data-view="matching" aria-pressed="false">Matching &amp; coverage <span class="pill" id="issue-count">0</span></button>
+          <button class="tab" role="tab" data-view="lakes" aria-pressed="false">Tenant lakes</button>
+          <button class="tab" role="tab" data-view="transforms" aria-pressed="false">Transforms</button>
+          <button class="tab" role="tab" data-view="deliveries" aria-pressed="false">Deliveries <span class="pill" id="deliv-count">0</span></button>
+        </div>
+        <span class="scopechip" id="scopechip"><span id="scopechip-name"></span><button type="button" id="scopechip-x" aria-label="Clear platform filter">&times;</button></span>
+      </div>
+      <div id="view-root"></div>
+    </div>
+
+    <aside class="focus" id="focus" aria-live="polite">
+      <div class="focus-empty">
+        <svg width="40" height="40" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h7m0 0-3-3m3 3-3 3M13 6h7m0 0-3-3m3 3-3 3M13 18h7m0 0-3-3m3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <p>Select a sync run, a platform record, or one of our<br>records to inspect how it maps across platforms.</p>
+      </div>
+    </aside>
+  </section>
+
+  <footer class="srcfoot">
+    <span><b>One spine over</b></span><span class="sep">·</span>
+    <span><b>Seccl</b> <i>custody ledger — API + webhooks</i></span><span class="sep">·</span>
+    <span><b>SEI</b> <i>custody &amp; cash — SFTP files + API</i></span><span class="sep">·</span>
+    <span><b>Morgan Lloyd</b> <i>SIPP administration — API</i></span><span class="sep">·</span>
+    <span><i>tenant resolution per <b>custodian-tenant-mapping</b> · core lake → grant-filtered tenant lakes → transforms → deliveries (integrations-review)</i></span>
+  </footer>
+</main>
+
+<div class="toast-wrap" id="toasts" aria-live="assertive"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ================= data (illustrative, grounded in the sample extracts) ================= */
+
+  const PLATFORMS = {
+    seccl: {
+      name:"Seccl", role:"Custody ledger & transactions",
+      transports:["REST API","Webhooks"], realtime:true,
+      health:"live", healthLabel:"Live",
+      mode:"<b>Realtime</b> — webhook push, hourly reconcile sweep",
+      feeds:[
+        {n:"clients",s:"ok"},{n:"accounts",s:"ok"},{n:"transactions",s:"ok"},
+        {n:"positions",s:"ok"},{n:"nodes",s:"ok"}
+      ],
+      counts:"<b>4,182</b> records mirrored", flag:"12 unmatched",
+      sparkLabel:"webhook events / hr",
+      spark:[51,47,44,38,29,21,14,9,6,4,3,4,3,5,8,14,22,31,42,55,63,58,61,48]
+    },
+    sei: {
+      name:"SEI", role:"Custody & cash receipts",
+      transports:["SFTP files","REST API"], realtime:false,
+      health:"warn", healthLabel:"Attention",
+      mode:"<b>Daily DSR files</b> 06:00 · API reference pulls",
+      feeds:[
+        {n:"client_account_link",s:"ok"},{n:"reference",s:"ok"},{n:"transactions",s:"ok"},
+        {n:"positions",s:"brk"},{n:"cash receipts",s:"ok"}
+      ],
+      counts:"<b>1,696</b> accounts · 5 firms", flag:"3 quarantined · positions file failed",
+      sparkLabel:"rows ingested / hr",
+      spark:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9840,120,14,6]
+    },
+    ml: {
+      name:"Morgan Lloyd", role:"SIPP administration",
+      transports:["REST API"], realtime:false,
+      health:"warn", healthLabel:"Attention",
+      mode:"<b>Polling</b> — every 15 min · we also push member changes",
+      feeds:[
+        {n:"schemes",s:"ok"},{n:"members",s:"ok"},{n:"transfers",s:"ok"},{n:"fee events",s:"ok"}
+      ],
+      counts:"<b>612</b> members · 4 schemes", flag:"1 push rejected",
+      sparkLabel:"changes / hr",
+      spark:[2,1,0,3,2,1,2,4,0,1,2,3,1,0,2,5,3,2,1,4,6,3,2,4]
+    }
+  };
+  const PKEYS = ["seccl","sei","ml"];
+
+  const STATS = [
+    {k:"Contacts linked", v:"96.8%", meta:"2,847 of 2,941 across platforms", cls:""},
+    {k:"Open mismatches", v:"21", meta:"conflicts + unmatched, needs review", cls:"warn"},
+    {k:"Quarantined rows", v:"3", meta:"SEI — no tenant rule (DSR 59284)", cls:"warn"},
+    {k:"Events today", v:"1,284", meta:"Seccl webhooks since 00:00", cls:"live"},
+    {k:"Push queue", v:"3", meta:"2 pending · 1 rejected (ML)", cls:"alarm"},
+    {k:"Tenant lakes", v:"8", meta:"fan-out complete 09:00 · 1 stale mart", cls:""},
+    {k:"Deliveries today", v:"12", meta:"11 ok · 1 failed (Harrogate SFTP)", cls:"alarm"},
+    {k:"Next scheduled", v:"09:30", meta:"SEI positions retry · ML poll 09:15", cls:""}
+  ];
+
+  /* ---------- sync activity ---------- */
+  const RUNS = [
+    {id:"r1", t:"09:11:42", p:"seccl", f:"transaction.created", s:"evt_8c31f2 · account SECCL:ACC-7F31", trig:"webhook", vol:"1 → <b>1</b>", dur:"0.4 s", st:"ok",
+      steps:[
+        {n:"Receive", m:"POST /hooks/seccl · signature verified", ms:"12 ms", s:"done"},
+        {n:"Stage", m:"1 row → staging.seccl_transactions", ms:"24 ms", s:"done"},
+        {n:"Resolve tenant", m:"node 30 ∈ lineage → Futura (Signia)", ms:"8 ms", s:"done"},
+        {n:"Upsert", m:"platform.transactions +1 (Buy · VLS60 · £2,400)", ms:"31 ms", s:"done"},
+        {n:"Link", m:"account SECCL:ACC-7F31 → accounts #10412 (existing)", ms:"9 ms", s:"done"}
+      ],
+      kv:{Trigger:"Seccl webhook (realtime)", Payload:"transaction.created", Idempotency:"evt_8c31f2 (first seen)", Tenant:"Futura (Signia) — node 30", Outcome:"1 transaction upserted, fully linked"}},
+    {id:"r2", t:"09:07:15", p:"seccl", f:"client.updated", s:"evt_8c2ee0 · client SECCL:FUT-2841", trig:"webhook", vol:"1 → <b>1</b>", dur:"0.3 s", st:"ok",
+      steps:[
+        {n:"Receive", m:"POST /hooks/seccl · signature verified", ms:"10 ms", s:"done"},
+        {n:"Stage", m:"1 row → staging.seccl_clients", ms:"18 ms", s:"done"},
+        {n:"Diff", m:"mobile changed · address unchanged", ms:"6 ms", s:"done"},
+        {n:"Upsert", m:"crm.contacts #2841 external copy refreshed", ms:"22 ms", s:"done"}
+      ],
+      kv:{Trigger:"Seccl webhook (realtime)", Payload:"client.updated", Contact:"Margaret Holloway (linked)", Change:"mobile number updated at custodian", Outcome:"mirror refreshed · no conflict"}},
+    {id:"r3", t:"09:00:04", p:"seccl", f:"Hourly reconcile sweep", s:"accounts + positions · all nodes", trig:"schedule", vol:"4,182 → <b>37</b>", dur:"41 s", st:"ok",
+      steps:[
+        {n:"Fetch", m:"GET /accounts, /positions (paged, 42 pages)", ms:"33 s", s:"done"},
+        {n:"Stage", m:"4,182 rows → staging.seccl_*", ms:"3.1 s", s:"done"},
+        {n:"Resolve tenant", m:"lineage overlap vs custodian_tenant_grant · 0 unresolved", ms:"0.9 s", s:"done"},
+        {n:"Upsert", m:"37 changed rows applied · 4,145 unchanged", ms:"2.8 s", s:"done"},
+        {n:"Verify", m:"webhook stream vs sweep — 0 missed events", ms:"0.6 s", s:"done"}
+      ],
+      kv:{Trigger:"Schedule (hourly)", Purpose:"catch anything webhooks missed; verify stream integrity", Drift:"0 missed events in the last 24 h", Outcome:"37 rows refreshed"}},
+    {id:"r4", t:"09:00:01", p:"ml", f:"Member & scheme poll", s:"GET /members?since=08:45", trig:"schedule", vol:"612 → <b>2</b>", dur:"6 s", st:"ok",
+      steps:[
+        {n:"Fetch", m:"GET /schemes, /members (delta since 08:45)", ms:"4.2 s", s:"done"},
+        {n:"Stage", m:"2 changed rows → staging.ml_members", ms:"0.3 s", s:"done"},
+        {n:"Upsert", m:"platform mirrors refreshed", ms:"0.5 s", s:"done"}
+      ],
+      kv:{Trigger:"Schedule (15 min poll)", Delta:"2 members changed since 08:45", Outcome:"mirrors refreshed · no conflicts"}},
+    {id:"r5", t:"08:52:30", p:"ml", f:"Push — member details", s:"2 contact updates → Morgan Lloyd", trig:"push", vol:"3 → <b>2</b> · <span class='q'>1 rejected</span>", dur:"2.1 s", st:"part",
+      steps:[
+        {n:"Queue", m:"3 pending changes (address ×2, postcode ×1)", ms:"—", s:"done"},
+        {n:"Push", m:"PATCH /members/ML-55810 · 200", ms:"0.6 s", s:"done"},
+        {n:"Push", m:"PATCH /members/ML-51204 · 200", ms:"0.5 s", s:"done"},
+        {n:"Push", m:"PATCH /members/ML-49873 · 422 — postcode format rejected", ms:"0.4 s", s:"fail"}
+      ],
+      kv:{Trigger:"Outbound push (change queue)", Sent:"2 accepted", Rejected:"1 — ML-49873, postcode failed their validation", Contact:"Tom Bradshaw", Action:"fix format and requeue, or edit at source"},
+      issues:[{t:"ML-49873 · Tom Bradshaw", r:"Morgan Lloyd rejected postcode “LS1 4 DP” (embedded space). Normalise and requeue.", brk:true}]},
+    {id:"r6", t:"06:04:12", p:"sei", f:"Daily DSR file batch", s:"sftp://sei/out · 5 files expected", trig:"schedule", vol:"11,431 → <b>11,296</b> · <span class='q'>3 quarantined</span>", dur:"4 m 51 s", st:"part",
+      steps:[
+        {n:"List & download", m:"5 files · CLIENT_ACCOUNT_LINK, REFERENCE, TRANSACTIONS, CASH_RECEIPTS ok — POSITIONS_20260707.csv truncated", ms:"71 s", s:"warn"},
+        {n:"Stage", m:"4 files → staging.sei_* · 11,431 rows", ms:"38 s", s:"done"},
+        {n:"Unpivot DSRs", m:"80 slot columns → account_dsr_membership (typed)", ms:"22 s", s:"done"},
+        {n:"Resolve tenant", m:"1,693 resolved via custodian_tenant_rule · 3 quarantined", ms:"9 s", s:"warn"},
+        {n:"Upsert", m:"platform.* refreshed · manager grants (Marlborough) reasserted", ms:"104 s", s:"done"},
+        {n:"Positions", m:"file failed checksum — retry scheduled 09:30", ms:"—", s:"fail"}
+      ],
+      kv:{Trigger:"Schedule (daily 06:00)", Files:"4 of 5 processed", Firms:"3102, 3106, 3108, 3110, 3114", Quarantine:"3 accounts — no tenant rule for DSR type 59284 (Legal Entity) at firm 3106", Retry:"POSITIONS re-pull at 09:30"},
+      issues:[
+        {t:"POSITIONS_20260707.csv", r:"Checksum mismatch after transfer (truncated at 4.2 MB). Automatic re-pull scheduled for 09:30.", brk:true},
+        {t:"3 accounts quarantined · firm 3106", r:"Accounts 88431, 88432, 90177 carry only a Legal Entity DSR (type 59284, MIM). Add a custodian_tenant_rule for the firm’s manager role to resolve.", brk:false}
+      ]},
+    {id:"r7", t:"06:00:00", p:"sei", f:"Reference pull", s:"GET /reference?type=DSR,DSR_TYPE_NAME", trig:"schedule", vol:"482 → <b>4</b>", dur:"11 s", st:"ok",
+      kv:{Trigger:"Schedule (daily, pre-file)", Purpose:"resolve DSR ids and type codes before the file batch lands", Changed:"4 reference rows (1 new DSR at firm 3110)", Outcome:"taxonomy current"}},
+    {id:"r8", t:"05:00:02", p:"seccl", f:"Hourly reconcile sweep", s:"accounts + positions · all nodes", trig:"schedule", vol:"4,181 → <b>3</b>", dur:"39 s", st:"ok",
+      kv:{Trigger:"Schedule (hourly)", Outcome:"3 rows refreshed · stream verified"}},
+    {id:"r9", t:"Yesterday 17:20", p:"ml", f:"Backfill — fee events", s:"manual · Jan–Jun 2026", trig:"manual", vol:"1,904 → <b>1,904</b>", dur:"3 m 12 s", st:"ok",
+      kv:{Trigger:"Manual backfill (ops)", Range:"01 Jan – 30 Jun 2026", Outcome:"fee event history loaded for natural-income reporting"}},
+    {id:"r10", t:"Yesterday 06:03", p:"sei", f:"Daily DSR file batch", s:"sftp://sei/out · 5 files", trig:"schedule", vol:"11,398 → <b>11,398</b>", dur:"5 m 02 s", st:"ok",
+      kv:{Trigger:"Schedule (daily 06:00)", Files:"5 of 5 processed", Outcome:"clean run"}}
+  ];
+
+  /* ---------- explorer: raw platform data ---------- */
+  const EXPLORER = {
+    seccl: {
+      entities:["Clients","Accounts","Transactions"],
+      Clients:{
+        cols:["Client id","Name","Node (firm)","Status","Linked to"],
+        rows:[
+          {id:"e-s1", c:["FUT-2841","Margaret Holloway","Futura (Signia) · node 30","Active"], link:{s:"linked",label:"crm #2841 · M. Holloway"},
+            raw:{"client id":"FUT-2841", name:"Margaret Holloway", "node_ids":"[30]", "node lineage":"[0,1,28,30]", status:"Active", email:"m.holloway@…", mobile:"07700 900412 (updated 09:07)"},
+            src:"webhook client.updated · evt_8c2ee0 · 09:07"},
+          {id:"e-s2", c:["TRU-0117","David Okafor","TRULY · node 11","Active"], link:{s:"linked",label:"crm #1178 · D. Okafor"},
+            raw:{"client id":"TRU-0117", name:"David Okafor", "node_ids":"[11]", status:"Active", email:"d.okafor@…"},
+            src:"hourly sweep · 09:00"},
+          {id:"e-s3", c:["LWP-0442","Priya Shah","Logic Wealth Planning · node 25","Active"], link:{s:"linked",label:"crm #1904 · P. Shah"},
+            raw:{"client id":"LWP-0442", name:"Priya Shah", "node_ids":"[25]", status:"Active"},
+            src:"hourly sweep · 09:00"},
+          {id:"e-s4", c:["FUT-3010","G. R. Miller","Futura (Tyndall) · node 41","Pending"], link:{s:"unmatched",label:"no contact match"},
+            raw:{"client id":"FUT-3010", name:"G. R. Miller", "node_ids":"[41]", status:"Pending", note:"created at custodian 04 Jul — likely George Miller (crm #2093), initials-only name blocks auto-match"},
+            src:"webhook client.created · 04 Jul"},
+          {id:"e-s5", c:["SEL-1220","Hannah Cole","Select Advised · node 4","Active"], link:{s:"linked",label:"crm #2450 · H. Cole"},
+            raw:{"client id":"SEL-1220", name:"Hannah Cole", "node_ids":"[4]", status:"Active"},
+            src:"hourly sweep · 09:00"}
+        ]
+      },
+      Accounts:{
+        cols:["Account id","Type","Client","Node (firm)","Linked to"],
+        rows:[
+          {id:"e-sa1", c:["ACC-7F31","GIA","FUT-2841","Futura (Signia)"], link:{s:"linked",label:"accounts #10412"},
+            raw:{"account id":"ACC-7F31", type:"GIA", client:"FUT-2841 · Margaret Holloway", "node lineage":"[0,1,28,30]", "tenant resolved":"Futura (Signia)", value:"£184,220"},
+            src:"webhook transaction.created · 09:11"},
+          {id:"e-sa2", c:["ACC-6B02","ISA","TRU-0117","TRULY"], link:{s:"linked",label:"accounts #9931"},
+            raw:{"account id":"ACC-6B02", type:"ISA", client:"TRU-0117 · David Okafor", "tenant resolved":"TRULY", value:"£61,480"},
+            src:"hourly sweep · 09:00"},
+          {id:"e-sa3", c:["ACC-9D77","SIPP","LWP-0442","Logic Wealth Planning"], link:{s:"linked",label:"accounts #10087"},
+            raw:{"account id":"ACC-9D77", type:"SIPP", client:"LWP-0442 · Priya Shah", "tenant resolved":"Logic Wealth Planning", value:"£312,905"},
+            src:"hourly sweep · 09:00"},
+          {id:"e-sa4", c:["ACC-A118","GIA","FUT-3010","Futura (Tyndall)"], link:{s:"unmatched",label:"client unmatched"},
+            raw:{"account id":"ACC-A118", type:"GIA", client:"FUT-3010 · G. R. Miller", "tenant resolved":"Futura (Tyndall)", note:"tenant fine — blocked only by the client match"},
+            src:"webhook account.created · 04 Jul"}
+        ]
+      },
+      Transactions:{
+        cols:["Txn id","Account","Type","Amount","Linked to"],
+        rows:[
+          {id:"e-st1", c:["TXN-88121","ACC-7F31","Buy · VLS60","£2,400.00"], link:{s:"linked",label:"platform.transactions"},
+            raw:{"txn id":"TXN-88121", account:"ACC-7F31", type:"Buy", instrument:"Vanguard LifeStrategy 60", amount:"£2,400.00", "settlement":"T+3", "tenant":"Futura (Signia)"},
+            src:"webhook transaction.created · evt_8c31f2 · 09:11"},
+          {id:"e-st2", c:["TXN-88109","ACC-6B02","Dividend","£184.22"], link:{s:"linked",label:"platform.transactions"},
+            raw:{"txn id":"TXN-88109", account:"ACC-6B02", type:"Dividend", amount:"£184.22", "tenant":"TRULY"},
+            src:"webhook transaction.created · 08:44"},
+          {id:"e-st3", c:["TXN-87990","ACC-9D77","Contribution","£1,000.00"], link:{s:"linked",label:"platform.transactions"},
+            raw:{"txn id":"TXN-87990", account:"ACC-9D77", type:"Contribution", amount:"£1,000.00", "tenant":"Logic Wealth Planning"},
+            src:"hourly sweep · 08:00"}
+        ]
+      }
+    },
+    sei: {
+      entities:["Clients","Accounts","Transactions"],
+      Clients:{
+        cols:["Client id","Name","Firm","IFA DSR","Linked to"],
+        rows:[
+          {id:"e-x1", c:["3106-88213","David Okafor","3106 · Select Platform","59259 · Harrogate FP"], link:{s:"conflict",label:"crm #1178 · drift"},
+            raw:{"client id":"3106-88213", name:"David Okafor", firm:"3106 · Select Platform", "dsr (IFA Firm)":"Harrogate FP", email:"d.okafor.home@… (differs from ours)", "file date":"07 Jul 2026"},
+            src:"CLIENT_ACCOUNT_LINK_20260707.csv · row 214"},
+          {id:"e-x2", c:["3102-40551","James Whitmore","3102 · Blackfinch","59261 · Fee-recv IFA ×2"], link:{s:"linked",label:"crm #1655 · J. Whitmore"},
+            raw:{"client id":"3102-40551", name:"James Whitmore", firm:"3102 · Blackfinch", note:"account carries 2 fee-receiving IFA entities — on_multiple=primary applied", "file date":"07 Jul 2026"},
+            src:"CLIENT_ACCOUNT_LINK_20260707.csv · row 88"},
+          {id:"e-x3", c:["3106-91442","S. Pemberton","3106 · Select Platform","59259 · Harrogate FP"], link:{s:"unmatched",label:"no contact match"},
+            raw:{"client id":"3106-91442", name:"S. Pemberton", firm:"3106 · Select Platform", note:"new in today’s file — no crm.contacts candidate above threshold", "file date":"07 Jul 2026"},
+            src:"CLIENT_ACCOUNT_LINK_20260707.csv · row 1102"},
+          {id:"e-x4", c:["3110-22087","Aisha Rahman","3110 · Concentric","— · Servicing Team"], link:{s:"linked",label:"crm #2210 · A. Rahman"},
+            raw:{"client id":"3110-22087", name:"Aisha Rahman", firm:"3110 · Concentric", "tenant type":"Servicing Team (per firm rule)", "file date":"07 Jul 2026"},
+            src:"CLIENT_ACCOUNT_LINK_20260707.csv · row 1544"}
+        ]
+      },
+      Accounts:{
+        cols:["Account","Firm","Tenant (owner)","Manager","Linked to"],
+        rows:[
+          {id:"e-xa1", c:["88213-01","3106","Harrogate FP","MIM (Marlborough)"], link:{s:"linked",label:"accounts #9931"},
+            raw:{account:"88213-01", firm:"3106 · Select Platform", "owner tenant":"Harrogate FP (IFA Firm DSR)", "manager":"Marlborough — Legal Entity DSR → sharing grant", "service type":"Marlborough MPS"},
+            src:"account_dsr_membership · file 07 Jul"},
+          {id:"e-xa2", c:["88431-01","3106","— quarantined","MIM (Marlborough)"], link:{s:"quarantined",label:"quarantined"},
+            raw:{account:"88431-01", firm:"3106 · Select Platform", problem:"only a Legal Entity DSR (type 59284) present — no owner-type rule matches", fix:"add manager-role rule with owner_priority fallback (see mapping doc §3.5)"},
+            src:"account_dsr_membership · file 07 Jul"},
+          {id:"e-xa3", c:["40551-02","3102","Blackfinch (primary of 2)","—"], link:{s:"linked",label:"accounts #8804"},
+            raw:{account:"40551-02", firm:"3102 · Blackfinch", note:"2 fee-receiving IFA entities on the account · on_multiple=primary", "owner tenant":"Blackfinch"},
+            src:"account_dsr_membership · file 07 Jul"}
+        ]
+      },
+      Transactions:{
+        cols:["Ref","Account","Type","Amount","Linked to"],
+        rows:[
+          {id:"e-xt1", c:["ACR-30991","88213-01","Cash receipt","£25,000.00"], link:{s:"linked",label:"platform.transactions"},
+            raw:{ref:"ACR-30991", account:"88213-01", type:"Automated cash receipt", amount:"£25,000.00", matched:"transfer T-2041 (Chester Rose)", "file":"CASH_RECEIPTS_20260707.csv"},
+            src:"CASH_RECEIPTS_20260707.csv · row 12"},
+          {id:"e-xt2", c:["TRN-77120","40551-02","Sell","£4,120.55"], link:{s:"linked",label:"platform.transactions"},
+            raw:{ref:"TRN-77120", account:"40551-02", type:"Sell", amount:"£4,120.55", "file":"TRANSACTIONS_20260707.csv"},
+            src:"TRANSACTIONS_20260707.csv · row 448"}
+        ]
+      }
+    },
+    ml: {
+      entities:["Members","Schemes","Transfers"],
+      Members:{
+        cols:["Member id","Name","Scheme","Status","Linked to"],
+        rows:[
+          {id:"e-m1", c:["ML-55810","Margaret Holloway","Graphene SIPP","Active"], link:{s:"pushq",label:"crm #2841 · push queued"},
+            raw:{"member id":"ML-55810", name:"Margaret Holloway", scheme:"Graphene SIPP", status:"Active", "pending push":"address change queued 08:52 — awaiting confirmation"},
+            src:"poll 09:00 · PATCH queued 08:52"},
+          {id:"e-m2", c:["ML-49873","Tom Bradshaw","Graphene SIPP","Active"], link:{s:"pushfail",label:"crm #2001 · push rejected"},
+            raw:{"member id":"ML-49873", name:"Tom Bradshaw", scheme:"Graphene SIPP", status:"Active", "last push":"422 — postcode “LS1 4 DP” failed ML validation"},
+            src:"push run 08:52"},
+          {id:"e-m3", c:["ML-51204","Eleanor Vance","Heritage SIPP","Active"], link:{s:"linked",label:"crm #1866 · E. Vance"},
+            raw:{"member id":"ML-51204", name:"Eleanor Vance", scheme:"Heritage SIPP", status:"Active", "last push":"200 — address accepted 08:52"},
+            src:"poll 09:00"},
+          {id:"e-m4", c:["ML-31177","Sophie Laurent","Heritage SIPP","Deferred"], link:{s:"linked",label:"crm #1409 · S. Laurent"},
+            raw:{"member id":"ML-31177", name:"Sophie Laurent", scheme:"Heritage SIPP", status:"Deferred"},
+            src:"poll 09:00"}
+        ]
+      },
+      Schemes:{
+        cols:["Scheme id","Name","Members","Trustee","Linked to"],
+        rows:[
+          {id:"e-ms1", c:["SCH-004","Graphene SIPP","418","ML Trustees Ltd"], link:{s:"linked",label:"pensions.schemes"},
+            raw:{"scheme id":"SCH-004", name:"Graphene SIPP", members:"418", trustee:"ML Trustees Ltd"},
+            src:"poll 09:00"},
+          {id:"e-ms2", c:["SCH-002","Heritage SIPP","194","ML Trustees Ltd"], link:{s:"linked",label:"pensions.schemes"},
+            raw:{"scheme id":"SCH-002", name:"Heritage SIPP", members:"194", trustee:"ML Trustees Ltd"},
+            src:"poll 09:00"}
+        ]
+      },
+      Transfers:{
+        cols:["Ref","Member","Ceding provider","Stage","Linked to"],
+        rows:[
+          {id:"e-mt1", c:["T-2041","ML-51204","Chester Rose","Settlement advised"], link:{s:"linked",label:"transfers workbench"},
+            raw:{ref:"T-2041", member:"ML-51204 · Eleanor Vance", "ceding":"Chester Rose", stage:"Settlement advised", "expected":"£25,000 — matched to SEI ACR-30991"},
+            src:"poll 09:00"},
+          {id:"e-mt2", c:["T-2064","ML-55810","Tavistock","In flight"], link:{s:"linked",label:"transfers workbench"},
+            raw:{ref:"T-2064", member:"ML-55810 · Margaret Holloway", "ceding":"Tavistock", stage:"In flight"},
+            src:"poll 09:00"}
+        ]
+      }
+    }
+  };
+
+  /* ---------- matching: our records vs platform links ---------- */
+  /* link states: linked | manual | conflict | pushq | pushfail | unmatched | na */
+  const CONTACTS = [
+    {id:"c1", n:"Margaret Holloway", tn:"Futura (Signia)", crm:"crm #2841",
+      links:{seccl:{s:"linked", id:"FUT-2841", last:"webhook · 09:07", dir:"pull"},
+             sei:{s:"na"},
+             ml:{s:"pushq", id:"ML-55810", last:"queued 08:52", dir:"push", note:"address change awaiting ML confirmation"}}},
+    {id:"c2", n:"David Okafor", tn:"TRULY", crm:"crm #1178",
+      links:{seccl:{s:"linked", id:"TRU-0117", last:"sweep · 09:00", dir:"pull"},
+             sei:{s:"conflict", id:"3106-88213", last:"file · 06:04", dir:"pull",
+               drift:{field:"email", ours:"d.okafor@truly.co.uk", theirs:"d.okafor.home@gmail.com"}},
+             ml:{s:"na"}}},
+    {id:"c3", n:"Priya Shah", tn:"Logic Wealth Planning", crm:"crm #1904",
+      links:{seccl:{s:"linked", id:"LWP-0442", last:"sweep · 09:00", dir:"pull"},
+             sei:{s:"na"}, ml:{s:"na"}}},
+    {id:"c4", n:"Tom Bradshaw", tn:"Select Platform · Harrogate FP", crm:"crm #2001",
+      links:{seccl:{s:"na"},
+             sei:{s:"linked", id:"3106-90112", last:"file · 06:04", dir:"pull"},
+             ml:{s:"pushfail", id:"ML-49873", last:"rejected 08:52", dir:"push", note:"postcode format failed ML validation — normalise and requeue"}}},
+    {id:"c5", n:"Eleanor Vance", tn:"Select Platform · Harrogate FP", crm:"crm #1866",
+      links:{seccl:{s:"na"},
+             sei:{s:"linked", id:"3106-87020", last:"file · 06:04", dir:"pull"},
+             ml:{s:"linked", id:"ML-51204", last:"push ok 08:52", dir:"push"}}},
+    {id:"c6", n:"George Miller", tn:"Futura (Tyndall)", crm:"crm #2093",
+      links:{seccl:{s:"unmatched", cand:"FUT-3010 · “G. R. Miller” (92% name match)", note:"created at custodian 04 Jul — confirm and link"},
+             sei:{s:"na"}, ml:{s:"na"}}},
+    {id:"c7", n:"James Whitmore", tn:"Blackfinch", crm:"crm #1655",
+      links:{seccl:{s:"na"},
+             sei:{s:"linked", id:"3102-40551", last:"file · 06:04", dir:"pull", note:"2 fee-receiving IFA DSRs — primary rule applied"},
+             ml:{s:"na"}}},
+    {id:"c8", n:"Aisha Rahman", tn:"Concentric", crm:"crm #2210",
+      links:{seccl:{s:"na"},
+             sei:{s:"manual", id:"3110-22087", last:"file · 06:04", dir:"pull", note:"linked manually 02 Jul (name mismatch: Aisha vs Ayesha)"},
+             ml:{s:"na"}}},
+    {id:"c9", n:"Sophie Laurent", tn:"Select Platform · Harrogate FP", crm:"crm #1409",
+      links:{seccl:{s:"na"},
+             sei:{s:"linked", id:"3106-83455", last:"file · 06:04", dir:"pull"},
+             ml:{s:"linked", id:"ML-31177", last:"poll · 09:00", dir:"pull"}}},
+    {id:"c10", n:"Hannah Cole", tn:"Select Advised (Seccl)", crm:"crm #2450",
+      links:{seccl:{s:"linked", id:"SEL-1220", last:"sweep · 09:00", dir:"pull"},
+             sei:{s:"na"}, ml:{s:"na"}}}
+  ];
+
+  const ACCOUNTS = [
+    {id:"a1", n:"GIA · #10412", tn:"Margaret Holloway · Futura (Signia)", crm:"accounts #10412",
+      links:{seccl:{s:"linked", id:"ACC-7F31", last:"webhook · 09:11", dir:"pull"}, sei:{s:"na"}, ml:{s:"na"}}},
+    {id:"a2", n:"ISA · #9931", tn:"David Okafor · TRULY", crm:"accounts #9931",
+      links:{seccl:{s:"linked", id:"ACC-6B02", last:"sweep · 09:00", dir:"pull"},
+             sei:{s:"linked", id:"88213-01", last:"file · 06:04", dir:"pull", note:"manager: Marlborough (sharing grant)"}, ml:{s:"na"}}},
+    {id:"a3", n:"SIPP · #10087", tn:"Priya Shah · Logic Wealth", crm:"accounts #10087",
+      links:{seccl:{s:"linked", id:"ACC-9D77", last:"sweep · 09:00", dir:"pull"}, sei:{s:"na"},
+             ml:{s:"linked", id:"ML-31177/S4", last:"poll · 09:00", dir:"pull"}}},
+    {id:"a4", n:"SIPP · #8804", tn:"James Whitmore · Blackfinch", crm:"accounts #8804",
+      links:{seccl:{s:"na"}, sei:{s:"linked", id:"40551-02", last:"file · 06:04", dir:"pull"}, ml:{s:"na"}}},
+    {id:"a5", n:"— unassigned", tn:"SEI 88431-01 · firm 3106", crm:"quarantine",
+      links:{seccl:{s:"na"},
+             sei:{s:"unmatched", cand:"quarantined — no tenant rule for DSR type 59284 (Legal Entity)", note:"resolves once the Marlborough manager rule lands"},
+             ml:{s:"na"}}}
+  ];
+
+  const LK_META = {
+    linked:{g:"✓", t:"Linked"}, manual:{g:"✓", t:"Manual link"}, conflict:{g:"!", t:"Conflict"},
+    pushq:{g:"↑", t:"Push queued"}, pushfail:{g:"↑!", t:"Push rejected"},
+    unmatched:{g:"○", t:"Unmatched"}, quarantined:{g:"⛉", t:"Quarantined"}, na:{g:"—", t:"Not on platform"}
+  };
+  const ISSUE_STATES = new Set(["conflict","pushfail","unmatched","quarantined"]);
+
+  /* ---------- tenant lakes (grant-filtered replicas of the core lake) ---------- */
+  const LAKES = [
+    {id:"l1", t:"Futura", bucket:"gx-t-12", st:"ok", tables:41, size:"212 MB", fresh:"09:00",
+      grants:[{p:"seccl", k:"nodes <b>44 · 30 · 41</b> (subtree ∩)"}],
+      cat:"lake_t_12", creds:"vault:tenants/12/s3",
+      inv:[["seccl.accounts","96 rows · 09:00"],["seccl.transactions","18,204 · 09:00"],["seccl.positions","1,340 · 09:00"],["marts.account_performance_daily","41,882 · 09:02"],["archive.events","append-only"]],
+      note:"Three Client-Firm nodes, one tenant — the grant set is why this is rows, not code."},
+    {id:"l2", t:"TRULY", bucket:"gx-t-7", st:"ok", tables:38, size:"164 MB", fresh:"09:00",
+      grants:[{p:"seccl", k:"node <b>11</b> (subtree ∩)"}],
+      cat:"lake_t_7", creds:"vault:tenants/7/s3",
+      inv:[["seccl.accounts","23 · 09:00"],["seccl.transactions","6,911 · 09:00"],["marts.daily_valuations","1,842 · 06:40"]],
+      note:"marts.daily_valuations feeds the True Potential SFTP report at 06:45."},
+    {id:"l3", t:"Logic Wealth Planning", bucket:"gx-t-9", st:"ok", tables:38, size:"96 MB", fresh:"09:00",
+      grants:[{p:"seccl", k:"node <b>25</b> (subtree ∩)"}],
+      cat:"lake_t_9", creds:"vault:tenants/9/s3",
+      inv:[["seccl.accounts","16 · 09:00"],["seccl.transactions","4,102 · 09:00"]]},
+    {id:"l4", t:"Harrogate FP", bucket:"gx-t-15", st:"warn", tables:22, size:"301 MB", fresh:"06:12",
+      grants:[{p:"sei", k:"3106 · <b>IFA Firm 59259</b>"}],
+      cat:"lake_t_15", creds:"vault:tenants/15/s3",
+      inv:[["sei.client_account_link","520 · 06:12"],["sei.transactions","112,808 · 06:12"],["sei.positions","stale — 06 Jul (file failed, retry 09:30)"]],
+      note:"positions mart stale pending the SEI positions re-pull at 09:30."},
+    {id:"l5", t:"Blackfinch", bucket:"gx-t-4", st:"ok", tables:22, size:"188 MB", fresh:"06:11",
+      grants:[{p:"sei", k:"3102 · <b>Fee-recv IFA</b> (on_multiple=primary)"}],
+      cat:"lake_t_4", creds:"vault:tenants/4/s3",
+      inv:[["sei.client_account_link","370 · 06:11"],["sei.transactions","64,220 · 06:11"]]},
+    {id:"l6", t:"Concentric", bucket:"gx-t-18", st:"ok", tables:20, size:"74 MB", fresh:"06:12",
+      grants:[{p:"sei", k:"3110 · <b>Servicing Team</b>"}],
+      cat:"lake_t_18", creds:"vault:tenants/18/s3",
+      inv:[["sei.client_account_link","201 · 06:12"]]},
+    {id:"l7", t:"Marlborough", bucket:"gx-t-21", st:"ok", tables:31, size:"142 MB", fresh:"09:00",
+      grants:[{p:"seccl", k:"node <b>4 · MPS DFM</b> stream", mgr:true},{p:"sei", k:"3106 · <b>Legal Entity 59284 · MIM</b>", mgr:true}],
+      cat:"lake_t_21", creds:"vault:tenants/21/s3",
+      inv:[["seccl.accounts","45 · 09:00 (via stream lineage)"],["sei.accounts","472 · 06:12 (via MIM membership)"],["marts.mps_valuations","517 · 07:00"]],
+      note:"Manager role: cross-custodian book scoped to its models — positions & transactions, not the client file. Same grants drive the OLTP sharing layer."},
+    {id:"l8", t:"Epworth", bucket:"gx-t-3", st:"ok", tables:44, size:"228 MB", fresh:"09:00",
+      grants:[{p:"seccl", k:"node <b>3</b> (subtree ∩)"}],
+      cat:"lake_t_3", creds:"vault:tenants/3/s3",
+      inv:[["seccl.accounts","88 · 09:00"],["marts.account_performance_monthly","12,404 · 09:04"],["marts.book_costs","8,110 · 09:05"]]}
+  ];
+
+  /* ---------- transforms (core = repo SQL; tenant = dynamic, safety-checked) ---------- */
+  const TRANSFORMS = [
+    {id:"x1", n:"seccl.nodes", l:"bronze → silver", scope:"core", grains:["lineage"], last:"09:00", dur:"0.4 s", st:"ok",
+      reads:["datalake.seccl.nodes"], writes:["datastream.seccl.nodes"],
+      sql:"CREATE OR REPLACE TABLE datastream.seccl.nodes AS (\n  WITH RECURSIVE tree AS (\n    SELECT id, parent_id, node_type, [id] AS lineage FROM datalake.seccl.nodes WHERE parent_id IS NULL\n    UNION ALL\n    SELECT n.id, n.parent_id, n.node_type, t.lineage || n.id\n    FROM datalake.seccl.nodes n JOIN tree t ON n.parent_id = t.id)\n  SELECT * FROM tree\n)",
+      note:"The lineage array is the backbone of every Seccl tenant filter."},
+    {id:"x2", n:"seccl.cash_balances", l:"silver → gold", scope:"core", grains:["base","daily","weekly","monthly","quarterly","yearly"], last:"09:01", dur:"6.2 s", st:"ok",
+      reads:["datastream.seccl.transactions"], writes:["datastream.seccl.cash_balances*"]},
+    {id:"x3", n:"seccl.account_performance_daily", l:"silver → gold", scope:"core", grains:["daily","monthly"], last:"09:02", dur:"11 s", st:"ok",
+      reads:["datastream.seccl.cash_balances_daily","asset_balances_daily"], writes:["datastream.seccl.account_performance_*"],
+      note:"TWRR (geometric chain) + MWRR (modified Dietz); handles backdated deposits, phantom transfer cashflows, tiny-base blow-ups."},
+    {id:"x4", n:"seccl.book_costs", l:"silver → gold", scope:"core", grains:["python"], last:"09:05", dur:"48 s", st:"ok",
+      reads:["datastream.seccl.transactions"], writes:["datastream.seccl.book_costs"],
+      note:"Procedural (pandas/Decimal): HMRC share matching incl. the 30-day bed-and-breakfast rule — deliberately not SQL."},
+    {id:"x5", n:"sei.account_dsr_membership", l:"bronze → silver", scope:"core", grains:["typed"], last:"06:10", dur:"22 s", st:"ok",
+      reads:["datalake.sei.client_account_link","datalake.sei.reference"], writes:["datastream.sei.account_dsr_membership"],
+      note:"Unpivots the 80 slot columns into typed (scope, grain, dsr_type, dsr) rows — keyed on the type tag, never the slot."},
+    {id:"x6", n:"sei.transactions", l:"bronze → silver", scope:"core", grains:["base"], last:"06:11", dur:"31 s", st:"ok",
+      reads:["datalake.sei.transactions"], writes:["datastream.sei.transactions"]},
+    {id:"x7", n:"core.tenant_fanout", l:"gold → tenant lakes", scope:"core", grains:["8 tenants"], last:"09:00", dur:"84 s", st:"ok",
+      reads:["datastream.*","integrations.tenant_grants"], writes:["lake_t_* (grant-filtered CTAS)"],
+      sql:"-- per tenant, per table: discover the filter column, apply the grant\nCREATE OR REPLACE TABLE lake_t_12.seccl.accounts AS\nSELECT * FROM datastream.seccl.accounts\nWHERE lineage && (SELECT array_agg(node_id) FROM grants WHERE tenant = 12)",
+      note:"Generalises the node/dsr filters — Seccl by lineage ∩, SEI by membership join. Grants are rows, so onboarding a tenant is config, not code."},
+    {id:"x8", n:"marlborough.mps_valuations", l:"tenant mart", scope:"Marlborough", grains:["daily"], last:"07:00", dur:"1.8 s", st:"ok", safety:true,
+      reads:["lake_t_21.seccl.positions","lake_t_21.sei.positions"], writes:["lake_t_21.marts.mps_valuations"],
+      sql:"SELECT model_code, valuation_date,\n       sum(value) AS aum, count(DISTINCT account_id) AS accounts\nFROM positions_unioned            -- cross-custodian: seccl ∪ sei\nGROUP BY ALL ORDER BY valuation_date DESC",
+      note:"Tenant-authored, safety-funnelled (single SELECT, row cap, timeout, read-only attach)."},
+    {id:"x9", n:"truly.daily_valuations", l:"tenant mart", scope:"TRULY", grains:["daily"], last:"06:40", dur:"0.9 s", st:"ok", safety:true,
+      reads:["lake_t_7.seccl.*"], writes:["lake_t_7.marts.daily_valuations"],
+      note:"Feeds the 06:45 True Potential SFTP delivery."},
+    {id:"x10", n:"ml.members", l:"bronze → silver", scope:"core", grains:["base"], last:"09:00", dur:"2.1 s", st:"ok",
+      reads:["datalake.ml.members"], writes:["datastream.ml.members"]}
+  ];
+
+  /* ---------- deliveries: destinations (endpoints) + scheduled reports ---------- */
+  const DESTINATIONS = [
+    {id:"d1", n:"True Potential SFTP", t:"TRULY", kind:"sftp", cfg:"sftp://sftp.tp-ll.co.uk/inbound/valuations", st:"active", checked:"06:47",
+      kv:{kind:"sftp", host:"sftp.tp-ll.co.uk", path:"/inbound/valuations", credentials:"vault:tenants/7/dest/tp-sftp", health:"active — probe ok 06:47"}},
+    {id:"d2", n:"Marlborough reports S3", t:"Marlborough", kind:"s3", cfg:"s3://mlb-inbound/graphene/", st:"active", checked:"07:02",
+      kv:{kind:"s3", bucket:"mlb-inbound", prefix:"graphene/", credentials:"vault:tenants/21/dest/s3", health:"active — probe ok 07:02"}},
+    {id:"d3", n:"Epworth monthly pack", t:"Epworth", kind:"email", cfg:"reports@epworthim.co.uk", st:"active", checked:"—",
+      kv:{kind:"email", to:"reports@epworthim.co.uk", from:"reports@grapheneplatforms.com", health:"active — last send 01 Jul"}},
+    {id:"d4", n:"Harrogate FP SFTP", t:"Harrogate FP", kind:"sftp", cfg:"sftp://files.harrogatefp.co.uk/drop", st:"error", checked:"06:45",
+      err:"Authentication failed at 06:45 — password likely rotated on their side. Delivery of the positions extract is paused.",
+      kv:{kind:"sftp", host:"files.harrogatefp.co.uk", path:"/drop", credentials:"vault:tenants/15/dest/sftp", health:"error — auth failed 06:45"}}
+  ];
+
+  const REPORTS = [
+    {id:"p1", n:"Truly daily valuations", q:"truly.daily_valuations", dest:"True Potential SFTP", fmt:"csv", cron:"45 6 * * *",
+      runs:[1,1,1,1,1,1,1,1,1,1,1,1,1,1], st:"ok", last:"06:45 · 1,842 rows · 214 KB",
+      file:"TP_SelectPlatform_DailyValuation_{date}.csv"},
+    {id:"p2", n:"Marlborough MPS valuation", q:"marlborough.mps_valuations", dest:"Marlborough reports S3", fmt:"parquet", cron:"0 7 * * 1-5",
+      runs:[1,1,1,1,1,1,1,1,1,1], st:"ok", last:"07:00 · 517 rows · 88 KB",
+      file:"mps_valuation_{date}.parquet"},
+    {id:"p3", n:"Epworth performance pack", q:"epworth.account_performance_monthly", dest:"Epworth monthly pack", fmt:"xlsx", cron:"0 7 1 * *",
+      runs:[1,1,1,1,1,1], st:"ok", last:"01 Jul · 12,404 rows · 3.1 MB",
+      file:"epworth_performance_{date}.xlsx"},
+    {id:"p4", n:"Harrogate positions extract", q:"harrogate.positions_daily", dest:"Harrogate FP SFTP", fmt:"csv", cron:"30 7 * * 1-5",
+      runs:[1,1,1,1,1,1,1,1,1,1,1,1,0,0], st:"fail", last:"07:30 · failed — destination auth",
+      file:"positions_{date}.csv"}
+  ];
+
+  /* ================= state ================= */
+  const state = {
+    view:"activity",       // activity | data | matching
+    platform:null,         // null = all
+    explPlatform:"seccl", explEntity:"Clients",
+    matchEntity:"Contacts", issuesOnly:false,
+    selected:null, query:""
+  };
+
+  /* ================= utils ================= */
+  const $=s=>document.querySelector(s);
+  const esc=s=>String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+  function toast(msg){
+    const t=document.createElement("div");t.className="toast";t.textContent=msg;
+    $("#toasts").appendChild(t);setTimeout(()=>t.remove(),3400);
+  }
+  function sparkSVG(data,w,h){
+    const max=Math.max(...data,1), pad=2;
+    const pts=data.map((v,i)=>[pad+i*(w-2*pad)/(data.length-1), h-pad-(v/max)*(h-2*pad-2)]);
+    const line=pts.map(p=>p.map(n=>n.toFixed(1)).join(",")).join(" ");
+    const area=`${pad},${h-pad} ${line} ${(w-pad).toFixed(1)},${h-pad}`;
+    const [ex,ey]=pts[pts.length-1];
+    return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" preserveAspectRatio="none" role="img" aria-label="24-hour activity">`+
+      `<polygon class="ar" points="${area}"></polygon>`+
+      `<polyline class="ln" points="${line}"></polyline>`+
+      `<circle class="ep" cx="${ex.toFixed(1)}" cy="${ey.toFixed(1)}" r="2.6"></circle></svg>`;
+  }
+
+  /* ================= platform board ================= */
+  function renderPlatforms(){
+    const host=$("#platforms");
+    host.innerHTML=PKEYS.map(k=>{
+      const p=PLATFORMS[k], sel=state.platform===k;
+      return `<button class="plat" type="button" data-plat="${k}" aria-pressed="${sel}">
+        <div class="top">
+          <div><div class="pname">${p.name}</div></div>
+          <span class="health ${p.health}"><span class="dot"></span>${p.healthLabel}</span>
+        </div>
+        <div class="prole">${p.role}</div>
+        <div class="chips">${p.transports.map((t,i)=>`<span class="chip ${p.realtime&&i===1?"live":""}">${t}</span>`).join("")}</div>
+        <div class="mode">${p.mode}</div>
+        <div class="spark">${sparkSVG(p.spark,170,34)}<span class="sk">${p.sparkLabel}<br>last 24 h</span></div>
+        <div class="feedlist">${p.feeds.map(f=>`<span class="feed ${f.s}">${f.n}</span>`).join("")}</div>
+        <div class="foot"><span class="cnt">${p.counts}</span><span class="flag ${p.health==="brk"?"brk":""}">${p.flag||""}</span></div>
+      </button>`;
+    }).join("")+
+    `<button class="plat ghost" type="button" id="connect-plat">
+      <span class="plus">+</span>
+      <span class="gt">Connect a platform</span>
+      <span class="gs">The spine is platform-agnostic — a connector declares its transport, feeds and tenant-resolution rule.</span>
+    </button>`;
+
+    host.querySelectorAll(".plat[data-plat]").forEach(b=>b.addEventListener("click",()=>{
+      state.platform = state.platform===b.dataset.plat ? null : b.dataset.plat;
+      state.selected=null; renderAll();
+    }));
+    $("#connect-plat").addEventListener("click",()=>toast("Concept — connector onboarding (transport, feeds, tenant rule) is a later flow."));
+  }
+
+  function renderStats(){
+    $("#stats").innerHTML=STATS.map(s=>
+      `<div class="stat ${s.cls}"><span class="k">${s.k}</span><span class="v">${s.v}</span><span class="meta">${s.meta}</span></div>`
+    ).join("");
+  }
+
+  function renderScopeChip(){
+    const c=$("#scopechip");
+    if(state.platform){ c.classList.add("on"); $("#scopechip-name").textContent="Scoped to "+PLATFORMS[state.platform].name; }
+    else c.classList.remove("on");
+  }
+
+  /* ================= views ================= */
+  function renderView(){
+    const root=$("#view-root");
+    if(state.view==="activity") root.innerHTML=viewActivity();
+    else if(state.view==="data") root.innerHTML=viewData();
+    else if(state.view==="matching") root.innerHTML=viewMatching();
+    else if(state.view==="lakes") root.innerHTML=viewLakes();
+    else if(state.view==="transforms") root.innerHTML=viewTransforms();
+    else root.innerHTML=viewDeliveries();
+    bindView(root);
+  }
+
+  /* ---- activity ---- */
+  function filteredRuns(){
+    let rs=RUNS;
+    if(state.platform) rs=rs.filter(r=>r.p===state.platform);
+    if(state.query) rs=rs.filter(r=>(r.f+" "+r.s+" "+PLATFORMS[r.p].name).toLowerCase().includes(state.query));
+    return rs;
+  }
+  function viewActivity(){
+    const rs=filteredRuns();
+    return `<div class="colhead"><span>Time</span><span>Platform</span><span>Run / event</span><span>Trigger</span><span>Rows in → applied</span><span class="r">Status</span></div>
+    <div class="rows">${rs.map(r=>`
+      <button class="row" type="button" data-run="${r.id}" aria-pressed="${state.selected==="run:"+r.id}">
+        <span class="t">${r.t}</span>
+        <span class="plat-tag">${PLATFORMS[r.p].name}</span>
+        <span class="what"><span class="f">${r.f}</span><span class="s">${r.s}</span></span>
+        <span class="trig ${r.trig}">${r.trig}</span>
+        <span class="vol">${r.vol} · ${r.dur}</span>
+        <span class="badge ${r.st==="ok"?"ok":r.st==="part"?"part":r.st==="fail"?"fail":"run"}">${r.st==="ok"?"ok":r.st==="part"?"partial":r.st}</span>
+      </button>`).join("")||emptyRows("No runs match.")}</div>`;
+  }
+
+  /* ---- explorer ---- */
+  function viewData(){
+    const pk=state.platform||state.explPlatform;
+    const p=EXPLORER[pk];
+    if(!p.entities.includes(state.explEntity)) state.explEntity=p.entities[0];
+    const ds=p[state.explEntity];
+    let rows=ds.rows;
+    if(state.query) rows=rows.filter(r=>(r.c.join(" ")+" "+r.link.label).toLowerCase().includes(state.query));
+    return `<div class="subctl">
+      <span class="lbl">Platform</span>
+      <div class="seg" data-seg="explPlatform">${PKEYS.map(k=>`<button type="button" data-v="${k}" aria-pressed="${pk===k}" ${state.platform&&state.platform!==k?"disabled":""}>${PLATFORMS[k].name}</button>`).join("")}</div>
+      <span class="lbl">Entity</span>
+      <div class="seg" data-seg="explEntity">${p.entities.map(e=>`<button type="button" data-v="${e}" aria-pressed="${state.explEntity===e}">${e}</button>`).join("")}</div>
+    </div>
+    <div class="xwrap"><table class="x"><thead><tr>${ds.cols.map(c=>`<th>${c}</th>`).join("")}</tr></thead>
+    <tbody>${rows.map(r=>`
+      <tr data-rec="${r.id}" aria-selected="${state.selected==="rec:"+r.id}" tabindex="0">
+        ${r.c.map((v,i)=>`<td class="${i===0?"id":""}">${esc(v)}</td>`).join("")}
+        <td><span class="linkcell ${r.link.s==="linked"?"":r.link.s==="na"?"na":"un"}"><span class="dot"></span>${esc(r.link.label)}</span></td>
+      </tr>`).join("")||`<tr><td colspan="${ds.cols.length}" style="color:var(--ink-3);padding:22px 12px;">No rows match.</td></tr>`}</tbody></table></div>
+    <div style="padding:8px 14px;border-top:1px solid var(--line);font-size:11px;color:var(--ink-3);">
+      Raw mirror as received from ${PLATFORMS[pk].name} — staging layer, before mapping. Select a row to see the record and its lineage.</div>`;
+  }
+
+  /* ---- matching ---- */
+  function matchRows(){
+    let rows=(state.matchEntity==="Contacts"?CONTACTS:ACCOUNTS);
+    if(state.issuesOnly) rows=rows.filter(r=>PKEYS.some(k=>ISSUE_STATES.has(r.links[k].s)));
+    if(state.platform) rows=rows.filter(r=>r.links[state.platform].s!=="na");
+    if(state.query) rows=rows.filter(r=>(r.n+" "+r.tn+" "+r.crm).toLowerCase().includes(state.query));
+    return rows;
+  }
+  function viewMatching(){
+    const rows=matchRows();
+    return `<div class="subctl">
+      <span class="lbl">Ours</span>
+      <div class="seg" data-seg="matchEntity">${["Contacts","Accounts"].map(e=>`<button type="button" data-v="${e}" aria-pressed="${state.matchEntity===e}">${e}</button>`).join("")}</div>
+      <button class="toggle" type="button" id="issues-toggle" aria-pressed="${state.issuesOnly}"><span class="tk"></span>Issues only</button>
+    </div>
+    <div class="mlegend">
+      <span class="li"><span class="lk linked">✓</span> linked</span>
+      <span class="li"><span class="lk manual">✓</span> manual</span>
+      <span class="li"><span class="lk conflict">!</span> conflict</span>
+      <span class="li"><span class="lk pushq">↑</span> push queued</span>
+      <span class="li"><span class="lk pushfail">↑!</span> push rejected</span>
+      <span class="li"><span class="lk unmatched">○</span> unmatched</span>
+      <span class="li"><span class="lk na">—</span> not on platform</span>
+    </div>
+    <div class="mhead"><span>${state.matchEntity==="Contacts"?"Contact · tenant":"Account · owner"}</span><span>Seccl</span><span>SEI</span><span>Morgan&nbsp;Lloyd</span></div>
+    <div class="rows">${rows.map(r=>`
+      <button class="mrow" type="button" data-match="${r.id}" aria-pressed="${state.selected==="match:"+r.id}">
+        <span class="who"><span class="n">${esc(r.n)}</span> <span class="tn">· ${esc(r.tn)}</span></span>
+        ${PKEYS.map(k=>{const l=r.links[k],m=LK_META[l.s];return `<span class="lk ${l.s}" title="${m.t}">${m.g}</span>`;}).join("")}
+      </button>`).join("")||emptyRows("Nothing matches this filter.")}</div>`;
+  }
+
+  function emptyRows(msg){return `<div style="padding:26px 14px;color:var(--ink-3);font-size:12px;">${msg}</div>`;}
+
+  /* ---- tenant lakes ---- */
+  function grantChips(grants){
+    return grants.map(g=>`<span class="gchip ${g.mgr?"mgr":""}" title="${g.mgr?"Manager-role grant":"Owner grant"}">${PLATFORMS[g.p].name} · ${g.k}${g.mgr?" · mgr":""}</span>`).join("");
+  }
+  function viewLakes(){
+    let rows=LAKES;
+    if(state.platform) rows=rows.filter(l=>l.grants.some(g=>g.p===state.platform));
+    if(state.query) rows=rows.filter(l=>(l.t+" "+l.bucket).toLowerCase().includes(state.query));
+    return `<div class="subhead"><span class="st">Tenant lakes</span><span class="ss">grant-filtered replicas of the core lake — one bucket + catalogue per tenant, scoped credentials</span></div>
+    <div class="rows">${rows.map(l=>`
+      <button class="lrow" type="button" data-lake="${l.id}" aria-pressed="${state.selected==="lake:"+l.id}">
+        <span class="tn"><span class="n">${esc(l.t)}</span><span class="b">s3://${l.bucket} · ${l.cat}</span></span>
+        <span class="grants">${grantChips(l.grants)}</span>
+        <span class="m">${l.tables} tables · ${l.size}</span>
+        <span class="m">${esc(l.fresh)}</span>
+        <span class="badge ${l.st==="ok"?"ok":"part"}">${l.st==="ok"?"fresh":"stale"}</span>
+      </button>`).join("")||emptyRows("No tenant lakes match.")}</div>
+    <div style="padding:8px 14px;border-top:1px solid var(--line);font-size:11px;color:var(--ink-3);">
+      Filters: Seccl = node-lineage overlap · SEI = typed DSR membership · grants are rows (integrations.tenant_grants), so onboarding is config, not code.</div>`;
+  }
+
+  /* ---- transforms ---- */
+  function viewTransforms(){
+    let rows=TRANSFORMS;
+    if(state.query) rows=rows.filter(x=>(x.n+" "+x.scope+" "+x.l).toLowerCase().includes(state.query));
+    return `<div class="subhead"><span class="st">Transforms</span><span class="ss">core = versioned repo SQL · tenant = dynamic, safety-funnelled (single SELECT, row cap, timeout)</span></div>
+    <div class="rows">${rows.map(x=>`
+      <button class="trow" type="button" data-transform="${x.id}" aria-pressed="${state.selected==="transform:"+x.id}">
+        <span class="nm"><span class="n">${esc(x.n)}</span><span class="l">${esc(x.l)}${x.note?" — "+esc(x.note):""}</span></span>
+        <span class="scopechip2 ${x.scope==="core"?"":"tenant"}">${esc(x.scope)}</span>
+        <span class="grains">${x.grains.map(g=>`<span class="grain">${esc(g)}</span>`).join("")}${x.safety?`<span class="grain" style="border-color:var(--live);color:var(--live);">safety ✓</span>`:""}</span>
+        <span class="m">${esc(x.last)} · ${esc(x.dur)}</span>
+        <span class="badge ok">ok</span>
+      </button>`).join("")||emptyRows("No transforms match.")}</div>`;
+  }
+
+  /* ---- deliveries ---- */
+  function viewDeliveries(){
+    let ds=DESTINATIONS, rs=REPORTS;
+    if(state.query){
+      ds=ds.filter(d=>(d.n+" "+d.t+" "+d.cfg).toLowerCase().includes(state.query));
+      rs=rs.filter(r=>(r.n+" "+r.q+" "+r.dest).toLowerCase().includes(state.query));
+    }
+    return `<div class="subhead"><span class="st">Destinations</span><span class="ss">tenant delivery endpoints — direction lives on the use, not the endpoint</span></div>
+    <div class="rows" style="max-height:none;">${ds.map(d=>`
+      <button class="drow" type="button" data-dest="${d.id}" aria-pressed="${state.selected==="dest:"+d.id}">
+        <span class="nm"><span class="n">${esc(d.n)} <span style="color:var(--ink-3);font-weight:400;">· ${esc(d.t)}</span></span><span class="c">${esc(d.cfg)}</span></span>
+        <span class="chip">${esc(d.kind)}</span>
+        <span class="health ${d.st==="active"?"ok":"brk"}" style="margin-left:0;"><span class="dot"></span>${d.st==="active"?"Active":"Error"}</span>
+        <span class="m">${esc(d.checked)}</span>
+        <span class="m" style="color:var(--live);">test →</span>
+      </button>`).join("")||emptyRows("No destinations match.")}</div>
+    <div class="subhead"><span class="st">Scheduled reports</span><span class="ss">query × destination × format + cron — every tick exports and delivers, recording a run</span></div>
+    <div class="rows" style="max-height:none;">${rs.map(r=>`
+      <button class="rrow" type="button" data-report="${r.id}" aria-pressed="${state.selected==="report:"+r.id}">
+        <span class="nm"><span class="n">${esc(r.n)}</span><span class="q">${esc(r.q)} → ${esc(r.dest)}</span></span>
+        <span class="m">${esc(r.fmt)} · <span class="mono">${esc(r.cron)}</span></span>
+        <span class="heat" title="last ${r.runs.length} runs">${r.runs.map(v=>`<i class="${v?"ok":"fail"}"></i>`).join("")}</span>
+        <span class="m">${esc(r.last)}</span>
+        <span class="badge ${r.st==="ok"?"ok":"fail"}">${r.st==="ok"?"ok":"failed"}</span>
+      </button>`).join("")||emptyRows("No reports match.")}</div>`;
+  }
+
+  /* ================= focus panel renderers ================= */
+  function focusEmpty(){
+    $("#focus").innerHTML=`<div class="focus-empty">
+      <svg width="40" height="40" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h7m0 0-3-3m3 3-3 3M13 6h7m0 0-3-3m3 3-3 3M13 18h7m0 0-3-3m3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <p>Select a sync run, a platform record, or one of our<br>records to inspect how it maps across platforms.</p></div>`;
+  }
+
+  function kvHTML(obj){
+    return `<div class="kv">${Object.entries(obj).map(([k,v])=>`<span class="k">${esc(k)}</span><span class="v">${esc(v)}</span>`).join("")}</div>`;
+  }
+
+  function focusRun(r){
+    const st=r.st==="ok"?["ok","ok"]:r.st==="part"?["part","partial"]:["fail","failed"];
+    $("#focus").innerHTML=`
+      <div class="fhead"><div><div class="fh-t">${esc(r.f)}</div><div class="fh-s">${PLATFORMS[r.p].name} · ${esc(r.t)} · ${esc(r.dur)}</div></div>
+        <span class="badge ${st[0]}">${st[1]}</span></div>
+      <div class="fbody">
+        ${r.steps?`<div class="fsec"><div class="fsec-t">Pipeline</div><div class="steps">${r.steps.map(s=>`
+          <div class="step ${s.s}"><span class="nd"></span><span><span class="sn">${esc(s.n)}</span><br><span class="sm">${esc(s.m)}</span></span><span class="ms">${esc(s.ms)}</span></div>`).join("")}</div></div>`:""}
+        <div class="fsec"><div class="fsec-t">Run record</div>${kvHTML(r.kv)}</div>
+        ${r.issues?`<div class="fsec"><div class="fsec-t">Needs attention</div><div class="qlist">${r.issues.map(q=>`
+          <div class="qitem ${q.brk?"brk":""}"><div class="qt">${esc(q.t)}</div><div class="qr">${esc(q.r)}</div></div>`).join("")}</div></div>`:""}
+        <div class="actions">
+          <button class="btn live" type="button" data-act="retry">Retry run</button>
+          <button class="btn" type="button" data-act="payload">View raw payload</button>
+          ${r.issues?`<button class="btn" type="button" data-act="quar">Open quarantine</button>`:""}
+        </div>
+      </div>`;
+  }
+
+  function findRec(id){
+    for(const pk of PKEYS){const p=EXPLORER[pk];
+      for(const e of p.entities){const hit=p[e].rows.find(r=>r.id===id);if(hit)return {pk,e,rec:hit};}}
+    return null;
+  }
+  function focusRec({pk,e,rec}){
+    const lk=rec.link;
+    const cls=lk.s==="linked"?"ok":lk.s==="na"?"ok":"part";
+    $("#focus").innerHTML=`
+      <div class="fhead"><div><div class="fh-t">${esc(rec.c[0])} <span style="font-weight:400;color:var(--ink-2)">· ${esc(e.replace(/s$/,""))}</span></div>
+        <div class="fh-s">${PLATFORMS[pk].name} raw record — as received</div></div>
+        <span class="badge ${cls}">${esc(LK_META[lk.s]?LK_META[lk.s].t:lk.s)}</span></div>
+      <div class="fbody">
+        <div class="fsec"><div class="fsec-t">Record</div>${kvHTML(rec.raw)}</div>
+        <div class="fsec"><div class="fsec-t">Lineage</div><div class="kv">
+          <span class="k">source</span><span class="v dim">${esc(rec.src)}</span>
+          <span class="k">landed in</span><span class="v dim">staging.${pk}_${e.toLowerCase()}</span>
+          <span class="k">link</span><span class="v ${lk.s==="linked"?"":"dim"}">${esc(lk.label)}</span></div></div>
+        <div class="actions">
+          ${lk.s==="linked"?`<button class="btn live" type="button" data-act="open">Open our record</button>
+            <button class="btn" type="button" data-act="unlink">Unlink</button>`
+          :lk.s==="quarantined"?`<button class="btn live" type="button" data-act="rule">Add tenant rule…</button>`
+          :`<button class="btn live" type="button" data-act="link">Link to ${state.matchEntity==="Accounts"?"account":"contact"}…</button>
+            <button class="btn" type="button" data-act="create">Create new from record</button>`}
+        </div>
+      </div>`;
+  }
+
+  function focusMatch(r){
+    const anyIssue=PKEYS.some(k=>ISSUE_STATES.has(r.links[k].s));
+    const dirLabel={pull:"pull ← platform", push:"push → platform"};
+    $("#focus").innerHTML=`
+      <div class="fhead"><div><div class="fh-t">${esc(r.n)}</div><div class="fh-s">${esc(r.tn)} · ${esc(r.crm)}</div></div>
+        <span class="badge ${anyIssue?"part":"ok"}">${anyIssue?"needs review":"in sync"}</span></div>
+      <div class="fbody">
+        <div class="fsec"><div class="fsec-t">Platform coverage — where this record lives</div>
+        ${PKEYS.map(k=>{
+          const l=r.links[k], m=LK_META[l.s];
+          if(l.s==="na") return `<div class="p360"><div class="ph"><span class="pn">${PLATFORMS[k].name}</span><span class="lk na">—</span></div>
+            <div class="pb" style="font-size:11.5px;color:var(--ink-3);">Not held on this platform.</div></div>`;
+          return `<div class="p360"><div class="ph"><span class="pn">${PLATFORMS[k].name}</span>
+              ${l.dir?`<span class="dir">${dirLabel[l.dir]||l.dir}</span>`:""}
+              <span class="lk ${l.s}">${m.g} ${m.t}</span></div>
+            <div class="pb">
+              <div class="kv">
+                ${l.id?`<span class="k">platform id</span><span class="v">${esc(l.id)}</span>`:""}
+                ${l.last?`<span class="k">last sync</span><span class="v dim">${esc(l.last)}</span>`:""}
+                ${l.cand?`<span class="k">candidate</span><span class="v dim">${esc(l.cand)}</span>`:""}
+                ${l.note?`<span class="k">note</span><span class="v dim">${esc(l.note)}</span>`:""}
+              </div>
+              ${l.drift?`<div class="drift"><div class="dt">Field drift — ${esc(l.drift.field)}</div>
+                <div class="pair"><span class="w">ours</span><span>${esc(l.drift.ours)}</span>
+                <span class="w">theirs</span><span>${esc(l.drift.theirs)}</span></div></div>`:""}
+              ${l.s==="conflict"?`<div class="actions">
+                  <button class="btn live" type="button" data-act="accept">Accept platform value</button>
+                  <button class="btn" type="button" data-act="pushours">Push our value</button>
+                  <button class="btn" type="button" data-act="review">Mark reviewed</button></div>`
+               :l.s==="pushfail"?`<div class="actions">
+                  <button class="btn live" type="button" data-act="requeue">Fix &amp; requeue push</button>
+                  <button class="btn" type="button" data-act="review">Dismiss</button></div>`
+               :l.s==="unmatched"?`<div class="actions">
+                  <button class="btn live" type="button" data-act="confirm">Confirm &amp; link</button>
+                  <button class="btn" type="button" data-act="notme">Not the same person</button></div>`
+               :l.s==="pushq"?`<div class="actions">
+                  <button class="btn" type="button" data-act="pushnow">Push now</button>
+                  <button class="btn" type="button" data-act="cancelq">Cancel queued change</button></div>`:""}
+            </div></div>`;
+        }).join("")}</div>
+        <div class="fsec"><div class="fsec-t">Recent link events</div><div class="steps">
+          <div class="step done"><span class="nd"></span><span><span class="sn">Today 09:07</span><br><span class="sm">Seccl client.updated mirrored (where linked)</span></span><span class="ms"></span></div>
+          <div class="step done"><span class="nd"></span><span><span class="sn">Today 06:04</span><br><span class="sm">SEI daily file refreshed memberships &amp; tenant resolution</span></span><span class="ms"></span></div>
+          <div class="step done"><span class="nd"></span><span><span class="sn">02 Jul</span><br><span class="sm">Initial auto-match pass (name + DoB + NI, 98% threshold)</span></span><span class="ms"></span></div>
+        </div></div>
+      </div>`;
+  }
+
+  function focusLake(l){
+    $("#focus").innerHTML=`
+      <div class="fhead"><div><div class="fh-t">${esc(l.t)} — tenant lake</div><div class="fh-s">s3://${esc(l.bucket)} · catalogue ${esc(l.cat)}</div></div>
+        <span class="badge ${l.st==="ok"?"ok":"part"}">${l.st==="ok"?"fresh":"stale"}</span></div>
+      <div class="fbody">
+        <div class="fsec"><div class="fsec-t">Entitlement — what fills this lake</div>
+          <div class="grants" style="display:flex;flex-wrap:wrap;gap:4px;">${grantChips(l.grants)}</div>
+          ${l.note?`<p style="font-size:11.5px;color:var(--ink-2);margin-top:8px;">${esc(l.note)}</p>`:""}</div>
+        <div class="fsec"><div class="fsec-t">Storage</div><div class="kv">
+          <span class="k">bucket</span><span class="v">s3://${esc(l.bucket)}</span>
+          <span class="k">endpoint</span><span class="v dim">rustfs:9000 (dev) · scoped user/policy</span>
+          <span class="k">credentials</span><span class="v dim">${esc(l.creds)} (secret-manager ref)</span>
+          <span class="k">catalogue</span><span class="v dim">${esc(l.cat)} (DuckLake, Postgres-catalogued)</span>
+          <span class="k">access</span><span class="v dim">read-only attach via quack pool · ETL is sole writer</span></div></div>
+        <div class="fsec"><div class="fsec-t">Tables (${l.tables} · ${esc(l.size)})</div><div class="kv">
+          ${l.inv.map(([t,m])=>`<span class="k">${esc(t)}</span><span class="v dim">${esc(m)}</span>`).join("")}</div></div>
+        <div class="actions">
+          <button class="btn live" type="button" data-act="fanout">Re-run fan-out</button>
+          <button class="btn" type="button" data-act="browse">Browse tables</button>
+          <button class="btn" type="button" data-act="rotate">Rotate credentials</button>
+        </div>
+      </div>`;
+  }
+
+  function focusTransform(x){
+    $("#focus").innerHTML=`
+      <div class="fhead"><div><div class="fh-t mono" style="font-size:12.5px;">${esc(x.n)}</div><div class="fh-s">${esc(x.l)} · ${x.scope==="core"?"core (repo SQL, reviewed + tested)":"tenant-authored · "+esc(x.scope)}</div></div>
+        <span class="badge ok">ok</span></div>
+      <div class="fbody">
+        ${x.sql?`<div class="fsec"><div class="fsec-t">Definition</div><div class="sqlprev">${esc(x.sql)}</div></div>`:""}
+        <div class="fsec"><div class="fsec-t">Lineage</div><div class="kv">
+          <span class="k">reads</span><span class="v dim">${x.reads.map(esc).join("<br>")}</span>
+          <span class="k">writes</span><span class="v">${x.writes.map(esc).join("<br>")}</span>
+          <span class="k">last run</span><span class="v dim">${esc(x.last)} · ${esc(x.dur)}</span></div></div>
+        ${x.safety?`<div class="fsec"><div class="fsec-t">Safety funnel</div><div class="kv">
+          <span class="k">statement</span><span class="v dim">single SELECT ✓</span>
+          <span class="k">rows</span><span class="v dim">capped 10,000 ✓</span>
+          <span class="k">timeout</span><span class="v dim">15 s interrupt ✓</span>
+          <span class="k">attach</span><span class="v dim">read-only, config locked ✓</span></div></div>`:""}
+        ${x.note?`<div class="fsec"><div class="fsec-t">Notes</div><p style="font-size:11.5px;color:var(--ink-2);">${esc(x.note)}</p></div>`:""}
+        <div class="actions">
+          <button class="btn live" type="button" data-act="runx">Run now</button>
+          <button class="btn" type="button" data-act="editx">${x.scope==="core"?"View in repo":"Edit definition"}</button>
+        </div>
+      </div>`;
+  }
+
+  function focusDest(d){
+    $("#focus").innerHTML=`
+      <div class="fhead"><div><div class="fh-t">${esc(d.n)}</div><div class="fh-s">${esc(d.t)} · delivery endpoint</div></div>
+        <span class="badge ${d.st==="active"?"ok":"fail"}">${d.st}</span></div>
+      <div class="fbody">
+        <div class="fsec"><div class="fsec-t">Endpoint</div>${kvHTML(d.kv)}</div>
+        ${d.err?`<div class="fsec"><div class="fsec-t">Needs attention</div><div class="qlist"><div class="qitem brk"><div class="qt">Probe failed</div><div class="qr">${esc(d.err)}</div></div></div></div>`:""}
+        <div class="fsec"><div class="fsec-t">Used by</div><div class="kv">
+          ${REPORTS.filter(r=>r.dest===d.n).map(r=>`<span class="k">${esc(r.n)}</span><span class="v dim">${esc(r.fmt)} · ${esc(r.cron)}</span>`).join("")||`<span class="k">—</span><span class="v dim">no reports bound</span>`}</div></div>
+        <div class="actions">
+          <button class="btn live" type="button" data-act="testdest">Test now</button>
+          <button class="btn" type="button" data-act="editdest">Edit endpoint</button>
+          ${d.err?`<button class="btn" type="button" data-act="creds">Update credentials</button>`:""}
+        </div>
+      </div>`;
+  }
+
+  function focusReport(r){
+    $("#focus").innerHTML=`
+      <div class="fhead"><div><div class="fh-t">${esc(r.n)}</div><div class="fh-s">query × destination × format · cron ${esc(r.cron)}</div></div>
+        <span class="badge ${r.st==="ok"?"ok":"fail"}">${r.st==="ok"?"ok":"failed"}</span></div>
+      <div class="fbody">
+        <div class="fsec"><div class="fsec-t">Binding</div><div class="kv">
+          <span class="k">query</span><span class="v">${esc(r.q)}</span>
+          <span class="k">destination</span><span class="v">${esc(r.dest)}</span>
+          <span class="k">format</span><span class="v dim">${esc(r.fmt)}</span>
+          <span class="k">filename</span><span class="v dim">${esc(r.file)}</span>
+          <span class="k">schedule</span><span class="v dim">${esc(r.cron)}</span></div></div>
+        <div class="fsec"><div class="fsec-t">Last ${r.runs.length} runs</div>
+          <div class="heat" style="margin-bottom:8px;">${r.runs.map(v=>`<i class="${v?"ok":"fail"}"></i>`).join("")}</div>
+          <div class="kv"><span class="k">latest</span><span class="v dim">${esc(r.last)}</span></div></div>
+        <div class="actions">
+          <button class="btn live" type="button" data-act="runreport">Run now</button>
+          ${r.st!=="ok"?`<button class="btn" type="button" data-act="retryreport">Retry after fixing destination</button>`:""}
+          <button class="btn" type="button" data-act="editreport">Edit report</button>
+        </div>
+      </div>`;
+  }
+
+  /* ================= bindings ================= */
+  function bindView(root){
+    root.querySelectorAll("[data-lake]").forEach(b=>b.addEventListener("click",()=>{
+      state.selected="lake:"+b.dataset.lake; renderView();
+      focusLake(LAKES.find(l=>l.id===b.dataset.lake));
+    }));
+    root.querySelectorAll("[data-transform]").forEach(b=>b.addEventListener("click",()=>{
+      state.selected="transform:"+b.dataset.transform; renderView();
+      focusTransform(TRANSFORMS.find(x=>x.id===b.dataset.transform));
+    }));
+    root.querySelectorAll("[data-dest]").forEach(b=>b.addEventListener("click",()=>{
+      state.selected="dest:"+b.dataset.dest; renderView();
+      focusDest(DESTINATIONS.find(d=>d.id===b.dataset.dest));
+    }));
+    root.querySelectorAll("[data-report]").forEach(b=>b.addEventListener("click",()=>{
+      state.selected="report:"+b.dataset.report; renderView();
+      focusReport(REPORTS.find(r=>r.id===b.dataset.report));
+    }));
+    root.querySelectorAll("[data-run]").forEach(b=>b.addEventListener("click",()=>{
+      state.selected="run:"+b.dataset.run; renderView();
+      focusRun(RUNS.find(r=>r.id===b.dataset.run));
+    }));
+    root.querySelectorAll("[data-rec]").forEach(tr=>{
+      const go=()=>{state.selected="rec:"+tr.dataset.rec; renderView(); focusRec(findRec(tr.dataset.rec));};
+      tr.addEventListener("click",go);
+      tr.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go();}});
+    });
+    root.querySelectorAll("[data-match]").forEach(b=>b.addEventListener("click",()=>{
+      state.selected="match:"+b.dataset.match; renderView();
+      const pool=state.matchEntity==="Contacts"?CONTACTS:ACCOUNTS;
+      focusMatch(pool.find(r=>r.id===b.dataset.match));
+    }));
+    root.querySelectorAll(".seg[data-seg] button").forEach(b=>b.addEventListener("click",()=>{
+      if(b.disabled)return;
+      const seg=b.closest(".seg").dataset.seg;
+      state[seg]=b.dataset.v; state.selected=null; renderView(); focusEmpty();
+    }));
+    const it=root.querySelector("#issues-toggle");
+    if(it) it.addEventListener("click",()=>{state.issuesOnly=!state.issuesOnly; renderView();});
+  }
+
+  document.querySelectorAll(".tab[data-view]").forEach(t=>t.addEventListener("click",()=>{
+    state.view=t.dataset.view; state.selected=null;
+    document.querySelectorAll(".tab[data-view]").forEach(x=>x.setAttribute("aria-pressed",x===t));
+    renderView(); focusEmpty();
+  }));
+
+  $("#scopechip-x").addEventListener("click",()=>{state.platform=null; state.selected=null; renderAll();});
+
+  $("#search").addEventListener("input",e=>{
+    state.query=e.target.value.trim().toLowerCase();
+    renderView();
+  });
+
+  /* focus panel actions (concept: everything toasts) */
+  $("#focus").addEventListener("click",e=>{
+    const b=e.target.closest("[data-act]"); if(!b)return;
+    const msgs={
+      retry:"Run requeued — it will appear at the top of the activity feed.",
+      payload:"Concept — raw payload viewer (staged rows / file slice / webhook body).",
+      quar:"Concept — quarantine queue with resolve-by-rule actions.",
+      open:"Concept — deep link into the CRM record.",
+      unlink:"Link removed. The platform record returns to the unmatched queue.",
+      link:"Concept — match picker with scored candidates.",
+      create:"Concept — creates our record from the platform mirror, pre-linked.",
+      rule:"Concept — opens the custodian_tenant_rule editor for firm 3106.",
+      accept:"Platform value accepted — our record updated, conflict closed.",
+      pushours:"Our value queued to push. The platform copy updates on confirmation.",
+      review:"Marked reviewed.",
+      requeue:"Postcode normalised to “LS1 4DP” — push requeued.",
+      confirm:"Linked. Future syncs for this platform id map automatically.",
+      notme:"Dismissed — the platform record stays in the unmatched queue.",
+      pushnow:"Pushing now — confirmation lands in the activity feed.",
+      cancelq:"Queued change cancelled.",
+      fanout:"Fan-out queued — grant-filtered replicas rebuild from the core lake.",
+      browse:"Concept — opens the lake table browser (read-only quack session).",
+      rotate:"Concept — mints a new scoped RustFS user; old credentials revoked after grace.",
+      runx:"Transform queued — result lands in the activity feed.",
+      editx:"Concept — core SQL lives in apps/dataflow (reviewed); tenant SQL opens the safety-checked editor.",
+      testdest:"Probe sent — a tiny test file pushed through the endpoint; health updates on result.",
+      editdest:"Concept — endpoint editor (credentials via secret manager, never stored inline).",
+      creds:"Concept — credential update flow; probe re-runs automatically after save.",
+      runreport:"Report run started — export → deliver → run recorded.",
+      retryreport:"Requeued — will deliver once the destination probe passes.",
+      editreport:"Concept — report editor (query × destination × format + cron)."
+    };
+    toast(msgs[b.dataset.act]||"Done.");
+  });
+
+  /* ================= boot ================= */
+  function renderIssueCount(){
+    const n=CONTACTS.concat(ACCOUNTS).filter(r=>PKEYS.some(k=>ISSUE_STATES.has(r.links[k].s))).length;
+    $("#issue-count").textContent=n;
+    const d=DESTINATIONS.filter(x=>x.st==="error").length + REPORTS.filter(x=>x.st!=="ok").length;
+    $("#deliv-count").textContent=d;
+  }
+  function renderAll(){
+    renderPlatforms(); renderStats(); renderScopeChip(); renderIssueCount(); renderView(); focusEmpty();
+  }
+  renderAll();
+})();
+</script>
+<!--ARTIFACT-END-->
+</body>
+</html>

@@ -1,0 +1,10 @@
+layer: 'library'
+language: 'typescript'
+
+tasks:
+  lint:
+    command: 'eslint'
+    args: '--cache --cache-location node_modules/.cache/eslint/ --cache-strategy content .'
+  test:
+    command: 'vitest'
+    args: 'run --passWithNoTests'

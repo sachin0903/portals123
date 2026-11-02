@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Annual Review 2025 — Margaret Chen</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scrollbar-gutter: stable; }
+  body {
+    font-family: 'Georgia', serif;
+    background: transparent;
+    color: #1a1a1a;
+    padding: 12px 0;
+  }
+  .page {
+    background: #fff;
+    width: 794px; aspect-ratio: 210 / 297; zoom: var(--doc-zoom, 1);
+    margin: 0 auto 12px;
+    padding: 64px 72px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.10);
+    border-radius: 2px;
+  }
+  /* Header */
+  .doc-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    border-bottom: 2px solid #1e3a5f;
+    padding-bottom: 28px;
+    margin-bottom: 36px;
+  }
+  .firm-name {
+    font-family: 'Arial', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e3a5f;
+    letter-spacing: -0.3px;
+  }
+  .firm-sub {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    color: #6b7280;
+    margin-top: 3px;
+    letter-spacing: 0.3px;
+  }
+  .doc-meta {
+    text-align: right;
+  }
+  .doc-type {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #1e3a5f;
+  }
+  .doc-ref {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    color: #9ca3af;
+    margin-top: 4px;
+  }
+  /* Title block */
+  .title-block { margin-bottom: 36px; }
+  .title-block h1 {
+    font-size: 26px;
+    font-weight: 400;
+    color: #1e3a5f;
+    letter-spacing: -0.5px;
+    line-height: 1.25;
+  }
+  .title-block .subtitle {
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+    color: #6b7280;
+    margin-top: 6px;
+  }
+  /* Client info strip */
+  .client-strip {
+    background: #f8f7f4;
+    border: 1px solid #e5e2da;
+    border-radius: 4px;
+    padding: 18px 22px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .client-strip dt {
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #9ca3af;
+    margin-bottom: 4px;
+  }
+  .client-strip dd {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1a1a;
+  }
+  /* Section */
+  .section { margin-bottom: 36px; }
+  .section-title {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #1e3a5f;
+    border-bottom: 1px solid #e5e2da;
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+  }
+  p { font-size: 13.5px; line-height: 1.7; color: #374151; margin-bottom: 12px; }
+  p:last-child { margin-bottom: 0; }
+  /* Stat grid */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+  .stat-card {
+    border: 1px solid #e5e2da;
+    border-radius: 4px;
+    padding: 18px 20px;
+  }
+  .stat-label {
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #9ca3af;
+    margin-bottom: 6px;
+  }
+  .stat-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1e3a5f;
+    letter-spacing: -0.5px;
+  }
+  .stat-change {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    margin-top: 4px;
+  }
+  .stat-change.up { color: #16a34a; }
+  .stat-change.down { color: #dc2626; }
+  /* Allocation table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+  thead th {
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #9ca3af;
+    text-align: left;
+    padding: 0 0 10px;
+    border-bottom: 1px solid #e5e2da;
+  }
+  thead th:not(:first-child) { text-align: right; }
+  tbody tr td {
+    padding: 12px 0;
+    border-bottom: 1px solid #f3f1ec;
+    vertical-align: middle;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  td:not(:first-child) { text-align: right; font-variant-numeric: tabular-nums; }
+  .asset-name { font-weight: 600; color: #1a1a1a; }
+  .asset-sub { font-family: 'Arial', sans-serif; font-size: 11px; color: #9ca3af; }
+  .bar-cell { width: 120px; }
+  .bar-bg {
+    background: #f0ede6;
+    border-radius: 2px;
+    height: 6px;
+    overflow: hidden;
+    display: inline-block;
+    width: 100%;
+  }
+  .bar-fill {
+    height: 100%;
+    background: #1e3a5f;
+    border-radius: 2px;
+  }
+  /* Recommendations */
+  .rec-list { list-style: none; }
+  .rec-list li {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f3f1ec;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: #374151;
+  }
+  .rec-list li:last-child { border-bottom: none; }
+  .rec-num {
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    color: #1e3a5f;
+    background: #eef2f8;
+    border-radius: 2px;
+    padding: 2px 6px;
+    flex-shrink: 0;
+  }
+  /* Footer */
+  .doc-footer {
+    border-top: 1px solid #e5e2da;
+    padding-top: 20px;
+    margin-top: 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .footer-left {
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    color: #9ca3af;
+    line-height: 1.6;
+  }
+  .footer-right {
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    color: #9ca3af;
+    text-align: right;
+    line-height: 1.6;
+  }
+  .page-num {
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    color: #d1cdc4;
+    text-align: center;
+    margin-top: 12px;
+  }
+  /* Print: a clean full-page document (the on-screen card view is unchanged). */
+  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  @media print {
+    @page { size: A4; margin: 0; }
+    .page { aspect-ratio: auto; zoom: 1; width: auto; }
+    body { background: #fff; padding: 0; }
+    .page { box-shadow: none; border: none; border-radius: 0; margin: 0; max-width: none; padding: 52px 60px; }
+    .page + .page { page-break-before: always; }
+    .page-num { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Page 1 -->
+<div class="page">
+  <div class="doc-header">
+    <div>
+      <div class="firm-name">Acme Advisers</div>
+      <div class="firm-sub">Authorised &amp; Regulated by the Financial Conduct Authority · FRN 123456</div>
+    </div>
+    <div class="doc-meta">
+      <div class="doc-type">Annual Review</div>
+      <div class="doc-ref">Ref: AA/AR/2025/0847</div>
+      <div class="doc-ref">18 May 2026</div>
+    </div>
+  </div>
+
+  <div class="title-block">
+    <h1>Annual Review Report 2025</h1>
+    <div class="subtitle">Prepared for Margaret Chen &nbsp;·&nbsp; Review period: 1 January – 31 December 2025</div>
+  </div>
+
+  <dl class="client-strip">
+    <div>
+      <dt>Client</dt>
+      <dd>Margaret Chen</dd>
+    </div>
+    <div>
+      <dt>Adviser</dt>
+      <dd>James Okafor</dd>
+    </div>
+    <div>
+      <dt>Risk Profile</dt>
+      <dd>Balanced (3/5)</dd>
+    </div>
+  </dl>
+
+  <div class="section">
+    <div class="section-title">Executive Summary</div>
+    <p>Dear Margaret, this report summarises the performance of your investment portfolio for the calendar year ending 31 December 2025, and sets out our recommendations for the year ahead.</p>
+    <p>Your portfolio delivered a total return of <strong>+9.4%</strong> over the period, ahead of your strategic benchmark of +7.1%. Global equities continued to provide the primary driver of growth, whilst your fixed income allocation provided stability during periods of heightened market volatility in Q3.</p>
+    <p>We recommend no change to your risk profile at this time. Your overall financial position remains well-aligned with your medium-term objectives, including the planned retirement drawdown commencing 2031.</p>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-label">Portfolio Value</div>
+      <div class="stat-value">£487,320</div>
+      <div class="stat-change up">↑ £41,800 since last review</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Return (2025)</div>
+      <div class="stat-value">+9.4%</div>
+      <div class="stat-change up">↑ +2.3% vs benchmark</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Income Received</div>
+      <div class="stat-value">£6,140</div>
+      <div class="stat-change">Dividends &amp; interest</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Annual Charges</div>
+      <div class="stat-value">0.82%</div>
+      <div class="stat-change">Total expense ratio</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Asset Allocation</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Asset Class</th>
+          <th>Value</th>
+          <th>Weight</th>
+          <th class="bar-cell">Allocation</th>
+          <th>Return</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="asset-name">Global Equities</div><div class="asset-sub">Developed markets, passive</div></td>
+          <td>£224,200</td>
+          <td>46.0%</td>
+          <td class="bar-cell"><div class="bar-bg"><div class="bar-fill" style="width:46%"></div></div></td>
+          <td>+13.2%</td>
+        </tr>
+        <tr>
+          <td><div class="asset-name">UK Equities</div><div class="asset-sub">FTSE All-Share tracker</div></td>
+          <td>£87,720</td>
+          <td>18.0%</td>
+          <td class="bar-cell"><div class="bar-bg"><div class="bar-fill" style="width:18%"></div></div></td>
+          <td>+7.8%</td>
+        </tr>
+        <tr>
+          <td><div class="asset-name">Fixed Income</div><div class="asset-sub">Gilts &amp; investment grade bonds</div></td>
+          <td>£97,460</td>
+          <td>20.0%</td>
+          <td class="bar-cell"><div class="bar-bg"><div class="bar-fill" style="width:20%"></div></div></td>
+          <td>+2.1%</td>
+        </tr>
+        <tr>
+          <td><div class="asset-name">Property</div><div class="asset-sub">UK REIT index</div></td>
+          <td>£48,730</td>
+          <td>10.0%</td>
+          <td class="bar-cell"><div class="bar-bg"><div class="bar-fill" style="width:10%"></div></div></td>
+          <td>+4.5%</td>
+        </tr>
+        <tr>
+          <td><div class="asset-name">Cash</div><div class="asset-sub">Money market fund</div></td>
+          <td>£29,210</td>
+          <td>6.0%</td>
+          <td class="bar-cell"><div class="bar-bg"><div class="bar-fill" style="width:6%"></div></div></td>
+          <td>+5.0%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="doc-footer">
+    <div class="footer-left">
+      Acme Advisers Ltd · 14 Finsbury Square, London EC2A 1HP<br />
+      Authorised and regulated by the FCA. Registration No. 123456.
+    </div>
+    <div class="footer-right">
+      Confidential — prepared for Margaret Chen only<br />
+      This document does not constitute financial advice.
+    </div>
+  </div>
+  <div class="page-num">1 of 2</div>
+</div>
+
+<!-- Page 2 -->
+<div class="page">
+  <div class="doc-header">
+    <div>
+      <div class="firm-name">Acme Advisers</div>
+      <div class="firm-sub">Annual Review 2025 · Margaret Chen · Ref: AA/AR/2025/0847</div>
+    </div>
+    <div class="doc-meta">
+      <div class="doc-type">Continued</div>
+      <div class="doc-ref">18 May 2026</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Recommendations for 2026</div>
+    <ul class="rec-list">
+      <li>
+        <span class="rec-num">01</span>
+        <span>Increase your ISA contribution to £20,000 for the 2026/27 tax year to maximise tax-efficient growth ahead of your drawdown phase. Your current contribution of £15,000 leaves £5,000 of allowance unused.</span>
+      </li>
+      <li>
+        <span class="rec-num">02</span>
+        <span>Rebalance the global equity weighting from 46% to 42%, redirecting £19,500 into the fixed income allocation. This moves the portfolio closer to target as markets approach historically elevated valuations.</span>
+      </li>
+      <li>
+        <span class="rec-num">03</span>
+        <span>Review the cash holding in light of the current interest rate environment. We suggest switching £15,000 from the money market fund into a 12-month fixed-rate cash ISA at 4.65% AER, subject to your liquidity needs.</span>
+      </li>
+      <li>
+        <span class="rec-num">04</span>
+        <span>Consider a nominated beneficiary review for your pension plan, particularly in light of the changes announced in the Autumn 2025 Budget regarding inherited pension taxation from 2027.</span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Next Steps</div>
+    <p>Your next scheduled review is due in May 2027. However, James will be in contact quarterly with a brief portfolio update. If your circumstances change materially — including income, expenditure, or tax position — please contact us promptly so we can reassess the suitability of your current strategy.</p>
+    <p>Please acknowledge receipt of this report using the link provided in the covering email. If you have any questions, you can reach James directly on <strong>james.okafor@acme-advisers.co.uk</strong> or on <strong>020 7123 4567</strong>.</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Adviser Sign-off</div>
+    <p style="margin-bottom: 32px;">This report has been prepared by James Okafor, Chartered Financial Planner (CFP), on behalf of Acme Advisers Ltd. James holds the appropriate qualifications and permissions to provide this advice under the firm's FCA authorisation.</p>
+    <div style="display:flex; gap: 48px;">
+      <div>
+        <div style="font-family:Georgia,serif; font-size:20px; color:#1e3a5f; font-style:italic; margin-bottom:4px;">James Okafor</div>
+        <div style="font-family:Arial,sans-serif; font-size:11px; color:#6b7280;">James Okafor CFP · Senior Financial Adviser</div>
+        <div style="font-family:Arial,sans-serif; font-size:11px; color:#6b7280;">18 May 2026</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-footer">
+    <div class="footer-left">
+      Acme Advisers Ltd · 14 Finsbury Square, London EC2A 1HP<br />
+      Authorised and regulated by the FCA. Registration No. 123456.
+    </div>
+    <div class="footer-right">
+      Confidential — prepared for Margaret Chen only<br />
+      This document does not constitute financial advice.
+    </div>
+  </div>
+  <div class="page-num">2 of 2</div>
+</div>
+
+<script>
+(function () {
+  var BASE = 794, GUTTER = 56;
+  function fit() {
+    var w = document.documentElement.clientWidth;
+    document.body.style.setProperty('--doc-zoom', Math.min(1, (w - GUTTER) / BASE));
+  }
+  window.addEventListener('resize', fit);
+  fit();
+}());
+</script>
+</body>
+</html>

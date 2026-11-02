@@ -1,0 +1,70 @@
+[project]
+name = "book-sink"
+version = "0.1.0"
+description = "The provider pipelines' write side: a tenant's conformed slice -> inbound -> the book."
+requires-python = ">=3.13"
+dependencies = [
+  "psycopg[binary]>=3.2",
+  "duckdb>=1.5.4",
+  "pyarrow>=17",
+  # REQUIRED BY DUCKDB, NOT BY US -- nothing in this codebase imports pytz, so it looks unused and
+  # is not. DuckDB's Python layer needs it to turn a `TIMESTAMP WITH TIME ZONE` into a `datetime`,
+  # and without it EVERY `fetchall()`/`fetchone()` over a relation carrying one raises
+  # `Invalid Input Error: Required module 'pytz' failed to import`. Plain TIMESTAMP and DATE are
+  # unaffected, which is why it surfaced as one broken console tab rather than as a broken lake.
+  #
+  # It used to arrive transitively: pandas <=2.x depended on pytz. The lock resolved pandas 3.0.5,
+  # which DROPPED that dependency, so it vanished with an upgrade that named nothing about
+  # timezones. Declared explicitly here so the next resolver change cannot take it away again.
+  "pytz>=2024.1",
+  # pkgs/api-log — `book_sink.api_log` is the sync side's persist half for audit.api_log. It
+  # lives here rather than in pkgs/api-log because that package is deliberately database-free,
+  # and here because this one already holds BOOK_WRITER_DSN and is already a dependency of all
+  # three provider services.
+  "api-log",
+]
+
+[tool.uv.sources]
+api-log = { workspace = true }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/book_sink"]
+
+[dependency-groups]
+dev = [
+  "ruff>=0.6",
+  "mypy>=1.11",
+  "pytest>=8.3",
+  # A merge is a statement about Postgres behaviour (ON CONFLICT, xmax, RLS, a pre-allocated
+  # identity), so its tests run against a real one rather than a stub.
+  "testcontainers[postgres]>=4.8",
+  # Registration is the one thing that cannot be tested without interlace's registry. A DEV
+  # dependency, not a runtime one: `register()` imports it lazily so the merge half of this package
+  # stays importable in an API container that has no pipeline in it.
+  "interlaced[service]>=2.8.7",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "ASYNC", "S", "C4"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101", "S104", "S105", "S106"] # asserts + dummy credentials + bind-host fixtures
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+
+[[tool.mypy.overrides]]
+module = ["duckdb", "duckdb.*", "pyarrow", "pyarrow.*", "interlace", "interlace.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

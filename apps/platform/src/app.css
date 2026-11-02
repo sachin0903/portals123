@@ -1,0 +1,30 @@
+@import 'tailwindcss';
+@import '@graphene/ui/theme.css';
+/* The sharp staff-tool surface preset: opaque panels, flat canvas, bold hairlines,
+   tight corners. Must come AFTER theme.css — it only reassigns theme tokens. The client
+   portal deliberately does not import this and keeps the glass look. */
+@import '@graphene/ui/sharp.css';
+/* The floating chrome look — widgets as sheets, no 1px box. Shared with the admin portal, which is
+   the point: the two staff portals must be indistinguishable in chrome. Toggle it live with
+   `document.documentElement.dataset.chrome = 'carded'`. */
+@import '@graphene/ui/chrome.css';
+
+/* Tailwind v4 ignores node_modules, so point it at the shared component source
+   to discover the utility classes used in @graphene/ui. Path is relative to this file. */
+@source '../../../pkgs/ui/src/**/*.{svelte,ts}';
+
+/* ── Document paper ─────────────────────────────────────────────────────────────────────────
+   The template editor previews a PDF. Paper is the physical stock the render worker prints
+   onto (WeasyPrint has no app CSS and no dark mode), so it is deliberately NOT a theme token:
+   it must stay white when the adviser has the app in dark mode, or the preview would
+   misrepresent the artefact they are about to send a client. One definition, used by every
+   paper-backed preview surface, so "why is this white?" has a single answer.
+
+   Use it ONLY for a surface that really is the printed page. The margin schematic in the page
+   settings panel looks like a candidate and is not one — it is a diagram drawn in themed greens,
+   so it follows the app scheme; putting app ink on fixed paper is how that label ended up at
+   1.6:1 in dark mode. There is deliberately no paper-ink token: nothing the APP draws belongs on
+   paper, so any text over these surfaces is document content and carries its own colour. */
+@theme {
+	--color-doc-paper: oklch(1 0 0);
+}

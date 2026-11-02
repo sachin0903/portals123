@@ -1,0 +1,56 @@
+# Keep the build context small and free of host-built artefacts / secrets.
+**/node_modules
+.venv
+**/.venv
+**/.svelte-kit
+**/build
+**/dist
+**/*.tsbuildinfo
+.moon/cache
+**/__pycache__
+**/.pytest_cache
+**/.ruff_cache
+**/.mypy_cache
+
+# interlace's local control plane: state/stream SQLite plus its query cache — a developer's
+# own sync state, and the .bak copies taken around a production run. Git ignores it, so a
+# clean clone has none, but Docker reads the FILESYSTEM: a laptop build was baking local (and
+# production) state into the image while CI's was empty, which is precisely how the seccl
+# service came to depend on a directory that only existed on one machine. The container
+# creates the directory itself (services/seccl/Dockerfile).
+**/.interlace
+
+# VCS / CI / docs are not needed to build the images — except the small
+# anonymised Seccl lake fixture, which the API image ships (see apps/api/
+# Dockerfile). NB: `docs/*` (not `docs`) so the fixture can be re-included;
+# Docker can't re-include a file whose parent dir is wholly excluded. This also
+# keeps the git-ignored real extract (docs/*.real.duckdb) out of the context.
+.git
+.github
+docs/*
+!docs/seccl.duckdb
+
+# pkgs/{seccl,sei,morgan-lloyd}/spec and /scripts are build-time-only (vendored API specs, the
+# manifest/schema generator scripts that read them) — nothing under src/ imports either at
+# runtime. Excluding them keeps the vendored 8.2MB Postman collection at pkgs/seccl/spec out of
+# apps/api/Dockerfile and Dockerfile.worker's runtime images, which COPY these packages' whole
+# trees (workspace `{ workspace = true }` sources need the tree present for `uv sync`, not just
+# the src/ half).
+pkgs/*/spec
+pkgs/*/scripts
+
+# Never bake env files into an image (only *.example is safe, but unneeded)
+**/.env
+**/.env.*
+!**/.env.example
+
+# intelliflo-sync's local-only seed fixtures (tenant/account identifiers for a developer's own
+# Intelliflo sandbox) — `local.yaml`, not `local.example.yaml`. Nothing at runtime imports the
+# seed script either, but the image build still COPYs the service's whole tree.
+**/migrations/*/seeds/local.yaml
+
+# Misc
+**/*.timestamp-*.mjs
+**/*.log
+.DS_Store
+apps/api/openapi.json

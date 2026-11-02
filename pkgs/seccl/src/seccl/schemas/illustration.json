@@ -1,0 +1,732 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "clientId": {
+      "type": "string",
+      "description": "observed values: 0268HC7, 026933B, 026C3JF"
+    },
+    "firmId": {
+      "type": "string",
+      "description": "observed values: SDEMO, SECCI"
+    },
+    "status": {
+      "type": "string",
+      "description": "observed values: Calculating"
+    },
+    "accountId": {
+      "type": "string",
+      "description": "observed values: 00GBDC9"
+    },
+    "accountName": {
+      "type": "string",
+      "description": "observed values: 1"
+    },
+    "currency": {
+      "type": "string",
+      "description": "observed values: GBP"
+    },
+    "initialCharges": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/InitialCharge"
+      }
+    },
+    "ongoingCharges": {
+      "$ref": "#/$defs/OngoingCharges"
+    },
+    "calculationsAfterEachPeriod": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/CalculationsAfterEachPeriod"
+      }
+    },
+    "investmentAmount": {
+      "type": "number"
+    },
+    "finalAmount": {
+      "type": "number"
+    },
+    "totalInitialCharges": {
+      "type": "number"
+    },
+    "totalOngoingCharges": {
+      "type": "number"
+    },
+    "totalTransactionCharges": {
+      "type": "number"
+    },
+    "totalCharges": {
+      "type": "number"
+    },
+    "totalChargesPercent": {
+      "type": "number"
+    },
+    "totalGrowth": {
+      "type": "number"
+    },
+    "additionalClientIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "observed values: C06DTYT"
+      }
+    }
+  },
+  "required": ["firmId"],
+  "title": "Illustration",
+  "description": "Illustration as Seccl returns it -- inferred from 7 example(s) in the Postman collection.",
+  "$defs": {
+    "IllustrationCreate": {
+      "type": "object",
+      "properties": {
+        "calculating": {
+          "type": "string",
+          "description": "observed values: ASYNCHRONOUS"
+        },
+        "illustrationName": {
+          "type": "string"
+        },
+        "firmId": {
+          "type": "string",
+          "description": "observed values: SDEMO, SECCI"
+        },
+        "adviserInfo": {
+          "$ref": "#/$defs/AdviserInfo"
+        },
+        "clientInfo": {
+          "$ref": "#/$defs/ClientInfo"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "nodeId": {
+          "type": "string",
+          "description": "observed values: 0, 11, 12"
+        },
+        "planLengthYears": {
+          "type": "number"
+        },
+        "periods": {
+          "type": "number"
+        },
+        "wrapperType": {
+          "type": "string",
+          "description": "observed values: GIA, ISA, PENSION"
+        },
+        "withdrawals": {
+          "$ref": "#/$defs/Withdrawals"
+        },
+        "charges": {
+          "$ref": "#/$defs/Charges"
+        },
+        "periodType": {
+          "type": "string",
+          "description": "observed values: MONTHS, Monthly"
+        },
+        "currency": {
+          "type": "string",
+          "description": "observed values: GBP"
+        },
+        "fees": {
+          "$ref": "#/$defs/Fees"
+        },
+        "otherPlatformHoldings": {
+          "type": "number"
+        },
+        "payments": {
+          "$ref": "#/$defs/Payments"
+        },
+        "transactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Transaction"
+          }
+        },
+        "retirementAge": {
+          "type": "number"
+        },
+        "schemeProductId": {
+          "type": "string",
+          "description": "observed values: 00002"
+        },
+        "modelId": {
+          "type": "string",
+          "description": "observed values: 04926"
+        },
+        "type": {
+          "type": "string",
+          "description": "observed values: SMPI"
+        },
+        "clientId": {
+          "type": "string"
+        },
+        "clientProductId": {
+          "type": "string"
+        },
+        "valuationDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "valuationData": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ValuationData"
+          }
+        },
+        "retirementDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "accountId": {
+          "type": "string"
+        },
+        "period": {
+          "type": "number"
+        },
+        "growthPercentage": {
+          "type": "number"
+        },
+        "illustrationType": {
+          "type": "string",
+          "description": "observed values: Trade"
+        },
+        "additionalClientsInfo": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string",
+                "description": "observed values: Mrs"
+              },
+              "firstName": {
+                "type": "string",
+                "description": "observed values: Joanna"
+              },
+              "surname": {
+                "type": "string",
+                "description": "observed values: Flintstone"
+              },
+              "email": {
+                "type": "string",
+                "description": "observed values: joannaflintstone@example.com"
+              },
+              "dateOfBirth": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "clientType": {
+                "type": "string",
+                "description": "observed values: Individual"
+              },
+              "language": {
+                "type": "string",
+                "description": "observed values: en-GB"
+              }
+            },
+            "required": [
+              "clientType",
+              "dateOfBirth",
+              "email",
+              "firstName",
+              "language",
+              "surname",
+              "title"
+            ]
+          }
+        },
+        "wrapperStatus": {
+          "type": "string",
+          "description": "observed values: DRAWDOWN"
+        },
+        "drawdown": {
+          "type": "object",
+          "properties": {
+            "fundsNotInDrawdown": {
+              "type": "number"
+            },
+            "drawdownMethod": {
+              "type": "string",
+              "description": "observed values: FAD"
+            }
+          },
+          "required": ["drawdownMethod", "fundsNotInDrawdown"]
+        },
+        "salary": {
+          "type": "number"
+        },
+        "salaryGrowth": {
+          "type": "number"
+        }
+      },
+      "required": ["firmId"],
+      "title": "IllustrationCreate",
+      "description": "Body for creating a Illustration -- inferred from 8 example(s) in the Postman collection."
+    },
+    "AdviserInfo": {
+      "type": "object",
+      "properties": {
+        "adviserName": {
+          "type": "string",
+          "description": "observed values: Adviser A, Bob Brian, Jane Adviser, Tom Jones"
+        },
+        "FCANumber": {
+          "type": "string",
+          "description": "observed values: 123123, 12345, 290920, 787291"
+        },
+        "company": {
+          "type": "string"
+        }
+      },
+      "required": ["FCANumber", "adviserName", "company"]
+    },
+    "AssetCharge": {
+      "type": "object",
+      "properties": {
+        "assetId": {
+          "type": "string",
+          "description": "observed values: 286D7, 286D8, 286D9"
+        },
+        "assetName": {
+          "type": "string",
+          "description": "observed values: WH Smith PLC"
+        },
+        "charges": {
+          "type": "array",
+          "items": {}
+        },
+        "totalCharges": {
+          "type": "number"
+        }
+      },
+      "required": ["assetId", "assetName", "charges", "totalCharges"]
+    },
+    "CalculationsAfterEachPeriod": {
+      "type": "object",
+      "properties": {
+        "periodIndex": {
+          "type": "integer"
+        },
+        "currency": {
+          "type": "string",
+          "description": "observed values: GBP"
+        },
+        "openingAmount": {
+          "type": "number"
+        },
+        "growthAmount": {
+          "type": "number"
+        },
+        "ongoingCharges": {
+          "$ref": "#/$defs/OngoingCharges"
+        },
+        "totalCharges": {
+          "type": "number"
+        },
+        "closingAmount": {
+          "type": "number"
+        },
+        "transactionCharges": {
+          "$ref": "#/$defs/TransactionCharges"
+        },
+        "transactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Transaction"
+          }
+        }
+      },
+      "required": [
+        "closingAmount",
+        "currency",
+        "growthAmount",
+        "ongoingCharges",
+        "openingAmount",
+        "periodIndex",
+        "totalCharges",
+        "transactionCharges"
+      ]
+    },
+    "Charges": {
+      "type": "object",
+      "properties": {
+        "tradingCharge": {
+          "type": "boolean"
+        },
+        "platformCharge": {
+          "type": "boolean"
+        },
+        "productCharge": {
+          "type": "boolean"
+        }
+      },
+      "required": ["platformCharge", "productCharge", "tradingCharge"]
+    },
+    "ClientInfo": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "observed values: Mr, Mrs"
+        },
+        "firstName": {
+          "type": "string",
+          "description": "observed values: Barney, Colin, Jake, Wilma"
+        },
+        "surname": {
+          "type": "string",
+          "description": "observed values: Flintstone, Potato, Rubble"
+        },
+        "email": {
+          "type": "string"
+        },
+        "dateOfBirth": {
+          "type": "string"
+        },
+        "clientType": {
+          "type": "string",
+          "description": "observed values: Client, Individual"
+        },
+        "language": {
+          "type": "string",
+          "description": "observed values: en-GB"
+        },
+        "middleName": {
+          "type": "string",
+          "description": "observed values:  "
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "Dealing": {
+      "type": "object",
+      "properties": {
+        "GBP": {
+          "type": "number"
+        }
+      },
+      "required": ["GBP"]
+    },
+    "Fees": {
+      "type": "object",
+      "properties": {
+        "enableTieredCharging": {
+          "type": "boolean"
+        },
+        "initialAdviserCharge": {
+          "$ref": "#/$defs/InitialAdviserCharge"
+        },
+        "initialDiscretionaryManagementCharge": {
+          "$ref": "#/$defs/InitialDiscretionaryManagementCharge"
+        },
+        "adviserCharge": {
+          "type": "number"
+        },
+        "discretionaryManagementCharge": {
+          "type": "number"
+        },
+        "adviserFixedCharge": {
+          "type": "number"
+        },
+        "applyAdviserChargeAcrossPortfolio": {
+          "type": "boolean"
+        },
+        "discretionaryManagementFixedCharge": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "initialAdviserCharge",
+        "initialDiscretionaryManagementCharge"
+      ]
+    },
+    "InitialAdviserCharge": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number"
+        },
+        "percent": {
+          "type": "number"
+        }
+      }
+    },
+    "InitialCharge": {
+      "type": "object",
+      "properties": {
+        "assetId": {
+          "type": "string",
+          "description": "observed values: 286D7, 286D8, 286D9"
+        },
+        "assetName": {
+          "type": "string",
+          "description": "observed values: WH Smith PLC"
+        },
+        "charges": {
+          "type": "array",
+          "items": {}
+        },
+        "totalCharges": {
+          "type": "number"
+        }
+      },
+      "required": ["assetId", "assetName", "charges", "totalCharges"]
+    },
+    "InitialDiscretionaryManagementCharge": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number"
+        }
+      }
+    },
+    "OngoingCharges": {
+      "type": "object",
+      "properties": {
+        "portfolioCharges": {
+          "type": "array",
+          "items": {}
+        },
+        "assetCharges": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AssetCharge"
+          }
+        }
+      },
+      "required": ["assetCharges", "portfolioCharges"]
+    },
+    "PTM": {
+      "type": "object",
+      "properties": {
+        "GBP": {
+          "type": "number"
+        }
+      },
+      "required": ["GBP"]
+    },
+    "Payments": {
+      "type": "object",
+      "properties": {
+        "initialPayment": {
+          "type": "number"
+        },
+        "singlePayments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SinglePayment"
+          }
+        },
+        "regularPayments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RegularPayment"
+          }
+        }
+      },
+      "required": ["initialPayment", "regularPayments", "singlePayments"]
+    },
+    "RegularPayment": {
+      "type": "object",
+      "properties": {
+        "frequency": {
+          "type": "string",
+          "description": "observed values: Monthly"
+        },
+        "fromDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "toDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "paymentAmount": {
+          "type": "number"
+        },
+        "percentageGrowth": {
+          "type": "number"
+        },
+        "movementType": {
+          "type": "string",
+          "description": "observed values: In"
+        },
+        "contributor": {
+          "type": "string",
+          "description": "observed values: Employee, Employer, Personal"
+        }
+      },
+      "required": [
+        "frequency",
+        "fromDate",
+        "movementType",
+        "paymentAmount",
+        "percentageGrowth",
+        "toDate"
+      ]
+    },
+    "RegularWithdrawal": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "percentageGrowth": {
+          "type": "number"
+        },
+        "frequency": {
+          "type": "string",
+          "description": "observed values: Monthly"
+        },
+        "type": {
+          "type": "string",
+          "description": "observed values: FAD"
+        }
+      },
+      "required": ["amount", "date", "frequency", "percentageGrowth"]
+    },
+    "SinglePayment": {
+      "type": "object",
+      "properties": {
+        "paymentDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "paymentAmount": {
+          "type": "number"
+        },
+        "contributor": {
+          "type": "string",
+          "description": "observed values: Employee, Employer, Transfer"
+        },
+        "movementType": {
+          "type": "string",
+          "description": "observed values: In"
+        }
+      },
+      "required": [
+        "contributor",
+        "movementType",
+        "paymentAmount",
+        "paymentDate"
+      ]
+    },
+    "SingleWithdrawal": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "type": {
+          "type": "string",
+          "description": "observed values: PCLS"
+        }
+      },
+      "required": ["amount", "date"]
+    },
+    "Stamp": {
+      "type": "object",
+      "properties": {
+        "GBP": {
+          "type": "number"
+        }
+      },
+      "required": ["GBP"]
+    },
+    "Total": {
+      "type": "object",
+      "properties": {
+        "GBP": {
+          "type": "number"
+        }
+      },
+      "required": ["GBP"]
+    },
+    "Transaction": {
+      "type": "object",
+      "properties": {
+        "assetId": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "currency": {
+          "type": "string",
+          "description": "observed values: GBP"
+        },
+        "percentage": {
+          "type": "number"
+        }
+      },
+      "required": ["assetId", "currency"]
+    },
+    "TransactionCharges": {
+      "type": "object",
+      "properties": {
+        "Stamp": {
+          "$ref": "#/$defs/Stamp"
+        },
+        "Dealing": {
+          "$ref": "#/$defs/Dealing"
+        },
+        "PTM": {
+          "$ref": "#/$defs/PTM"
+        },
+        "total": {
+          "$ref": "#/$defs/Total"
+        }
+      },
+      "required": ["Dealing", "PTM", "Stamp", "total"]
+    },
+    "ValuationData": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "type": "string"
+        },
+        "startValuation": {
+          "type": "number"
+        }
+      },
+      "required": ["accountId", "startValuation"]
+    },
+    "Withdrawals": {
+      "type": "object",
+      "properties": {
+        "singleWithdrawals": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SingleWithdrawal"
+          }
+        },
+        "regularWithdrawals": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RegularWithdrawal"
+          }
+        }
+      },
+      "required": ["regularWithdrawals", "singleWithdrawals"]
+    }
+  }
+}

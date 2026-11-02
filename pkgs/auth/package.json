@@ -1,0 +1,23 @@
+{
+	"name": "@graphene/auth",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"exports": {
+		".": "./src/index.ts",
+		"./page-view": "./src/page-view.ts"
+	},
+	"scripts": {
+		"lint": "eslint .",
+		"test": "vitest run"
+	},
+	"dependencies": {
+		"@workos-inc/node": "^10.13.0"
+	},
+	"devDependencies": {
+		"@graphene/config": "workspace:*",
+		"eslint": "^9.39.5",
+		"typescript": "^5.9.3",
+		"vitest": "^4.1.11"
+	}
+}

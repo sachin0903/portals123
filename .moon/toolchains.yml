@@ -1,0 +1,7 @@
+# https://moonrepo.dev/docs/config/toolchain
+# Optional. Enables the JS/TS toolchains; versions are inherited from .prototools.
+# The Python side runs as plain `uv` command-tasks (moon's python toolchain is
+# still flagged unstable in v2), so it is intentionally not enabled here.
+javascript: {}
+node: {}
+pnpm: {}

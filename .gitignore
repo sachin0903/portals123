@@ -1,0 +1,73 @@
+# Node / JS
+node_modules/
+.svelte-kit/
+build/
+dist/
+*.tsbuildinfo
+.vite/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# moon
+.moon/cache/
+.moon/docker/
+# Generated git hooks: `moon sync vcs-hooks` writes these from the `vcs.hooks` block in
+# workspace.yml and marks them DO NOT MODIFY. Not committed, because the thing a fresh clone
+# actually needs is `core.hooksPath` pointing here — which is local git config, so the sync has to
+# run per clone regardless (the root `prepare` script does it), and that same run writes the files.
+.moon/hooks/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+# The generated Coolify environment list — real credentials for a real deployment, produced by
+# `docs/deployment-env.md`'s procedure and pasted into Coolify's UI. Never a tracked file: the
+# whole point of the one-list model is that the list lives in Coolify, not in the repo.
+/coolify.env
+
+# Generated locally by the client-drift check (CI writes it transiently)
+apps/api/openapi.json
+
+# Coverage / misc
+coverage/
+.DS_Store
+*.log
+
+# Vite temp config files
+*.timestamp-*.mjs
+
+# Local analytical data files (DuckDB) — never commit; large + client data.
+# The ONE exception is docs/seccl.duckdb: a small, ANONYMISED, downsampled dev
+# fixture (built by apps/api/scripts/anonymise_seccl.py). NEVER put real client
+# data at that path — keep real extracts as *.real.duckdb (still ignored) or
+# point LAKE_SECCL_PATH elsewhere.
+*.duckdb
+*.duckdb.wal
+!docs/seccl.duckdb
+.data/
+
+platform-main/
+aml-idv-internal/
+
+# E2E / Playwright captured auth state — these hold LIVE sealed WorkOS session
+# cookies (Fe26.2*...). Never commit: they are working credentials.
+*-state.json
+client-state.json
+platform-state.json
+
+# LibreOffice writes one of these beside any tracked .docx it has open (there are two in
+# docs/morgan-lloyd/). A stale one outlives the editor and is never worth committing.
+.~lock.*#
+
+# Local pnpm content-addressed store (created when a clone uses a workspace-local store).
+.pnpm-store/
+
+# Local Claude/Cursor skill copies — not product source.
+.claude/

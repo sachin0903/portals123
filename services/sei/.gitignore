@@ -1,0 +1,4 @@
+.interlace/
+# Local landing zone for `sei-sync pull --local-dir` development runs. Real SEI
+# drops contain client data and the PGP key material never belongs in the tree.
+.data/

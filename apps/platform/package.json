@@ -1,0 +1,44 @@
+{
+	"name": "@graphene/platform",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "vite dev",
+		"build": "vite build",
+		"preview": "vite preview",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"lint": "eslint .",
+		"format": "prettier --check .",
+		"test": "vitest run"
+	},
+	"dependencies": {
+		"@dagrejs/dagre": "^3.1.1",
+		"@graphene/api-client": "workspace:*",
+		"@graphene/auth": "workspace:*",
+		"@graphene/rum": "workspace:*",
+		"@graphene/ui": "workspace:*",
+		"@lucide/svelte": "^1.47.0",
+		"@workos-inc/node": "^10.13.0",
+		"@xyflow/svelte": "^1.6.6",
+		"grapesjs": "^0.23.6",
+		"grapesjs-blocks-basic": "^1.0.2",
+		"write-excel-file": "4.1.1"
+	},
+	"devDependencies": {
+		"@graphene/config": "workspace:*",
+		"@sveltejs/adapter-node": "^5.5.7",
+		"@sveltejs/kit": "^2.70.2",
+		"@sveltejs/vite-plugin-svelte": "^7.3.0",
+		"@tailwindcss/vite": "^4.3.3",
+		"@types/node": "^24.13.5",
+		"eslint": "^9.39.5",
+		"fflate": "^0.8.3",
+		"svelte": "^5.57.0",
+		"svelte-check": "^4.7.6",
+		"tailwindcss": "^4.3.3",
+		"typescript": "^5.9.3",
+		"vite": "^8.3.4",
+		"vitest": "^4.1.11"
+	}
+}

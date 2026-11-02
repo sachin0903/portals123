@@ -1,0 +1,6 @@
+.svelte-kit/
+build/
+*.timestamp-*.mjs
+src/lib/vendor/
+# Static assets are served as-is (mock document fixtures, etc.).
+static/

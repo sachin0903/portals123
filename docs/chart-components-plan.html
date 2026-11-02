@@ -1,0 +1,961 @@
+<title>Saved Charts & Custom Code</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+/>
+
+<style>
+  /* ─────────────────────────────────────────────────────────────────────────
+	   Palette taken from the thing being planned: these are the literal chrome
+	   constants in app/render/charts.py — the grid hairline, the axis grey, the
+	   text slate, and DEFAULT_PALETTE[0] as the accent.
+	   ───────────────────────────────────────────────────────────────────────── */
+  :root {
+    --ground: #fbfcfd;
+    --raised: #ffffff;
+    --ink: #1e293b;
+    --ink-soft: #475569;
+    --muted: #64748b;
+    --grid: #e9eef3; /* _GRID, a touch stronger for screen */
+    --axis: #cbd5e1; /* _AXIS */
+    --accent: #0f766e; /* DEFAULT_PALETTE[0] */
+    --accent-soft: #e6f2f0;
+    --caution: #b45309;
+    --caution-soft: #fdf4e7;
+    --code-bg: #f4f7f9;
+    --shadow:
+      0 1px 2px rgba(15, 23, 42, 0.05), 0 8px 24px -18px rgba(15, 23, 42, 0.28);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0e1418;
+      --raised: #141c22;
+      --ink: #e3ebf2;
+      --ink-soft: #b8c7d4;
+      --muted: #8397a8;
+      --grid: #222e38;
+      --axis: #354653;
+      --accent: #4dbfae;
+      --accent-soft: #122b28;
+      --caution: #e0a256;
+      --caution-soft: #2b2015;
+      --code-bg: #101820;
+      --shadow:
+        0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px -18px rgba(0, 0, 0, 0.8);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #0e1418;
+    --raised: #141c22;
+    --ink: #e3ebf2;
+    --ink-soft: #b8c7d4;
+    --muted: #8397a8;
+    --grid: #222e38;
+    --axis: #354653;
+    --accent: #4dbfae;
+    --accent-soft: #122b28;
+    --caution: #e0a256;
+    --caution-soft: #2b2015;
+    --code-bg: #101820;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px -18px rgba(0, 0, 0, 0.8);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family:
+      "IBM Plex Sans",
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 61rem;
+    margin: 0 auto;
+    padding: clamp(2.5rem, 6vw, 5rem) clamp(1.25rem, 5vw, 3rem) 6rem;
+  }
+
+  /* ── masthead ─────────────────────────────────────────────────────────── */
+  .masthead {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding-bottom: 2.25rem;
+    border-bottom: 2px solid var(--axis);
+  }
+
+  .kicker {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  h1 {
+    font-family: "Spectral", Georgia, "Times New Roman", serif;
+    font-size: clamp(2.1rem, 5.2vw, 3.1rem);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .standfirst {
+    max-width: 46rem;
+    font-size: 1.075rem;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  .meta b {
+    font-weight: 500;
+    color: var(--ink-soft);
+  }
+
+  /* ── at a glance ──────────────────────────────────────────────────────── */
+  .glance {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: 1rem;
+    margin: 2.5rem 0 0;
+  }
+
+  .card {
+    background: var(--raised);
+    border: 1px solid var(--grid);
+    border-top: 3px solid var(--accent);
+    border-radius: 3px;
+    padding: 1.25rem 1.35rem 1.35rem;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .card.is-guarded {
+    border-top-color: var(--caution);
+  }
+
+  .card h3 {
+    font-family: "Spectral", Georgia, serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.25;
+  }
+
+  .card p {
+    margin: 0;
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+  }
+
+  .facts {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.4rem 1rem;
+    margin: 0;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--grid);
+    font-size: 0.82rem;
+  }
+
+  .facts dt {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-top: 0.15rem;
+  }
+
+  .facts dd {
+    margin: 0;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ── sections ─────────────────────────────────────────────────────────── */
+  section {
+    margin-top: 4rem;
+  }
+
+  .sec-head {
+    display: grid;
+    grid-template-columns: 2.75rem 1fr;
+    align-items: baseline;
+    gap: 0 0.75rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--axis);
+    margin-bottom: 1.75rem;
+  }
+
+  /* The numerals are real: §3 is about the order these are built in. */
+  .sec-num {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+
+  h2 {
+    font-family: "Spectral", Georgia, serif;
+    font-size: clamp(1.5rem, 3vw, 1.85rem);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  h3 {
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 2.5rem 0 0.9rem;
+  }
+
+  .body {
+    max-width: 40rem;
+  }
+
+  p,
+  ul,
+  ol {
+    margin: 0 0 1.1rem;
+  }
+
+  .body > *:last-child {
+    margin-bottom: 0;
+  }
+
+  ul,
+  ol {
+    padding-left: 1.35rem;
+  }
+
+  li {
+    margin-bottom: 0.55rem;
+  }
+
+  li::marker {
+    color: var(--axis);
+  }
+
+  strong {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  em {
+    font-style: italic;
+    color: var(--ink-soft);
+  }
+
+  a {
+    color: var(--accent);
+    text-underline-offset: 2px;
+  }
+
+  code {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.855em;
+    background: var(--code-bg);
+    border: 1px solid var(--grid);
+    border-radius: 2px;
+    padding: 0.08em 0.34em;
+    color: var(--ink);
+    word-break: break-word;
+  }
+
+  pre {
+    margin: 0 0 1.35rem;
+    background: var(--code-bg);
+    border: 1px solid var(--grid);
+    border-left: 3px solid var(--axis);
+    border-radius: 2px;
+    padding: 1rem 1.15rem;
+    overflow-x: auto;
+  }
+
+  pre code {
+    background: none;
+    border: 0;
+    padding: 0;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    white-space: pre;
+  }
+
+  .pre-label {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 0.45rem;
+  }
+
+  /* ── callout: a decision, sat against an axis rule ────────────────────── */
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: var(--accent-soft);
+    padding: 1.05rem 1.25rem;
+    margin: 0 0 1.35rem;
+    border-radius: 0 2px 2px 0;
+  }
+
+  .callout.is-caution {
+    border-left-color: var(--caution);
+    background: var(--caution-soft);
+  }
+
+  .callout p:last-child {
+    margin-bottom: 0;
+  }
+
+  .callout-label {
+    display: block;
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.66rem;
+    font-weight: 500;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.4rem;
+  }
+
+  .callout.is-caution .callout-label {
+    color: var(--caution);
+  }
+
+  /* ── tables ───────────────────────────────────────────────────────────── */
+  .table-wrap {
+    overflow-x: auto;
+    margin: 0 0 1.35rem;
+    border: 1px solid var(--grid);
+    border-radius: 2px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    background: var(--raised);
+  }
+
+  th,
+  td {
+    text-align: left;
+    padding: 0.62rem 0.9rem;
+    border-bottom: 1px solid var(--grid);
+    vertical-align: top;
+  }
+
+  thead th {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.66rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--code-bg);
+    white-space: nowrap;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  td:first-child {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.78rem;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  .estimate {
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    padding: 0.7rem 0 0;
+    border-top: 1px solid var(--grid);
+  }
+
+  /* ── open questions ───────────────────────────────────────────────────── */
+  .questions {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .questions li {
+    margin: 0;
+    padding-left: 1.5rem;
+    border-left: 2px solid var(--axis);
+  }
+
+  .questions .q {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+
+  .questions .a {
+    display: block;
+    color: var(--ink-soft);
+    font-size: 0.94rem;
+  }
+
+  footer {
+    margin-top: 4.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--grid);
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  @media (max-width: 34rem) {
+    .sec-head {
+      grid-template-columns: 1fr;
+      gap: 0.3rem;
+    }
+  }
+</style>
+
+<div class="page">
+  <header class="masthead">
+    <p class="kicker">Template editor · build plan</p>
+    <h1>Saved Charts &amp; Custom Code</h1>
+    <p class="standfirst">
+      Two requests from the template editor, written up before either is built.
+      They look like one feature and are not: the first is
+      <strong>storage and reuse</strong> of a configuration this editor already
+      produces, the second is <strong>a second renderer</strong> for shapes it
+      cannot produce at all.
+    </p>
+    <div class="meta">
+      <span><b>Status</b> Neither started</span>
+      <span><b>Repo</b> portals</span>
+      <span><b>Read as</b> the thing to argue with</span>
+    </div>
+  </header>
+
+  <div class="glance">
+    <article class="card">
+      <h3>1 · Saved components</h3>
+      <p>
+        Configure a chart once, save it as a named firm component, drop it
+        preconfigured into any template.
+      </p>
+      <dl class="facts">
+        <dt>Effort</dt>
+        <dd>1–2 days</dd>
+        <dt>Risk</dt>
+        <dd>Low — reuses the dataset CRUD shape</dd>
+        <dt>Blocked on</dt>
+        <dd>Nothing</dd>
+      </dl>
+    </article>
+    <article class="card is-guarded">
+      <h3>2 · Custom chart code</h3>
+      <p>
+        Code that defines the <em>marks</em>. The chart binds its dataset like
+        any other; the engine keeps the data, the scales and the chrome.
+      </p>
+      <dl class="facts">
+        <dt>Effort</dt>
+        <dd>2–3 days</dd>
+        <dt>Risk</dt>
+        <dd>Moderate — it emits SVG</dd>
+        <dt>Blocked on</dt>
+        <dd>Nothing</dd>
+      </dl>
+    </article>
+  </div>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">00</span>
+      <h2>What exists today, so the plan can be read against it</h2>
+    </div>
+    <div class="body">
+      <p>
+        A chart or table in a template is a <code>&lt;div&gt;</code> carrying
+        <code>data-comp-*</code> attributes (<code>editor/marker-attrs.ts</code>
+        lists every one). The config drawer edits a draft of those attributes
+        and commits them in one <code>addAttributes</code> call.
+      </p>
+      <p>
+        On save, <code>serialize.ts</code> reads them into
+        <code>schema.components[]</code> —
+        <code>{ id, type, props, binding }</code> — stored as opaque
+        <code>jsonb</code> on <code>documents.template_versions.schema</code>.
+        On render, <code>app/render/components.py</code> matches each
+        <code>&lt;g-chart&gt;</code> marker to its component by
+        <code>data-id</code> and calls <code>charts.py::render_chart_svg</code>.
+      </p>
+      <p>Two facts constrain everything below.</p>
+      <ul>
+        <li>
+          <strong
+            >A component's configuration is already a self-contained JSON
+            object.</strong
+          >
+          Nothing needs inventing to store one.
+        </li>
+        <li>
+          <strong>WeasyPrint has no JavaScript engine.</strong> The PDF is built
+          from static SVG. Any &ldquo;custom chart&rdquo; is authored SVG, or it
+          does not reach a document.
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <h2>Saved components</h2>
+    </div>
+    <div class="body">
+      <p>
+        An author configures a chart once — the firm's colours, its typography,
+        its figure format, its grid — and saves it as a named component. It
+        appears in the block palette, and dropping it produces a chart already
+        configured that way.
+      </p>
+
+      <h3>Shape</h3>
+      <p class="pre-label">migrations/sql/0128_component_presets.sql</p>
+      <pre><code>CREATE TABLE documents.component_presets (
+    id          int         PRIMARY KEY GENERATED BY DEFAULT AS IDENTITY,
+    uid         text        NOT NULL UNIQUE,
+    tenant_id   int         NOT NULL REFERENCES auth.tenants(id) ON DELETE CASCADE,
+    code        text        NOT NULL,
+    name        text        NOT NULL,
+    kind        text        NOT NULL,   -- 'chart' | 'table'
+    config      jsonb       NOT NULL,   -- the data-comp-* map, verbatim
+    description text,
+    archived_at timestamptz,
+    created_by  uuid        NOT NULL REFERENCES auth.users(id),
+    created_at  timestamptz NOT NULL DEFAULT now(),
+    UNIQUE (tenant_id, code)
+);</code></pre>
+      <p>
+        RLS in the same migration, like every tenant-scoped table. Reuses
+        <code>templates:read</code> / <code>templates:write</code> — a preset is
+        a piece of template authoring, and a firm that can edit templates can
+        already produce the identical result by hand. No new permission.
+      </p>
+
+      <h3>The one decision that matters</h3>
+      <div class="callout">
+        <span class="callout-label">Decision · copy, not link</span>
+        <p>
+          A preset is <strong>copied</strong> into the template on drop. It is
+          not a live reference.
+        </p>
+      </div>
+      <p>
+        The alternative — editing a preset updates every chart already using it
+        — sounds better and is a trap. A template version is
+        <strong>immutable once published</strong>, and documents already
+        generated from it are regulated records. A live link would mean either a
+        published version's appearance can change under it, or the link silently
+        stops applying at publish: two behaviours for one concept. Copy has
+        neither problem, and &ldquo;update every chart&rdquo; can be added later
+        as an explicit, opt-in bulk action.
+      </p>
+      <p>
+        Say it in the UI, once, where the preset is saved:
+        <em
+          >&ldquo;Charts already using this keep the settings they were
+          given.&rdquo;</em
+        >
+      </p>
+
+      <h3>What a preset does not carry</h3>
+      <p>
+        The data source, dataset uid and field bindings. A preset is
+        <strong>appearance</strong>, not data: the same look on a different
+        dataset is the whole point, and a preset that dragged a dataset in with
+        it would break the moment it landed in a template that has not linked
+        it. The save dialog strips them and says so.
+      </p>
+      <p>
+        Debatable: the title and axis labels. They are appearance by type and
+        data by nature (&ldquo;Fund Value (£)&rdquo; is about the series, not
+        the look). Suggest
+        <strong>keeping</strong> them — a preset for a fund-value chart wanting
+        that label is exactly the case, and an author clears a text box faster
+        than they type one.
+      </p>
+
+      <h3>Work</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Layer</th>
+              <th scope="col">Change</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>DB</td>
+              <td><code>0128_component_presets</code> + RLS</td>
+            </tr>
+            <tr>
+              <td>API</td>
+              <td>
+                <code>routers/component_presets.py</code> — list / create /
+                rename / archive, under
+                <code>templates:*</code>
+              </td>
+            </tr>
+            <tr>
+              <td>Client</td>
+              <td>Regenerate <code>@graphene/api-client</code></td>
+            </tr>
+            <tr>
+              <td>Editor</td>
+              <td>
+                &ldquo;Save as component&rdquo; in the drawer footer; a
+                <strong>Firm components</strong> palette category fed from the
+                API; drop → <code>chartDraftFrom(preset.config)</code>
+              </td>
+            </tr>
+            <tr>
+              <td>Tests</td>
+              <td>
+                Router + RLS; a unit test that a saved preset round-trips to an
+                identical
+                <code>data-comp-*</code> map
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="estimate">
+        Estimate 1–2 days · the dataset CRUD shape with a different payload.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <h2>Custom chart code</h2>
+    </div>
+    <div class="body">
+      <h3>What the code actually defines</h3>
+      <p>Not the chart. The <strong>marks</strong>.</p>
+      <p>
+        An earlier draft of this section had the author writing the whole SVG
+        and looping over the rows themselves. That is the wrong split: it hands
+        them the expensive, risky half — data access, scales, ticks, chrome —
+        which is the half that already works.
+      </p>
+      <p>
+        A custom chart binds a dataset
+        <strong>exactly like every other chart</strong>: the same Data tab, the
+        same field pickers, the same sample-values preview. The code says only
+        how to draw what came back.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">The engine keeps</th>
+              <th scope="col">The code defines</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Fetching rows, resolving the bindings</td>
+              <td>The marks</td>
+            </tr>
+            <tr>
+              <td>The value domain and the nice ticks</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>The plot box, the axes, the gridlines</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Title, legend, typography, background, palette</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout">
+        <span class="callout-label">Consequence</span>
+        <p>
+          <strong
+            >Every control in the Appearance panel still applies to a custom
+            chart.</strong
+          >
+          The colour pickers, the grid colour, the typography, the background —
+          all of it is still
+          <code>charts.py</code>, so a custom chart is a chart, not a foreign
+          object bolted into the page.
+        </p>
+      </div>
+
+      <h3>The context handed in</h3>
+      <p>
+        <code>series</code> (the projected values, per series),
+        <code>labels</code>, <code>x(i)</code> and <code>y(value)</code> — the
+        scale functions the engine already computed — <code>palette</code>, and
+        the plot rectangle. Deliberately <strong>no <code>rows</code></strong
+        >: everything the drawing needs is a number or a label that was going to
+        be drawn anyway, and withholding the raw records means the drawing layer
+        has no reach into the dataset at all.
+      </p>
+      <p class="pre-label">a waterfall, in full</p>
+      <pre><code>{# Each bar starts where the last one ended. #}
+{% set ns = namespace(base=0) %}
+{% for v in series[0] %}
+  &lt;rect x="{{ x(loop.index0) - 12 }}" width="24"
+        y="{{ y(ns.base + v if v &gt; 0 else ns.base) }}"
+        height="{{ (y(0) - y(v))|abs }}"
+        fill="{{ palette[0 if v &gt; 0 else 1] }}"/&gt;
+  {% set ns.base = ns.base + v %}
+{% endfor %}</code></pre>
+      <p>
+        Ten lines, because the engine has already done everything around it.
+      </p>
+
+      <h3>What this reaches, and what it does not</h3>
+      <p>
+        <strong>Does:</strong> anything that is marks in a normal x/y plot —
+        waterfall, bullet, candlestick, dumbbell, stepped line, range band,
+        target markers.
+      </p>
+      <p>
+        <strong>Does not:</strong> anything with its own geometry — a gauge, a
+        radar, a sankey. Those need to own the whole canvas, which is the
+        expensive version this section used to describe. If one of those is the
+        actual requirement, it is a separate decision and a separate estimate.
+      </p>
+
+      <h3>Security, now much smaller</h3>
+      <p>
+        Two of the three worries went with the row access. What remains is that
+        the code emits markup.
+      </p>
+      <ul>
+        <li>
+          <strong>SVG is not inert.</strong> <code>&lt;script&gt;</code>,
+          <code>&lt;foreignObject&gt;</code>,
+          <code>&lt;image href&gt;</code> and <code>&lt;use href&gt;</code> are
+          live in a browser context, and the editor preview renders in the
+          author's own session. An allowlist still applies on save and on render
+          — but it now guards a
+          <strong>fragment confined to the plot layer</strong>, not a whole
+          document, so it is short: shapes, paths, text, <code>g</code>, and
+          their geometry and paint attributes.
+        </li>
+        <li>
+          <strong>No external references.</strong> An <code>href</code> to
+          anything off-box is an outbound request from the render worker.
+          Refused, not proxied — the
+          <code>AUTOMATION_LOOKUP_ENDPOINTS</code> posture.
+        </li>
+        <li>
+          <strong>Jinja</strong> runs in a
+          <code>SandboxedEnvironment</code> with no loader, a statement and loop
+          budget, and a wall-clock deadline (<code>app/flows/ai.py</code> sets
+          the pattern). The context is six names, so there is very little to
+          reach out of.
+        </li>
+      </ul>
+
+      <h3>The preview</h3>
+      <p>
+        The editor cannot evaluate Jinja — TypeScript against a Python worker —
+        and the chart contract test exists precisely because
+        <strong>the preview must not lie about the PDF</strong>. So a custom
+        chart's preview is <strong>server-rendered</strong>, debounced, through
+        the endpoint that already renders server-side. One implementation, no
+        drift. The chrome is identical on both sides by construction, since
+        neither side draws it from the author's code.
+      </p>
+
+      <h3>Work</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Layer</th>
+              <th scope="col">Change</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>API</td>
+              <td>
+                <code>render/custom_marks.py</code> — sandboxed Jinja over the
+                projected context, SVG allowlist on the emitted fragment
+              </td>
+            </tr>
+            <tr>
+              <td>API</td>
+              <td>
+                A validation endpoint; a refusal names the offending element or
+                attribute, never a generic failure
+              </td>
+            </tr>
+            <tr>
+              <td>Render</td>
+              <td>
+                <code>charts.py</code> exposes its scales and plot box, and
+                drops the fragment into the series layer
+              </td>
+            </tr>
+            <tr>
+              <td>DB</td>
+              <td>
+                None — it is a <code>data-comp-*</code> attribute like every
+                other
+              </td>
+            </tr>
+            <tr>
+              <td>Editor</td>
+              <td>
+                A <code>custom</code> chart type; a code pane in the drawer
+                (CodeMirror is already there for the code view); server-side
+                preview
+              </td>
+            </tr>
+            <tr>
+              <td>Tests</td>
+              <td>
+                The allowlist element by element; a sandbox-escape battery;
+                budget and deadline; a refusal that names the node
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="estimate">
+        Estimate 2–3 days · down from 4–6, because the data half is gone and the
+        allowlist now covers a fragment rather than a document.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <h2>Order</h2>
+    </div>
+    <div class="body">
+      <p>
+        Build <strong>1 first</strong>, and not only because it is smaller.
+        Saved components is a large fraction of what custom code is being asked
+        for: a chunk of &ldquo;we need more chart shapes&rdquo; turns out to be
+        &ldquo;we need the same chart, configured the way we always configure
+        it, without doing it by hand each time&rdquo;. Ship presets, watch which
+        shapes are still genuinely missing, and let that decide what custom code
+        has to support.
+      </p>
+      <p>
+        They also compose. A custom chart is worth saving as a preset far more
+        than a built-in one is, since it carries authored code rather than a
+        handful of switches.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <span class="sec-num">04</span>
+      <h2>Open questions</h2>
+    </div>
+    <div class="body">
+      <ul class="questions">
+        <li>
+          <span class="q">Do presets belong to the firm only?</span>
+          <span class="a"
+            >Or should Graphene ship a starter set, the way it does for datasets
+            (<code>0152_dataset_catalogue</code>)? A platform-provided set
+            answers &ldquo;what good looks like&rdquo; on day one for a firm
+            with no templates yet.</span
+          >
+        </li>
+        <li>
+          <span class="q"
+            >Should a preset carry a dataset binding after all?</span
+          >
+          <span class="a"
+            >For a firm whose charts all read the same dataset. Suggest no for
+            v1 — it is addable later, and the reverse is not.</span
+          >
+        </li>
+        <li>
+          <span class="q"
+            >Is custom chart code firm-authored, or Graphene-authored on a
+            firm's behalf?</span
+          >
+          <span class="a"
+            >Less pivotal than it was — with row access gone the surface is
+            small either way — but it decides whether the code pane ships to
+            every firm or sits behind an operations flag, the
+            <code>flows.ai_tenants</code> posture.</span
+          >
+        </li>
+        <li>
+          <span class="q">Is a gauge or a radar actually wanted?</span>
+          <span class="a"
+            >Neither is marks in an x/y plot, so neither is reachable through
+            this hook. If one of them is the real requirement, say so before §2
+            is built — it is a different feature with a different
+            estimate.</span
+          >
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    docs/chart-components-plan.md · nothing in this plan is built yet
+  </footer>
+</div>

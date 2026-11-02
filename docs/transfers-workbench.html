@@ -1,0 +1,1335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Transfers workbench · Graphene</title>
+</head>
+<body>
+<!--ARTIFACT-START-->
+<style>
+  /* ============ tokens (extends the app's achromatic zinc system) ============ */
+  :root{
+    --ground:#FAFAFA;        /* near-white paper */
+    --surface:#FFFFFF;       /* cards */
+    --surface-2:#F4F4F5;     /* muted panels, table head */
+    --ink:#18181B;           /* text — zinc-900 ≈ oklch(.145 0 0) */
+    --ink-2:#52525B;         /* muted text — zinc-600 */
+    --ink-3:#A1A1AA;         /* faint — zinc-400 */
+    --line:#E4E4E7;          /* borders — zinc-200 ≈ oklch(.922 0 0) */
+    --line-2:#D4D4D8;        /* stronger hairline */
+
+    --live:#2540D8;          /* the one chromatic signal: in-transit / active */
+    --live-bg:#EEF0FE;
+    --break:#DC2626;         /* settlement red — matches destructive */
+    --break-bg:#FEF2F2;
+    --warn:#B45309;          /* stalled / at-risk (used sparingly) */
+    --warn-bg:#FEF6E7;
+    --done:#18181B;          /* settled = solid ink stamp */
+
+    --radius:0.625rem;       /* 10px — the app's radius */
+    --radius-sm:0.4375rem;
+    --radius-xs:0.3125rem;
+
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,"SF Mono","Cascadia Mono","Roboto Mono",Menlo,Consolas,"Liberation Mono",monospace;
+
+    --shadow:0 1px 2px rgba(24,24,27,.04),0 1px 3px rgba(24,24,27,.06);
+    --shadow-lg:0 8px 24px -8px rgba(24,24,27,.18),0 2px 6px rgba(24,24,27,.06);
+  }
+
+  *,*::before,*::after{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;background:var(--ground);color:var(--ink);
+    font-family:var(--sans);font-size:14px;line-height:1.5;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  }
+  h1,h2,h3,p,ul,figure{margin:0;}
+  ul{list-style:none;padding:0;}
+  button{font-family:inherit;font-size:inherit;cursor:pointer;color:inherit;}
+  :focus-visible{outline:2px solid var(--live);outline-offset:2px;border-radius:var(--radius-xs);}
+
+  .mono{font-family:var(--mono);font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;}
+  .num{font-family:var(--mono);font-variant-numeric:tabular-nums;}
+  .eyebrow{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--ink-3);font-weight:500;
+  }
+
+  /* ============ masthead ============ */
+  .mast{
+    display:flex;align-items:center;gap:20px;
+    padding:0 24px;height:56px;
+    background:var(--surface);border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:40;
+  }
+  .brand{display:flex;align-items:center;gap:10px;flex:0 0 auto;}
+  .brand svg{display:block;}
+  .brand .wm{font-family:var(--mono);font-weight:600;letter-spacing:.04em;font-size:13px;}
+  .brand .wm b{color:var(--ink);}
+  .brand .wm span{color:var(--ink-3);}
+  .mast .scope{
+    font-family:var(--mono);font-size:11px;color:var(--ink-2);
+    border:1px solid var(--line);border-radius:999px;padding:3px 10px;
+    display:inline-flex;align-items:center;gap:7px;
+  }
+  .mast .scope::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--live);}
+  .search{flex:1 1 auto;display:flex;align-items:center;gap:8px;max-width:420px;
+    background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius-sm);
+    padding:7px 11px;color:var(--ink-2);}
+  .search svg{flex:0 0 auto;color:var(--ink-3);}
+  .search input{border:0;background:transparent;outline:none;width:100%;
+    font-family:var(--mono);font-size:12px;color:var(--ink);}
+  .search input::placeholder{color:var(--ink-3);}
+  .mast .asof{margin-left:auto;text-align:right;flex:0 0 auto;}
+  .mast .asof .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--ink-3);text-transform:uppercase;}
+  .mast .asof .v{font-family:var(--mono);font-size:12px;color:var(--ink-2);}
+
+  /* ============ layout ============ */
+  main{max-width:1320px;margin:0 auto;padding:22px 24px 64px;display:flex;flex-direction:column;gap:18px;}
+
+  /* ============ settlement board ============ */
+  .board{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+  .board-head{display:flex;align-items:baseline;justify-content:space-between;padding:16px 18px 4px;}
+  .board-head h2{font-size:13px;font-weight:600;letter-spacing:-.01em;display:flex;align-items:center;gap:10px;}
+  .board-head .sub{color:var(--ink-2);font-size:12px;}
+
+  /* flow ribbon — the thesis: where money is pooling across the saga */
+  .ribbon{display:flex;align-items:stretch;gap:0;padding:8px 18px 18px;overflow-x:auto;}
+  .stage{
+    flex:1 1 0;min-width:96px;position:relative;
+    display:flex;flex-direction:column;gap:7px;padding:0 4px;
+    background:none;border:0;text-align:left;
+  }
+  .stage .cap{display:flex;align-items:baseline;gap:6px;}
+  .stage .cnt{font-family:var(--mono);font-size:20px;font-weight:600;letter-spacing:-.02em;line-height:1;color:var(--ink-3);}
+  .stage.has .cnt{color:var(--ink);}
+  .stage.live .cnt{color:var(--live);}
+  .stage.brk .cnt{color:var(--break);}
+  .stage .amt{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);}
+  .stage.has .amt{color:var(--ink-2);}
+  /* the rail line + node */
+  .stage .track{position:relative;height:14px;display:flex;align-items:center;}
+  .stage .track::before{content:"";position:absolute;left:0;right:0;height:2px;background:var(--line-2);}
+  .stage:first-child .track::before{left:50%;}
+  .stage:last-child .track::before{right:50%;}
+  .stage .node{position:relative;z-index:1;width:11px;height:11px;border-radius:50%;
+    background:var(--surface);border:2px solid var(--line-2);margin-left:0;}
+  .stage.has .node{border-color:var(--ink);}
+  .stage.live .node{border-color:var(--live);background:var(--live);box-shadow:0 0 0 4px var(--live-bg);}
+  .stage.brk .node{border-color:var(--break);background:var(--break);box-shadow:0 0 0 4px var(--break-bg);}
+  .stage .lbl{font-size:11px;color:var(--ink-2);line-height:1.25;}
+  .stage .code{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--ink-3);text-transform:uppercase;margin-top:1px;}
+  .stage{cursor:pointer;border-radius:var(--radius-sm);transition:background .12s;}
+  .stage:hover{background:var(--surface-2);}
+  .stage[aria-pressed="true"]{background:var(--live-bg);}
+  .stage[aria-pressed="true"] .lbl{color:var(--ink);}
+
+  .stats{display:flex;gap:0;border-top:1px solid var(--line);}
+  .stat{flex:1 1 0;padding:13px 18px;display:flex;flex-direction:column;gap:3px;border-right:1px solid var(--line);}
+  .stat:last-child{border-right:0;}
+  .stat .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);}
+  .stat .v{font-family:var(--mono);font-size:19px;font-weight:600;letter-spacing:-.02em;}
+  .stat .meta{font-size:11px;color:var(--ink-2);}
+  .stat.alarm .v{color:var(--break);}
+  .stat.warn .v{color:var(--warn);}
+
+  /* ============ work area ============ */
+  .work{display:grid;grid-template-columns:minmax(0,1.32fr) minmax(0,1fr);gap:18px;align-items:start;}
+
+  /* queue */
+  .queue{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+  .queue-head{display:flex;align-items:center;gap:14px;padding:13px 16px;border-bottom:1px solid var(--line);}
+  .queue-head h2{font-size:13px;font-weight:600;}
+  .tabs{display:flex;gap:2px;margin-left:auto;background:var(--surface-2);border-radius:var(--radius-sm);padding:3px;}
+  .tab{border:0;background:none;padding:5px 12px;border-radius:var(--radius-xs);font-size:12px;font-weight:500;color:var(--ink-2);display:flex;align-items:center;gap:6px;}
+  .tab[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow);}
+  .tab .pill{font-family:var(--mono);font-size:10px;background:var(--break);color:#fff;border-radius:999px;padding:1px 6px;line-height:1.4;}
+  .tab[aria-pressed="true"] .pill{}
+
+  .colhead{display:grid;grid-template-columns:12px minmax(0,1fr) 132px 116px 122px;gap:12px;
+    padding:8px 16px;border-bottom:1px solid var(--line);background:var(--surface-2);}
+  .colhead span{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);}
+  .colhead .r{text-align:right;}
+
+  .rows{max-height:560px;overflow-y:auto;}
+  .row{display:grid;grid-template-columns:12px minmax(0,1fr) 132px 116px 122px;gap:12px;align-items:center;
+    width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);
+    padding:13px 16px;position:relative;transition:background .1s;}
+  .row:hover{background:var(--surface-2);}
+  .row[aria-selected="true"]{background:var(--live-bg);}
+  .row[aria-selected="true"]::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--live);}
+  .row.is-break::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--break);}
+  .row.is-risk::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--warn);}
+  .row[aria-selected="true"].is-break::before,.row[aria-selected="true"].is-risk::before{background:var(--live);}
+
+  .edge{width:8px;height:8px;border-radius:50%;background:var(--line-2);justify-self:center;}
+  .edge.live{background:var(--live);} .edge.break{background:var(--break);}
+  .edge.warn{background:var(--warn);} .edge.done{background:var(--done);} .edge.idle{background:var(--ink-3);}
+
+  .who{min-width:0;}
+  .who .l1{display:flex;align-items:center;gap:9px;}
+  .who .id{font-family:var(--mono);font-size:11px;color:var(--ink-2);}
+  .who .nm{font-size:13px;font-weight:560;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .who .l2{display:flex;align-items:center;gap:8px;margin-top:3px;color:var(--ink-2);font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .route{font-family:var(--mono);font-size:11px;color:var(--ink-2);}
+  .route b{color:var(--ink);font-weight:600;}
+  .route .arr{color:var(--ink-3);margin:0 5px;}
+  .tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-2);
+    border:1px solid var(--line-2);border-radius:var(--radius-xs);padding:1px 5px;}
+
+  /* mini rail */
+  .minirail{display:flex;flex-direction:column;gap:5px;}
+  .mr{display:flex;align-items:center;}
+  .mr i{width:7px;height:7px;border-radius:50%;background:var(--surface);border:1.5px solid var(--line-2);flex:0 0 auto;}
+  .mr s{flex:1 1 auto;height:1.5px;background:var(--line-2);}
+  .mr i.done{background:var(--ink);border-color:var(--ink);}
+  .mr s.done{background:var(--ink);}
+  .mr i.live{background:var(--live);border-color:var(--live);box-shadow:0 0 0 2.5px var(--live-bg);}
+  .mr i.risk{background:var(--warn);border-color:var(--warn);box-shadow:0 0 0 2.5px var(--warn-bg);}
+  .mr i.cur-idle{border-color:var(--ink);}
+  .mr i.broke{background:var(--break);border-color:var(--break);box-shadow:0 0 0 2.5px var(--break-bg);}
+  .mr-meta{font-family:var(--mono);font-size:10px;color:var(--ink-3);}
+  .mr-meta.risk{color:var(--warn);font-weight:600;}
+
+  .val{text-align:right;font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:-.01em;}
+  .val .ccy{color:var(--ink-3);font-weight:400;font-size:11px;}
+
+  .stcell{display:flex;flex-direction:column;align-items:flex-end;gap:4px;}
+  .badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:560;
+    border-radius:999px;padding:2px 9px;border:1px solid transparent;white-space:nowrap;}
+  .badge::before{content:"";width:5px;height:5px;border-radius:50%;}
+  .badge.idle{background:var(--surface-2);color:var(--ink-2);border-color:var(--line);}
+  .badge.idle::before{background:var(--ink-3);}
+  .badge.live{background:var(--live-bg);color:var(--live);}
+  .badge.live::before{background:var(--live);}
+  .badge.done{background:var(--ink);color:#fff;}
+  .badge.done::before{background:#fff;}
+  .badge.break{background:var(--break-bg);color:var(--break);}
+  .badge.break::before{background:var(--break);}
+
+  /* ============ focus panel ============ */
+  .focus{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);position:sticky;top:74px;overflow:hidden;}
+  .focus-empty{padding:64px 28px;text-align:center;color:var(--ink-2);}
+  .focus-empty svg{color:var(--line-2);margin-bottom:14px;}
+  .focus-empty p{font-size:13px;}
+
+  .fhead{padding:16px 18px;border-bottom:1px solid var(--line);}
+  .fhead .top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+  .fhead .id{font-family:var(--mono);font-size:12px;color:var(--ink-2);}
+  .fhead h2{font-size:17px;font-weight:600;letter-spacing:-.015em;margin-top:2px;}
+  .fhead .firm{font-size:12px;color:var(--ink-2);margin-top:1px;}
+  .fhead .statusline{display:flex;align-items:center;gap:8px;margin-top:11px;flex-wrap:wrap;}
+  .fhead .rawstatus{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);letter-spacing:.04em;}
+
+  .fbody{padding:6px 18px 18px;display:flex;flex-direction:column;gap:18px;}
+  .sect{padding-top:14px;}
+  .sect > .eyebrow{display:block;margin-bottom:11px;}
+
+  /* big stage rail / timeline */
+  .rail{display:flex;align-items:flex-start;overflow-x:auto;padding-bottom:2px;}
+  .rnode{flex:1 1 0;min-width:64px;display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;}
+  .rnode .seg{position:absolute;top:6px;left:-50%;width:100%;height:2px;background:var(--line-2);z-index:0;}
+  .rnode:first-child .seg{display:none;}
+  .rnode .seg.done{background:var(--ink);}
+  .rnode .dot{position:relative;z-index:1;width:13px;height:13px;border-radius:50%;background:var(--surface);border:2px solid var(--line-2);}
+  .rnode .dot.done{background:var(--ink);border-color:var(--ink);}
+  .rnode .dot.live{background:var(--live);border-color:var(--live);box-shadow:0 0 0 4px var(--live-bg);}
+  .rnode .dot.risk{background:var(--warn);border-color:var(--warn);box-shadow:0 0 0 4px var(--warn-bg);}
+  .rnode .dot.cur-idle{border-color:var(--ink);}
+  .rnode .dot.broke{background:var(--break);border-color:var(--break);box-shadow:0 0 0 4px var(--break-bg);}
+  .rnode .rl{font-size:10px;color:var(--ink-2);text-align:center;line-height:1.2;max-width:74px;}
+  .rnode .rt{font-family:var(--mono);font-size:9px;color:var(--ink-3);}
+  .rnode.cur .rl{color:var(--ink);font-weight:600;}
+  /* animated transit pulse on the active inbound segment */
+  .rnode .seg.active{background:linear-gradient(90deg,var(--line-2) 0%,var(--line-2) 40%,var(--live) 50%,var(--line-2) 60%,var(--line-2) 100%);
+    background-size:240% 100%;animation:flow 1.5s linear infinite;}
+  @keyframes flow{0%{background-position:120% 0;}100%{background-position:-120% 0;}}
+
+  /* chain of custody */
+  .chain{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+  .leg{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius-sm);padding:11px 12px;}
+  .leg .lh{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+  .leg .lh .role{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);}
+  .leg .lh .hop{color:var(--ink-3);}
+  .leg .org{font-size:13px;font-weight:600;letter-spacing:-.01em;}
+  .leg dl{margin:7px 0 0;display:grid;grid-template-columns:auto 1fr;gap:3px 8px;}
+  .leg dt{font-size:10.5px;color:var(--ink-3);}
+  .leg dd{margin:0;font-family:var(--mono);font-size:10.5px;color:var(--ink);text-align:right;overflow:hidden;text-overflow:ellipsis;}
+  .leg dd.muted{color:var(--ink-3);}
+
+  /* reconciliation — the crux */
+  .recon{border:1px solid var(--line);border-radius:var(--radius-sm);overflow:hidden;}
+  .recon-grid{display:grid;grid-template-columns:1fr 1fr 1fr;}
+  .rc{padding:13px 14px;border-right:1px solid var(--line);}
+  .rc:last-child{border-right:0;}
+  .rc .src{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);}
+  .rc .sub{font-size:10.5px;color:var(--ink-3);margin-bottom:6px;}
+  .rc .amt{font-family:var(--mono);font-size:17px;font-weight:600;letter-spacing:-.02em;}
+  .rc.flag{background:var(--break-bg);}
+  .rc.flag .amt{color:var(--break);}
+  .recon-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 14px;border-top:1px solid var(--line);background:var(--surface-2);}
+  .delta{display:flex;align-items:baseline;gap:10px;}
+  .delta .dk{font-size:11px;color:var(--ink-2);}
+  .delta .dv{font-family:var(--mono);font-size:14px;font-weight:600;}
+  .delta .dv.bad{color:var(--break);} .delta .dv.ok{color:var(--ink);}
+  .tol{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:560;padding:3px 9px;border-radius:999px;}
+  .tol.ok{background:var(--ink);color:#fff;} .tol.bad{background:var(--break);color:#fff;}
+  .tol .mono{font-size:10px;font-weight:500;opacity:.85;}
+
+  /* actions */
+  .actions{display:flex;flex-direction:column;gap:10px;}
+  .act-primary{display:flex;gap:8px;flex-wrap:wrap;}
+  .btn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line-2);background:var(--surface);
+    border-radius:var(--radius-sm);padding:8px 13px;font-size:12.5px;font-weight:560;transition:background .1s,border-color .1s;}
+  .btn:hover{background:var(--surface-2);}
+  .btn.solid{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .btn.solid:hover{background:#000;}
+  .btn.live{background:var(--live);color:#fff;border-color:var(--live);}
+  .btn.live:hover{filter:brightness(1.06);}
+  .btn.danger{color:var(--break);border-color:#F3C7C7;background:var(--break-bg);}
+  .btn.danger:hover{background:#FCE4E4;}
+  .btn svg{flex:0 0 auto;}
+
+  .panelform{border:1px solid var(--line);border-radius:var(--radius-sm);padding:12px;display:flex;flex-direction:column;gap:9px;background:var(--surface-2);}
+  .panelform .ftitle{font-size:11.5px;font-weight:600;display:flex;align-items:center;gap:7px;}
+  .panelform .frow{display:flex;gap:8px;flex-wrap:wrap;}
+  .panelform select,.panelform input{font-family:var(--mono);font-size:12px;border:1px solid var(--line-2);border-radius:var(--radius-xs);
+    padding:7px 9px;background:var(--surface);color:var(--ink);min-width:0;}
+  .panelform select{flex:1 1 150px;} .panelform input{flex:2 1 180px;}
+  .panelform .hint{font-size:10.5px;color:var(--ink-3);}
+
+  /* event trail */
+  .trail{position:relative;padding-left:18px;}
+  .trail::before{content:"";position:absolute;left:4px;top:4px;bottom:4px;width:1.5px;background:var(--line);}
+  .ev{position:relative;padding:0 0 12px;}
+  .ev:last-child{padding-bottom:0;}
+  .ev .dot{position:absolute;left:-17.5px;top:4px;width:9px;height:9px;border-radius:50%;background:var(--surface);border:2px solid var(--line-2);}
+  .ev.acc .dot{background:var(--live);border-color:var(--live);}
+  .ev.bad .dot{background:var(--break);border-color:var(--break);}
+  .ev.good .dot{background:var(--ink);border-color:var(--ink);}
+  .ev .code{font-family:var(--mono);font-size:11px;color:var(--ink);font-weight:560;}
+  .ev .det{font-size:11.5px;color:var(--ink-2);margin-top:1px;}
+  .ev .ts{font-family:var(--mono);font-size:9.5px;color:var(--ink-3);margin-top:2px;}
+
+  /* toast */
+  .toast-wrap{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);display:flex;flex-direction:column;gap:8px;z-index:80;align-items:center;}
+  .toast{background:var(--ink);color:#fff;border-radius:var(--radius-sm);padding:10px 16px;font-size:12.5px;
+    box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:9px;animation:rise .22s ease;max-width:90vw;}
+  .toast .mono{color:#d4d4d8;font-size:11px;}
+  @keyframes rise{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+  /* ceding-provider progress chip (Seccl two-level status) */
+  .cede{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10.5px;
+    border:1px solid var(--line-2);border-radius:999px;padding:2px 9px;color:var(--ink-2);white-space:nowrap;}
+  .cede::before{content:"\2192";color:var(--ink-3);}
+  .cede.live{border-color:#C7CDF7;color:var(--live);background:var(--live-bg);}
+  .cede.live::before{color:var(--live);}
+  .cede.break{border-color:#F3C7C7;color:var(--break);background:var(--break-bg);}
+  .cede.done{color:var(--ink-2);}
+  .tag.warn{border-color:#EAD9A6;color:var(--warn);background:var(--warn-bg);}
+
+  /* in-specie asset lines */
+  .abnr{display:flex;align-items:center;gap:9px;background:var(--warn-bg);border:1px solid #EAD9A6;color:var(--warn);
+    border-radius:var(--radius-sm);padding:9px 12px;font-size:11.5px;line-height:1.35;margin-bottom:11px;}
+  .abnr svg{flex:0 0 auto;}
+  .abnr b{font-weight:600;}
+  .assets{width:100%;border-collapse:collapse;font-size:11.5px;}
+  .assets th{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);
+    text-align:left;padding:5px 8px;border-bottom:1px solid var(--line);font-weight:500;}
+  .assets th.r,.assets td.r{text-align:right;}
+  .assets td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top;}
+  .assets .isin{font-family:var(--mono);font-size:9.5px;color:var(--ink-3);margin-top:1px;}
+  .assets .an{font-weight:560;}
+  .assets .qp{font-family:var(--mono);}
+  .assets .bk-set{font-family:var(--mono);color:var(--ink);}
+  .assets .auto{color:var(--ink-3);font-size:9px;font-family:var(--mono);}
+  .assets .bk-miss{display:inline-flex;align-items:center;gap:6px;justify-content:flex-end;}
+  .assets .miss{color:var(--warn);font-family:var(--mono);font-size:10px;}
+  .assets tfoot td{font-family:var(--mono);font-weight:600;color:var(--ink-2);border-bottom:0;border-top:1.5px solid var(--line-2);}
+  .btn.mini{padding:3px 9px;font-size:10.5px;border-radius:var(--radius-xs);font-weight:560;}
+
+  /* sources footer */
+  .srcfoot{display:flex;align-items:center;gap:11px;flex-wrap:wrap;justify-content:center;padding:8px 0 0;color:var(--ink-3);}
+  .srcfoot .s{font-family:var(--mono);font-size:10.5px;letter-spacing:.02em;}
+  .srcfoot .s b{color:var(--ink-2);font-weight:600;}
+  .srcfoot .s i{font-style:normal;color:var(--ink-3);}
+  .srcfoot .sep{color:var(--line-2);}
+
+  /* manage surface — provider operations */
+  .manage-top{display:flex;flex-wrap:wrap;gap:8px;}
+  .nextbtn{flex:1 1 220px;justify-content:space-between;align-items:center;padding:10px 14px;}
+  .nextbtn .nb-api{font-family:var(--mono);font-size:10px;font-weight:400;opacity:.82;margin-left:12px;white-space:nowrap;}
+  .editbtn{flex:0 0 auto;}
+  .nexthint{flex:1 1 220px;font-size:12px;color:var(--ink-2);background:var(--surface-2);
+    border:1px solid var(--line);border-radius:var(--radius-sm);padding:10px 12px;}
+  .opgrp{border:1px solid var(--line);border-radius:var(--radius-sm);overflow:hidden;}
+  .opgrp-h{padding:6px 11px;background:var(--surface-2);border-bottom:1px solid var(--line);}
+  .opgrp-h .pv{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);font-weight:600;}
+  .oprow{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;
+    border:0;border-top:1px solid var(--line);background:none;padding:9px 11px;transition:background .1s;}
+  .opgrp .oprow:first-of-type{border-top:0;}
+  .oprow:hover{background:var(--live-bg);}
+  .op-l{display:flex;flex-direction:column;gap:2px;min-width:0;}
+  .op-verb{font-size:12.5px;font-weight:560;}
+  .op-api{font-family:var(--mono);font-size:10px;color:var(--ink-3);}
+  .op-go{color:var(--ink-3);flex:0 0 auto;}
+  .oprow:hover .op-go,.oprow:hover .op-api{color:var(--live);}
+  .newbtn{margin-left:10px;flex:0 0 auto;}
+
+  /* composer modal */
+  .modal-wrap{position:fixed;inset:0;z-index:90;display:flex;align-items:flex-start;justify-content:center;padding:36px 16px;overflow-y:auto;}
+  .modal-wrap[hidden]{display:none;}
+  .modal-bd{position:fixed;inset:0;background:rgba(24,24,27,.34);}
+  .modal{position:relative;z-index:1;width:100%;max-width:660px;background:var(--surface);border:1px solid var(--line);
+    border-radius:var(--radius);box-shadow:var(--shadow-lg);overflow:hidden;animation:rise .16s ease;}
+  .modal-h{display:flex;align-items:center;justify-content:space-between;padding:15px 18px;border-bottom:1px solid var(--line);}
+  .modal-h h2{font-size:15px;font-weight:600;letter-spacing:-.01em;}
+  .modal-x{border:0;background:none;color:var(--ink-3);font-size:16px;line-height:1;padding:4px 8px;border-radius:var(--radius-xs);}
+  .modal-x:hover{color:var(--ink);background:var(--surface-2);}
+  .modal-b{padding:16px 18px;display:grid;grid-template-columns:1fr 1fr;gap:12px;max-height:64vh;overflow-y:auto;}
+  .modal-f{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 18px;border-top:1px solid var(--line);background:var(--surface-2);}
+  .modal-api{font-size:11px;color:var(--ink-3);}
+  .modal-actions{display:flex;gap:8px;}
+  .fld{display:flex;flex-direction:column;gap:5px;min-width:0;}
+  .fld label{font-size:11px;color:var(--ink-2);font-weight:560;}
+  .fld input,.fld select{font-family:var(--mono);font-size:12.5px;border:1px solid var(--line-2);
+    border-radius:var(--radius-xs);padding:8px 10px;background:var(--surface);color:var(--ink);width:100%;}
+  .fld input.ro{background:var(--surface-2);color:var(--ink-2);}
+  .abuild{grid-column:1/-1;border:1px solid var(--line);border-radius:var(--radius-sm);padding:11px;
+    background:var(--surface-2);display:flex;flex-direction:column;gap:9px;}
+  .abuild[hidden]{display:none;}
+  .abuild-h{display:flex;align-items:center;justify-content:space-between;}
+  .arow{display:grid;grid-template-columns:1.2fr 1.7fr .8fr .8fr auto;gap:6px;align-items:center;}
+  .arow input{font-family:var(--mono);font-size:11.5px;border:1px solid var(--line-2);border-radius:var(--radius-xs);
+    padding:6px 8px;background:var(--surface);color:var(--ink);width:100%;}
+  .arow .rm{border:1px solid var(--line-2);background:var(--surface);border-radius:var(--radius-xs);
+    padding:5px 9px;color:var(--ink-3);font-size:12px;line-height:1;}
+  .arow .rm:hover{color:var(--break);border-color:#F3C7C7;}
+  .abuild-f{display:flex;align-items:center;justify-content:space-between;font-size:11.5px;color:var(--ink-2);}
+  #c-total{font-weight:600;color:var(--ink);}
+
+  @media (max-width:980px){
+    .work{grid-template-columns:1fr;}
+    .focus{position:static;}
+    .chain{grid-template-columns:1fr;}
+  }
+  @media (max-width:620px){
+    .modal-b{grid-template-columns:1fr;}
+    .arow{grid-template-columns:1fr 1fr;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .rnode .seg.active{animation:none;background:var(--live);}
+    .toast{animation:none;}
+    *{scroll-behavior:auto;}
+  }
+</style>
+
+<header class="mast">
+  <div class="brand" title="Graphene">
+    <svg width="22" height="24" viewBox="0 0 22 24" aria-hidden="true">
+      <polygon points="11,1 20.5,6.5 20.5,17.5 11,23 1.5,17.5 1.5,6.5" fill="none" stroke="#18181B" stroke-width="1.5"/>
+      <polygon points="11,6 16,9 16,15 11,18 6,15 6,9" fill="none" stroke="#2540D8" stroke-width="1.5"/>
+    </svg>
+    <span class="wm"><b>GRAPHENE</b> <span>/ TRANSFERS</span></span>
+  </div>
+  <span class="scope">Ops console · all firms</span>
+  <label class="search">
+    <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <input id="search" type="search" placeholder="Search transfer id, plan number, provider, client…" aria-label="Search transfers">
+  </label>
+  <div class="asof">
+    <div class="k">As of</div>
+    <div class="v">25 Jun 2026 · 09:42</div>
+  </div>
+</header>
+
+<main>
+  <!-- ===== settlement board ===== -->
+  <section class="board" aria-label="Settlement board">
+    <div class="board-head">
+      <h2><span class="eyebrow">Settlement board</span> Where money is sitting right now</h2>
+      <span class="sub" id="ribbon-hint">Tap a stage to filter the queue</span>
+    </div>
+    <div class="ribbon" id="ribbon" role="tablist" aria-label="Saga stages"></div>
+    <div class="stats" id="stats"></div>
+  </section>
+
+  <!-- ===== work area ===== -->
+  <section class="work">
+    <div class="queue">
+      <div class="queue-head">
+        <h2>Work queue</h2>
+        <div class="tabs" role="tablist" aria-label="Queue filter">
+          <button class="tab" role="tab" data-tab="needs" aria-pressed="true">Needs me <span class="pill" id="needs-count">0</span></button>
+          <button class="tab" role="tab" data-tab="all" aria-pressed="false">All transfers</button>
+        </div>
+        <button class="btn live newbtn" id="new-transfer" type="button">
+          <svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>New transfer</button>
+      </div>
+      <div class="colhead">
+        <span></span><span>Transfer</span><span>Stage</span><span class="r">Value</span><span class="r">Status</span>
+      </div>
+      <div class="rows" id="rows" role="list"></div>
+    </div>
+
+    <aside class="focus" id="focus" aria-live="polite">
+      <div class="focus-empty">
+        <svg width="40" height="40" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h7m0 0-3-3m3 3-3 3M13 6h7m0 0-3-3m3 3-3 3M13 18h7m0 0-3-3m3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <p>Select a transfer to inspect its chain of custody,<br>reconciliation, and act on it.</p>
+      </div>
+    </aside>
+  </section>
+
+  <footer class="srcfoot">
+    <span class="s"><b>One surface over</b></span>
+    <span class="sep">·</span>
+    <span class="s"><b>Morgan Lloyd</b> <i>SIPP administration</i></span>
+    <span class="sep">·</span>
+    <span class="s"><b>SEI</b> <i>custody &amp; cash receipts</i></span>
+    <span class="sep">·</span>
+    <span class="s"><b>Seccl</b> <i>custody ledger &amp; transactions</i></span>
+  </footer>
+</main>
+
+<div class="modal-wrap" id="modal" hidden>
+  <div class="modal-bd" data-close></div>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-h">
+      <h2 id="modal-title">New transfer</h2>
+      <button class="modal-x" type="button" data-close aria-label="Close">&times;</button>
+    </div>
+    <form id="composer" class="modal-b" autocomplete="off"></form>
+    <div class="modal-f">
+      <span class="modal-api mono" id="modal-api">POST /transfers</span>
+      <div class="modal-actions">
+        <button type="button" class="btn" data-close>Cancel</button>
+        <button type="submit" form="composer" class="btn live" id="modal-submit">Create transfer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toasts" aria-live="assertive"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- saga model ---------- */
+  const STAGES=[
+    {key:"entered",label:"Draft",code:"ENT"},
+    {key:"submitted_to_ml",label:"Submitted",code:"SUB"},
+    {key:"in_flight",label:"In flight",code:"FLT"},
+    {key:"ml_complete",label:"ML complete",code:"MLC"},
+    {key:"settlement_date_advised",label:"Settlement advised",code:"SDA"},
+    {key:"sei_acr_created",label:"Cash receipt",code:"ACR"},
+    {key:"reconciled",label:"Reconciled",code:"REC"}
+  ];
+  const FINAL={key:"adviser_notified",label:"Adviser notified",code:"NOT"};
+  const ALL_STATUSES=[...STAGES.map(s=>s.key),FINAL.key,"manual_intervention"];
+  const IDX=Object.fromEntries(STAGES.map((s,i)=>[s.key,i]));
+
+  const META={
+    entered:{label:"Draft",bucket:"idle"},
+    submitted_to_ml:{label:"Submitted",bucket:"live"},
+    in_flight:{label:"In flight",bucket:"live"},
+    ml_complete:{label:"ML complete",bucket:"live"},
+    settlement_date_advised:{label:"Settlement advised",bucket:"live"},
+    sei_acr_created:{label:"Awaiting funds",bucket:"live"},
+    reconciled:{label:"Reconciled",bucket:"done"},
+    adviser_notified:{label:"Closed",bucket:"done"},
+    manual_intervention:{label:"Needs attention",bucket:"break"}
+  };
+  const LIVE=new Set(["submitted_to_ml","in_flight","ml_complete","settlement_date_advised","sei_acr_created"]);
+
+  /* ---------- seed data (realistic, cross-tenant ops view) ---------- */
+  const T=[
+    {id:"tr_9f2a71",client:"Eleanor Whitfield",acct:"acc_4471",firm:"Castlebridge Advisers",firmId:"firm_castlebridge",
+     provider:"Aviva",plan:"AV-44820913",value:128540.00,basis:"cash",scope:"full",
+     status:"manual_intervention",diverged:6,risk:true,inStage:"2d",created:"07 Jun 2026",
+     ml:{scheme:"ML-SCH-0098",ref:"cam-8f3a21d0",settle:"19 Jun 2026"},
+     sei:{acct:"SEI-AC-44120",acr:"ACR-2026-00713"},
+     recon:{graphene:128540.00,ml:128540.00,sei:128427.65},
+     breakType:"settlement_value_mismatch",breakStatus:"open",
+     events:[
+       {code:"transfer.created",det:"Recorded by Castlebridge · cash, full",ts:"07 Jun · 11:04",kind:""},
+       {code:"transfer.submit_requested",det:"Queued for Morgan Lloyd",ts:"07 Jun · 11:05",kind:""},
+       {code:"ml.transfer_created",det:"cam_createtransfer → cam-8f3a21d0",ts:"07 Jun · 11:06",kind:"acc"},
+       {code:"ml.complete",det:"Morgan Lloyd reported settlement",ts:"18 Jun · 14:22",kind:"acc"},
+       {code:"sei.acr_created",det:"Automated cash receipt ACR-2026-00713",ts:"19 Jun · 08:10",kind:"acc"},
+       {code:"transfer.reconciliation_break",det:"SEI credit short of ML advised by £112.35",ts:"23 Jun · 06:30",kind:"bad"}
+     ]},
+
+    {id:"tr_aa31c2",client:"Malcolm Reeves",acct:"acc_5120",firm:"Penrose Financial",firmId:"firm_penrose",
+     provider:"Standard Life",plan:"SL-77120044",value:203500.00,basis:"cash",scope:"full",
+     status:"manual_intervention",diverged:6,risk:true,inStage:"4d",created:"02 Jun 2026",
+     ml:{scheme:"ML-SCH-0102",ref:"cam-71c0aa9f",settle:"15 Jun 2026"},
+     sei:{acct:"SEI-AC-44201",acr:"ACR-2026-00690"},
+     recon:{graphene:203500.00,ml:203500.00,sei:203061.20},
+     breakType:"settlement_value_mismatch",breakStatus:"investigating",
+     events:[
+       {code:"transfer.created",det:"Recorded by Penrose · cash, full",ts:"02 Jun · 09:18",kind:""},
+       {code:"ml.transfer_created",det:"cam_createtransfer → cam-71c0aa9f",ts:"02 Jun · 09:20",kind:"acc"},
+       {code:"ml.complete",det:"Settlement date advised 15 Jun",ts:"14 Jun · 16:40",kind:"acc"},
+       {code:"sei.acr_created",det:"Automated cash receipt ACR-2026-00690",ts:"15 Jun · 07:55",kind:"acc"},
+       {code:"transfer.reconciliation_break",det:"SEI credit short of ML advised by £438.80",ts:"16 Jun · 06:30",kind:"bad"},
+       {code:"break.investigating",det:"Picked up by ops — querying ceding charges",ts:"21 Jun · 10:12",kind:""}
+     ]},
+
+    {id:"tr_7c10b8",client:"Raymond Castellano",acct:"acc_3380",firm:"Marchwood Wealth",firmId:"firm_marchwood",
+     provider:"Standard Life",plan:"SL-99204170",value:342180.00,basis:"in_specie",scope:"full",
+     status:"in_flight",diverged:null,risk:true,inStage:"9d",created:"12 Jun 2026",
+     ml:{scheme:"ML-SCH-0077",ref:"cam-3b29e110",settle:null},
+     sei:{acct:"SEI-AC-43980",acr:null},
+     recon:null,
+     events:[
+       {code:"transfer.created",det:"Recorded by Marchwood · in-specie, full",ts:"12 Jun · 13:30",kind:""},
+       {code:"ml.transfer_created",det:"cam_createtransfer → cam-3b29e110",ts:"12 Jun · 13:33",kind:"acc"},
+       {code:"ml.poll",det:"Status: in_flight — 7 in-specie lines outstanding",ts:"23 Jun · 02:00",kind:""}
+     ]},
+
+    {id:"tr_2e4b66",client:"Sandra Beaumont",acct:"acc_6602",firm:"Penrose Financial",firmId:"firm_penrose",
+     provider:"Aviva",plan:"AV-44120555",value:58900.00,basis:"cash",scope:"partial",
+     status:"in_flight",diverged:null,risk:false,inStage:"2d",created:"21 Jun 2026",
+     ml:{scheme:"ML-SCH-0104",ref:"cam-2e4b6601",settle:null},
+     sei:{acct:"SEI-AC-44310",acr:null},recon:null,
+     events:[
+       {code:"transfer.created",det:"Recorded by Penrose · cash, partial",ts:"21 Jun · 10:02",kind:""},
+       {code:"ml.transfer_created",det:"cam_createtransfer → cam-2e4b6601",ts:"21 Jun · 10:05",kind:"acc"},
+       {code:"ml.poll",det:"Status: in_flight",ts:"24 Jun · 02:00",kind:""}
+     ]},
+
+    {id:"tr_4d88e0",client:"Priya Nandakumar",acct:"acc_5511",firm:"Penrose Financial",firmId:"firm_penrose",
+     provider:"Aegon",plan:"AEG-7781200",value:64200.00,basis:"cash",scope:"partial",
+     status:"sei_acr_created",diverged:null,risk:false,inStage:"1d",created:"16 Jun 2026",
+     ml:{scheme:"ML-SCH-0091",ref:"cam-4d88e0aa",settle:"23 Jun 2026"},
+     sei:{acct:"SEI-AC-44150",acr:"ACR-2026-00721"},recon:null,
+     events:[
+       {code:"transfer.created",det:"Recorded by Penrose · cash, partial",ts:"16 Jun · 15:44",kind:""},
+       {code:"ml.complete",det:"Settlement date advised 23 Jun",ts:"22 Jun · 11:20",kind:"acc"},
+       {code:"sei.acr_created",det:"Automated cash receipt ACR-2026-00721 — awaiting credit",ts:"24 Jun · 08:30",kind:""}
+     ]},
+
+    {id:"tr_3c7e54",client:"George Pemberton",acct:"acc_4090",firm:"Marchwood Wealth",firmId:"firm_marchwood",
+     provider:"Prudential",plan:"PRU-77410022",value:97840.00,basis:"cash",scope:"full",
+     status:"settlement_date_advised",diverged:null,risk:false,inStage:"0d",created:"18 Jun 2026",settleToday:true,
+     ml:{scheme:"ML-SCH-0095",ref:"cam-3c7e5402",settle:"25 Jun 2026"},
+     sei:{acct:"SEI-AC-44088",acr:null},recon:null,
+     events:[
+       {code:"transfer.created",det:"Recorded by Marchwood · cash, full",ts:"18 Jun · 09:50",kind:""},
+       {code:"ml.complete",det:"Morgan Lloyd reported complete",ts:"24 Jun · 17:02",kind:"acc"},
+       {code:"ml.settlement_advised",det:"Settlement date 25 Jun — cash receipt due",ts:"25 Jun · 07:15",kind:"acc"}
+     ]},
+
+    {id:"tr_8f3b29",client:"Aisha Kareem",acct:"acc_4820",firm:"Penrose Financial",firmId:"firm_penrose",
+     provider:"Phoenix Life",plan:"PHX-6620901",value:156300.00,basis:"in_specie",scope:"full",
+     status:"ml_complete",diverged:null,risk:false,inStage:"3d",created:"15 Jun 2026",
+     ml:{scheme:"ML-SCH-0088",ref:"cam-8f3b2900",settle:null},
+     sei:{acct:"SEI-AC-44066",acr:null},recon:null,
+     events:[
+       {code:"transfer.created",det:"Recorded by Penrose · in-specie, full",ts:"15 Jun · 14:10",kind:""},
+       {code:"ml.transfer_created",det:"cam_createtransfer → cam-8f3b2900",ts:"15 Jun · 14:13",kind:"acc"},
+       {code:"ml.complete",det:"Complete — awaiting settlement date",ts:"22 Jun · 12:00",kind:"acc"}
+     ]},
+
+    {id:"tr_6e9c12",client:"Margaret O'Sullivan",acct:"acc_7001",firm:"Aldgate Retirement",firmId:"firm_aldgate",
+     provider:"Legal & General",plan:"LG-55012883",value:210000.00,basis:"cash",scope:"full",
+     status:"submitted_to_ml",diverged:null,risk:false,inStage:"1d",created:"24 Jun 2026",
+     ml:{scheme:"ML-SCH-0106",ref:"cam-6e9c1200",settle:null},
+     sei:{acct:"SEI-AC-44350",acr:null},recon:null,
+     events:[
+       {code:"transfer.created",det:"Recorded by Aldgate · cash, full",ts:"24 Jun · 16:20",kind:""},
+       {code:"transfer.submit_requested",det:"Queued for Morgan Lloyd",ts:"24 Jun · 16:21",kind:""},
+       {code:"ml.transfer_created",det:"cam_createtransfer → cam-6e9c1200",ts:"24 Jun · 16:24",kind:"acc"}
+     ]},
+
+    {id:"tr_0b6a18",client:"Victor Mancini",acct:"acc_3902",firm:"Castlebridge Advisers",firmId:"firm_castlebridge",
+     provider:"Canada Life",plan:"CL-90012377",value:172640.00,basis:"in_specie",scope:"partial",
+     status:"manual_intervention",diverged:2,risk:true,inStage:"5d",created:"10 Jun 2026",
+     ml:{scheme:"ML-SCH-0083",ref:"cam-0b6a1800",settle:null},
+     sei:{acct:"SEI-AC-44012",acr:null},recon:null,
+     breakType:"ml_submission_failed",breakStatus:null,
+     events:[
+       {code:"transfer.created",det:"Recorded by Castlebridge · in-specie, partial",ts:"10 Jun · 10:00",kind:""},
+       {code:"ml.transfer_created",det:"cam_createtransfer → cam-0b6a1800",ts:"10 Jun · 10:03",kind:"acc"},
+       {code:"ml.poll",det:"OData 502 — retry 1 of 4",ts:"18 Jun · 02:00",kind:""},
+       {code:"saga.retries_exhausted",det:"Polling failed 4× — moved to manual intervention",ts:"19 Jun · 02:00",kind:"bad"}
+     ]},
+
+    {id:"tr_1a0d77",client:"Daniel Fairweather",acct:"acc_2210",firm:"Castlebridge Advisers",firmId:"firm_castlebridge",
+     provider:"Royal London",plan:"RL-11800433",value:45750.00,basis:"cash",scope:"partial",
+     status:"entered",diverged:null,risk:false,inStage:"0d",created:"25 Jun 2026",
+     ml:{scheme:null,ref:null,settle:null},sei:{acct:null,acr:null},recon:null,
+     events:[
+       {code:"transfer.created",det:"Recorded by Castlebridge · cash, partial — not yet submitted",ts:"25 Jun · 09:05",kind:""}
+     ]},
+
+    {id:"tr_5d2f90",client:"Helen Brightwater",acct:"acc_1180",firm:"Aldgate Retirement",firmId:"firm_aldgate",
+     provider:"Nest",plan:"NEST-2201980",value:31200.00,basis:"cash",scope:"full",
+     status:"adviser_notified",diverged:null,risk:false,inStage:"4d",created:"30 May 2026",
+     ml:{scheme:"ML-SCH-0061",ref:"cam-5d2f9000",settle:"12 Jun 2026"},
+     sei:{acct:"SEI-AC-43900",acr:"ACR-2026-00644"},
+     recon:{graphene:31200.00,ml:31200.00,sei:31200.00},
+     events:[
+       {code:"transfer.created",det:"Recorded by Aldgate · cash, full",ts:"30 May · 11:00",kind:""},
+       {code:"ml.complete",det:"Settlement date advised 12 Jun",ts:"11 Jun · 15:30",kind:"acc"},
+       {code:"transfer.reconciled",det:"SEI credit matched ML advised within tolerance",ts:"13 Jun · 06:30",kind:"good"},
+       {code:"transfer.adviser_notified",det:"Adviser notified — transfer closed",ts:"21 Jun · 09:00",kind:"good"}
+     ]}
+  ];
+
+  /* ---------- Seccl-informed enrichment (wrapper, ceding progress, in-specie asset lines) ---------- */
+  const ENRICH={
+    tr_9f2a71:{wrapper:"SIPP",provRef:"AV-REF-88201",cedingProgress:"Completed"},
+    tr_aa31c2:{wrapper:"SIPP",provRef:"SL-REF-11204",cedingProgress:"Completed"},
+    tr_7c10b8:{wrapper:"SIPP",provRef:"SL-REF-99204",cedingProgress:"Onboarding assets",assets:[
+      {isin:"GB00B3X7QG63",name:"Fundsmith Equity I Acc",qty:18420.55,price:6.42,value:118259.93,book:null,autoBook:false},
+      {isin:"GB00BJRCFR40",name:"Vanguard FTSE Dev World ex-UK",qty:9910.12,price:4.18,value:41424.30,book:null,autoBook:false},
+      {isin:"IE00B4L5Y983",name:"iShares Core MSCI World ETF",qty:1840,price:78.50,value:144440.00,book:132100.00,autoBook:false},
+      {isin:"GB00BD3RZ368",name:"Royal London Corporate Bond",qty:25202.5,price:1.51,value:38055.77,book:39900.00,autoBook:false}]},
+    tr_2e4b66:{wrapper:"SIPP",provRef:"AV-REF-44120",cedingProgress:"With previous provider"},
+    tr_4d88e0:{wrapper:"SIPP",provRef:"AEG-REF-77812",cedingProgress:"Completed"},
+    tr_3c7e54:{wrapper:"SIPP",provRef:"PRU-REF-77410",cedingProgress:"Completed"},
+    tr_8f3b29:{wrapper:"SIPP",provRef:"PHX-REF-66209",cedingProgress:"Completed",assets:[
+      {isin:"GB00B41YBW71",name:"L&G UK Index Trust",qty:30500,price:2.10,value:64050.00,book:58200.00,autoBook:true},
+      {isin:"GB00B45Q9038",name:"Baillie Gifford American",qty:4200,price:12.05,value:50610.00,book:41300.00,autoBook:true},
+      {isin:"GB00BMGZ4G77",name:"Royal London Sustainable Leaders",qty:9797.6,price:4.25,value:41640.00,book:35900.00,autoBook:true}]},
+    tr_6e9c12:{wrapper:"SIPP",provRef:"LG-REF-55012",cedingProgress:"With previous provider"},
+    tr_0b6a18:{wrapper:"SIPP",provRef:"CL-REF-90012",cedingProgress:"Onboarding assets",assets:[
+      {isin:"GB00B0CNHZ09",name:"Jupiter UK Special Situations",qty:12000,price:8.15,value:97800.00,book:90200.00,autoBook:false},
+      {isin:"IE00B3RBWM25",name:"Vanguard FTSE All-World ETF",qty:720,price:103.94,value:74840.00,book:null,autoBook:false}]},
+    tr_1a0d77:{wrapper:"SIPP",provRef:"RL-REF-11800",cedingProgress:null},
+    tr_5d2f90:{wrapper:"SIPP",provRef:"NEST-REF-22019",cedingProgress:"Completed"}
+  };
+  const SEISTAT={tr_4d88e0:"IN PROCESS — SUBMITTED TO COUNTERPARTY",tr_9f2a71:"SETTLED",tr_aa31c2:"SETTLED",tr_5d2f90:"COMPLETE"};
+  T.forEach(t=>{Object.assign(t,ENRICH[t.id]||{});
+    t.seiStatus=SEISTAT[t.id]||null;
+    t.actionRequired=!!(t.assets&&t.assets.some(a=>a.book==null&&!a.autoBook));});
+
+  /* ---------- provider operations registry (what each API can actually do) ---------- */
+  const NOW="25 Jun · 09:42",NOWDATE="25 Jun 2026";
+  let _seq=0;function seq(){return ++_seq;}
+  function ev(t,code,det,kind){t.events.push({code,det,ts:NOW,kind:kind||""});}
+  const FIRMS=[{id:"firm_marchwood",name:"Marchwood Wealth"},{id:"firm_castlebridge",name:"Castlebridge Advisers"},
+    {id:"firm_penrose",name:"Penrose Financial"},{id:"firm_aldgate",name:"Aldgate Retirement"}];
+  const PROVIDERS=["Aviva","Standard Life","Scottish Widows","Aegon","Legal & General","Royal London","Phoenix Life","Prudential","Nest","Canada Life"];
+  const WRAPPERS=["SIPP","ISA","JISA","LISA","GIA"];
+  const PROV_ORDER=["Morgan Lloyd","SEI","Seccl","Graphene"];
+
+  const OPS=[
+    {id:"ml_create",prov:"Morgan Lloyd",label:"Create transfer at Morgan Lloyd",api:"POST cam_createtransfer",
+     avail:t=>t.status==="entered",
+     run:t=>{t.status="submitted_to_ml";t.ml.ref=t.ml.ref||("cam-"+t.id.slice(3)+"00");t.cedingProgress="With previous provider";
+       ev(t,"transfer.submit_requested","POST /transfers/"+t.id+"/submit — queued for Morgan Lloyd","");
+       ev(t,"ml.transfer_created","cam_createtransfer → "+t.ml.ref,"acc");return "Submitted to Morgan Lloyd";}},
+    {id:"ml_poll",prov:"Morgan Lloyd",label:"Poll transfer status",api:"POST cam_gettransfer",
+     avail:t=>LIVE.has(t.status),
+     run:t=>{ev(t,"ml.poll","cam_gettransfer → "+t.status+", no change","");return "Polled Morgan Lloyd — no change";}},
+    {id:"ml_lookup",prov:"Morgan Lloyd",label:"Look up by policy number",api:"POST cam_gettransferbypolicyno",
+     avail:t=>!!t.ml.ref,
+     run:t=>{ev(t,"ml.lookup","cam_gettransferbypolicyno("+(t.plan||"—")+")","");return "Looked up "+(t.plan||t.id);}},
+    {id:"ml_amend",prov:"Morgan Lloyd",label:"Amend transfer at Morgan Lloyd",api:"PATCH cam_transfers/{id}",
+     avail:t=>t.status==="submitted_to_ml"||t.status==="in_flight",
+     run:t=>{ev(t,"ml.transfer_updated","PATCH cam_transfers/"+(t.ml.ref||"")+" — amended","acc");return "Amended at Morgan Lloyd";}},
+
+    {id:"sei_acr_create",prov:"SEI",label:"Create cash receipt (ACR)",api:"createCurrencyReceiptUsingPOST",
+     avail:t=>t.status==="settlement_date_advised"&&t.basis==="cash",
+     run:t=>{t.status="sei_acr_created";t.sei.acr=t.sei.acr||("ACR-2026-00"+(720+seq()));t.seiStatus="IN PROCESS — SUBMITTED TO COUNTERPARTY";
+       ev(t,"sei.acr_created","POST /createCurrencyReceipt → "+t.sei.acr+" · BACS direct credit, GBP — awaiting credit","acc");
+       return "Cash receipt created at SEI";}},
+    {id:"sei_acr_modify",prov:"SEI",label:"Modify cash receipt",api:"modifyCashReceiptEventUsingPOST",
+     avail:t=>!!t.sei.acr,
+     run:t=>{ev(t,"sei.acr_modified","POST /cashReceipt/modify ("+t.sei.acr+") — terms updated","acc");return "Cash receipt modified";}},
+    {id:"sei_ftin",prov:"SEI",label:"Free transfer in (register assets)",api:"initiateAccountTransferInUsingPOST",
+     avail:t=>t.status==="settlement_date_advised"&&t.basis==="in_specie",
+     run:t=>{t.status="sei_acr_created";t.seiStatus="IN PROCESS — RECEIVED AT COUNTERPARTY";const n=t.assets?t.assets.length:0;
+       ev(t,"sei.free_transfer_in","POST /accountCustodyTransfer/transferIn → "+n+" lines, free receipt to "+(t.sei.acct||"SEI a/c")+" ("+(t.scope==="full"?"Full":"Partial")+" Transfer)","acc");
+       return "Assets registered at SEI";}},
+    {id:"sei_settle",prov:"SEI",label:"Settle free movement",api:"createFreeMovementUsingPOST",
+     avail:t=>t.basis==="in_specie"&&t.status==="sei_acr_created",
+     run:t=>{t.seiStatus="SETTLED";ev(t,"sei.settle_free_movement","POST /settlePendedItem → freeMovementType 4 (Free Receipt) settled","acc");return "Free movement settled";}},
+    {id:"sei_edit_custody",prov:"SEI",label:"Edit custody transfer dates",api:"editCustodyTransferUsingPATCH",
+     avail:t=>t.basis==="in_specie"&&LIVE.has(t.status),
+     run:t=>{ev(t,"sei.edit_custody","PATCH /custodytransfer/{activityId} — requested & settlement dates amended","acc");return "Custody transfer dates edited";}},
+    {id:"sei_pending",prov:"SEI",label:"Check pending transfers",api:"getPendingTransfersStatusUsingPOST",
+     avail:t=>LIVE.has(t.status),
+     run:t=>{ev(t,"sei.pending_status","POST /getPendingTransfersStatus (transferType 1) → "+(t.seiStatus||"in process"),"");return "Checked SEI pending transfers";}},
+
+    {id:"seccl_bookcost",prov:"Seccl",label:"Set book cost on missing lines",api:"PUT /portfoliotransaction/action/bookvalue",
+     avail:t=>!!(t.assets&&t.assets.some(a=>a.book==null&&!a.autoBook)),
+     run:t=>{let n=0;t.assets.forEach(a=>{if(a.book==null&&!a.autoBook){a.book=Math.round(a.value*0.92*100)/100;n++;}});t.actionRequired=false;
+       ev(t,"seccl.book_value_set","PUT /portfoliotransaction/action/bookvalue — "+n+" lines","acc");return "Book cost set on "+n+" lines";}},
+    {id:"seccl_update_stock",prov:"Seccl",label:"Update stock transfer leg",api:"PATCH /portfoliotransaction/{id}",
+     avail:t=>t.basis==="in_specie",
+     run:t=>{ev(t,"seccl.stock_transfer_updated","PATCH /portfoliotransaction/"+t.id+" — leg amended","acc");return "Stock transfer updated";}},
+    {id:"seccl_manual_in",prov:"Seccl",label:"Upload manual transfer-in (CSV)",api:"POST /filestore/manualtransferin",
+     avail:t=>t.status==="entered",
+     run:t=>{ev(t,"seccl.manual_transfer_in","POST /filestore/manualtransferin — CSV queued","");return "Manual transfer-in uploaded";}},
+
+    {id:"notify",prov:"Graphene",label:"Notify adviser & close",api:"POST /transfers/{uid}/notify",
+     avail:t=>t.status==="reconciled",
+     run:t=>{t.status="adviser_notified";ev(t,"transfer.adviser_notified","Adviser notified — transfer closed","good");return "Adviser notified — closed";}}
+  ];
+  const NEXT={entered:"ml_create",submitted_to_ml:"ml_poll",in_flight:"ml_poll",ml_complete:"ml_poll",
+    settlement_date_advised:t=>t.basis==="in_specie"?"sei_ftin":"sei_acr_create",
+    sei_acr_created:t=>t.basis==="in_specie"?"sei_settle":null,
+    reconciled:"notify",adviser_notified:null,manual_intervention:null};
+  function waitingHint(t){
+    if(t.status==="sei_acr_created"&&t.basis==="cash")return "Awaiting SEI cash credit — reconciliation runs automatically once the credit is matched.";
+    if(t.status==="adviser_notified")return "Transfer closed. No further action.";
+    if(t.status==="manual_intervention")return "Resolve the break or force a stage below.";
+    return null;
+  }
+  function doOp(t,id){const op=OPS.find(o=>o.id===id);if(!op||!op.avail(t))return;const msg=op.run(t);refreshAll();if(msg)toast(msg,t.id);}
+
+  /* ---------- helpers ---------- */
+  const gbp=new Intl.NumberFormat("en-GB",{style:"currency",currency:"GBP",minimumFractionDigits:2});
+  const gbp0=new Intl.NumberFormat("en-GB",{style:"currency",currency:"GBP",maximumFractionDigits:0});
+  function money(n){const s=gbp.format(n);return s.replace("£",'<span class="ccy">£</span>');}
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const curIdx=t=>t.status==="adviser_notified"?7:(t.status==="reconciled"?6:IDX[t.status]);
+
+  /* mini / big rail node state */
+  function nodeState(t,i){
+    if(t.status==="manual_intervention"){
+      if(i<t.diverged)return "done";
+      if(i===t.diverged)return "broke";
+      return "future";
+    }
+    const ci=curIdx(t);
+    const doneTo=(t.status==="adviser_notified"||t.status==="reconciled")?7:ci;
+    if(i<doneTo)return "done";
+    if(i===ci)return LIVE.has(t.status)?(t.risk?"risk":"live"):"cur-idle";
+    return "future";
+  }
+
+  const state={tab:"needs",stage:null,q:"",sel:null,editId:null};
+
+  function needsMe(t){return t.status==="manual_intervention"||t.risk||t.actionRequired||t.status==="entered";}
+  function triageWeight(t){
+    if(t.status==="manual_intervention")return 0;
+    if(t.risk)return 1;
+    if(t.status==="entered")return 2;
+    return 3;
+  }
+
+  function visible(){
+    let list=T.slice();
+    if(state.tab==="needs")list=list.filter(needsMe);
+    if(state.stage)list=list.filter(t=>nodeStageMatches(t,state.stage));
+    if(state.q){
+      const q=state.q.toLowerCase();
+      list=list.filter(t=>(t.id+" "+t.plan+" "+t.provider+" "+t.client+" "+t.firm).toLowerCase().includes(q));
+    }
+    if(state.tab==="needs")list.sort((a,b)=>triageWeight(a)-triageWeight(b)||b.value-a.value);
+    else list.sort((a,b)=>(orderRank(b)-orderRank(a))||b.value-a.value);
+    return list;
+  }
+  // for "all" sort: breaks top, then by stage progression descending, drafts last
+  function orderRank(t){
+    if(t.status==="manual_intervention")return 100;
+    if(t.status==="adviser_notified")return -1;
+    return curIdx(t);
+  }
+  function nodeStageMatches(t,stageKey){
+    if(stageKey==="manual_intervention")return t.status==="manual_intervention";
+    if(stageKey==="adviser_notified")return t.status==="adviser_notified";
+    return t.status===stageKey;
+  }
+
+  /* ---------- render: ribbon + stats ---------- */
+  function renderBoard(){
+    const ribbon=document.getElementById("ribbon");
+    const cells=STAGES.map(s=>{
+      const items=T.filter(t=>t.status===s.key);
+      const sum=items.reduce((a,t)=>a+t.value,0);
+      const live=LIVE.has(s.key)&&items.length;
+      const cls=["stage",items.length?"has":"",live?"live":"",state.stage===s.key?"pressed":""].join(" ");
+      return `<button class="${cls}" role="tab" aria-pressed="${state.stage===s.key}" data-stage="${s.key}">
+        <div class="cap"><span class="cnt">${items.length}</span><span class="amt">${items.length?gbp0.format(sum):"—"}</span></div>
+        <div class="track"><span class="node"></span></div>
+        <div class="lbl">${s.label}<span class="code">${s.code}</span></div>
+      </button>`;
+    });
+    // off-rail: needs attention
+    const mi=T.filter(t=>t.status==="manual_intervention");
+    const miSum=mi.reduce((a,t)=>a+t.value,0);
+    cells.push(`<button class="stage ${mi.length?"has brk":""}" role="tab" aria-pressed="${state.stage==="manual_intervention"}" data-stage="manual_intervention">
+      <div class="cap"><span class="cnt">${mi.length}</span><span class="amt">${mi.length?gbp0.format(miSum):"—"}</span></div>
+      <div class="track"><span class="node"></span></div>
+      <div class="lbl">Needs attention<span class="code">MI</span></div>
+    </button>`);
+    ribbon.innerHTML=cells.join("");
+    ribbon.querySelectorAll("[data-stage]").forEach(b=>b.onclick=()=>{
+      state.stage=state.stage===b.dataset.stage?null:b.dataset.stage;
+      if(state.stage&&state.tab==="needs")state.tab="all";
+      syncTabs();renderBoard();renderQueue();
+    });
+
+    // stats
+    const inFlight=T.filter(t=>LIVE.has(t.status)).reduce((a,t)=>a+t.value,0);
+    const reconBreaks=T.filter(t=>t.recon&&Math.abs(t.recon.ml-t.recon.sei)>0.01&&t.status==="manual_intervention");
+    const atRisk=reconBreaks.reduce((a,t)=>a+Math.abs(t.recon.ml-t.recon.sei),0);
+    const settling=T.filter(t=>t.settleToday).length;
+    const stalled=T.filter(t=>t.risk&&t.status!=="manual_intervention").length;
+    document.getElementById("stats").innerHTML=`
+      <div class="stat"><span class="k">In flight</span><span class="v">${gbp0.format(inFlight)}</span><span class="meta">${T.filter(t=>LIVE.has(t.status)).length} transfers across 5 stages</span></div>
+      <div class="stat alarm"><span class="k">Reconciliation breaks</span><span class="v">${reconBreaks.length}</span><span class="meta">${gbp.format(atRisk)} out of tolerance</span></div>
+      <div class="stat warn"><span class="k">Stalled</span><span class="v">${stalled}</span><span class="meta">no movement in 7+ days</span></div>
+      <div class="stat"><span class="k">Settling today</span><span class="v">${settling}</span><span class="meta">cash receipt due 25 Jun</span></div>`;
+    document.getElementById("ribbon-hint").textContent=state.stage?"Filtered — tap stage again to clear":"Tap a stage to filter the queue";
+  }
+
+  /* ---------- render: queue ---------- */
+  function miniRail(t){
+    let html='<div class="mr">';
+    STAGES.forEach((s,i)=>{
+      const st=nodeState(t,i);
+      if(i>0)html+=`<s class="${(st==="done"||(nodeState(t,i-1)==="done"&&st!=="future"))?"done":""}"></s>`;
+      html+=`<i class="${st}"></i>`;
+    });
+    html+="</div>";
+    const meta=t.status==="manual_intervention"?`<span class="mr-meta risk">stuck · ${t.inStage}</span>`
+      :t.risk?`<span class="mr-meta risk">stalled · ${t.inStage}</span>`
+      :`<span class="mr-meta">${META[t.status].label} · ${t.inStage}</span>`;
+    return `<div class="minirail">${html}${meta}</div>`;
+  }
+  function renderQueue(){
+    const rows=document.getElementById("rows");
+    const list=visible();
+    if(!list.length){
+      rows.innerHTML=`<div style="padding:40px 16px;text-align:center;color:var(--ink-2);font-size:13px">
+        ${state.tab==="needs"?"Nothing needs you right now — settlement is clean.":"No transfers match this view."}</div>`;
+      return;
+    }
+    rows.innerHTML=list.map(t=>{
+      const m=META[t.status];
+      const edge=t.status==="manual_intervention"?"break":t.risk?"warn":m.bucket;
+      const rowcls=["row",t.status==="manual_intervention"?"is-break":t.risk?"is-risk":"",state.sel===t.id?"sel":""].join(" ");
+      return `<button class="${rowcls}" role="listitem" aria-selected="${state.sel===t.id}" data-id="${t.id}">
+        <span class="edge ${edge}"></span>
+        <span class="who">
+          <span class="l1"><span class="id mono">${t.id}</span><span class="nm">${esc(t.client)}</span></span>
+          <span class="l2">
+            <span class="route">${esc(t.provider)}<span class="arr">→</span><b>Morgan Lloyd</b></span>
+            <span class="tag">${t.wrapper||"SIPP"}</span>
+            <span class="tag">${t.basis==="in_specie"?"In-specie":"Cash"}</span>
+            <span class="tag">${t.scope}</span>
+            ${t.actionRequired?'<span class="tag warn">set book cost</span>':""}
+          </span>
+        </span>
+        ${miniRail(t)}
+        <span class="val">${money(t.value)}</span>
+        <span class="stcell"><span class="badge ${m.bucket}">${m.label}</span></span>
+      </button>`;
+    }).join("");
+    rows.querySelectorAll("[data-id]").forEach(b=>b.onclick=()=>select(b.dataset.id));
+  }
+
+  /* ---------- render: focus panel ---------- */
+  function bigRail(t){
+    const nodes=STAGES.map((s,i)=>{
+      const st=nodeState(t,i);
+      const prev=i>0?nodeState(t,i-1):null;
+      let seg="";
+      if(i>0){
+        if(prev==="done"&&st==="done")seg="done";
+        else if(prev==="done"&&(st==="live"||st==="risk"))seg="active";
+        else if(prev==="done")seg="done";
+      }
+      const cur=(st==="live"||st==="risk"||st==="broke"||st==="cur-idle");
+      const time=stageTime(t,s.key);
+      return `<div class="rnode ${cur?"cur":""}">
+        ${i>0?`<span class="seg ${seg}"></span>`:""}
+        <span class="dot ${st}"></span>
+        <span class="rl">${s.label}</span>
+        ${time?`<span class="rt">${time}</span>`:""}
+      </div>`;
+    }).join("");
+    return `<div class="rail">${nodes}</div>`;
+  }
+  function stageTime(t,key){
+    // derive a display date for reached stages from the event trail where sensible
+    const map={
+      entered:t.created,
+      submitted_to_ml:t.ml.ref?"sent":null,
+      ml_complete:t.ml.settle?"":null,
+      settlement_date_advised:t.ml.settle,
+      sei_acr_created:t.sei.acr?"":null,
+      reconciled:(t.recon&&Math.abs(t.recon.ml-t.recon.sei)<=0.01)?"matched":null
+    };
+    return "";
+  }
+
+  function reconBlock(t){
+    if(!t.recon){
+      const note=t.breakType==="ml_submission_failed"
+        ? "No settlement reconciled — Morgan Lloyd submission failed before completion."
+        : (LIVE.has(t.status)||t.status==="entered")
+          ? "Reconciliation runs once the SEI cash credit is matched against the Morgan Lloyd advised value."
+          : "";
+      return `<div class="sect"><span class="eyebrow">Three-way reconciliation</span>
+        <p style="font-size:12px;color:var(--ink-2)">${note}</p></div>`;
+    }
+    const {graphene,ml,sei}=t.recon;
+    const delta=sei-ml;
+    const ok=Math.abs(delta)<=0.01;
+    return `<div class="sect"><span class="eyebrow">Three-way reconciliation</span>
+      <div class="recon">
+        <div class="recon-grid">
+          <div class="rc"><div class="src">Graphene</div><div class="sub">expected</div><div class="amt">${gbp.format(graphene)}</div></div>
+          <div class="rc"><div class="src">Morgan Lloyd</div><div class="sub">advised</div><div class="amt">${gbp.format(ml)}</div></div>
+          <div class="rc ${ok?"":"flag"}"><div class="src">SEI</div><div class="sub">received</div><div class="amt">${gbp.format(sei)}</div></div>
+        </div>
+        <div class="recon-foot">
+          <div class="delta"><span class="dk">Δ Morgan Lloyd → SEI</span>
+            <span class="dv ${ok?"ok":"bad"}">${delta<0?"−":delta>0?"+":""}${gbp.format(Math.abs(delta)).replace("£","£")}</span></div>
+          <span class="tol ${ok?"ok":"bad"}">${ok?"Within tolerance":"Out of tolerance"} <span class="mono">±£0.01</span></span>
+        </div>
+      </div></div>`;
+  }
+
+  function manageBlock(t){
+    const avail=OPS.filter(o=>o.avail(t));
+    const rawNext=NEXT[t.status];
+    const nextId=typeof rawNext==="function"?rawNext(t):rawNext;
+    const nextOp=avail.find(o=>o.id===nextId);
+    const primary=nextOp
+      ? `<button class="btn live nextbtn" data-op="${nextOp.id}"><span>${nextOp.label}</span><span class="nb-api">${nextOp.api}</span></button>`
+      : (waitingHint(t)?`<div class="nexthint">${waitingHint(t)}</div>`:"");
+    const edit=t.status==="entered"
+      ? `<button class="btn editbtn" type="button" data-edit><svg width="13" height="13" viewBox="0 0 16 16"><path d="M2 14l1-4 8-8 3 3-8 8z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>Edit draft</button>`
+      : "";
+
+    // provider operations, grouped — the real API surface, contextual to state/basis
+    const groups=PROV_ORDER.map(p=>{
+      const ops=avail.filter(o=>o.prov===p&&(!nextOp||o.id!==nextOp.id));
+      if(!ops.length)return "";
+      return `<div class="opgrp"><div class="opgrp-h"><span class="pv">${p}</span></div>
+        ${ops.map(o=>`<button class="oprow" type="button" data-op="${o.id}">
+          <span class="op-l"><span class="op-verb">${o.label}</span><span class="op-api">${o.api}</span></span>
+          <span class="op-go">&rarr;</span></button>`).join("")}</div>`;
+    }).join("");
+
+    // break resolution
+    let breakForm="";
+    if(t.status==="manual_intervention"&&t.recon){
+      breakForm=`<form class="panelform" data-form="resolve">
+        <div class="ftitle"><svg width="13" height="13" viewBox="0 0 16 16"><path d="M8 1l7 13H1z" fill="none" stroke="var(--break)" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 6v4M8 11.5v.5" stroke="var(--break)" stroke-width="1.4" stroke-linecap="round"/></svg>Resolve break · <span class="mono" style="font-size:10px">${t.breakType}</span></div>
+        <div class="frow">
+          <select name="status" aria-label="Resolution">
+            <option value="investigating"${t.breakStatus==="investigating"?" selected":""}>investigating</option>
+            <option value="resolved">resolved</option>
+            <option value="accepted">accepted (rounding)</option>
+          </select>
+          <input name="note" placeholder="Note for the audit trail…">
+          <button class="btn danger" type="submit">Apply</button>
+        </div>
+        <span class="hint">Recorded against the break and audited. Worker resumes from the chosen state.</span>
+      </form>`;
+    }
+
+    // force step — always available to ops
+    const opts=ALL_STATUSES.map(s=>`<option value="${s}"${s===t.status?" selected":""}>${s}</option>`).join("");
+    const force=`<form class="panelform" data-form="force">
+      <div class="ftitle">Force to stage</div>
+      <div class="frow">
+        <select name="to" aria-label="Target status">${opts}</select>
+        <input name="reason" placeholder="Reason (required for audit)…" required>
+        <button class="btn" type="submit">Apply</button>
+      </div>
+      <span class="hint">Overrides the saga. PATCH /admin/transfers/${t.id}/force-step — audited, worker resumes from the new state.</span>
+    </form>`;
+
+    return `<div class="sect"><span class="eyebrow">Manage transfer</span>
+      <div class="actions">
+        <div class="manage-top">${primary}${edit}</div>
+        ${groups}
+        ${breakForm}
+        ${force}
+      </div></div>`;
+  }
+
+  function cedeChip(t){
+    if(!t.cedingProgress)return "";
+    const tone={"With previous provider":"","Onboarding assets":"live","Completed":"done","Rejected":"break"}[t.cedingProgress]||"";
+    return `<span class="cede ${tone}" title="Ceding provider progress (Seccl transferStatus model)">${esc(t.provider)}: ${t.cedingProgress}</span>`;
+  }
+
+  function assetsBlock(t){
+    if(!t.assets||!t.assets.length)return "";
+    const missing=t.assets.filter(a=>a.book==null&&!a.autoBook).length;
+    const banner=missing?`<div class="abnr">
+      <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1l7 13H1z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 6v4M8 11.5v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <span><b>Set book cost</b> on ${missing} of ${t.assets.length} lines before CREST re-registration can settle — required for CGT.</span></div>`:"";
+    const rows=t.assets.map(a=>{
+      const book=a.book!=null
+        ? `<span class="bk-set">${gbp.format(a.book)}</span>${a.autoBook?' <span class="auto">auto</span>':''}`
+        : `<span class="bk-miss"><span class="miss">needs cost</span><button class="btn mini" type="button" data-book="${a.isin}">Set</button></span>`;
+      return `<tr>
+        <td><div class="an">${esc(a.name)}</div><div class="isin">${a.isin}</div></td>
+        <td class="r qp">${a.qty.toLocaleString("en-GB")}</td>
+        <td class="r qp">${gbp.format(a.price)}</td>
+        <td class="r qp">${gbp.format(a.value)}</td>
+        <td class="r">${book}</td></tr>`;
+    }).join("");
+    const total=t.assets.reduce((s,a)=>s+a.value,0);
+    return `<div class="sect"><span class="eyebrow">In-specie assets · CREST re-registration</span>
+      ${banner}
+      <table class="assets">
+        <thead><tr><th>Asset</th><th class="r">Quantity</th><th class="r">Price</th><th class="r">Value</th><th class="r">Book cost</th></tr></thead>
+        <tbody>${rows}</tbody>
+        <tfoot><tr><td>${t.assets.length} lines</td><td></td><td></td><td class="r">${gbp.format(total)}</td><td></td></tr></tfoot>
+      </table></div>`;
+  }
+
+  function chainBlock(t){
+    const f=(v)=>v?`<dd>${esc(v)}</dd>`:`<dd class="muted">—</dd>`;
+    return `<div class="sect"><span class="eyebrow">Chain of custody</span>
+      <div class="chain">
+        <div class="leg"><div class="lh"><span class="role">Ceding · previous provider</span></div>
+          <div class="org">${esc(t.provider)}</div>
+          <dl><dt>Plan no.</dt>${f(t.plan)}<dt>Provider ref</dt>${f(t.provRef)}<dt>Basis</dt><dd>${t.basis==="in_specie"?"in-specie · "+t.scope:"cash · "+t.scope}</dd></dl></div>
+        <div class="leg"><div class="lh"><span class="role">Receiving · ${t.wrapper||"SIPP"}</span><span class="hop">→</span></div>
+          <div class="org">Morgan Lloyd</div>
+          <dl><dt>Scheme ref</dt>${f(t.ml.scheme)}<dt>Transfer id</dt>${f(t.ml.ref)}<dt>Settle</dt>${f(t.ml.settle)}</dl></div>
+        <div class="leg"><div class="lh"><span class="role">Custody</span><span class="hop">→</span></div>
+          <div class="org">SEI</div>
+          <dl><dt>Account</dt>${f(t.sei.acct)}<dt>Cash receipt</dt>${f(t.sei.acr)}${t.seiStatus?`<dt>SEI status</dt><dd>${esc(t.seiStatus)}</dd>`:""}</dl></div>
+      </div></div>`;
+  }
+
+  function trailBlock(t){
+    const ev=t.events.slice().reverse().map(e=>`<div class="ev ${e.kind}"><span class="dot"></span>
+      <div class="code">${esc(e.code)}</div><div class="det">${e.det}</div><div class="ts">${e.ts}</div></div>`).join("");
+    return `<div class="sect"><span class="eyebrow">Event trail</span><div class="trail">${ev}</div></div>`;
+  }
+
+  function renderFocus(){
+    const focus=document.getElementById("focus");
+    const t=T.find(x=>x.id===state.sel);
+    if(!t){
+      focus.innerHTML=`<div class="focus-empty">
+        <svg width="40" height="40" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h7m0 0-3-3m3 3-3 3M13 6h7m0 0-3-3m3 3-3 3M13 18h7m0 0-3-3m3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <p>Select a transfer to inspect its chain of custody,<br>reconciliation, and act on it.</p></div>`;
+      return;
+    }
+    const m=META[t.status];
+    focus.innerHTML=`
+      <div class="fhead">
+        <div class="top">
+          <div>
+            <div class="id">${t.id} · ${t.acct}</div>
+            <h2>${esc(t.client)}</h2>
+            <div class="firm">${esc(t.firm)} · <span class="mono">${t.firmId}</span></div>
+          </div>
+          <div class="val" style="font-size:18px">${money(t.value)}</div>
+        </div>
+        <div class="statusline">
+          <span class="badge ${m.bucket}">${m.label}</span>
+          ${cedeChip(t)}
+          <span class="rawstatus">${t.status} · in stage ${t.inStage}</span>
+        </div>
+      </div>
+      <div class="fbody">
+        <div class="sect"><span class="eyebrow">Stage · ${escStageNo(t)}</span>${bigRail(t)}</div>
+        ${chainBlock(t)}
+        ${assetsBlock(t)}
+        ${reconBlock(t)}
+        ${manageBlock(t)}
+        ${trailBlock(t)}
+      </div>`;
+    wireForms(t);
+  }
+  function escStageNo(t){
+    if(t.status==="manual_intervention")return "diverged at "+STAGES[t.diverged].label.toLowerCase();
+    if(t.status==="adviser_notified")return "closed · 07 of 07 + notified";
+    const i=curIdx(t);
+    return String(i+1).padStart(2,"0")+" of 07";
+  }
+
+  /* ---------- actions ---------- */
+  function wireForms(t){
+    const focus=document.getElementById("focus");
+    focus.querySelectorAll("[data-op]").forEach(b=>b.onclick=()=>doOp(t,b.dataset.op));
+    focus.querySelectorAll("[data-book]").forEach(b=>b.onclick=()=>setBook(t,b.dataset.book));
+    const eb=focus.querySelector("[data-edit]");if(eb)eb.onclick=()=>openComposer(t);
+    const rf=focus.querySelector('[data-form="resolve"]');
+    if(rf)rf.onsubmit=e=>{e.preventDefault();
+      const s=rf.status.value;t.breakStatus=s;
+      if(s==="resolved"||s==="accepted"){t.status="reconciled";t.risk=false;t.diverged=null;
+        t.events.push({code:"break."+s,det:(rf.note.value||"Resolved by ops")+" — returned to reconciled",ts:"25 Jun · 09:42",kind:"good"});}
+      else t.events.push({code:"break.investigating",det:rf.note.value||"Under investigation",ts:"25 Jun · 09:42",kind:""});
+      toast("Break "+s,t.id);refreshAll();
+    };
+    const ff=focus.querySelector('[data-form="force"]');
+    if(ff)ff.onsubmit=e=>{e.preventDefault();
+      const to=ff.to.value;const reason=ff.reason.value.trim();
+      if(!reason){ff.reason.focus();return;}
+      const from=t.status;t.status=to;
+      if(to!=="manual_intervention"){t.risk=false;t.diverged=null;}
+      else t.diverged=t.diverged??curIdxFrom(from);
+      t.events.push({code:"transfer.force_stepped",det:`${from} → ${to} · ${reason}`,ts:"25 Jun · 09:42",kind:"acc"});
+      toast(`Forced to ${to}`,t.id);refreshAll();
+    };
+  }
+  function curIdxFrom(s){return s in IDX?IDX[s]:6;}
+
+  /* ---------- create / edit composer ---------- */
+  function composerForm(t){
+    const v=k=>t&&t[k]!=null?t[k]:"";
+    const opt=(arr,cur)=>arr.map(o=>`<option value="${o}"${o===cur?" selected":""}>${o}</option>`).join("");
+    const firmOpts=FIRMS.map(fm=>`<option value="${fm.id}"${t&&t.firmId===fm.id?" selected":""}>${esc(fm.name)}</option>`).join("");
+    const basis=t?t.basis:"cash";
+    return `
+      <div class="fld"><label>Client name</label><input name="client" value="${t?esc(t.client):""}" placeholder="e.g. Eleanor Whitfield" required></div>
+      <div class="fld"><label>Account</label><input name="acct" value="${esc(v('acct'))}" placeholder="acc_…"></div>
+      <div class="fld"><label>Firm (tenant)</label><select name="firmId">${firmOpts}</select></div>
+      <div class="fld"><label>Receiving wrapper</label><select name="wrapper">${opt(WRAPPERS,t?t.wrapper:"SIPP")}</select></div>
+      <div class="fld"><label>Ceding provider</label><select name="provider">${opt(PROVIDERS,t?t.provider:PROVIDERS[0])}</select></div>
+      <div class="fld"><label>Previous provider ref</label><input name="provRef" value="${esc(v('provRef'))}" placeholder="e.g. AV-REF-88201"></div>
+      <div class="fld"><label>Plan / policy number</label><input name="plan" value="${esc(v('plan'))}" placeholder="ceding policy no."></div>
+      <div class="fld"><label>Basis</label><select name="basis" id="c-basis">${opt(["cash","in_specie"],basis)}</select></div>
+      <div class="fld"><label>Scope</label><select name="scope">${opt(["full","partial"],t?t.scope:"full")}</select></div>
+      <div class="fld"><label>Value (GBP)</label><input name="value" id="c-value" type="number" step="0.01" min="0" value="${t?t.value:""}" placeholder="0.00"></div>
+      <div class="abuild" id="c-assets"${basis==="in_specie"?"":" hidden"}>
+        <div class="abuild-h"><span class="eyebrow">In-specie asset lines · ISIN</span><button type="button" class="btn mini" id="c-addrow">+ Add line</button></div>
+        <div id="c-rows"></div>
+        <div class="abuild-f"><span>Total · re-registered value</span><span id="c-total" class="mono">£0.00</span></div>
+      </div>`;
+  }
+  function assetRowEl(a){
+    const d=document.createElement("div");d.className="arow";
+    d.innerHTML=`<input class="a-isin" placeholder="ISIN" value="${a?esc(a.isin):""}">
+      <input class="a-name" placeholder="Asset name" value="${a?esc(a.name):""}">
+      <input class="a-qty" type="number" step="any" min="0" placeholder="Qty" value="${a&&a.qty!=null?a.qty:""}">
+      <input class="a-price" type="number" step="any" min="0" placeholder="Price" value="${a&&a.price!=null?a.price:""}">
+      <button type="button" class="rm" title="Remove line" aria-label="Remove line">&times;</button>`;
+    return d;
+  }
+  function openComposer(t){
+    state.editId=t?t.id:null;
+    document.getElementById("modal-title").textContent=t?("Edit transfer · "+t.id):"New transfer";
+    document.getElementById("modal-submit").textContent=t?"Save changes":"Create transfer";
+    document.getElementById("modal-api").textContent=t?("PATCH /transfers/"+t.id):"POST /transfers";
+    const form=document.getElementById("composer");
+    form.innerHTML=composerForm(t);
+    const rows=form.querySelector("#c-rows");
+    const seed=(t&&t.assets&&t.assets.length)?t.assets:[];
+    seed.forEach(a=>rows.appendChild(assetRowEl(a)));
+    if((t?t.basis:"cash")==="in_specie"&&!seed.length)rows.appendChild(assetRowEl(null));
+    wireComposer();
+    document.getElementById("modal").hidden=false;
+    form.querySelector('[name="client"]').focus();
+  }
+  function wireComposer(){
+    const form=document.getElementById("composer");
+    const basis=form.querySelector("#c-basis"),assetsBox=form.querySelector("#c-assets"),
+      valueInp=form.querySelector("#c-value"),rows=form.querySelector("#c-rows");
+    function recompute(){
+      let total=0;
+      rows.querySelectorAll(".arow").forEach(r=>{
+        const q=parseFloat(r.querySelector(".a-qty").value)||0,p=parseFloat(r.querySelector(".a-price").value)||0;total+=q*p;});
+      if(basis.value==="in_specie"){valueInp.value=total.toFixed(2);valueInp.readOnly=true;valueInp.classList.add("ro");
+        form.querySelector("#c-total").textContent=gbp.format(total);}
+      else{valueInp.readOnly=false;valueInp.classList.remove("ro");}
+    }
+    function wireRows(){rows.querySelectorAll(".arow").forEach(r=>{
+      r.querySelector(".a-qty").oninput=recompute;r.querySelector(".a-price").oninput=recompute;
+      r.querySelector(".rm").onclick=()=>{r.remove();recompute();};});}
+    basis.onchange=()=>{const ins=basis.value==="in_specie";assetsBox.hidden=!ins;
+      if(ins&&!rows.children.length)rows.appendChild(assetRowEl(null));wireRows();recompute();};
+    form.querySelector("#c-addrow").onclick=()=>{rows.appendChild(assetRowEl(null));wireRows();recompute();};
+    wireRows();recompute();
+    form.onsubmit=submitComposer;
+  }
+  function submitComposer(e){
+    e.preventDefault();
+    const form=document.getElementById("composer");
+    const g=n=>form.querySelector(`[name="${n}"]`).value.trim();
+    const client=g("client");if(!client){form.querySelector('[name="client"]').focus();return;}
+    const basis=g("basis"),scope=g("scope"),wrapper=g("wrapper"),firmId=g("firmId");
+    const firm=(FIRMS.find(f=>f.id===firmId)||{}).name||firmId;
+    const provider=g("provider"),provRef=g("provRef")||null,plan=g("plan")||null;
+    let assets;
+    if(basis==="in_specie"){
+      assets=[];
+      form.querySelectorAll(".arow").forEach(r=>{
+        const isin=r.querySelector(".a-isin").value.trim(),name=r.querySelector(".a-name").value.trim(),
+          qty=parseFloat(r.querySelector(".a-qty").value)||0,price=parseFloat(r.querySelector(".a-price").value)||0;
+        if(isin||name||qty)assets.push({isin:isin||"—",name:name||"Unnamed holding",qty,price,value:Math.round(qty*price*100)/100,book:null,autoBook:false});
+      });
+    }
+    const value=basis==="in_specie"?(assets||[]).reduce((s,a)=>s+a.value,0):(parseFloat(g("value"))||0);
+    const acct=g("acct")||("acc_"+(3000+seq()));
+    if(state.editId){
+      const t=T.find(x=>x.id===state.editId);
+      if(t&&t.status==="entered"){
+        Object.assign(t,{client,acct,firmId,firm,provider,provRef,plan,wrapper,basis,scope,value,assets});
+        t.actionRequired=!!(assets&&assets.some(a=>a.book==null&&!a.autoBook));
+        ev(t,"transfer.updated","PATCH /transfers/"+t.id+" — draft amended","");
+        toast("Transfer updated",t.id);
+      }
+      closeModal();select(state.editId);return;
+    }
+    const id="tr_"+Math.random().toString(36).slice(2,8);
+    const t={id,client,acct,firm,firmId,provider,plan,provRef,wrapper,value,basis,scope,
+      status:"entered",diverged:null,risk:false,inStage:"0d",created:NOWDATE,seiStatus:null,cedingProgress:null,assets,
+      ml:{scheme:null,ref:null,settle:null},sei:{acct:"SEI-AC-"+(44400+seq()),acr:null},recon:null,
+      events:[{code:"transfer.created",det:"POST /transfers — recorded by "+firm+" · "+(basis==="in_specie"?"in-specie":"cash")+", "+scope,ts:NOW,kind:""}]};
+    t.actionRequired=!!(assets&&assets.some(a=>a.book==null&&!a.autoBook));
+    T.unshift(t);
+    closeModal();state.stage=null;select(id);
+    toast("Transfer created",id);
+  }
+  function closeModal(){document.getElementById("modal").hidden=true;state.editId=null;refreshAll();}
+
+  function setBook(t,isin){
+    const a=t.assets.find(x=>x.isin===isin);if(!a)return;
+    a.book=Math.round(a.value*0.92*100)/100;a.autoBook=false;
+    t.actionRequired=t.assets.some(x=>x.book==null&&!x.autoBook);
+    t.events.push({code:"transfer.book_value_set",det:`Book cost ${gbp.format(a.book)} set on ${a.name}`,ts:"25 Jun · 09:42",kind:"acc"});
+    toast("Book cost set",t.id);refreshAll();
+  }
+
+  function toast(msg,id){
+    const w=document.getElementById("toasts");
+    const el=document.createElement("div");el.className="toast";
+    el.innerHTML=`<svg width="14" height="14" viewBox="0 0 16 16"><path d="M3 8.5l3 3 7-7" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>${esc(msg)} <span class="mono">${id}</span>`;
+    w.appendChild(el);setTimeout(()=>{el.style.opacity="0";el.style.transition="opacity .3s";setTimeout(()=>el.remove(),300);},2600);
+  }
+
+  function refreshAll(){renderBoard();syncTabs();renderQueue();renderFocus();}
+  function select(id){state.sel=id;renderQueue();renderFocus();
+    document.getElementById("focus").scrollIntoView({block:"nearest",behavior:"smooth"});}
+
+  function syncTabs(){
+    document.getElementById("needs-count").textContent=T.filter(needsMe).length;
+    document.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.tab===state.tab)));
+  }
+
+  /* ---------- wire chrome ---------- */
+  document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{
+    state.tab=b.dataset.tab;if(state.tab==="needs")state.stage=null;
+    syncTabs();renderBoard();renderQueue();
+  });
+  document.getElementById("search").addEventListener("input",e=>{
+    state.q=e.target.value;if(state.q&&state.tab==="needs"){state.tab="all";syncTabs();}
+    renderQueue();
+  });
+  document.getElementById("new-transfer").onclick=()=>openComposer(null);
+  document.querySelectorAll("#modal [data-close]").forEach(el=>el.onclick=closeModal);
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!document.getElementById("modal").hidden)closeModal();});
+
+  /* ---------- init ---------- */
+  renderBoard();syncTabs();renderQueue();renderFocus();
+  const hash=location.hash.slice(1);
+  select(T.some(x=>x.id===hash)?hash:"tr_9f2a71"); // deep-link, else highest-priority break
+  window.addEventListener("hashchange",()=>{const h=location.hash.slice(1);if(T.some(x=>x.id===h))select(h);});
+})();
+</script>
+<!--ARTIFACT-END-->
+</body>
+</html>

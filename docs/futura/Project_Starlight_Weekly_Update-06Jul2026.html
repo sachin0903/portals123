@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Project Starlight — Weekly Status</title>
+<style>
+  :root{--ink:#111;--sec:#4b4b4b;--muted:#8a8a8a;--surface:#f7f7f7;--card:#fff;--border:#e5e5e5;
+    --success:#059669;--success-bg:#ecfdf5;--warning:#d97706;--warning-bg:#fffbeb;--danger:#dc2626;--danger-bg:#fef2f2;--info:#2563eb;--info-bg:#eff6ff;}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--surface);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .header{background:linear-gradient(135deg,#000,#111 50%,#1a1a1a);position:relative}
+  .header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#333,#555,#333)}
+  .header-inner{max-width:940px;margin:0 auto;padding:30px 24px 34px}
+  .brand-row{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.02em;color:#fff;font-size:15px}
+  .brand-x{color:#777;font-weight:400}
+  .brand-row .g{color:#9fc0e6}
+  .header-title{color:#fff;font-size:27px;font-weight:800;margin:16px 0 4px;letter-spacing:-.02em}
+  .report-meta{color:#b8b8b8;font-size:13px;display:flex;flex-wrap:wrap;gap:6px 20px}
+  .report-meta b{color:#eee;font-weight:600}
+  main{max-width:940px;margin:0 auto;padding:26px 24px 60px}
+  .summary-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:20px}
+  .summary-card h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px}
+  .summary-card p{color:var(--sec);font-size:15px}
+  .section-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 22px;box-shadow:0 1px 3px rgba(0,0,0,.05);margin-bottom:18px}
+  .section-card h3{font-size:16px;font-weight:800;margin-bottom:12px}
+  .task-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid #f0f0f0}
+  .task-item:last-child{border-bottom:none}
+  .task-key{flex:none;min-width:58px;font-size:11px;font-weight:700;color:#fff;background:#2a2a2a;border-radius:6px;padding:3px 7px;height:fit-content;text-align:center}
+  .task-key.plat{background:#1863dc}.task-key.eng{background:#7a3fbf}.task-key.fut{background:#0a7ea6}
+  .task-title{font-weight:600;font-size:14.5px}
+  .task-meta{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;margin-top:3px;font-size:12.5px;color:var(--muted)}
+  .status-badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px}
+  .s-done{background:var(--success-bg);color:var(--success)} .s-dev{background:var(--warning-bg);color:var(--warning)} .s-plan{background:var(--info-bg);color:var(--info)} .s-hold{background:#f0f0f0;color:#666}
+  ul.list{margin:2px 0 0;padding-left:20px} ul.list li{color:var(--sec);font-size:14px;margin:5px 0}
+  .info-block{border-radius:10px;padding:12px 15px;margin:10px 0;font-size:14px}
+  .info-block.notice{background:var(--info-bg);border-left:4px solid var(--info)}
+  .info-block.risk{background:var(--warning-bg);border-left:4px solid var(--warning)}
+  .info-block.success-block{background:var(--success-bg);border-left:4px solid var(--success)}
+  .info-block b{color:var(--ink)}
+  .epic-row{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:13.5px}
+  .epic-row:last-child{border-bottom:none}
+  .epic-num{flex:none;width:52px;font-weight:800;color:var(--muted);font-size:12px}
+  .epic-name{flex:1;color:var(--sec)}
+  .tag{flex:none;font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:999px}
+  .tag-done{background:var(--success-bg);color:var(--success)} .tag-active{background:var(--warning-bg);color:var(--warning)} .tag-backlog{background:#f0f0f0;color:#777} .tag-reuse{background:#eef2ff;color:#4338ca}
+  footer{max-width:940px;margin:0 auto;padding:0 24px 50px;color:var(--muted);font-size:12px}
+  @media print{body{background:#fff}.summary-card,.section-card{box-shadow:none}.header{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+
+<header class="header"><div class="header-inner">
+  <div class="brand-row">Futura <span class="brand-x">×</span> <span class="g">Graphene</span></div>
+  <div class="header-title">Project Starlight — Phase 1 · Weekly Status</div>
+  <div class="report-meta">
+    <span><b>Reporting week:</b> w/c 6 Jul 2026</span>
+    <span><b>Phase:</b> 1 — Client Onboarding &amp; Advice Platform</span>
+    <span><b>Prepared by:</b> Graphene</span>
+  </div>
+</div></header>
+
+<main>
+
+  <div class="summary-card">
+    <h2>Project Summary</h2>
+    <p>Starlight is built on Graphene's shared multi-tenant platform — the same engineering that powers our other client portals — delivered to Futura as a single-tenant, Futura-branded instance. This week the <b>shared foundation that Starlight reuses moved on materially</b>: per-tenant white-label branding (with a visual branding studio and live portal preview) and the multi-tenant identity / access / operations platform. Net effect: the <b>Futura-branded look becomes a configuration, not a code fork</b>. The next milestone is the shared <b>advice engines</b> — workflow, forms (fact-find / risk), and ID/AML — which the Futura onboarding journey sits on.</p>
+  </div>
+
+  <div class="section-card">
+    <h3>✅ Progress this week <span style="font-weight:500;font-size:12px;color:var(--muted)">(shared platform Starlight reuses)</span></h3>
+    <div class="task-item"><span class="task-key plat">Brand</span><div class="task-body">
+      <div class="task-title">Per-tenant white-label branding across the portals</div>
+      <div class="task-meta"><span class="status-badge s-done">Complete</span><span>Client / adviser / admin all render each firm's brand; tenant tokens win the cascade</span></div></div></div>
+    <div class="task-item"><span class="task-key plat">Brand</span><div class="task-body">
+      <div class="task-title">WYSIWYG branding studio — light/dark palettes, live portal preview</div>
+      <div class="task-meta"><span class="status-badge s-done">Complete</span><span>Non-developers can set a firm's colours, logos and theme with an instant preview</span></div></div></div>
+    <div class="task-item"><span class="task-key plat">Brand</span><div class="task-body">
+      <div class="task-title">Drag-and-drop client-home layout builder</div>
+      <div class="task-meta"><span class="status-badge s-dev">In progress</span><span>Phase 2 — arrange the client dashboard per firm without code</span></div></div></div>
+    <div class="task-item"><span class="task-key plat">Auth</span><div class="task-body">
+      <div class="task-title">Multi-tenant identity &amp; access foundation</div>
+      <div class="task-meta"><span class="status-badge s-done">Complete</span><span>Project-per-tenant WorkOS, per-tenant token verification, self-hosted invites + email verification + forgot-password</span></div></div></div>
+    <div class="task-item"><span class="task-key plat">Admin</span><div class="task-body">
+      <div class="task-title">Operations (admin) portal + role-based access</div>
+      <div class="task-meta"><span class="status-badge s-done">Complete</span><span>Tenant-scoped roles editor, granular operations permissions, firm self-service, member management</span></div></div></div>
+  </div>
+
+  <div class="section-card">
+    <h3>🎯 Aim — this week &amp; next (6–17 Jul)</h3>
+    <ul class="list">
+      <li><b>Start the shared advice engines</b> the Futura onboarding journey needs: the <b>workflow + task engine</b>, the <b>forms engine</b> (fact-find / risk / suitability / terms) and the <b>provider-agnostic ID/AML framework</b>.</li>
+      <li><b>Scope the Futura instance</b> in the new branding studio — Futura primary brand + the four trading-style co-brands on the "Your Adviser" card.</li>
+      <li>Confirm <b>SmartSearch</b> as the Futura ID/AML provider so the adapter can be wired onto the shared framework.</li>
+      <li>Finish the client-home layout builder (phase 2) and fold it into the Futura client dashboard.</li>
+    </ul>
+  </div>
+
+  <div class="section-card">
+    <h3>🚧 Key actions &amp; review areas</h3>
+    <div class="info-block risk"><b>POC sign-off still open (Futura).</b> EPIC 0b (POC iteration &amp; UX sign-off) remains the current gate — Futura feedback rounds + module UX sign-offs. Closing this unblocks the onboarding-journey build.</div>
+    <div class="info-block notice"><b>Sequencing.</b> The Futura onboarding journey (invite → documents → ID/AML → fact-find → risk → suitability) depends on the shared advice engines above. Those land next; the Futura-specific build starts once they're in place — see resourcing note below.</div>
+    <div class="info-block success-block"><b>Good news on cost.</b> With the branding studio delivered, the Futura re-skin of the three portals is now largely <b>configuration, not bespoke build</b> — reducing the Futura-specific effort.</div>
+  </div>
+
+  <div class="section-card">
+    <h3>📋 Key decisions &amp; notes</h3>
+    <ul class="list">
+      <li><b>Reuse, not rebuild.</b> Starlight is a single-tenant, Futura-branded instance of the shared platform — auth, tenancy, branding, RBAC and the operations portal are now in place and reused, not rebuilt.</li>
+      <li><b>ID/AML is provider-agnostic.</b> The shared framework takes pluggable providers; Futura's choice (SmartSearch) is a thin adapter on top — swappable later.</li>
+      <li><b>Branding as configuration.</b> Futura's look is set in the studio (colours, logos, layout) with a live preview — no code fork per firm.</li>
+    </ul>
+  </div>
+
+  <div class="section-card">
+    <h3>🗺 Phase 1 EPIC roadmap</h3>
+    <div class="epic-row"><span class="epic-num">0</span><span class="epic-name">Discovery &amp; technical workshop</span><span class="tag tag-done">Done</span></div>
+    <div class="epic-row"><span class="epic-num">0b</span><span class="epic-name">POC iteration &amp; UX sign-off</span><span class="tag tag-active">In progress · gate</span></div>
+    <div class="epic-row"><span class="epic-num">1</span><span class="epic-name">Core platform &amp; application foundation (auth · tenancy · RBAC · branding)</span><span class="tag tag-done">Largely met by shared platform</span></div>
+    <div class="epic-row"><span class="epic-num">2</span><span class="epic-name">Client record &amp; data model</span><span class="tag tag-reuse">Shared build</span></div>
+    <div class="epic-row"><span class="epic-num">3</span><span class="epic-name">Workflow engine</span><span class="tag tag-active">Starting</span></div>
+    <div class="epic-row"><span class="epic-num">4</span><span class="epic-name">Task management &amp; operational controls</span><span class="tag tag-reuse">Shared build</span></div>
+    <div class="epic-row"><span class="epic-num">5</span><span class="epic-name">Fact-find engine</span><span class="tag tag-active">Starting</span></div>
+    <div class="epic-row"><span class="epic-num">6</span><span class="epic-name">Risk-profiling engine</span><span class="tag tag-active">Starting</span></div>
+    <div class="epic-row"><span class="epic-num">7</span><span class="epic-name">ID/AML integration (SmartSearch)</span><span class="tag tag-active">Framework starting</span></div>
+    <div class="epic-row"><span class="epic-num">8–10</span><span class="epic-name">Suitability · letter suite · e-signature</span><span class="tag tag-backlog">Backlog</span></div>
+    <div class="epic-row"><span class="epic-num">11</span><span class="epic-name">Client portal experience (onboarding journey)</span><span class="tag tag-active">In progress</span></div>
+    <div class="epic-row"><span class="epic-num">12</span><span class="epic-name">Adviser &amp; admin experience</span><span class="tag tag-reuse">Shared + branding</span></div>
+    <div class="epic-row"><span class="epic-num">13</span><span class="epic-name">Infrastructure readiness &amp; go-live</span><span class="tag tag-backlog">Backlog</span></div>
+  </div>
+
+</main>
+
+<footer>
+  Project Starlight (Futura) · Graphene Platforms · internal weekly status. "Shared build" = capabilities built once on the Graphene platform and reused by Futura's single-tenant instance. Progress items reflect platform engineering landed in the portals codebase this week.
+</footer>
+
+</body>
+</html>

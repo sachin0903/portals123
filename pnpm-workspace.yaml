@@ -1,0 +1,62 @@
+packages:
+  - 'apps/client'
+  - 'apps/platform'
+  - 'apps/admin'
+  - 'pkgs/*'
+# pnpm 11 reads the build-script allowlist from here (name -> allowed).
+allowBuilds:
+  core-js: false
+  esbuild: true
+  lefthook: set this to true or false
+  # Its postinstall only prints an Open Collective banner.
+  tesseract.js: false
+minimumReleaseAgeExclude:
+  - layerchart@2.5.1
+# Security floors for TRANSITIVE deps flagged by Dependabot (2026-07): each pins the parent's
+# resolution to the first patched version WITHIN the major the parent expects (an open-ended
+# `>=` floor once resolved cookie to 2.x and broke SvelteKit's runtime imports — keep these
+# caret-scoped). Remove an entry once the parent ships its own bump (`pnpm why <pkg>`).
+overrides:
+  # ONE Svelte runtime, ONE Kit. bits-ui / runed / svelte-toolbelt / mode-watcher / svelte-sonner /
+  # @lucide/svelte / svelte-dnd-action / @xyflow+svelte all declare a `svelte` PEER, and pnpm was
+  # satisfying it with a second copy (5.56.0 + kit 2.61.1) while the apps and pkgs/ui ran 5.56.8 +
+  # kit 2.70.1. Two runtimes = two schedulers: blocks created by one are never driven by the other,
+  # so hydration cleared every {#if}/{#each} body and nothing refilled it — the page rendered for a
+  # frame then went blank, every bits-ui popover (nationality, tax residence) was inert, the
+  # mode-watcher theme toggle did nothing and `use:enhance` never attached. No error is thrown, on
+  # any portal, which is what made it so expensive to find. Do not remove without checking
+  # `find . -path '*/node_modules/svelte/package.json'` returns exactly one version.
+  svelte: '^5.57.0'
+  '@sveltejs/kit': '^2.70.1'
+  # CVE-2026-67213: nanoid's random ID generation can loop indefinitely. Nothing here depends on
+  # it directly — it's a transitive dep of some dev-toolchain package — so the fix has to be an
+  # override rather than a package.json bump. 3.3.18 stays on the 3.x line the resolved tree
+  # already expects; the 5.x rewrite is ESM-only and unrelated to this fix.
+  nanoid: '^3.3.18'
+  # minimatch 3 is the only consumer of brace-expansion 1.x, which has NO patch for
+  # CVE-2026-14257 (fix exists only in 5.0.8). minimatch 10 rides brace-expansion 5 and keeps
+  # the call signatures its consumers (eslint's config machinery) use — proven by the lint gate.
+  'minimatch@3': '^10.2.5'
+  'brace-expansion@>=3': '^5.0.8'
+  'cookie@<0.7.0': '^0.7.0'
+  'handlebars@<4.7.9': '^4.7.9'
+  'js-yaml@4': '^4.3.0'
+  'postcss@<8.5.18': '^8.5.18'
+  'qs@<6.15.2': '^6.15.2'
+  'tar@<7.5.21': '^7.5.21'
+  'underscore@<1.13.8': '^1.13.8'
+  # CVE-2026-92708 and the three devalue advisories fixed in 5.9.3. Svelte and SvelteKit
+  # accept ^5.8.1 and still resolve 5.9.0, so the floor has to be an override.
+  devalue: '^5.9.3'
+  # CVE-2026-93749: source-map-js 1.2.1 can stall the event loop on a crafted indexed
+  # source-map section. PostCSS, Tailwind and css-tree still resolve 1.2.1; the fix is
+  # 1.2.2 on the same line.
+  'source-map-js@<1.2.2': '^1.2.2'
+  # GHSA-cg2g-xh64-v4q7 (critical, SAFE_FOR_TEMPLATES bypass) and GHSA-mrv2-3pqr-j5jr (high,
+  # IN_PLACE hook): fixed in 3.4.17. Only jspdf (via @graphene/ui) pulls dompurify in, and it still
+  # resolves 3.4.16; the fix is the next patch on the same 3.x line.
+  'dompurify@<3.4.17': '^3.4.17'
+  # CVE-2026-112942: launch-editor (inside vite's dev server) command injection, fixed in 8.3.3.
+  # The apps and pkgs/ui declare vite directly; pkgs/rum has no vite of its own and resolves it as
+  # @sveltejs/kit's peer, which stayed on 8.3.0 until this floor.
+  'vite@<8.3.3': '^8.3.3'

@@ -1,0 +1,16 @@
+# Review routing. Also serves as documented access control for SOC 2 / ISO 27001.
+# Replace the placeholder teams with real GitHub teams.
+
+*                       @graphene/engineering
+
+/apps/api/              @graphene/backend
+/apps/client/           @graphene/frontend
+/apps/platform/         @graphene/frontend
+/apps/admin/            @graphene/platform
+/infrastructure/        @graphene/platform
+/.github/               @graphene/platform
+
+# Migrations and auth are sensitive — require platform review.
+/pkgs/auth/         @graphene/platform @graphene/frontend
+/apps/api/migrations/   @graphene/platform @graphene/backend
+/apps/api/app/auth.py   @graphene/platform @graphene/backend

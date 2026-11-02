@@ -1,0 +1,1108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "firmId": {
+      "type": "string",
+      "description": "observed values: FIRM001, SECCI, TEST1"
+    },
+    "nodeId": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "observed values: 1, 83, 84"
+      }
+    },
+    "clientType": {
+      "type": "string",
+      "description": "observed values: Individual"
+    },
+    "title": {
+      "type": "string",
+      "description": "observed values: Dr, Mr, Mrs"
+    },
+    "firstName": {
+      "type": "string",
+      "description": "observed values: Fred, Maxie, Wilma"
+    },
+    "surname": {
+      "type": "string",
+      "description": "observed values: Flinstone, Flintstone, Zieme"
+    },
+    "gender": {
+      "type": "string",
+      "description": "observed values: Female, Male"
+    },
+    "currency": {
+      "type": "string",
+      "description": "observed values: GBP"
+    },
+    "addressDetail": {
+      "$ref": "#/$defs/AddressDetail"
+    },
+    "language": {
+      "type": "string",
+      "description": "observed values: en"
+    },
+    "email": {
+      "type": "string"
+    },
+    "mobile": {
+      "$ref": "#/$defs/Mobile"
+    },
+    "nationality": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Nationality"
+        },
+        {
+          "type": "string",
+          "description": "observed values: GB"
+        }
+      ]
+    },
+    "nationalInsuranceNo": {
+      "type": "string",
+      "description": "observed values: AB266151C, AB325567C, AB767888C, AL790272C, PC989833C"
+    },
+    "dateOfBirth": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "taxDomicile": {
+      "type": "string",
+      "description": "observed values: GB"
+    },
+    "termsAccepted": {
+      "type": "boolean"
+    },
+    "bankDetails": {
+      "$ref": "#/$defs/BankDetails"
+    },
+    "emailVerified": {
+      "type": "boolean"
+    },
+    "emailToken": {
+      "type": "string"
+    },
+    "emailTokenExpiry": {
+      "type": "string"
+    },
+    "mobileVerified": {
+      "type": "boolean"
+    },
+    "smsToken": {
+      "type": "string",
+      "description": "observed values: 012782, 228397, 534464, 620273, 830512"
+    },
+    "smsTokenExpiry": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "description": "observed values: Active, Pending"
+    },
+    "nodeName": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "observed values: AML Testing Node, BAV Testing Node, Seccl child firm"
+      }
+    },
+    "smsTokenVerified": {
+      "type": "boolean"
+    },
+    "commsStatus": {
+      "$ref": "#/$defs/CommsStatus"
+    },
+    "marketingConsent": {
+      "type": "boolean"
+    },
+    "termsAcceptedDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "amlData": {
+      "$ref": "#/$defs/AmlData"
+    },
+    "_surname": {
+      "type": "string",
+      "description": "observed values: FLINSTONE, FLINTSTONE, ZIEME"
+    },
+    "_firstName": {
+      "type": "string",
+      "description": "observed values: FRED, MAXIE, WILMA"
+    },
+    "auditDetails": {
+      "$ref": "#/$defs/AuditDetails"
+    },
+    "updateId": {
+      "type": "string"
+    },
+    "externalIds": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ExternalId"
+      }
+    },
+    "amlChecks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/AmlCheck"
+      }
+    },
+    "updateHistory": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/UpdateHistory"
+      }
+    },
+    "nationalities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Nationality"
+      }
+    },
+    "employmentStatus": {
+      "type": "string",
+      "description": "observed values: Employed"
+    },
+    "maritalStatus": {
+      "type": "string",
+      "description": "observed values: Single"
+    },
+    "retirementAge": {
+      "type": "number"
+    },
+    "recordCreationDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "bankDetailsHistory": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "createdBy": {
+            "$ref": "#/$defs/CreatedBy"
+          },
+          "createdOn": {
+            "type": "string",
+            "description": "observed values: 2024-04-04T12:25:14.112Z"
+          },
+          "verificationStatus": {
+            "type": "string",
+            "description": "observed values: Active"
+          },
+          "verificationInfo": {
+            "$ref": "#/$defs/VerificationInfo"
+          },
+          "sortCode": {
+            "type": "string",
+            "description": "observed values: 309493"
+          },
+          "accountNumber": {
+            "type": "string",
+            "description": "observed values: 01273801"
+          }
+        },
+        "required": [
+          "accountNumber",
+          "createdBy",
+          "createdOn",
+          "sortCode",
+          "verificationInfo",
+          "verificationStatus"
+        ]
+      }
+    },
+    "feeStructures": {
+      "$ref": "#/$defs/FeeStructures"
+    }
+  },
+  "title": "Client",
+  "description": "Client as Seccl returns it -- inferred from 41 example(s) in the Postman collection.",
+  "$defs": {
+    "ClientCreate": {
+      "type": "object",
+      "properties": {
+        "firmId": {
+          "type": "string",
+          "description": "observed values: SCUST, TEST1"
+        },
+        "nodeId": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "observed values: 0, 1"
+          }
+        },
+        "clientType": {
+          "type": "string",
+          "description": "observed values: Corporate, Individual, Individual Minor, Trust"
+        },
+        "title": {
+          "type": "string",
+          "description": "observed values: Miss, Mr, Mrs"
+        },
+        "firstName": {
+          "type": "string",
+          "description": "observed values: Billy, Gerald, Pebbles, Wilma"
+        },
+        "surname": {
+          "type": "string",
+          "description": "observed values: Flinstone, Flintstone, NoMates, Smith"
+        },
+        "gender": {
+          "type": "string",
+          "description": "observed values: Female, Male"
+        },
+        "currency": {
+          "type": "string",
+          "description": "observed values: GBP"
+        },
+        "addressDetail": {
+          "$ref": "#/$defs/AddressDetail"
+        },
+        "language": {
+          "type": "string",
+          "description": "observed values: en"
+        },
+        "email": {
+          "type": "string"
+        },
+        "mobile": {
+          "$ref": "#/$defs/Mobile"
+        },
+        "nationality": {
+          "type": "string",
+          "description": "observed values: AT, GB"
+        },
+        "nationalInsuranceNo": {
+          "type": "string",
+          "description": "observed values: PC955833D"
+        },
+        "dateOfBirth": {
+          "type": "string",
+          "format": "date"
+        },
+        "taxDomicile": {
+          "type": "string",
+          "description": "observed values: GB"
+        },
+        "amlStatus": {
+          "type": "string",
+          "description": "observed values: Approved"
+        },
+        "termsAccepted": {
+          "type": "boolean"
+        },
+        "bankDetails": {
+          "$ref": "#/$defs/BankDetails"
+        },
+        "nationalities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Nationality"
+          }
+        },
+        "vulnerability": {
+          "$ref": "#/$defs/Vulnerability"
+        },
+        "emailVerified": {
+          "type": "boolean"
+        },
+        "kycData": {
+          "$ref": "#/$defs/KycData"
+        },
+        "entityName": {
+          "type": "string",
+          "description": "observed values: Bedrock Corp, Bedrock Trust"
+        },
+        "entityDetails": {
+          "$ref": "#/$defs/EntityDetails"
+        },
+        "employmentStatus": {
+          "type": "string",
+          "description": "observed values: Employed"
+        },
+        "maritalStatus": {
+          "type": "string",
+          "description": "observed values: Married"
+        },
+        "retirementAge": {
+          "type": "number"
+        },
+        "feeStructures": {
+          "$ref": "#/$defs/FeeStructures"
+        },
+        "status": {
+          "type": "string",
+          "description": "observed values: Active"
+        },
+        "parentId": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "employers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "companyName": {
+                "type": "string",
+                "description": "observed values: Company Ltd"
+              },
+              "companyRegNo": {
+                "type": "string",
+                "description": "observed values: 1234567"
+              },
+              "addressDetail": {
+                "$ref": "#/$defs/AddressDetail"
+              },
+              "bankDetails": {
+                "$ref": "#/$defs/BankDetails"
+              }
+            },
+            "required": [
+              "addressDetail",
+              "bankDetails",
+              "companyName",
+              "companyRegNo"
+            ]
+          }
+        },
+        "requiresDebitMandate": {
+          "type": "boolean"
+        }
+      },
+      "required": ["clientType", "currency", "firmId", "nodeId", "taxDomicile"],
+      "title": "ClientCreate",
+      "description": "Body for creating a Client -- inferred from 19 example(s) in the Postman collection."
+    },
+    "ClientUpdate": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "updateAction": {
+          "type": "string"
+        },
+        "updateReason": {
+          "type": "string"
+        },
+        "updateData": {
+          "$ref": "#/$defs/UpdateData"
+        },
+        "updateId": {
+          "type": "string",
+          "description": "observed values: 6826028f5ba4d613a16d4a22"
+        },
+        "name": {
+          "type": "string",
+          "description": "observed values: Steven"
+        },
+        "bankDetails": {
+          "$ref": "#/$defs/BankDetails"
+        },
+        "email": {
+          "type": "string",
+          "description": "observed values: steven1@example.com"
+        },
+        "kycData": {
+          "$ref": "#/$defs/KycData"
+        },
+        "vulnerability": {
+          "$ref": "#/$defs/Vulnerability"
+        },
+        "clientGroups": {
+          "$ref": "#/$defs/ClientGroups"
+        },
+        "feeStructures": {
+          "$ref": "#/$defs/FeeStructures"
+        },
+        "requiresDebitMandate": {
+          "type": "boolean"
+        },
+        "cashInterestOptOut": {
+          "type": "boolean"
+        },
+        "clients": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "observed values: client1, client2"
+          }
+        },
+        "targetNode": {
+          "type": "string",
+          "description": "observed values: 50"
+        },
+        "sourceNode": {
+          "type": "string",
+          "description": "observed values: 2"
+        }
+      },
+      "title": "ClientUpdate",
+      "description": "Partial update to a Client; where the endpoint takes an `updateId` it is Seccl's optimistic-concurrency token -- inferred from 20 example(s) in the Postman collection."
+    },
+    "AddressDetail": {
+      "type": "object",
+      "properties": {
+        "flatNumber": {
+          "type": "string",
+          "description": "observed values: 301, Bedrock"
+        },
+        "address1": {
+          "type": "string"
+        },
+        "address2": {
+          "type": "string",
+          "description": "observed values: Bedrock, Doncaster, New Edlington"
+        },
+        "country": {
+          "type": "string",
+          "description": "observed values: GB"
+        },
+        "postCode": {
+          "type": "string",
+          "description": "observed values: B70 777, BA2 4DS, BE1 R0K, BR1 6PR, BR1 6RK, DN13 4GG, XXXX XXX"
+        },
+        "buildingNumber": {
+          "type": "string",
+          "description": "observed values: 1, 179, 201, 301"
+        },
+        "address3": {
+          "type": "string",
+          "description": "observed values: Leicester"
+        },
+        "address4": {
+          "type": "string",
+          "description": "observed values: South Yorkshire"
+        },
+        "buildingName": {
+          "type": "string",
+          "description": "observed values: Rubble House"
+        }
+      },
+      "required": ["address1", "country", "postCode"]
+    },
+    "AmlCheck": {
+      "type": "object",
+      "properties": {
+        "vendor": {
+          "type": "string",
+          "description": "observed values: Northrow"
+        },
+        "trigger": {
+          "type": "string",
+          "description": "observed values: Bank Details Changed, New Client Onboarding"
+        },
+        "outcome": {
+          "type": "string",
+          "description": "observed values: Accepted, Verified"
+        },
+        "checkProfile": {
+          "type": "string",
+          "description": "observed values: northrow-profile-uuid"
+        },
+        "checkUuid": {
+          "type": "string",
+          "description": "observed values: cool-northrow-check-id"
+        },
+        "completedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "checkProfile",
+        "checkUuid",
+        "completedAt",
+        "outcome",
+        "trigger",
+        "vendor"
+      ]
+    },
+    "AmlData": {
+      "type": "object",
+      "properties": {
+        "checkDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "checkNode": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "observed values: 1, 83, 84"
+          }
+        },
+        "amlEvidenceSeen": {
+          "type": "boolean"
+        },
+        "checkResult": {
+          "type": "string",
+          "description": "observed values: BYPASSED, PENDING"
+        },
+        "checks": {
+          "type": "array",
+          "items": {}
+        }
+      },
+      "required": [
+        "amlEvidenceSeen",
+        "checkDate",
+        "checkNode",
+        "checkResult",
+        "checks"
+      ]
+    },
+    "AuditDetails": {
+      "type": "object",
+      "properties": {
+        "updateDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "userFirmId": {
+          "type": "string",
+          "description": "observed values: BACKGROUND, SCUST, TEST1"
+        },
+        "userId": {
+          "type": "string",
+          "description": "observed values: 029B3F4, 029B3FF, Background"
+        },
+        "version": {
+          "type": "integer"
+        },
+        "application": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "application",
+        "updateDate",
+        "userFirmId",
+        "userId",
+        "version"
+      ]
+    },
+    "BankDetails": {
+      "type": "object",
+      "properties": {
+        "sortCode": {
+          "type": "string",
+          "description": "observed values: 000000, 123122, 123456, 209493, 222222, 304050, 309493, 993049"
+        },
+        "accountNumber": {
+          "type": "string"
+        },
+        "createdBy": {
+          "$ref": "#/$defs/CreatedBy"
+        },
+        "createdOn": {
+          "type": "string"
+        },
+        "verificationStatus": {
+          "type": "string",
+          "description": "observed values: Active, Bypassed, Pending"
+        },
+        "verificationInfo": {
+          "$ref": "#/$defs/VerificationInfo"
+        },
+        "paymentMethod": {
+          "type": "string",
+          "description": "observed values: Bank Transfer"
+        },
+        "reference": {
+          "type": "string",
+          "description": "observed values: Payment"
+        },
+        "debitPaymentMandate": {
+          "type": "boolean"
+        },
+        "debitPaymentMandateAgreementDate": {
+          "type": "string"
+        }
+      }
+    },
+    "ClientGroups": {
+      "type": "object",
+      "properties": {
+        "clientFeeGroupId": {
+          "type": ["string", "null"]
+        }
+      },
+      "required": ["clientFeeGroupId"]
+    },
+    "CommsStatus": {
+      "type": "object",
+      "properties": {
+        "welcomeSent": {
+          "type": "boolean"
+        }
+      },
+      "required": ["welcomeSent"]
+    },
+    "CreatedBy": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "observed values: 029B3F3, 029B3FF"
+        },
+        "userFirmId": {
+          "type": "string",
+          "description": "observed values: SECCL, TEST1"
+        },
+        "userType": {
+          "type": "string",
+          "description": "observed values: Machine, User"
+        },
+        "userName": {
+          "type": "string",
+          "description": "observed values: Machine User"
+        }
+      },
+      "required": ["userFirmId", "userId", "userName", "userType"]
+    },
+    "EntityDetails": {
+      "type": "object",
+      "properties": {
+        "companyRegNo": {
+          "type": "string",
+          "description": "observed values: 07845123"
+        },
+        "stakeholders": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Stakeholder"
+          }
+        },
+        "legalEntityIdentifier": {
+          "type": "string",
+          "description": "observed values: 529900T8BM49AURDDO55, 529900T8BM49AURSDO55"
+        },
+        "knowYourBusiness": {
+          "$ref": "#/$defs/KnowYourBusiness"
+        },
+        "declarationAccepted": {
+          "type": "boolean"
+        },
+        "type": {
+          "type": "string",
+          "description": "observed values: Charity, Discretionary"
+        },
+        "uniqueTrustReference": {
+          "type": "string",
+          "description": "observed values: 1234567890"
+        },
+        "uniqueCharityreference": {
+          "type": "string",
+          "description": "observed values: 1234567890"
+        }
+      },
+      "required": [
+        "declarationAccepted",
+        "knowYourBusiness",
+        "legalEntityIdentifier",
+        "stakeholders"
+      ]
+    },
+    "ExternalId": {
+      "type": "object",
+      "properties": {
+        "idType": {
+          "type": "string",
+          "description": "observed values: NorthrowCaseId"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "required": ["idType", "value"]
+    },
+    "FeeStructures": {
+      "type": "object",
+      "properties": {
+        "adviserFeeId": {
+          "type": "string",
+          "description": "observed values: 64f1a2b3c4d5e6f7a8b9c0d1"
+        },
+        "platformFeeId": {
+          "type": "string"
+        }
+      }
+    },
+    "FromData": {
+      "type": "object",
+      "properties": {
+        "bankDetails": {
+          "$ref": "#/$defs/BankDetails"
+        }
+      },
+      "required": ["bankDetails"]
+    },
+    "Identifier": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "description": "observed values: ABCDEF99A31A123A, AL790272C, PC672672C, PC892898C, PC892898D"
+        },
+        "available": {
+          "type": "boolean"
+        },
+        "regex": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "localeName": {
+          "type": "string",
+          "description": "observed values: CONCAT, Henkil\u00f6tunnus, National Passport Number"
+        },
+        "example": {
+          "type": "string",
+          "description": "observed values: 19360821MARY#MIGGI, 311299+123X, AB12345678"
+        },
+        "priority": {
+          "type": "number"
+        }
+      },
+      "required": ["name"]
+    },
+    "KnowYourBusiness": {
+      "type": "object",
+      "properties": {
+        "checksPerformed": {
+          "type": "string",
+          "description": "observed values: 2024-05-20"
+        }
+      },
+      "required": ["checksPerformed"]
+    },
+    "KycData": {
+      "type": "object",
+      "properties": {
+        "domesticPep": {
+          "type": "boolean"
+        },
+        "domesticAssociatedPep": {
+          "type": "boolean"
+        },
+        "foreignPep": {
+          "type": "boolean"
+        },
+        "foreignAssociatedPep": {
+          "type": "boolean"
+        },
+        "sanctioned": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "domesticAssociatedPep",
+        "domesticPep",
+        "foreignAssociatedPep",
+        "foreignPep",
+        "sanctioned"
+      ]
+    },
+    "Mobile": {
+      "type": "object",
+      "properties": {
+        "number": {
+          "type": "string",
+          "description": "observed values: 07123456789, 07777000000"
+        },
+        "locale": {
+          "type": "string",
+          "description": "observed values: en-GB"
+        },
+        "isMobile": {
+          "type": "boolean"
+        }
+      },
+      "required": ["isMobile", "locale", "number"]
+    },
+    "Nationality": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "observed values: AT, AU, FI, GB, IE, IT, PL, RO"
+        },
+        "identifiers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          }
+        },
+        "id": {
+          "type": "string",
+          "description": "observed values: AU, FI, IE"
+        },
+        "name": {
+          "type": "string",
+          "description": "observed values: Australia, Finland, Ireland"
+        },
+        "adjective": {
+          "type": "string",
+          "description": "observed values: Australian, Finnish, Irish"
+        },
+        "inEEA": {
+          "type": "boolean"
+        }
+      },
+      "required": ["code"]
+    },
+    "Source": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "type": "string",
+          "description": "observed values: Automatic, Manual"
+        },
+        "referenceId": {
+          "type": "string"
+        },
+        "externalSystem": {
+          "type": "string",
+          "description": "observed values: Northrow"
+        }
+      },
+      "required": ["method"]
+    },
+    "Stakeholder": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "type": "string",
+          "description": "observed values: Beneficiary, Director, Settlor, Trustee"
+        },
+        "clientId": {
+          "type": "string",
+          "description": "observed values: 03B2D6F, 03B2D6G, 03B2D70"
+        },
+        "clientAndAccountManagement": {
+          "type": "boolean"
+        },
+        "relationshipToBeneficiary": {
+          "type": "string",
+          "description": "observed values: Parent"
+        },
+        "sourceOfWealth": {
+          "type": "string",
+          "description": "observed values: Inheritance"
+        }
+      },
+      "required": ["clientId", "role"]
+    },
+    "ToData": {
+      "type": "object",
+      "properties": {
+        "bankDetails": {
+          "$ref": "#/$defs/BankDetails"
+        }
+      },
+      "required": ["bankDetails"]
+    },
+    "UpdateData": {
+      "type": "object",
+      "properties": {
+        "fromData": {
+          "$ref": "#/$defs/FromData"
+        },
+        "toData": {
+          "$ref": "#/$defs/ToData"
+        },
+        "status": {
+          "type": "string",
+          "description": "observed values: Pending"
+        },
+        "title": {
+          "type": "string",
+          "description": "observed values: Ms"
+        },
+        "email": {
+          "type": "string",
+          "description": "observed values: wilmaflintstone@seccl.tech"
+        },
+        "firstName": {
+          "type": "string",
+          "description": "observed values: Wilma"
+        },
+        "surname": {
+          "type": "string",
+          "description": "observed values: Flintstone"
+        },
+        "addressDetail": {
+          "$ref": "#/$defs/AddressDetail"
+        },
+        "bankDetails": {
+          "$ref": "#/$defs/BankDetails"
+        },
+        "requiresDebitMandate": {
+          "type": "boolean"
+        },
+        "currency": {
+          "type": "string",
+          "description": "observed values: GBP"
+        },
+        "amlStatus": {
+          "type": "string",
+          "description": "observed values: Approved"
+        },
+        "termsAccepted": {
+          "type": "boolean"
+        },
+        "clientType": {
+          "type": "string",
+          "description": "observed values: Individual"
+        },
+        "dateOfBirth": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "taxDomicile": {
+          "type": "string",
+          "description": "observed values: GB"
+        },
+        "nationalInsuranceNo": {
+          "type": "string",
+          "description": "observed values: PC672672C"
+        },
+        "nationality": {
+          "type": "string",
+          "description": "observed values: GB"
+        },
+        "nationalities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Nationality"
+          }
+        },
+        "dateOfDeathConfirmation": {
+          "type": "string",
+          "format": "date"
+        },
+        "dateOfDeath": {
+          "type": "string",
+          "format": "date"
+        },
+        "debitPaymentMandate": {
+          "type": "boolean"
+        },
+        "debitPaymentMandateAgreementDate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "UpdateHistory": {
+      "type": "object",
+      "properties": {
+        "updateId": {
+          "type": "number"
+        },
+        "updateAction": {
+          "type": "string",
+          "description": "observed values: AmendBank, VerifyBankDetails"
+        },
+        "updateReason": {
+          "type": "string"
+        },
+        "updateDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedFields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "observed values: bankDetails"
+          }
+        },
+        "updateData": {
+          "$ref": "#/$defs/UpdateData"
+        }
+      },
+      "required": [
+        "updateAction",
+        "updateData",
+        "updateDate",
+        "updateId",
+        "updateReason",
+        "updatedFields"
+      ]
+    },
+    "VerificationInfo": {
+      "type": "object",
+      "properties": {
+        "verifiedOn": {
+          "type": "string"
+        },
+        "source": {
+          "$ref": "#/$defs/Source"
+        },
+        "verifiedBy": {
+          "$ref": "#/$defs/VerifiedBy"
+        }
+      },
+      "required": ["source", "verifiedOn"]
+    },
+    "VerifiedBy": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "observed values: 029B3FF"
+        },
+        "userFirmId": {
+          "type": "string",
+          "description": "observed values: TEST1"
+        },
+        "userType": {
+          "type": "string",
+          "description": "observed values: Machine, User"
+        },
+        "userName": {
+          "type": "string",
+          "description": "observed values: Machine User"
+        }
+      },
+      "required": ["userFirmId", "userId", "userName", "userType"]
+    },
+    "Vulnerability": {
+      "type": "object",
+      "properties": {
+        "isVulnerable": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "observed values: Capability, Health, Life event, Resilience"
+          }
+        },
+        "isSupportTemporary": {
+          "type": "boolean"
+        }
+      },
+      "required": ["isVulnerable"]
+    }
+  }
+}

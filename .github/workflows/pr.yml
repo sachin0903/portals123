@@ -1,0 +1,314 @@
+name: PR
+
+on:
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: pr-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    env:
+      # moon fans every project's task out in parallel by CPU count, each proto-managed tool (uv,
+      # node, ...) is invoked through a shim, and two concurrent shim invocations race: the loser
+      # fails with `proto-shim: Failed to execute proto for the shimmed command: Permission denied
+      # (os error 13)`. It lands on whichever task loses, never the same one twice — sei:lint, then
+      # seccl-sync:lint, then api:lint on separate runs. Serialising moon's task runner (not the
+      # tools) makes it impossible.
+      #
+      # STILL NEEDED ON proto 0.61.2 — TESTED, not assumed. This var carried a "candidate for
+      # removal" note on the grounds that proto's shim-locking fixes (v0.36.0, then
+      # v0.56.3/v0.56.4) had probably fixed it. They have not, and the earlier note was wrong
+      # because it tested the WARM path. Reproduce it in about a minute:
+      #
+      #   H=$(mktemp -d); PROTO_HOME=$H proto install
+      #   PROTO_HOME=$H PATH="$H/shims:$H/bin:$PATH" MOON_CACHE=off MOON_CONCURRENCY=4 \
+      #     moon run :lint
+      #
+      # A FRESH `PROTO_HOME` is the whole trick — it is `setup-toolchain`'s cache-MISS path, which
+      # is when CI failed. Measured over 6 fresh-home trials each, at concurrency 4:
+      #
+      #   straight to parallel .................. 4/6 raced
+      #   after a serial shim warm-up ........... 5/6 raced   (no better)
+      #   `proto activate` instead of shims ..... 6/6 raced   (worse)
+      #   MOON_CONCURRENCY=1 .................... 0/6 raced
+      #
+      # Two dead ends are recorded there deliberately. A warm-up task
+      # (`moon run api-log:lint`) was the first attempt at this and could never have worked —
+      # `pnpm install` and `uv sync` already run below through the same shims, so whatever it was
+      # serialising had long since happened, and the measurement above confirms it. And bypassing
+      # shims via `proto activate` does not help, so the race is not simply shim dispatch.
+      #
+      # It costs about 2.5x on the lint step alone (25s serial against 10s at concurrency 4, this
+      # runner's core count), on every moon step in this job. `.prototools` pins proto ITSELF so
+      # this stays a question about the code rather than about which proto the runner happened to
+      # install; re-test with the recipe above after a bump, and drop this the day it reads 0/6.
+      #
+      # Tests are NOT a step here. Under this var a UI change ran ui, then platform, then admin,
+      # then client, one after another — that serial wait was the long pole of the pull request.
+      # Each affected project's tests run on their own runner (`test` below). Separate runners do
+      # not share a PROTO_HOME, so they do not reintroduce the shim race, and this job still
+      # serialises its own moon steps.
+      MOON_CONCURRENCY: "1"
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: moonrepo/setup-toolchain@v0
+        with:
+          auto-install: true
+      - name: Install JS dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Install Python dependencies
+        run: uv sync --frozen --project apps/api
+      # `moon ci` (not `moon run`) — it auto-detects this PR's base/head from the GitHub Actions
+      # env and only runs tasks for projects affected by the diff (plus real downstream/upstream
+      # dependents), instead of every project regardless of what changed. Correctness depends on
+      # the project graph knowing about a dependency: it does for real package deps (client/
+      # platform/admin on pkgs/ui via package.json), but NOT for the cross-language pkgs/ui <->
+      # apps/api contract pins (block-contract.json / flow-contract.json), which api reads by
+      # filesystem path with no declared dependency — see the unconditional contract-drift job
+      # below, which exists specifically to cover that blind spot.
+      - name: Lint
+        run: moon ci :lint
+      - name: Format check
+        run: moon ci :format
+      - name: Type check
+        run: moon ci :check :typecheck
+      - name: Build
+        run: moon ci :build
+
+  test-plan:
+    # Same affected set `moon ci :test` used when it was a step of `checks`: projects whose
+    # test task the diff actually touches, including downstream dependents. One JSON array,
+    # so the matrix below can give each of them a runner.
+    runs-on: ubuntu-latest
+    outputs:
+      projects: ${{ steps.plan.outputs.projects }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: moonrepo/setup-toolchain@v0
+        with:
+          auto-install: true
+      - name: Affected test projects
+        id: plan
+        run: |
+          set -euo pipefail
+          moon query tasks --affected --id test > "$RUNNER_TEMP/affected-tests.json"
+          python3 - << 'PY'
+          import json, os
+          data = json.load(open(os.environ["RUNNER_TEMP"] + "/affected-tests.json"))
+          projects = sorted((data.get("tasks") or {}))
+          with open(os.environ["GITHUB_OUTPUT"], "a") as fh:
+              fh.write("projects=" + json.dumps(projects) + "\n")
+          print("affected test projects:", ", ".join(projects) or "(none)")
+          PY
+
+  test:
+    needs: test-plan
+    if: needs.test-plan.outputs.projects != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project: ${{ fromJson(needs.test-plan.outputs.projects) }}
+    env:
+      # One moon task per runner, but the task runner is still serialised: a project test can
+      # pull a dependency task, and two shims in one job are the race `checks` documents.
+      MOON_CONCURRENCY: "1"
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: moonrepo/setup-toolchain@v0
+        with:
+          auto-install: true
+      - name: Install JS dependencies
+        run: pnpm install --frozen-lockfile
+      # Workspace sync, not `--project apps/api`. That flag reconciles the shared venv down to
+      # api's closure and uninstalls the other members, so a service test job would then have
+      # to resync. One sync covers every Python project the matrix can name.
+      - name: Install Python dependencies
+        run: uv sync --frozen
+      - name: Test
+        run: moon run ${{ matrix.project }}:test
+
+  # The check a pull request waits on. `checks` and `test` run together; this fails unless
+  # both did. A green `verify` still means the tests passed — they are no longer a step
+  # inside it only so the affected suites can run at the same time.
+  verify:
+    needs: [checks, test-plan, test]
+    if: ${{ always() && !cancelled() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require checks and tests
+        run: |
+          set -eu
+          echo "checks=${{ needs.checks.result }} plan=${{ needs.test-plan.result }} test=${{ needs.test.result }}"
+          test "${{ needs.checks.result }}" = "success"
+          test "${{ needs.test-plan.result }}" = "success"
+          t="${{ needs.test.result }}"
+          if [ "$t" = "skipped" ]; then
+            test "${{ needs.test-plan.outputs.projects }}" = "[]"
+          else
+            test "$t" = "success"
+          fi
+
+  migrations:
+    # Apply every migration to a REAL Postgres 18, with the same superuser/migrator/app role split
+    # production uses. Without this a broken migration's first execution is against production.
+    #
+    # This job BLOCKS. It carried `continue-on-error: true` while its own comment above claimed to
+    # be the thing standing between a broken migration and production -- so the one check whose
+    # entire purpose is proving migrations apply could not fail a pull request.
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: portals
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      MIGRATION_DATABASE_URL: postgresql+psycopg://migrator:migrator@localhost:5432/portals
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # Full history so moon can resolve the default branch for its VCS diff.
+          fetch-depth: 0
+      - uses: moonrepo/setup-toolchain@v0
+        with:
+          auto-install: true
+      - run: pnpm install --frozen-lockfile
+      - run: uv sync --frozen --project apps/api
+      - name: Bootstrap roles (as the superuser, exactly as a real environment does)
+        env:
+          PGPASSWORD: postgres
+        run: |
+          set -euo pipefail
+          psql -h localhost -U postgres -d portals -v ON_ERROR_STOP=1 \
+            -f apps/api/migrations/bootstrap/01-roles.sql
+          # The migrator isn't the DB owner on a fresh cluster, so let it create objects
+          # (tests/conftest.py does the same for its testcontainer).
+          psql -h localhost -U postgres -d portals -v ON_ERROR_STOP=1 \
+            -f apps/api/migrations/bootstrap/02-grants.sql
+      - name: Apply migrations
+        run: moon run api:migrate
+      # `upgrade head` at head executes NO migrations, so this does not prove idempotence -- what
+      # it actually catches is a multi-head revision graph, which alembic refuses to resolve.
+      - name: Re-apply (a second upgrade must find a single head and no work)
+        run: moon run api:migrate
+
+  security:
+    # This job BLOCKS. It carried `continue-on-error: true`, so the secret scan reported 35 findings
+    # for weeks to nobody — a scan that cannot fail is a scan nobody reads. Every one was checked
+    # individually and allowlisted with its reason in `.gitleaks.toml` (fixtures, vendored vendor
+    # specs, and paths that only exist in history). Dependency CVEs are floored in
+    # `pnpm-workspace.yaml`'s `overrides`, which is where a new one goes.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # Full history so gitleaks scans every commit on the PR, not just the tip.
+          fetch-depth: 0
+      - name: Secret scan
+        # Run the gitleaks CLI directly (Apache-2.0, no licence) rather than
+        # gitleaks-action@v2, which now requires a paid GITLEAKS_LICENSE for orgs.
+        # Mounts the repo (incl. .git) so it scans full history; non-zero on a find. `.gitleaks.toml`
+        # at the repo root is picked up automatically from --source, and `--redact` keeps any match
+        # out of the workflow log.
+        run: docker run --rm -v "$PWD:/repo" ghcr.io/gitleaks/gitleaks:latest detect --source=/repo --redact --no-banner
+      - uses: moonrepo/setup-toolchain@v0
+        with:
+          auto-install: true
+      # Trivy's fs scanner cannot parse this repo's uv.lock at all ("uv lockfile must contain 1
+      # root package" — it expects a single-project lock, not a multi-member workspace one), so
+      # without this every Python dependency in the repo is invisible to the scan below — not
+      # flagged clean, just never looked at. Exporting each deployable project's resolved
+      # dependencies to plain requirements.txt (a format Trivy's lockfile parser already
+      # understands) restores real coverage for everything uv actually resolves. `--no-hashes`:
+      # this file is only ever read, never installed from, so the install-time integrity hashes
+      # buy nothing here. MUST be named exactly `requirements.txt` — Trivy's detector does not
+      # match a prefixed/suffixed variant (verified: `requirements-trivy-api.txt` at the repo root
+      # was silently never scanned at all), so each goes in its own project directory rather than
+      # sharing one root-level name. This does NOT cover packages that reach the built image by
+      # some path other than uv's own resolution (bundled base-image tooling like `setuptools`)
+      # — that needs `trivy image` against the built artefact instead, a separate piece of work.
+      - name: Export Python lockfiles to a format Trivy can read
+        run: |
+          set -euo pipefail
+          uv export --project apps/api --format requirements-txt --no-hashes -o apps/api/requirements.txt
+          uv export --project services/sei --format requirements-txt --no-hashes -o services/sei/requirements.txt
+          uv export --project services/seccl --format requirements-txt --no-hashes -o services/seccl/requirements.txt
+          uv export --project services/morgan-lloyd --format requirements-txt --no-hashes -o services/morgan-lloyd/requirements.txt
+      - name: Dependency + filesystem scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          scan-ref: .
+          severity: CRITICAL,HIGH
+          exit-code: "1"
+
+  contract-drift:
+    # Runs UNCONDITIONALLY, every PR — deliberately not folded into `verify`'s `moon ci`, and not
+    # gated on affected-detection at all. api has no declared dependency on ui (different
+    # language, different workspace), so a pkgs/ui-only PR that edits block-contract.json or
+    # flow-contract.json would never be selected to re-run api's tests under `moon ci` above — a
+    # `dependsOn: ['ui']` edge was tried and rejected, because pkgs/ui changes constantly and api
+    # rarely, so that edge would re-run api's whole suite on nearly every ui PR. This runs only
+    # the ~60 tests (named test_*contract* by convention) that pin app/branding.py and
+    # app/flows/* against those two JSON files by filesystem path — ~10s, every PR, regardless of
+    # what changed. Mirrors client-drift below for the same reason: a cross-artefact pin that the
+    # project graph can't see has to be checked unconditionally rather than relying on diffing.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # Full history so moon can resolve the default branch (`main`) for its VCS diff; a
+          # shallow checkout makes `moon run` fail with git exit 128 (same as client-drift below).
+          fetch-depth: 0
+      - uses: moonrepo/setup-toolchain@v0
+        with:
+          auto-install: true
+      - run: uv sync --frozen --project apps/api
+      - name: Run the block-contract.json / flow-contract.json pin tests
+        run: moon run api:test-contracts
+
+  client-drift:
+    # Fails the PR if the committed TS client no longer matches the API's OpenAPI schema.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # Full history so moon can resolve the default branch (`main`) for its
+          # VCS diff; a shallow checkout makes `moon run` fail with git exit 128.
+          fetch-depth: 0
+      - uses: moonrepo/setup-toolchain@v0
+        with:
+          auto-install: true
+      - run: pnpm install --frozen-lockfile
+      - run: uv sync --frozen --project apps/api
+      # `api-client:generate` dumps the schema itself (it depends on `api:dump-openapi`) and reads
+      # it from the file. This step used to dump the schema inline and pass `OPENAPI_URL`, which
+      # made CI's input differ from the one a developer gets by following CLAUDE.md — and Hey API
+      # derives the client's base URL and the `ClientOptions['baseUrl']` TYPE from its input, so a
+      # regeneration against a running API committed `http://localhost:8000` and this job went red
+      # for everyone. One command, one input.
+      - name: Regenerate client
+        run: moon run api-client:generate
+      - name: Regenerate permission constants
+        run: moon run api:generate-permissions
+      - name: Fail if client or permissions are out of date
+        run: git diff --exit-code pkgs/api-client/src pkgs/api-client/permissions.ts

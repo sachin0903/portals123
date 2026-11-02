@@ -1,0 +1,446 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "firmId": {
+      "type": "string",
+      "description": "observed values: SDEMO, SECCI, TEST1"
+    },
+    "transactionType": {
+      "type": "string",
+      "description": "observed values: Cash, Notional, Order, Payment, Product Transfer, Stock Transfer"
+    },
+    "transactionSubType": {
+      "type": "string"
+    },
+    "movementType": {
+      "type": "string",
+      "description": "observed values: In, Invest, Out, Raise"
+    },
+    "accountId": {
+      "type": "string"
+    },
+    "currency": {
+      "type": "string",
+      "description": "observed values: GBP"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "method": {
+      "type": "string",
+      "description": "observed values: BACS Credit, Bank Transfer, Transfer"
+    },
+    "providerId": {
+      "type": "string",
+      "description": "observed values: Test Provider"
+    },
+    "transactionDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "type": "string",
+      "description": "observed values: Checking, Completed, Deleted, Pending, Waiting"
+    },
+    "accountName": {
+      "type": "string",
+      "description": "observed values: GIA test, Raise Trades Testing, Test Account"
+    },
+    "accountType": {
+      "type": "string",
+      "description": "observed values: Wrapper"
+    },
+    "statusChanges": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/StatusChange"
+      }
+    },
+    "checkingResults": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/CheckingResult"
+      }
+    },
+    "nodeId": {
+      "type": "string",
+      "description": "observed values: 0, 1, 4, 5"
+    },
+    "createdDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "auditDetails": {
+      "$ref": "#/$defs/AuditDetails"
+    },
+    "updateId": {
+      "type": "string"
+    },
+    "coreId": {
+      "type": "string",
+      "description": "observed values: 00007828J, JHZTIAAE"
+    },
+    "linkId": {
+      "type": "string"
+    },
+    "completedDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "assetId": {
+      "type": "string",
+      "description": "observed values: 26MM1, 26R3G, 27DQN, 29F55"
+    },
+    "intendedSettlementDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "assetName": {
+      "type": "string"
+    },
+    "isin": {
+      "type": "string",
+      "description": "observed values: GB0030720733, GB00B7T92B14, GB00B90TBZ18, GB00BZ82ZW98"
+    },
+    "mic": {
+      "type": "string",
+      "description": "observed values: XOFF"
+    },
+    "instrumentType": {
+      "type": "string",
+      "description": "observed values: Fund"
+    },
+    "consideration": {
+      "type": "number"
+    },
+    "executedAmount": {
+      "type": "number"
+    },
+    "executedQuantity": {
+      "type": "number"
+    },
+    "executionDetails": {
+      "$ref": "#/$defs/ExecutionDetails"
+    },
+    "tradingFirm": {
+      "type": "string",
+      "description": "observed values: SCUST"
+    },
+    "autoDisinvest": {
+      "type": "string",
+      "description": "observed values: Largest"
+    },
+    "autoDisinvestSellType": {
+      "type": "string",
+      "description": "observed values: Amount"
+    },
+    "autoDisinvestmentMethod": {
+      "type": "string",
+      "description": "observed values: Largest"
+    },
+    "deletionRequest": {
+      "type": "object",
+      "properties": {
+        "requestedOn": {
+          "type": "string",
+          "description": "observed values: 2024-12-09T16:13:46.233Z"
+        },
+        "requestedBy": {
+          "type": "object",
+          "properties": {
+            "userId": {
+              "type": "string",
+              "description": "observed values: 029B3HD"
+            },
+            "userFirmId": {
+              "type": "string",
+              "description": "observed values: SECCL"
+            },
+            "userType": {
+              "type": "string",
+              "description": "observed values: Machine"
+            },
+            "userName": {
+              "type": "string",
+              "description": "observed values: Integration"
+            }
+          },
+          "required": ["userFirmId", "userId", "userName", "userType"]
+        }
+      },
+      "required": ["requestedBy", "requestedOn"]
+    },
+    "transferAccountAddress": {
+      "$ref": "#/$defs/TransferAccountAddress"
+    },
+    "previousProvider": {
+      "type": "string"
+    },
+    "previousProviderRef": {
+      "type": "string"
+    },
+    "transferValue": {
+      "type": "number"
+    },
+    "transferStatus": {
+      "type": "string",
+      "description": "observed values: Onboarding Assets, With Previous Provider"
+    },
+    "wrapperType": {
+      "type": "string",
+      "description": "observed values: GIA, ISA, PENSION"
+    },
+    "clientName": {
+      "type": "string"
+    },
+    "clientId": {
+      "type": "string"
+    },
+    "actionRequired": {
+      "type": "boolean"
+    },
+    "estimatedValue": {
+      "type": "number"
+    },
+    "productDrawdownStatus": {
+      "type": "string",
+      "description": "observed values: No Drawdown"
+    },
+    "quantity": {
+      "type": "integer"
+    },
+    "bookValue": {
+      "type": "number"
+    },
+    "primaryClientId": {
+      "type": "string",
+      "description": "observed values: ABC123"
+    },
+    "information": {
+      "type": "object",
+      "properties": {
+        "cashInterestRetainedReason": {
+          "type": "string",
+          "description": "observed values: Client Opted Out"
+        }
+      },
+      "required": ["cashInterestRetainedReason"]
+    }
+  },
+  "title": "PortfolioTransaction",
+  "description": "PortfolioTransaction as Seccl returns it -- inferred from 84 example(s) in the Postman collection.",
+  "$defs": {
+    "PortfolioTransactionCreate": {
+      "type": "object",
+      "properties": {
+        "firmId": {
+          "type": "string"
+        },
+        "accountId": {
+          "type": "string"
+        },
+        "transactionType": {
+          "type": "string",
+          "description": "observed values: Cash, Order"
+        },
+        "transactionSubType": {
+          "type": "string",
+          "description": "observed values: At Best, Platform Fee"
+        },
+        "movementType": {
+          "type": "string",
+          "description": "observed values: Out, Raise"
+        },
+        "currency": {
+          "type": "string",
+          "description": "observed values: GBP"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "assetId": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "accountId",
+        "amount",
+        "currency",
+        "firmId",
+        "movementType",
+        "transactionSubType",
+        "transactionType"
+      ],
+      "title": "PortfolioTransactionCreate",
+      "description": "Body for creating a PortfolioTransaction -- inferred from 2 example(s) in the Postman collection."
+    },
+    "PortfolioTransactionUpdate": {
+      "type": "object",
+      "properties": {
+        "firmId": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "description": "observed values: 00008BM7P, 00008F19P"
+        },
+        "actionReason": {
+          "type": "string"
+        },
+        "transactionAction": {
+          "type": "string",
+          "description": "observed values: Request Deletion"
+        },
+        "bookValue": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string",
+              "description": "observed values: auto"
+            }
+          ]
+        },
+        "updateId": {
+          "type": "string"
+        },
+        "createdByFirm": {
+          "type": "string"
+        },
+        "updateNote": {
+          "type": "string",
+          "description": "observed values: My Update Note"
+        },
+        "effectiveFrom": {
+          "type": "string",
+          "description": "observed values: 2025-01-01"
+        }
+      },
+      "title": "PortfolioTransactionUpdate",
+      "description": "Partial update to a PortfolioTransaction; where the endpoint takes an `updateId` it is Seccl's optimistic-concurrency token -- inferred from 7 example(s) in the Postman collection."
+    },
+    "AuditDetails": {
+      "type": "object",
+      "properties": {
+        "updateDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "userFirmId": {
+          "type": "string",
+          "description": "observed values: BACKGROUND, SECCI, SECCL, TEST1"
+        },
+        "userId": {
+          "type": "string",
+          "description": "observed values: 029B3F3, 029B3FF, 029B3HD, Background, TESTUSER"
+        },
+        "version": {
+          "type": "integer"
+        },
+        "application": {
+          "type": "string",
+          "description": "observed values: PfolioAPI, PfolioEventAPI, PortfolioProcessor"
+        }
+      },
+      "required": [
+        "application",
+        "updateDate",
+        "userFirmId",
+        "userId",
+        "version"
+      ]
+    },
+    "CheckingResult": {
+      "type": "object",
+      "properties": {
+        "rule": {
+          "type": "string"
+        },
+        "passed": {
+          "type": "boolean"
+        }
+      },
+      "required": ["passed", "rule"]
+    },
+    "ExecutionDetails": {
+      "type": "object",
+      "properties": {
+        "currency": {
+          "type": "string",
+          "description": "observed values: GBP"
+        },
+        "price": {
+          "type": "number"
+        },
+        "transactionTime": {
+          "type": "string",
+          "description": "observed values: 00:00:00"
+        },
+        "venue": {
+          "type": "string",
+          "description": "observed values: XLON"
+        }
+      },
+      "required": ["currency", "price", "transactionTime", "venue"]
+    },
+    "StatusChange": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "description": "observed values: Completed, Deleted, Pending, Waiting"
+        },
+        "statusDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": {
+          "type": "string"
+        },
+        "transferStatus": {
+          "type": "string",
+          "description": "observed values: Onboarding Assets, With Previous Provider"
+        }
+      },
+      "required": ["description", "statusDate"]
+    },
+    "TransferAccountAddress": {
+      "type": "object",
+      "properties": {
+        "flatNumber": {
+          "type": "string",
+          "description": "observed values: 1, test"
+        },
+        "buildingNumber": {
+          "type": "string",
+          "description": "observed values: 1, 15, 2, 40"
+        },
+        "address1": {
+          "type": "string"
+        },
+        "address2": {
+          "type": "string",
+          "description": "observed values: 15 Waterloo Road, Doncaster, LONDON"
+        },
+        "country": {
+          "type": "string",
+          "description": "observed values: GB"
+        },
+        "postCode": {
+          "type": "string",
+          "description": "observed values: AB1C 2DE, DN11 6RJ, KT13 8RB, SK152AU, SW17 8RB, TS1 1ST, W4 1EX"
+        },
+        "buildingName": {
+          "type": "string",
+          "description": "observed values: 1, 3"
+        }
+      },
+      "required": ["address1", "country", "postCode"]
+    }
+  }
+}

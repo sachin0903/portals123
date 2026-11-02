@@ -1,0 +1,45 @@
+layer: 'library'
+language: 'typescript'
+
+tasks:
+  check:
+    # TWO PASSES, because one tsconfig cannot serve both. The source, then the TESTS with
+    # `noUncheckedIndexedAccess` relaxed — see tsconfig.test.json. Both go through svelte-check
+    # rather than plain `tsc`: a test importing a `.svelte` component is every one of that
+    # component's props reported as a missing member under tsc, which has no Svelte language
+    # service. Before this the tests were type-checked by nothing at all (svelte-check honoured the
+    # exclude, vitest strips types), which is how a fixture came to carry a deleted field and miss
+    # a required one and stay green.
+    script: 'svelte-check --tsconfig ./tsconfig.json && svelte-check --tsconfig ./tsconfig.test.json'
+  lint:
+    command: 'eslint'
+    # `--cache` re-lints only the files that changed since the last run. Safe because no rule in
+    # pkgs/config/eslint.config.js is type-aware, so a file's result depends only on its own content
+    # and the config, and ESLint drops the cache when the config changes. `content`, not mtime, so a
+    # checkout or rebase that rewrites mtimes does not empty it. node_modules is gitignored, so moon's
+    # own input hash never sees the cache file.
+    args: '--cache --cache-location node_modules/.cache/eslint/ --cache-strategy content .'
+  # THIS PACKAGE WAS NOT IN THE FORMAT GATE, and it is the biggest source tree in the repo. Every
+  # app and five of the other packages declare `format`, so `moon ci :format` looked estate-wide
+  # while never reading a line of pkgs/ui — a file could be committed unformatted here and nothing
+  # would say so, which is exactly what happened twice (two of the six files this task first
+  # flagged were already on main). Adding it cost six reformats, because the package was otherwise
+  # clean; the longer it stayed out, the more expensive turning it on would have become.
+  format:
+    command: 'prettier'
+    args: '--check .'
+  test:
+    command: 'vitest'
+    args: 'run --passWithNoTests'
+  # The email chrome is rendered from `better-svelte-email` into a Python module the send path
+  # imports — see the script's header for why it is a build step and not a runtime call.
+  build-email-chrome:
+    command: 'node'
+    args: 'scripts/build-email-chrome.mjs'
+    options:
+      cache: false
+  # Fails when the committed artefact no longer matches the components, the way the generated
+  # api-client's drift check does.
+  check-email-chrome:
+    command: 'node'
+    args: 'scripts/build-email-chrome.mjs --check'

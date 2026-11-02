@@ -1,0 +1,974 @@
+/*
+ * Graphene design system — "private wealth / institutional".
+ * The single re-theme point: change a token here and every portal updates.
+ *
+ * Consumed from each app's `src/app.css`:
+ *     @import 'tailwindcss';
+ *     @import '@graphene/ui/theme.css';
+ *     @source '../../../pkgs/ui/src/**\/*.{svelte,ts}';
+ *
+ * Palette: cool paper surfaces, ink-navy primary, teal brand accent (per
+ * grapheneplatforms.com), emerald/red for gains/losses.
+ * Type: Inter throughout (self-hosted) — modern sans, no serif.
+ */
+
+/* Animation utilities (`animate-in`, `fade-in-0`, `slide-in-from-right-*`, `animate-out`).
+   Tailwind 4 does NOT ship these — they are the successor to the v3 `tailwindcss-animate`
+   plugin. The shadcn components we vendored reference them throughout, so without this import
+   every one of those classes is a no-op and dialogs, sheets and popovers appear instantly with
+   no transition. Imported here rather than per-app so all three portals get it from the one
+   re-theme point. */
+@import 'tw-animate-css';
+
+@import '@fontsource-variable/inter';
+
+:root {
+	color-scheme: light;
+	--radius: 0.75rem;
+	/* Display face for large numerals (portfolio totals, statement figures). Defaults to the body
+	   sans so `var(--font-display)` always resolves; a tenant's branding overrides it (see
+	   pkgs/auth brandingHead — `font_display`). */
+	--font-display: var(--font-sans);
+
+	/* ── Motion ─────────────────────────────────────────────────────────────────────────────
+	   Semantic, perceptual motion: callers choose the BEHAVIOUR, never invent a duration/easing
+	   pair. The two linear() curves are sampled spring responses, so they accelerate immediately,
+	   remain interruptible, and settle without the mechanical constant speed of a tween.
+
+	   smooth: structural/layout changes; critically damped, no overshoot.
+	   bouncy: transient reveals — overlays, menus, a result region folding open. Sampled at damping
+	   ratio 0.55, so it reaches its target by ~23% of the duration, peaks ~12.6% past it, and spends
+	   the rest settling through one visible rebound. That is the house bounce, and it is deliberately
+	   felt rather than technically present: earlier cuts at 2.5% and 8% read as a rendering artefact
+	   instead of a response. The bounce lives in the tail, which is why a short duration still feels
+	   elastic rather than clipped — most of the time is the settle, not the travel.
+	   Bezier/linear tokens stay for opacity and colour, where spring physics look unnatural. */
+	--motion-duration-toggle: 200ms;
+	--motion-duration-fade: 250ms;
+	/* One duration for every transient reveal, so a panel and the region folding out of it cannot
+	   disagree about how quick the interface feels. */
+	--motion-duration-reveal: 220ms;
+	--motion-duration-expand: 500ms;
+	--motion-duration-exit: 150ms;
+	--motion-spring-smooth: linear(
+		0,
+		0.14 8%,
+		0.39 18%,
+		0.62 30%,
+		0.78 42%,
+		0.89 55%,
+		0.95 68%,
+		0.982 80%,
+		0.996 90%,
+		1
+	);
+	--motion-spring-bouncy: linear(
+		0,
+		0.128 5%,
+		0.398 10%,
+		0.683 15%,
+		0.909 20%,
+		1.052 25%,
+		1.116 30%,
+		1.124 35%,
+		1.1 40%,
+		1.063 45%,
+		1.029 50%,
+		1.004 55%,
+		0.99 60%,
+		0.984 65%,
+		0.985 70%,
+		0.989 75%,
+		0.994 80%,
+		0.998 85%,
+		1
+	);
+	--motion-ease-out: cubic-bezier(0, 0, 0.58, 1);
+	--motion-ease-in-out: cubic-bezier(0.42, 0, 0.58, 1);
+
+	/* ── Finish axis (Branding.finish: card | ledger) ───────────────────────────────────────
+	   Every widget renders through Card.* + these tokens, so re-pointing them re-skins the whole
+	   portal in one move (pkgs/auth branding.ts FINISH_DECLS is the only writer). The defaults
+	   below reproduce today's carded look exactly; the ledger finish swaps cards for open,
+	   hairline-ruled sections. Consumed by the `[data-slot='card']` component rules further down
+	   and by Card/StatTile's elevation classes. */
+	/* The card fill. Ledger: transparent — a section, not a surface. */
+	--surface-card: var(--card);
+	/* The card's border, as a full shorthand so ledger can remove it wholesale (`0`). The default
+	   matches the `border border-border/70` classes this token replaces (Tailwind mixes utility
+	   colour opacity in oklab, hence the interpolation space). */
+	--surface-card-border: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
+	/* The card's BOTTOM edge, separately: under ledger it stays as the hairline rule between
+	   stacked sections when the other three sides go. Defaults to the border so the carded look
+	   is untouched. */
+	--surface-card-divider: var(--surface-card-border);
+	/* Card depth per elevation step (see Card's `elevation` prop). Ledger: none — an engraved
+	   page has rules, not lift. */
+	--surface-card-shadow: var(--elev-1);
+	--surface-card-shadow-floating: var(--elev-3);
+	/* Card.Title register. Defaults reproduce the old `text-lg tracking-tight`; ledger turns the
+	   title into a small-caps eyebrow (uppercase / 0.08em / 0.75rem). */
+	--card-title-case: none;
+	--card-title-tracking: -0.025em;
+	--card-title-size: 1.125rem;
+	/* NB: `--money-display` (the numeral face knob Money consumes) is deliberately NOT declared
+	   here: unset must mean "inherit the surrounding cell's face" (a mono reference column keeps
+	   its mono figures), and a root default would overwrite that inheritance. The ledger finish
+	   sets it to var(--font-display). */
+
+	/* ── The basic palette ──────────────────────────────────────────────────────────────────
+	   FOURTEEN tokens, and the only colours a firm's branding can set (pkgs/auth branding.ts
+	   COLOUR_VARS). Six neutrals, two seeds a firm owns (primary + brand, each with its ink), and
+	   four semantic hues. Everything else in this file — the aliases below, the tonal ramp, the
+	   hero, glass and elevation — is DERIVED from these, so it can never disagree with them.
+	   docs/design-language.md "Colour" explains why it is fourteen and not thirty-six. */
+	--background: oklch(0.975 0.005 250);
+	--foreground: oklch(0.22 0.04 256);
+	--card: oklch(1 0 0);
+	--muted: oklch(0.965 0.006 250);
+	--muted-foreground: oklch(0.5 0.02 256);
+	--border: oklch(0.9 0.008 250);
+
+	/* Ink-navy primary; teal brand accent */
+	--primary: oklch(0.26 0.055 256);
+	--primary-foreground: oklch(0.98 0.005 250);
+	--brand: oklch(0.64 0.115 202);
+	--brand-foreground: oklch(0.99 0.01 200);
+
+	/* Gain/loss, and the two status hues with no gain/loss meaning (see StatusBadge). */
+	--positive: oklch(0.56 0.12 162);
+	--negative: oklch(0.55 0.18 25);
+	--warning: oklch(0.62 0.13 71);
+	--info: oklch(0.58 0.12 245);
+
+	/* Steps off `--muted` for the hover fill (`--accent`) and the loading placeholder
+	   (`--skeleton`), applied in the alias block below. A skeleton sits on the white `--card`, and
+	   muted's 0.035 delta reads as an empty page rather than a loading one, so it steps further.
+	   Numbers only, so they flip under .dark without depending on the firm's colours. */
+	--accent-l-step: -0.01;
+	--accent-c-scale: 2;
+	--skeleton-l-step: -0.04;
+	--skeleton-c-scale: 1.3;
+
+	/* Liquid glass — translucent material, specular sheen + edge light.
+	   Consumed by the `glass*` utilities below. The three control vars (tint / blur / sheen-strength)
+	   are the white-label knobs — a tenant's branding overrides them (see pkgs/auth brandingHead);
+	   these defaults reproduce the stock look, and `--glass-blur:0px; --glass-tint:100%;
+	   --glass-sheen-strength:0` turns the glass into solid opaque surfaces. */
+	--glass-tint: 48%;
+	--glass-panel-tint: 64%;
+	--glass-blur: 20px;
+	--glass-sheen-strength: 1;
+	/* Ambient page-backdrop wash (`glass-canvas`). 0 => a flat --background, which is what
+	   the sharp surface preset (styles/sharp.css) uses. */
+	--glass-canvas-strength: 1;
+	--glass-bg: color-mix(in oklch, var(--background) var(--glass-tint), transparent);
+	--glass-panel-bg: color-mix(in oklch, var(--card) var(--glass-panel-tint), transparent);
+	--glass-border: color-mix(in oklch, var(--foreground) 10%, transparent);
+	--glass-highlight: oklch(1 0 0 / calc(0.7 * var(--glass-sheen-strength)));
+	--glass-sheen: oklch(1 0 0 / calc(0.5 * var(--glass-sheen-strength)));
+	--glass-shadow: 0 16px 40px -16px oklch(0.3 0.05 256 / 0.34);
+	/* The `glass-panel` outer drop shadow (the insets are sheen-driven and zero with it). A token
+	   so the ledger finish can remove the smudge under panels it has already made transparent —
+	   the value is the literal the utility used to hardcode. */
+	--glass-panel-shadow: 0 4px 18px -10px oklch(0.3 0.05 264 / 0.22);
+
+	/* ── Elevation scale ────────────────────────────────────────────────────────────────────
+	   Three steps, ink-tinted rather than neutral grey so shadows sit in the same colour family
+	   as the surfaces they fall on. y-offset dominant + a tight contact shadow = "raised sheet",
+	   not "glow". Consume as `shadow-[var(--elev-2)]` or via Card's `elevation` prop. */
+	--elev-1: 0 1px 2px -1px oklch(0.22 0.05 264 / 0.08), 0 4px 16px -6px oklch(0.22 0.05 264 / 0.08);
+	--elev-2: 0 1px 2px -1px oklch(0.22 0.05 264 / 0.1), 0 8px 24px -10px oklch(0.22 0.05 264 / 0.14);
+	--elev-3:
+		0 2px 4px -2px oklch(0.22 0.05 264 / 0.12), 0 18px 40px -18px oklch(0.22 0.05 264 / 0.22);
+
+	/* ── Hero surface ──────────────────────────────────────────────────────────────────────
+	   The dark anchor band at the top of a dashboard/record ("institutional depth"). This is the
+	   PRODUCT ink. A branded client portal replaces it (brandingHead): a deep shade of --primary,
+	   lightness pinned so a light brand stays a dark band, or an explicit hero colour. Deriving
+	   by copying --primary's own lightness would turn the band white in dark mode, which is why
+	   the pin lives in the inject and not as `oklch(from var(--primary) l c h)` here. */
+	--hero-base: oklch(0.26 0.055 256);
+	--hero-from: color-mix(in oklch, var(--hero-base) 82%, white 18%);
+	--hero-via: var(--hero-base);
+	--hero-to: color-mix(in oklch, var(--hero-base) 72%, black 28%);
+	--hero-foreground: oklch(0.98 0.005 250);
+	--hero-accent: var(--brand);
+	--hero-shadow: 0 18px 40px -20px color-mix(in oklch, var(--hero-base) 62%, transparent);
+	/* Gain/loss ON the ink hero: the page-level tokens are tuned for light paper and go muddy
+	   against navy, so lift them toward white for on-hero use. */
+	--hero-positive: color-mix(in oklch, var(--positive) 62%, white 38%);
+	--hero-negative: color-mix(in oklch, var(--negative) 66%, white 34%);
+	--hero-muted: color-mix(in oklch, var(--hero-foreground) 58%, transparent);
+
+	/* ── Card finishes ─────────────────────────────────────────────────────────────────────
+	   The lightness each account-card finish pins the firm's brand hue to (`finish()` in
+	   categorical.ts). Pinned, not relative: `brand` and `deep` carry white ink whatever colour
+	   the firm picked, and `tint` carries the page ink. Numbers only so the scheme can flip them. */
+	--finish-brand-from: 0.52;
+	--finish-brand-to: 0.44;
+	--finish-deep-from: 0.38;
+	--finish-deep-to: 0.3;
+	--finish-tint-l: 0.93;
+	--finish-tint-c: 0.3;
+}
+
+/* ── Aliases of the basic palette ───────────────────────────────────────────────────────────
+   The names shadcn components and Tailwind utilities speak (`bg-popover`, `text-card-foreground`,
+   `ring-ring`, `bg-success/10`…), each pointing at one of the fourteen. They are NOT brand inputs:
+   a firm sets `--foreground` and every foreground below follows. The staff presets (chrome.css)
+   still reassign a few of them for their own denser register, which is why they stay variables
+   rather than being folded into the components.
+
+   Declared once for both schemes: `.dark` lives on the same <html> element, so these resolve
+   against whichever palette is in force there. The `--palette-scope` match is the studio preview,
+   which applies a firm's palette inline on the frame's <body> (brandingPreviewStyle emits the
+   marker); without re-declaring here the frame would inherit aliases resolved against the
+   PRODUCT palette at its <html>, and the preview would show the wrong card ink. */
+:root,
+[style*='--palette-scope'] {
+	--card-foreground: var(--foreground);
+	--popover: var(--card);
+	--popover-foreground: var(--foreground);
+	--secondary: var(--muted);
+	--secondary-foreground: var(--foreground);
+	--accent: oklch(
+		from var(--muted) calc(l + var(--accent-l-step)) calc(c * var(--accent-c-scale)) h
+	);
+	--accent-foreground: var(--foreground);
+	--skeleton: oklch(
+		from var(--muted) calc(l + var(--skeleton-l-step)) calc(c * var(--skeleton-c-scale)) h
+	);
+	--input: var(--border);
+	--ring: var(--brand);
+
+	/* One hue per meaning: success IS the gain colour, destructive IS the loss colour. */
+	--success: var(--positive);
+	--destructive: var(--negative);
+	/* Ink on a solid status fill, picked by the base's own lightness: near-white below L 0.6, a
+	   dark ink of the same hue above it (the clamp is a step function). In light mode amber
+	   (L 0.62) takes the dark ink, which white failed at 3.5:1; every dark-mode base takes it. */
+	--success-foreground: oklch(
+		from var(--positive) clamp(0.2, calc((0.6 - l) * 1000), 0.985) 0.01 h
+	);
+	--destructive-foreground: oklch(
+		from var(--negative) clamp(0.2, calc((0.6 - l) * 1000), 0.985) 0.01 h
+	);
+	--warning-foreground: oklch(from var(--warning) clamp(0.2, calc((0.6 - l) * 1000), 0.985) 0.01 h);
+	--info-foreground: oklch(from var(--info) clamp(0.2, calc((0.6 - l) * 1000), 0.985) 0.01 h);
+
+	/* Sidebar — tracks the app surfaces (light/glass language, not a separate navy slab) */
+	--sidebar: var(--card);
+	--sidebar-foreground: var(--foreground);
+	--sidebar-primary: var(--primary);
+	--sidebar-primary-foreground: var(--primary-foreground);
+	--sidebar-accent: var(--accent);
+	--sidebar-accent-foreground: var(--foreground);
+	--sidebar-border: var(--border);
+	--sidebar-ring: var(--brand);
+}
+
+.dark {
+	color-scheme: dark;
+	--background: oklch(0.18 0.028 256);
+	--foreground: oklch(0.94 0.01 240);
+	--card: oklch(0.22 0.032 256);
+	--muted: oklch(0.27 0.032 256);
+	--muted-foreground: oklch(0.7 0.02 240);
+	--border: oklch(1 0 0 / 12%);
+
+	/* Teal brand primary in dark */
+	--primary: oklch(0.72 0.12 198);
+	--primary-foreground: oklch(0.18 0.03 240);
+	--brand: oklch(0.72 0.12 198);
+	--brand-foreground: oklch(0.16 0.03 240);
+
+	/* Brighter in dark so tinted badges stay legible. */
+	--positive: oklch(0.74 0.13 162);
+	--negative: oklch(0.68 0.17 25);
+	--warning: oklch(0.8 0.13 75);
+	--info: oklch(0.72 0.12 245);
+
+	/* Lighter than muted rather than darker: a placeholder or a hover fill reads as raised off a
+	   dark surface. */
+	--accent-l-step: 0.03;
+	--accent-c-scale: 1.2;
+	--skeleton-l-step: 0.05;
+	--skeleton-c-scale: 1;
+
+	/* Liquid glass — darker tint, dimmer specular edge. (blur + sheen-strength inherit from :root; a
+	   tenant override at :root:root re-tints both schemes at once.) */
+	--glass-tint: 42%;
+	--glass-panel-tint: 60%;
+	--glass-bg: color-mix(in oklch, var(--card) var(--glass-tint), transparent);
+	--glass-panel-bg: color-mix(in oklch, var(--card) var(--glass-panel-tint), transparent);
+	--glass-border: oklch(1 0 0 / 0.16);
+	--glass-highlight: oklch(1 0 0 / calc(0.2 * var(--glass-sheen-strength)));
+	--glass-sheen: oklch(1 0 0 / calc(0.13 * var(--glass-sheen-strength)));
+	--glass-shadow: 0 18px 44px -16px oklch(0 0 0 / 0.65);
+
+	/* Elevation: on a dark canvas a light-tinted shadow reads as haze, so go darker + deeper. */
+	--elev-1: 0 1px 2px -1px oklch(0 0 0 / 0.4), 0 4px 16px -6px oklch(0 0 0 / 0.45);
+	--elev-2: 0 1px 2px -1px oklch(0 0 0 / 0.45), 0 8px 24px -10px oklch(0 0 0 / 0.55);
+	--elev-3: 0 2px 4px -2px oklch(0 0 0 / 0.5), 0 18px 40px -18px oklch(0 0 0 / 0.7);
+
+	/* Hero: lift slightly ABOVE the dark canvas (0.18) so the band still reads as a raised
+	   surface rather than a hole; the brand hairline carries the accent as in light mode. */
+	--hero-base: oklch(0.25 0.038 256);
+	--hero-shadow: 0 18px 40px -20px oklch(0 0 0 / 0.7);
+	/* Already-bright dark-mode gain/loss tokens need far less lifting. */
+	--hero-positive: color-mix(in oklch, var(--positive) 88%, white 12%);
+	--hero-negative: color-mix(in oklch, var(--negative) 88%, white 12%);
+
+	/* Finishes on a dark canvas: brand/deep stay white-ink slabs; tint becomes a dim wash that
+	   carries the (now light) page ink. */
+	--finish-brand-from: 0.55;
+	--finish-brand-to: 0.46;
+	--finish-deep-from: 0.4;
+	--finish-deep-to: 0.32;
+	--finish-tint-l: 0.3;
+	--finish-tint-c: 0.4;
+}
+
+/* ── Scoped-branding re-derivation (the studio preview) ─────────────────────────────────────
+   brandingPreviewStyle applies a tenant's tokens as an INLINE STYLE on a preview frame, not at
+   :root the way the portals' brandingHead does. The derived glass fills below are declared on
+   :root/.dark, and var() substitution inside a custom property happens on the DECLARING element —
+   so a frame-scoped override of the *-tint/-strength knobs can never reach a value that was
+   already resolved at :root and inherited down. Re-declaring the derivations on any element
+   carrying a scoped glass override makes the frame re-derive them locally, so the studio shows
+   what the live portal will actually do (the ledger finish's open panels, the Material sliders'
+   fill — previously the light-scheme preview's fill knob was dead for exactly this reason).
+   The formulas must stay literally in sync with the :root/.dark ones above. Re-deriving with
+   unchanged inputs yields the unchanged output, so an element that merely CONSUMES a glass var
+   inline is unaffected, and the live portals (branding via <style>, no inline overrides) never
+   match this selector at all. */
+[style*='--glass'] {
+	--glass-bg: color-mix(in oklch, var(--background) var(--glass-tint), transparent);
+	--glass-panel-bg: color-mix(in oklch, var(--card) var(--glass-panel-tint), transparent);
+	--glass-highlight: oklch(1 0 0 / calc(0.7 * var(--glass-sheen-strength)));
+	--glass-sheen: oklch(1 0 0 / calc(0.5 * var(--glass-sheen-strength)));
+}
+.dark[style*='--glass'],
+.dark [style*='--glass'] {
+	--glass-bg: color-mix(in oklch, var(--card) var(--glass-tint), transparent);
+	--glass-panel-bg: color-mix(in oklch, var(--card) var(--glass-panel-tint), transparent);
+	--glass-highlight: oklch(1 0 0 / calc(0.2 * var(--glass-sheen-strength)));
+	--glass-sheen: oklch(1 0 0 / calc(0.13 * var(--glass-sheen-strength)));
+}
+
+/* ── Spotlight's edge ───────────────────────────────────────────────────────────────────────
+   The search palette (`SpotlightSearch`) is one glass surface in every portal, sharp or glass.
+   Its tint/blur/sheen ride the inline `--glass-*` knobs, which the block above re-derives per
+   scheme; the two tokens that are NOT derived live here because they have to differ by scheme:
+
+     border — sharp.css wants a bold hairline and chrome.css then removes it entirely, which is
+              right for a panel IN the page and wrong for one floating over it;
+     shadow — an ink-tinted drop reads on paper and disappears on a dark canvas, so dark mode
+              needs a true black one (the same split :root/.dark make for their own glass). */
+.spotlight-glass {
+	--glass-border: color-mix(in oklch, var(--foreground) 38%, transparent);
+	--glass-shadow: 0 28px 64px -24px color-mix(in oklch, var(--hero-base) 60%, transparent);
+}
+
+.dark .spotlight-glass {
+	--glass-border: color-mix(in oklch, var(--foreground) 30%, transparent);
+	--glass-shadow: 0 28px 64px -20px oklch(0 0 0 / 0.72);
+}
+
+/* Bind Tailwind's `dark:` variant to the .dark CLASS, not prefers-color-scheme.
+   Tailwind v4 defaults `dark:` to `@media (prefers-color-scheme: dark)`, but this design system
+   switches schemes by putting `.dark` on <html> — so the 63 `dark:` utilities in the tree were
+   keyed to the OS while every token was keyed to the class. With no theme switcher the two
+   almost always agreed and it was invisible; the moment a user can choose light while the OS is
+   dark, dark-only utilities fire on a light page. `:where()` keeps specificity at zero so it
+   cannot outrank anything. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ── Tonal status ramp (derived, never hand-set) ───────────────────────────────────────────────
+   The 268 hardcoded palette classes this replaces were all the same three-part idiom: a tinted
+   surface, a readable ink on it, and a hairline (`bg-emerald-100 text-emerald-700
+   border-emerald-200`). Deriving each from its BASE token is what makes branding total: a firm
+   changes --success and its subtle/strong/line all follow, with no extra branding surface and
+   nothing to keep in sync.
+
+     -subtle  a tinted surface        (bg-success-subtle)
+     -strong  ink/icon on that tint   (text-success-strong)
+     -line    hairline on that tint   (border-success-line)
+
+   HUE IS HELD EXACTLY. The first cut of this used `color-mix(in oklch, var(--warning) 14%,
+   var(--background))`, which is wrong: color-mix interpolates hue, and our --background/--foreground
+   are very slightly blue (hue ~262), so mixing dragged every status toward blue. Measured on the
+   real portals, --warning-strong came out MAROON (hue 7), --destructive-subtle VIOLET,
+   --success-strong CYAN, and all five -subtle tints collapsed into one lavender band (hue 248-285)
+   despite base hues spanning 25-245. A caution surface read as an error and the status vocabulary
+   the workbenches trade on stopped differentiating — strictly worse than the palette it replaced.
+
+   `oklch(from …)` relative syntax fixes it by construction: `h` is passed through untouched, so a
+   derived tone can only ever differ from its base in lightness and chroma. The L/C figures live in
+   the --tone-* knobs below and flip under .dark, so one definition serves both schemes. */
+:root {
+	/* Lightness targets per rung, and a chroma multiplier applied to the BASE colour's own chroma
+	   (so a firm's muted brand yields muted tones, not artificially vivid ones).
+	
+	   MUTED DELIBERATELY. Only the chroma multipliers were lowered; the lightness targets are
+	   untouched, which is what makes this safe — contrast comes from L, so desaturating cannot make
+	   ink harder to read, and `oklch(from …)` passes `h` through so no tone drifts hue on the way
+	   down (the failure documented at length above). A status badge is a label on a dense table read
+	   all day, not a signal that has to win the page: at the old figures a listing of thirty rows
+	   read as stripes of colour, and the tint competed with the money it sat beside. Turn these back
+	   up rather than reaching for a palette class if a surface genuinely needs more. */
+	--tone-subtle-l: 0.955;
+	--tone-subtle-c: 0.2;
+	--tone-strong-l: 0.42;
+	--tone-strong-c: 0.7;
+	--tone-line-l: 0.86;
+	--tone-line-c: 0.38;
+}
+
+.dark {
+	/* Inverted: a tint on a dark canvas is DARKER than the canvas, and the ink on it is lighter.
+	   Muted by the same proportion as light mode, and for the same reason — but the dark figures stay
+	   a little higher throughout, because chroma reads weaker against a dark ground and matching the
+	   light numbers here would grey the tones out rather than soften them. */
+	--tone-subtle-l: 0.26;
+	--tone-subtle-c: 0.3;
+	--tone-strong-l: 0.84;
+	--tone-strong-c: 0.62;
+	--tone-line-l: 0.4;
+	--tone-line-c: 0.44;
+}
+
+:root,
+.dark,
+[style*='--palette-scope'] {
+	--success-subtle: oklch(
+		from var(--success) var(--tone-subtle-l) calc(c * var(--tone-subtle-c)) h
+	);
+	--success-strong: oklch(
+		from var(--success) var(--tone-strong-l) calc(c * var(--tone-strong-c)) h
+	);
+	--success-line: oklch(from var(--success) var(--tone-line-l) calc(c * var(--tone-line-c)) h);
+	--warning-subtle: oklch(
+		from var(--warning) var(--tone-subtle-l) calc(c * var(--tone-subtle-c)) h
+	);
+	--warning-strong: oklch(
+		from var(--warning) var(--tone-strong-l) calc(c * var(--tone-strong-c)) h
+	);
+	--warning-line: oklch(from var(--warning) var(--tone-line-l) calc(c * var(--tone-line-c)) h);
+	--info-subtle: oklch(from var(--info) var(--tone-subtle-l) calc(c * var(--tone-subtle-c)) h);
+	--info-strong: oklch(from var(--info) var(--tone-strong-l) calc(c * var(--tone-strong-c)) h);
+	--info-line: oklch(from var(--info) var(--tone-line-l) calc(c * var(--tone-line-c)) h);
+	--destructive-subtle: oklch(
+		from var(--destructive) var(--tone-subtle-l) calc(c * var(--tone-subtle-c)) h
+	);
+	--destructive-strong: oklch(
+		from var(--destructive) var(--tone-strong-l) calc(c * var(--tone-strong-c)) h
+	);
+	--destructive-line: oklch(
+		from var(--destructive) var(--tone-line-l) calc(c * var(--tone-line-c)) h
+	);
+	--brand-subtle: oklch(from var(--brand) var(--tone-subtle-l) calc(c * var(--tone-subtle-c)) h);
+	--brand-strong: oklch(from var(--brand) var(--tone-strong-l) calc(c * var(--tone-strong-c)) h);
+	--brand-line: oklch(from var(--brand) var(--tone-line-l) calc(c * var(--tone-line-c)) h);
+	--positive-subtle: oklch(
+		from var(--positive) var(--tone-subtle-l) calc(c * var(--tone-subtle-c)) h
+	);
+	--positive-strong: oklch(
+		from var(--positive) var(--tone-strong-l) calc(c * var(--tone-strong-c)) h
+	);
+	--positive-line: oklch(from var(--positive) var(--tone-line-l) calc(c * var(--tone-line-c)) h);
+	--negative-subtle: oklch(
+		from var(--negative) var(--tone-subtle-l) calc(c * var(--tone-subtle-c)) h
+	);
+	--negative-strong: oklch(
+		from var(--negative) var(--tone-strong-l) calc(c * var(--tone-strong-c)) h
+	);
+	--negative-line: oklch(from var(--negative) var(--tone-line-l) calc(c * var(--tone-line-c)) h);
+}
+
+@theme inline {
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--color-card: var(--card);
+	--color-card-foreground: var(--card-foreground);
+	--color-popover: var(--popover);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-skeleton: var(--skeleton);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-destructive: var(--destructive);
+	--color-destructive-foreground: var(--destructive-foreground);
+	--color-success: var(--success);
+	--color-success-foreground: var(--success-foreground);
+	--color-success-subtle: var(--success-subtle);
+	--color-success-strong: var(--success-strong);
+	--color-success-line: var(--success-line);
+	--color-warning-subtle: var(--warning-subtle);
+	--color-warning-strong: var(--warning-strong);
+	--color-warning-line: var(--warning-line);
+	--color-info-subtle: var(--info-subtle);
+	--color-info-strong: var(--info-strong);
+	--color-info-line: var(--info-line);
+	--color-destructive-subtle: var(--destructive-subtle);
+	--color-destructive-strong: var(--destructive-strong);
+	--color-destructive-line: var(--destructive-line);
+	--color-brand-subtle: var(--brand-subtle);
+	--color-brand-strong: var(--brand-strong);
+	--color-brand-line: var(--brand-line);
+	--color-positive-subtle: var(--positive-subtle);
+	--color-positive-strong: var(--positive-strong);
+	--color-positive-line: var(--positive-line);
+	--color-negative-subtle: var(--negative-subtle);
+	--color-negative-strong: var(--negative-strong);
+	--color-negative-line: var(--negative-line);
+	--color-warning: var(--warning);
+	--color-warning-foreground: var(--warning-foreground);
+	--color-info: var(--info);
+	--color-info-foreground: var(--info-foreground);
+	--color-brand: var(--brand);
+	--color-brand-foreground: var(--brand-foreground);
+	--color-positive: var(--positive);
+	--color-negative: var(--negative);
+	--color-border: var(--border);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
+
+	--color-sidebar: var(--sidebar);
+	--color-sidebar-foreground: var(--sidebar-foreground);
+	--color-sidebar-primary: var(--sidebar-primary);
+	--color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+	--color-sidebar-accent: var(--sidebar-accent);
+	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+	--color-sidebar-border: var(--sidebar-border);
+	--color-sidebar-ring: var(--sidebar-ring);
+
+	--font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+
+	--radius-sm: calc(var(--radius) - 4px);
+	--radius-md: calc(var(--radius) - 2px);
+	--radius-lg: var(--radius);
+	--radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+	* {
+		border-color: var(--border);
+		outline-color: color-mix(in oklch, var(--ring) 50%, transparent);
+	}
+	body {
+		background-color: var(--background);
+		color: var(--foreground);
+		font-feature-settings: 'cv11', 'ss01';
+	}
+}
+
+/* ── Semantic motion utilities ──────────────────────────────────────────────────────────────
+   These are intentionally plain classes rather than component-specific keyframes: every portal
+   gets one motion vocabulary from theme.css. Existing ad-hoc transitions can migrate as their
+   components are touched; new work uses these names immediately. */
+/* Scale, never `translate`: Tailwind's `-translate-x-1/2` centring writes the `translate` property,
+   and a keyframe animating it would drop the element half a width sideways for the whole entry. */
+@keyframes motion-menu-in {
+	from {
+		opacity: 0;
+		scale: 0.92;
+	}
+	to {
+		opacity: 1;
+		scale: 1;
+	}
+}
+
+@keyframes motion-menu-out {
+	from {
+		opacity: 1;
+		scale: 1;
+	}
+	to {
+		opacity: 0;
+		scale: 0.985;
+	}
+}
+
+@keyframes motion-item-in {
+	from {
+		opacity: 0;
+		translate: 0 0.25rem;
+	}
+	to {
+		opacity: 1;
+		translate: 0 0;
+	}
+}
+
+@layer utilities {
+	/* Floating menus/dialogs: the house bounce on entry, quick clean exit. `!important`
+	   deliberately replaces the old tw-animate animation shorthand while components migrate. */
+	.motion-menu[data-state='open'] {
+		animation: motion-menu-in var(--motion-duration-reveal) var(--motion-spring-bouncy) both !important;
+	}
+	.motion-menu[data-state='closed'] {
+		animation: motion-menu-out var(--motion-duration-exit) var(--motion-ease-out) both !important;
+	}
+
+	/* A transient region folding open — search results, an inline panel. Same spring and duration as
+	   the overlay it belongs to, so the container and its contents read as one gesture. */
+	.motion-reveal {
+		transition-duration: var(--motion-duration-reveal);
+		transition-timing-function: var(--motion-spring-bouncy);
+	}
+
+	/* Structural expansion: zero-overshoot spring, for a surface large enough that a bounce would
+	   read as instability — a drawer, a record section, a card growing in place. */
+	.motion-expand {
+		transition-duration: var(--motion-duration-expand);
+		transition-timing-function: var(--motion-spring-smooth);
+	}
+
+	/* Neutral atmospheric change: opacity/colour, never geometry. */
+	.motion-fade {
+		transition-duration: var(--motion-duration-fade);
+		transition-timing-function: var(--motion-ease-in-out);
+	}
+
+	/* Small binary controls: tactile and immediate, with no bounce. */
+	.motion-toggle {
+		transition-duration: var(--motion-duration-toggle);
+		transition-timing-function: var(--motion-ease-out);
+	}
+
+	/* Newly-mounted children, such as search result groups. Tied to the reveal duration, not the fade
+	   one: content arriving inside a region that has already finished folding open reads as lag. It
+	   does not stagger by itself — order-based delays become sluggish on long lists, so a component
+	   may opt into a very short delay. */
+	.motion-item-enter {
+		animation: motion-item-in var(--motion-duration-reveal) var(--motion-ease-out) both;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.motion-menu,
+	.motion-item-enter {
+		animation: none !important;
+	}
+	.motion-reveal,
+	.motion-expand,
+	.motion-fade,
+	.motion-toggle {
+		transition-duration: 1ms !important;
+	}
+}
+
+/* ── Finish-axis consumption ────────────────────────────────────────────────────────────────
+   The card surface + title register read the finish tokens HERE, in the components layer, rather
+   than as utility classes on card.svelte. Two reasons:
+   - caller overrides keep working: utilities (`bg-warning-subtle`, `border-t-brand`, `text-sm`
+     on a title) live in the later `utilities` layer, so they beat these rules exactly as they
+     used to beat the classes this replaces — including Card's own `glass-panel` branch, whose
+     utility fully re-covers background/border;
+   - declaration ORDER inside one rule is guaranteed, so the `border` shorthand can be laid down
+     before the `border-bottom` divider carve-out (as utility classes their emitted order would
+     be Tailwind's to choose).
+   Defaults keep this byte-identical to the classes it replaces; only the ledger finish re-points
+   the tokens. */
+@layer components {
+	[data-slot='card'] {
+		background-color: var(--surface-card);
+		border: var(--surface-card-border);
+		/* Under ledger the bottom edge SURVIVES the border removal as the hairline rule between
+		   stacked sections; by default it just restates the border, so nothing changes. */
+		border-bottom: var(--surface-card-divider);
+	}
+	[data-slot='card-title'] {
+		/* Defaults = the old `text-lg tracking-tight` (line-height stays with the component's
+		   `leading-snug` class). Ledger swaps these for the small-caps eyebrow register. */
+		font-size: var(--card-title-size);
+		letter-spacing: var(--card-title-tracking);
+		text-transform: var(--card-title-case);
+	}
+	[data-slot='card'][data-size='sm'] [data-slot='card-title'] {
+		/* The sm card's title tracks the token at the old text-lg → text-base ratio (18 → 16px),
+		   so the default is exactly the 1rem it always was and a ledger eyebrow scales with it. */
+		font-size: calc(var(--card-title-size) * 8 / 9);
+	}
+}
+
+/*
+ * Liquid glass utilities. Each owns the full material — a top-left specular
+ * sheen layered over the translucent fill, blur + saturation (the saturation is
+ * what makes colour behind the glass bloom rather than wash out), a hairline
+ * border and a bright inset edge. Components own border-radius + positioning.
+ *   `glass`        — floating chrome / overlays (strongest, most translucent).
+ *   `glass-panel`  — content surfaces / cards (more opaque, stays readable).
+ *   `glass-bar`    — edge-anchored sticky bars (no drop shadow; edge divider).
+ *   `glass-canvas` — ambient page backdrop so the glass above has colour to
+ *                    refract; without it glass over a near-white page reads flat.
+ */
+@utility glass {
+	/* A thin top specular band + a small top-left glint — glossy, not streaky. */
+	background-image:
+		linear-gradient(
+			to bottom,
+			color-mix(in oklch, var(--glass-sheen) 60%, transparent),
+			transparent 12%
+		),
+		radial-gradient(
+			70% 55% at 0% 0%,
+			color-mix(in oklch, var(--glass-sheen) 55%, transparent),
+			transparent 42%
+		);
+	background-color: var(--glass-bg);
+	/* brightness + contrast actively reshape the backdrop (the lensing read), so
+	   it isn't a uniform blur. */
+	-webkit-backdrop-filter: blur(var(--glass-blur)) saturate(235%) brightness(1.12) contrast(1.1);
+	backdrop-filter: blur(var(--glass-blur)) saturate(235%) brightness(1.12) contrast(1.1);
+	border: 1px solid var(--glass-border);
+	/* Depth from the outer drop shadow + a crisp lit edge only — no inner bands. */
+	box-shadow:
+		var(--glass-shadow),
+		inset 0 1px 0.5px 0 var(--glass-highlight),
+		inset 0 0 0 1px color-mix(in oklch, var(--glass-highlight) 28%, transparent);
+}
+
+@utility glass-panel {
+	/* Same treatment as `glass` but lighter, so content stays readable. */
+	background-image:
+		linear-gradient(
+			to bottom,
+			color-mix(in oklch, var(--glass-sheen) 50%, transparent),
+			transparent 12%
+		),
+		radial-gradient(
+			65% 50% at 0% 0%,
+			color-mix(in oklch, var(--glass-sheen) 45%, transparent),
+			transparent 40%
+		);
+	background-color: var(--glass-panel-bg);
+	-webkit-backdrop-filter: blur(calc(var(--glass-blur) * 0.8)) saturate(175%) brightness(1.05);
+	backdrop-filter: blur(calc(var(--glass-blur) * 0.8)) saturate(175%) brightness(1.05);
+	border: 1px solid var(--glass-border);
+	box-shadow:
+		var(--glass-panel-shadow),
+		inset 0 1px 0.5px 0 var(--glass-highlight),
+		inset 0 0 0 1px color-mix(in oklch, var(--glass-highlight) 18%, transparent);
+}
+
+@utility glass-bar {
+	/* Edge-anchored: a soft top specular band + brightened backdrop, keeping the
+	   bottom divider. No full rim (it spans the viewport width). */
+	background-image: linear-gradient(
+		to bottom,
+		color-mix(in oklch, var(--glass-sheen) 45%, transparent),
+		transparent 45%
+	);
+	background-color: var(--glass-bg);
+	-webkit-backdrop-filter: blur(calc(var(--glass-blur) * 0.9)) saturate(185%) brightness(1.06);
+	backdrop-filter: blur(calc(var(--glass-blur) * 0.9)) saturate(185%) brightness(1.06);
+	box-shadow:
+		inset 0 -1px 0 0 var(--glass-border),
+		inset 0 1px 0.5px 0 var(--glass-highlight);
+}
+
+@utility glass-canvas {
+	background-color: var(--background);
+	/* Each wash is scaled by --glass-canvas-strength, so 0 collapses all three to fully
+	   transparent and the canvas paints as a flat --background. The mixes stay a hint (12% and
+	   under): a stronger wash of --brand/--primary paints the ground in the brand colour, and
+	   the buttons stop reading against it. */
+	background-image:
+		radial-gradient(
+			55% 45% at 12% 0%,
+			color-mix(in oklch, var(--brand) calc(12% * var(--glass-canvas-strength)), transparent),
+			transparent 72%
+		),
+		radial-gradient(
+			45% 45% at 100% 8%,
+			color-mix(in oklch, var(--primary) calc(8% * var(--glass-canvas-strength)), transparent),
+			transparent 72%
+		),
+		radial-gradient(
+			55% 40% at 50% 100%,
+			color-mix(in oklch, var(--brand) calc(6% * var(--glass-canvas-strength)), transparent),
+			transparent 72%
+		);
+}
+
+/* The institutional hero band: an ink gradient lit from the top-right, a brand specular hairline
+   along the top edge, and a raised shadow. Token-driven (see --hero-*) so it re-themes and so
+   HeroPanel and PortfolioHeader cannot drift apart. Text on it uses --hero-foreground. */
+@utility hero-surface {
+	position: relative;
+	overflow: hidden;
+	color: var(--hero-foreground);
+	background-color: var(--hero-via);
+	background-image: radial-gradient(
+		120% 140% at 100% 0%,
+		var(--hero-from) 0%,
+		var(--hero-via) 42%,
+		var(--hero-to) 100%
+	);
+	box-shadow: var(--hero-shadow);
+}
+
+/* The specular hairline. Applied to a child so the gradient above stays a single paint. */
+/* Segmented toggle sitting ON the hero (period switchers). Token-driven so it tracks a
+   re-themed hero instead of assuming a navy background. */
+@utility hero-toggle-on {
+	background-color: color-mix(in oklch, var(--hero-foreground) 15%, transparent);
+	color: var(--hero-foreground);
+}
+@utility hero-toggle-off {
+	color: var(--hero-muted);
+
+	&:hover {
+		color: var(--hero-foreground);
+	}
+}
+
+@utility hero-hairline {
+	position: absolute;
+	inset-inline: 0;
+	top: 0;
+	height: 1px;
+	background-image: linear-gradient(
+		90deg,
+		transparent,
+		color-mix(in oklch, var(--hero-accent) 75%, transparent),
+		transparent
+	);
+}
+
+/* ── Touch targets ──────────────────────────────────────────────────────────────────────────
+   A control is tapped with a thumb, and a thumb is 44px wide (Apple HIG; WCAG 2.5.5). The
+   control's LOOK does not have to be: a 24px "View all ›" link or a 36px round icon button is
+   right at its size, and padding it out to 44 would make every quiet row a chunky one. So the
+   hit area is extended invisibly — an absolutely positioned pseudo-element that grows the box
+   to 44×44 on whichever axes fall short and does nothing on the ones that do not (a 120px-wide
+   button gets taller, not wider). `min()` against 0 is what makes it one class for every shape:
+   `50% - 22px` is negative exactly when the box is under 44 on that axis, and the percentage
+   resolves against the box's own width for `left`/`right` and height for `top`/`bottom`.
+
+   Three limits. The element must be the hit target itself (a replaced element — `<input>` — has
+   no pseudo-elements, so a field gets `min-height` instead; see the client's app.css). An
+   ancestor with `overflow: hidden/auto` clips the extension at its edge, so a control inside a
+   scroller sizes itself for real. And two extended controls closer together than their
+   extensions overlap: the later one in the DOM wins the shared strip. Lay small controls out
+   with a gap at least the sum of their shortfalls' halves (two 36px icons need `gap-2`).
+
+   The client portal checks all of this in development (`@graphene/ui` touch-audit): every
+   interactive element's hit box — border box plus this extension — must reach 44 on both axes,
+   and extensions must not overlap a neighbour's visible box. `data-tap-ok` waives one element.
+   The pseudo is `::before`; a control that already uses its own `::before` for something else
+   (period pills) sizes that one instead. An element that is already `absolute`/`fixed`/`sticky`
+   keeps that — the pseudo only needs SOME positioned box to measure against. */
+@utility tap-target {
+	&:where(:not(.absolute, .fixed, .sticky)) {
+		position: relative;
+	}
+
+	&::before {
+		content: '';
+		position: absolute;
+		inset: min(0px, calc(50% - 22px));
+	}
+}
+
+/* ── Scrollbars ─────────────────────────────────────────────────────────────────────────────
+   Quiet by default: a scroll container's bar is invisible until the pointer is over that
+   container (or something inside it has focus), then it fades up as a slim themed thumb on a
+   transparent track.
+
+   This IS applied globally, reversing an earlier decision to leave the native bar alone. The
+   reasoning that decision rested on — "the OS bar is the right one for the page" — assumed the OS
+   bar auto-hides, which is only true on a trackpad. On a mouse, or with macOS set to "Show scroll
+   bars: Always", the UA paints a permanent high-contrast bar down the edge of EVERY scroll
+   container we have, and this product is mostly scroll containers: a listing's table, a record's
+   notes, the notification feed, every drawer. Twelve permanent bars is chrome competing with the
+   content, and it cannot be fixed per-panel because there is no selector for "an element that
+   scrolls" — so the default has to live here, on `*`.
+
+   `:hover` matches ANCESTORS, which is what makes this behave like the platform bar it imitates:
+   pointing at a row inside a panel reveals that panel's bar (and the page's), and moving away
+   hides it again. `:focus-within` is the keyboard half — scrolling a panel with the arrow keys
+   must not be invisible.
+
+   Two things it deliberately does not do. It never hides the bar where a hover can never happen:
+   `@media (hover: hover)` means a touch device keeps whatever its UA draws. And it uses ONLY the
+   standard properties, no `::-webkit-scrollbar` — the pseudo-elements would force a classic
+   non-overlay bar in every WebKit engine, taking a permanent gutter out of the content width to
+   hide a bar that was already auto-hiding there. The accepted cost is the mirror of that: on
+   Chromium, customising at all opts out of overlay bars, so a trackpad user trades ~8px of
+   container width for a stable gutter. `thin` keeps that as small as the engine allows. */
+@layer base {
+	@media (hover: hover) {
+		* {
+			scrollbar-width: thin;
+			scrollbar-color: transparent transparent;
+		}
+		*:hover,
+		*:focus-within {
+			scrollbar-color: color-mix(in oklch, var(--muted-foreground) 40%, transparent) transparent;
+		}
+	}
+}
+
+/* No bar at all, for a container whose scrolling is self-evident and whose bar would sit on top of
+   the design: the sidebar nav (it scrolls only on a short viewport, and a bar down the rail reads
+   as a border) and the ⌘K palette's result list. Both already asked for this class; it had never
+   been defined, so both had been showing a bar for as long as they have existed.
+
+   `scrollbar-width: none` is the standard; the pseudo-element is for Safari before 18.2. This is
+   the one case where hiding a bar outright is right rather than lazy — the container is short, the
+   content is obviously a list, and the wheel/trackpad/keyboard all still scroll it. */
+@utility no-scrollbar {
+	scrollbar-width: none;
+
+	&::-webkit-scrollbar {
+		display: none;
+	}
+}
+
+/* A slim, themed scrollbar that is ALWAYS VISIBLE, for the containers where the bar is telling you
+   something: the document viewer's page column, where the thumb is how far through a 40-page
+   suitability report you are. Everywhere else the quiet default above is what you want — this is
+   the opt-out from it, so use it only when the position indicator is worth the chrome. It also
+   pairs with `[scrollbar-gutter:stable]` there, because a viewer whose page width changes as you
+   page through a document is a viewer that reflows the thing you are reading.
+
+   Two mechanisms, because no single one is portable: `scrollbar-width`/`scrollbar-color` is the
+   standard (Firefox, Chromium 121+, Safari 18.2+), `::-webkit-scrollbar` is what older Safari
+   needs. A browser that honours the standard properties ignores the pseudo-elements entirely, so
+   the two never fight. Colours come from the theme, so a re-skinned tenant gets a matching bar. */
+@utility scrollbar-slim {
+	scrollbar-width: thin;
+	scrollbar-color: color-mix(in oklch, var(--muted-foreground) 35%, transparent) transparent;
+
+	&::-webkit-scrollbar {
+		width: 0.625rem;
+		height: 0.625rem;
+	}
+	&::-webkit-scrollbar-track {
+		background: transparent;
+	}
+	&::-webkit-scrollbar-thumb {
+		/* Padding-box + a transparent border is the trick that insets the thumb from the track
+		   without a wrapper: the border is drawn in the track's (transparent) colour. */
+		background-color: color-mix(in oklch, var(--muted-foreground) 35%, transparent);
+		background-clip: padding-box;
+		border: 3px solid transparent;
+		border-radius: 9999px;
+	}
+	&:hover::-webkit-scrollbar-thumb {
+		background-color: color-mix(in oklch, var(--muted-foreground) 55%, transparent);
+	}
+	&::-webkit-scrollbar-corner {
+		background: transparent;
+	}
+}

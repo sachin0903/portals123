@@ -1,0 +1,72 @@
+[project]
+name = "morgan-lloyd-sync"
+version = "0.0.0"
+description = "Morgan Lloyd CRM sync — scheduled extraction on interlace v2"
+requires-python = ">=3.13"
+dependencies = [
+  # 2.0.0 renamed the interlace-owned materialisation to `virtual` and repurposed `table` for
+  # EXTERNAL tables it delivers into but never drops — which is what lets the per-tenant merge
+  # write the portals database directly. `adbc` is the postgres engine's driver (it ingests
+  # Arrow via adbc_ingest); without the extra the engine raises at open.
+  # 2.8.8 keeps a schema-qualified DuckLake create in that schema. Before it, a
+  # parallel build could commit the table into `main`.
+  "interlaced[service,adbc]>=2.8.8",
+  "morgan-lloyd",
+  "httpx>=0.27",
+  "pydantic>=2.9",
+  "pydantic-settings>=2.5",
+  "pyarrow>=17",
+  "fpdf2>=2.8",  # local rendering of test illustration PDFs (scripts/)
+  # pkgs/book-sink — a RUNTIME dependency, because `models/tenants.py` imports it at module load
+  # and interlace discovers models by importing them. It sat in `dev` with a comment saying this
+  # service does not import it at run time, which was true before the per-tenant chain landed:
+  # a `--no-dev` install (what every Dockerfile does) then loses `models/tenants.py` entirely, and
+  # an absent model is not an error — the daemon serves happily with no tenant models at all,
+  # which reads as "no firm is enabled on Morgan Lloyd" rather than as a broken build.
+  "book-sink",
+]
+
+[dependency-groups]
+dev = [
+  "ruff>=0.6",
+  "mypy>=1.11",
+  "pytest>=8.3",
+  "pytest-asyncio>=0.24",
+]
+
+[tool.uv.sources]
+book-sink = { workspace = true }
+morgan-lloyd = { workspace = true }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ml_sync"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "ASYNC", "S", "C4"]
+
+[tool.ruff.lint.per-file-ignores]
+# asserts + dummy credentials are fine in tests; S314 covers stdlib-XML parsing
+# of untrusted input, but the tests only parse XML this repo just generated
+"tests/*" = ["S101", "S105", "S106", "S314"]
+"scripts/*" = ["S311"] # deterministic pseudo-random test data is the point
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+plugins = ["pydantic.mypy"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+
+# pyarrow ships no type stubs.
+[[tool.mypy.overrides]]
+module = ["pyarrow", "pyarrow.*"]
+ignore_missing_imports = true

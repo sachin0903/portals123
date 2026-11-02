@@ -1,0 +1,50 @@
+[project]
+name = "intelliflo"
+version = "0.0.0"
+description = "Intelliflo Office adviser directory client — OAuth2 client-credentials, for the SEI/Intelliflo advisor-identity mapping feature"
+requires-python = ">=3.13"
+dependencies = [
+  "httpx>=0.27",
+  "pydantic>=2.9",
+  "pydantic-settings>=2.5",
+  # pkgs/api-log — declared for the same reason pkgs/morgan-lloyd declares it: this package is
+  # meant to be usable as an SDK on its own, and a uv workspace installing every member into one
+  # venv must not be the only thing making that true.
+  "api-log",
+]
+
+[tool.uv.sources]
+api-log = { workspace = true }
+
+[dependency-groups]
+dev = [
+  "ruff>=0.6",
+  "mypy>=1.11",
+  "pytest>=8.3",
+  "pytest-asyncio>=0.24",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/intelliflo"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "ASYNC", "S", "C4"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101", "S105", "S106"] # asserts + dummy credentials are fine in tests
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+plugins = ["pydantic.mypy"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"

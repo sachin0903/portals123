@@ -1,0 +1,25 @@
+-- ============================================================================
+-- Drop platform.provider_instructions -- the outbound instruction queue (0074).
+--
+-- CONTRACT PHASE. The table shipped with a claim/backoff/idempotency design, per-operation retry
+-- classes, a worker loop draining it and a full test suite -- and `provider_queue.enqueue()` was
+-- called from nowhere but those tests. No route wrote to it, no surface read it, and 0074's own
+-- comment describes an API ("enqueuing goes through the API, which validates the payload against
+-- the vendor contract first") that was never built.
+--
+-- That is the exact shape `pkgs/api-log`'s module docstring records `audit.api_log` having been
+-- in: "a finished table, drain, endpoint set and admin page with no producer at all". The lesson
+-- taken here is the opposite one -- rather than build the producer, remove the queue, because
+-- docs/provider-routing.md §6a already argues the console should not have one in front of it:
+-- an operator watching a form is better served by the vendor's own 409 than by a job id.
+--
+-- WHAT IS NOT LOST. The vendor-safety knowledge lived on `ActionDef.retry`, in code, and stays
+-- there: every operation is still classified safe | guarded | manual, and the console now warns
+-- before sending one that cannot be retried. That classification is a fact about the vendor
+-- (Morgan Lloyd has no delete, so a retried create puts a second human in the CRM; a retried
+-- contribution reclaims relief from HMRC twice) and it outlives the transport that prompted it.
+--
+-- Nothing to migrate: the table has never held a row in any environment, because nothing could
+-- put one there.
+-- ============================================================================
+DROP TABLE IF EXISTS platform.provider_instructions;

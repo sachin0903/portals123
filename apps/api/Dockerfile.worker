@@ -1,0 +1,63 @@
+# syntax=docker/dockerfile:1
+# The DocumentWorker — renders generated documents (Jinja2 + WeasyPrint) in Linux, where WeasyPrint's
+# native stack (Pango / Cairo / GLib / gdk-pixbuf) installs cleanly from apt. The Windows-native dev
+# API just enqueues into documents.render_jobs; this container drains the queue (plus the flows
+# outbox and the task notifier, each its own loop). Build context is the repo root (so it can COPY
+# apps/api/... AND the uv workspace root's lockfile). Runs as the `render` service in both
+# compose.dev.yaml and the production docker-compose.yaml.
+FROM python:3.13-slim
+
+# WeasyPrint native deps (same set as the platform-1 worker image) + fonts for stable rendering.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpango-1.0-0 \
+    libpangocairo-1.0-0 \
+    libpangoft2-1.0-0 \
+    libgdk-pixbuf-2.0-0 \
+    libcairo2 \
+    libffi8 \
+    fonts-liberation \
+ && rm -rf /var/lib/apt/lists/*
+
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+
+WORKDIR /app
+
+# Dependencies from the LOCKFILE (uv workspace root), not resolved fresh from pyproject: the
+# worker image has to be reproducible and to match the API image's resolution exactly. Manifests
+# only, so the dependency layer caches across source changes. `--frozen` fails the build if the
+# lock is out of date; the venv lands at the workspace root (/app/.venv).
+COPY pyproject.toml uv.lock /app/
+COPY apps/api/pyproject.toml /app/apps/api/pyproject.toml
+# apps/api's four workspace packages are `{ workspace = true }` sources, so uv installs them
+# from source (editable, .pth into /app/pkgs/*/src) and the manifest alone will not do -- the
+# sync fails with "Distribution not found at: file:///app/pkgs/api-log". Whole trees, therefore,
+# but they change rarely, so the dependency layer still caches across apps/api source changes.
+COPY pkgs/api-log /app/pkgs/api-log
+COPY pkgs/baton /app/pkgs/baton
+COPY pkgs/intelliflo /app/pkgs/intelliflo
+COPY pkgs/morgan-lloyd /app/pkgs/morgan-lloyd
+COPY pkgs/sei /app/pkgs/sei
+COPY pkgs/seccl /app/pkgs/seccl
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-dev --no-install-project --project apps/api
+
+# App code (bind-mounted over in dev for hot-restart; baked here for prod).
+COPY apps/api/app /app/app
+COPY apps/api/migrations /app/migrations
+
+# --create-home matters: DuckDB (app/lake) refuses to run with no home directory to cache its
+# extensions in — the same trap apps/api/Dockerfile documents for the API image itself.
+RUN groupadd --system app && useradd --system --gid app --create-home app \
+ && chown -R app:app /app
+USER app
+
+ENV PATH="/app/.venv/bin:$PATH" \
+    PYTHONUNBUFFERED=1
+
+# The worker serves no HTTP, so liveness is a heartbeat file each of its three loops stamps.
+# Unhealthy => a loop is wedged, or the process died before its first iteration. Also declared in
+# docker-compose.yaml so it is visible where the service is configured.
+HEALTHCHECK --interval=60s --timeout=10s --start-period=60s --retries=3 \
+    CMD ["python", "-m", "app.worker", "--healthcheck"]
+
+CMD ["python", "-m", "app.worker"]

@@ -1,0 +1,5 @@
+.interlace/
+
+# interlace.yaml interpolates ${SECCL_STATE_PATH}/${SECCL_STREAM_PATH}; running without a .env
+# leaves the name un-expanded and writes a stray file called exactly that, outside .interlace/.
+${SECCL_*_PATH}

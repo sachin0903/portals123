@@ -1,0 +1,6 @@
+# Auto-generated permission constants — emitted by apps/api/scripts/generate_permissions_ts.py
+# (the registry in app/permissions.py is the source of truth). Formatted by the generator, not
+# prettier, so the CI drift check compares the generator's exact output.
+pkgs/api-client/permissions.ts
+# Vendored Scalar browser bundle. Prettier would rewrite the minified file.
+apps/api/external/static/scalar-api-reference.js

@@ -1,0 +1,976 @@
+"""Graphene's own compliance reports: PDFs laid out like the onboarding application summary.
+
+Three reports, built from what Graphene holds (``compliance.*``) each time one is asked for and
+never stored:
+
+* the client report: the client as Graphene checked them (their details and addresses), and every
+  identity check and AML screen with its outcome;
+* an identity check report: the document, the outcome and the analysis of the photos;
+* an AML screen report: what was screened, the outcome, and whether it is monitored.
+
+Two readers. Graphene operations (the AML console, ``routers/aml.py``) read everything: each
+status as it is, the client's risk, each match, and each decision with its comment. A firm (the
+client's compliance page, ``routers/client_identity.py``) reads each status in its own vocabulary
+(``outcomes.firm_status``, ``outcomes.firm_aml_status``), and never a decision or its comment. It
+reads a screen's matches only once Graphene let the journey continue past them, and then only the
+confirmed ones: nothing may tell it what Graphene is still reviewing (docs/aml.md §5).
+
+Every read names its client or check, and needs a session that reads ``compliance.*`` whole: the
+console's, or a firm's under ``db.as_service_role``.
+"""
+
+from __future__ import annotations
+
+import base64
+import logging
+from collections.abc import Mapping, Sequence
+from datetime import UTC, date, datetime
+from decimal import Decimal
+from typing import Any, Literal
+
+from fastapi import Response
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app import countries, storage
+from app.complycube.outcomes import (
+    TECHNICAL_FAILURE,
+    allowed_past_match,
+    firm_aml_status,
+    firm_status,
+    monitoring_covers,
+)
+
+# The application summary's own building blocks, so a report looks like it.
+from app.flows.application_pack import (
+    APPLICATION_PACK_CSS,
+    Row,
+    _band,
+    _card,
+    _card_head,
+    _esc,
+    _facts,
+    _h2,
+    _logo_src,
+    _long_date,
+    _pill,
+    _stamp,
+)
+from app.render.illustration_brand import brand_for_illustration
+
+logger = logging.getLogger(__name__)
+
+#: Who a report is for: Graphene operations read everything; a firm reads what §5 lets it.
+Audience = Literal["operations", "firm"]
+
+#: The checks a report covers.
+REPORTED_KINDS = ("identity", "aml")
+
+#: Who the firm is told uploaded the photos of an operations upload.
+GRAPHENE = "Graphene"
+
+
+class ReportUnavailable(RuntimeError):
+    """The PDF could not be rendered."""
+
+
+# ---- reading --------------------------------------------------------------------------------
+
+_CLIENT = """
+SELECT cl.id, cl.uid, cl.tenant_id, cl.client_type, cl.entity_name, cl.first_name, cl.middle_name,
+       cl.last_name, cl.dob, cl.nationality, cl.birth_country, cl.email, cl.mobile, cl.telephone,
+       cl.national_identity_number, cl.tax_identification_number, cl.company_name,
+       cl.registration_number, cl.incorporation_country, cl.website, cl.created_at,
+       c.uid AS contact_uid, t.name AS firm_name, r.overall AS risk
+  FROM compliance.clients cl
+  JOIN auth.tenants t ON t.id = cl.tenant_id
+  LEFT JOIN crm.contacts c ON c.id = cl.contact_id
+  LEFT JOIN compliance.client_risk r ON r.client_id = cl.id
+ WHERE cl.id = :client
+"""
+
+_ADDRESSES = """
+SELECT address_type, property_number, building_name, line, city, state, postal_code, country,
+       from_date, to_date
+  FROM compliance.addresses
+ WHERE client_id = :client
+ ORDER BY id
+"""
+
+_CHECKS = """
+SELECT ch.id, ch.uid, ch.client_id, ch.kind, ch.status, ch.origin, ch.provider_type, ch.attempt,
+       ch.monitoring, ch.created_at, ch.updated_at, ch.decided_by, ch.decided_at,
+       ch.decision_comment, ch.uploaded_by, ch.uploaded_via, ch.upload_comment,
+       d.document_type, d.issuing_country
+  FROM compliance.checks ch
+  LEFT JOIN compliance.documents d ON d.id = ch.document_id
+ WHERE ch.kind IN ('identity', 'aml')
+   AND (CAST(:client AS int) IS NULL OR ch.client_id = CAST(:client AS int))
+   AND (CAST(:check AS int) IS NULL OR ch.id = CAST(:check AS int))
+ ORDER BY ch.id DESC
+"""
+
+_MATCHES = """
+SELECT uid, name, match_types, score, dob, countries, sources, raw, decision, decided_by,
+       decided_at, comment
+  FROM compliance.matches
+ WHERE check_id = :check
+ ORDER BY score DESC NULLS LAST, id
+"""
+
+
+async def _client(session: AsyncSession, client_pk: int) -> dict[str, Any]:
+    row = (await session.execute(text(_CLIENT), {"client": client_pk})).mappings().one()
+    return dict(row)
+
+
+async def _checks(
+    session: AsyncSession, *, client_pk: int | None = None, check_pk: int | None = None
+) -> list[dict[str, Any]]:
+    rows = await session.execute(text(_CHECKS), {"client": client_pk, "check": check_pk})
+    return [dict(row) for row in rows.mappings().all()]
+
+
+async def reader_name(session: AsyncSession, user_id: str | None) -> str | None:
+    """The name of the person downloading a report, for its "generated by" line."""
+    if not user_id:
+        return None
+    return (
+        await session.execute(
+            text(
+                "SELECT COALESCE(NULLIF(trim(concat_ws(' ', first_name, last_name)), ''), email) "
+                "FROM auth.users WHERE id = CAST(:u AS uuid)"
+            ),
+            {"u": user_id},
+        )
+    ).scalar_one_or_none()
+
+
+# ---- wording --------------------------------------------------------------------------------
+
+_DOCUMENT_TYPES = {
+    "passport": "Passport",
+    "driving_license": "Driving licence",
+    "driving_licence": "Driving licence",
+    "national_identity_card": "National identity card",
+    "national_id": "National identity card",
+    "residence_permit": "Residence permit",
+}
+
+_SCREENING_TYPES = {
+    "extensive_screening_check": "Extensive screening",
+    "standard_screening_check": "Standard screening",
+}
+
+#: What an extensive screen searches, group by group.
+EXTENSIVE_SCREENING_LISTS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    (
+        "Sanctions and watchlists",
+        (
+            "Sanctions lists",
+            "Terror",
+            "War crimes",
+            "Sanctions control and ownership",
+            "Child sexual exploitation",
+            "Other official lists",
+            "Other exclusion lists",
+        ),
+    ),
+    ("Politically exposed persons", ("PEP level 1", "PEP level 2", "PEP level 3", "PEP level 4")),
+    (
+        "Adverse media",
+        (
+            "Environment and production",
+            "Social and labour",
+            "Competitive and financial",
+            "Regulatory",
+        ),
+    ),
+    (
+        "Other lists",
+        (
+            "Tax crime",
+            "Associated entity",
+            "Corruption",
+            "Trafficking",
+            "Financial crime",
+            "Organised crime",
+        ),
+    ),
+)
+
+#: A status as operations read it: its word and its pill.
+_OPERATIONS_STATUS = {
+    "pending": ("Running", "mute"),
+    "clear": ("Clear", "ok"),
+    "refer": ("Referred", "warn"),
+    "rejected": ("Rejected", "bad"),
+    TECHNICAL_FAILURE: ("Could not run", "mute"),
+}
+
+#: A status in the firm's vocabulary: its word and its pill.
+_FIRM_STATUS = {
+    "in_progress": ("In progress", "mute"),
+    "pending": ("In progress", "mute"),
+    "passed": ("Passed", "ok"),
+    "referred": ("Referred", "warn"),
+    "failed": ("Failed", "bad"),
+    "superseded": ("Superseded by newer photos", "mute"),
+}
+
+
+def _status(check: Mapping[str, Any], audience: Audience) -> tuple[str, str]:
+    raw = str(check["status"])
+    decided = check["decided_at"] is not None
+    if audience == "operations":
+        # An AML screen allowed past its confirmed matches reads as the AML console reads it.
+        if check["kind"] == "aml" and allowed_past_match(raw, decided, str(check["origin"])):
+            return "Allowed to continue", "ok"
+        word, kind = _OPERATIONS_STATUS.get(raw, (raw.title(), "mute"))
+        if raw == "refer" and not decided:
+            word = "Referred, awaiting review"
+        return word, kind
+    vocab = (
+        firm_status(raw, decided)
+        if check["kind"] == "identity"
+        else firm_aml_status(raw, decided, portal=check["origin"] == "portal")
+    )
+    return _FIRM_STATUS[vocab]
+
+
+def _status_pill(check: Mapping[str, Any], audience: Audience) -> str:
+    word, kind = _status(check, audience)
+    return _pill(word, kind)
+
+
+def _country(code: object) -> str | None:
+    if not code:
+        return None
+    catalogue = countries.current()
+    name = catalogue.name_of(str(code)) if catalogue else None
+    return name or str(code)
+
+
+def _date(value: object) -> str | None:
+    if isinstance(value, datetime):
+        return _stamp(value)[0]
+    if isinstance(value, date):
+        return _long_date(value)
+    return str(value) if value else None
+
+
+def _moment(value: object) -> str | None:
+    if not isinstance(value, datetime):
+        return _date(value)
+    day, stamp = _stamp(value)
+    return f"{day}, {stamp[11:]}"
+
+
+def _rows(pairs: Sequence[tuple[str, object]]) -> tuple[Row, ...]:
+    """Facts with a value, each as display text; an empty one is left out."""
+    return tuple(Row(label=label, value=str(value)) for label, value in pairs if value)
+
+
+def _client_name(client: Mapping[str, Any]) -> str:
+    if client["entity_name"]:
+        return str(client["entity_name"])
+    person = " ".join(
+        str(part) for part in (client["first_name"], client["last_name"]) if part
+    ).strip()
+    return person or str(client["company_name"] or "Unnamed client")
+
+
+def _client_ref(client: Mapping[str, Any]) -> str:
+    return str(client["contact_uid"] or client["uid"])
+
+
+def _document(check: Mapping[str, Any]) -> str | None:
+    kind = check["document_type"]
+    return (
+        _DOCUMENT_TYPES.get(str(kind), str(kind).replace("_", " ").capitalize()) if kind else None
+    )
+
+
+def _uploader(check: Mapping[str, Any], audience: Audience) -> str | None:
+    if check["uploaded_via"] == "operations":
+        if audience == "firm":
+            return GRAPHENE
+        return f"{check['uploaded_by'] or 'Operations'} (Graphene operations)"
+    if check["uploaded_via"] == "firm":
+        return f"{check['uploaded_by'] or 'The adviser'} (the firm)"
+    return "The client" if check["kind"] == "identity" else None
+
+
+def _check_name(check: Mapping[str, Any]) -> str:
+    if check["kind"] == "identity":
+        return "Identity check"
+    return "AML screen"
+
+
+def _check_detail(check: Mapping[str, Any]) -> str:
+    if check["kind"] == "identity":
+        country = _country(check["issuing_country"])
+        parts = [_document(check), country, f"Try {check['attempt']}"]
+    else:
+        parts = [_SCREENING_TYPES.get(str(check["provider_type"]))]
+    return " · ".join(part for part in parts if part)
+
+
+# ---- layout ---------------------------------------------------------------------------------
+
+#: The Graphene mark, as the portals draw it (``@graphene/ui`` ``Logo``) in the stock navy. An
+#: image, so the running header (``pack-firm``) carries it onto every page.
+GRAPHENE_MARK = (
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 426 372">'
+    '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">'
+    '<stop offset="0%" stop-color="#1e3a5e"/><stop offset="55%" stop-color="#265574"/>'
+    '<stop offset="100%" stop-color="#2f6789"/></linearGradient></defs>'
+    '<path fill="url(#g)" d="M110 0 318 0 338 33 350 55 141 55 64 188 141 319 289 318 333 232 '
+    '365 289 323 372 107 372 0 189Z"/>'
+    '<path fill="url(#g)" d="M209 129 393 129 426 186 397 244 360 183 240 183 210 130Z"/>'
+    "</svg>"
+)
+_GRAPHENE_MARK_SRC = (
+    "data:image/svg+xml;base64," + base64.b64encode(GRAPHENE_MARK.encode()).decode()
+)
+
+#: What the application summary's style lacks: the Graphene lockup, pills for a referral and a
+#: failure, and a check's outcome as a banner.
+REPORT_CSS = """
+.pack-firm { white-space: nowrap; }
+.pack-firm .graphene {
+  display: inline-block;
+  height: 18px;
+  width: auto;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+.pack-firm .graphene-name {
+  vertical-align: middle;
+  font-size: 11pt;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #1e3a5e;
+}
+.application-pack .pill.warn { background: #fef3c7; color: #92400e; }
+.application-pack .pill.bad { background: #fee2e2; color: #b91c1c; }
+.application-pack table.people td .sub { margin: 2px 0 0; }
+.application-pack .card.match { padding: 12px 14px 8px; }
+.application-pack table.match-head { width: 100%; border-collapse: collapse; margin: 0 0 4px; }
+.application-pack table.match-head td { border: none; padding: 0 0 6px; vertical-align: top; }
+.application-pack td.match-photo { width: 84px; padding-right: 12px; }
+.application-pack td.match-photo img {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+}
+.application-pack td.match-score {
+  width: 70px;
+  text-align: right;
+  font-size: 14pt;
+  font-weight: 700;
+  color: #92400e;
+}
+.application-pack .chips { margin-top: 4px; }
+.application-pack .chips .pill { margin: 2px 4px 0 0; }
+.application-pack .notes { white-space: pre-line; margin: 0 0 8px; font-size: 9pt; }
+.application-pack ul.plain { list-style: none; padding: 0; margin: 0 0 8px; font-size: 9pt; }
+.application-pack ul.plain li { margin: 0 0 3px; }
+.application-pack ul.links li { color: #374151; word-break: break-all; }
+.application-pack .verdict {
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 4px 0 10px;
+  page-break-inside: avoid;
+}
+.application-pack .verdict .label {
+  font-size: 8.5pt;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 0;
+}
+.application-pack .verdict .word {
+  font-size: 26pt;
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 2px 0;
+}
+.application-pack .verdict .when { font-size: 9pt; color: #374151; margin: 0; }
+.application-pack .verdict.ok {
+  background: #e5f6ec;
+  border-left: 6px solid #1f9d55;
+  color: #157a3c;
+}
+.application-pack .verdict.warn {
+  background: #fef3c7;
+  border-left: 6px solid #d97706;
+  color: #92400e;
+}
+.application-pack .verdict.bad {
+  background: #fee2e2;
+  border-left: 6px solid #dc2626;
+  color: #b91c1c;
+}
+.application-pack .verdict.mute {
+  background: #f3f4f6;
+  border-left: 6px solid #9ca3af;
+  color: #374151;
+}
+"""
+
+
+def _verdict(check: Mapping[str, Any], audience: Audience) -> str:
+    """The check's outcome as the report's headline: the word large, in its colour."""
+    word, kind = _status(check, audience)
+    when = _date(check["decided_at"] or check["updated_at"])
+    return (
+        f'<div class="verdict {kind}">'
+        f'<p class="label">{_esc(_check_name(check))} outcome</p>'
+        f'<p class="word">{_esc(word)}</p>'
+        + (f'<p class="when">As of {_esc(when)}</p>' if when else "")
+        + "</div>"
+    )
+
+
+def _page(
+    *,
+    client: Mapping[str, Any],
+    brand: Mapping[str, Any],
+    kicker: str,
+    reference: str,
+    generated_at: datetime,
+    generated_by: str | None,
+    body: str,
+) -> str:
+    firm = str(client["firm_name"] or "")
+    logo = _logo_src(brand.get("logo") if isinstance(brand.get("logo"), str) else None)
+    logo_html = f'<img class="logo" alt="" src="{_esc(logo)}">' if logo else ""
+    mini = f'<img class="mini" alt="" src="{_esc(logo)}">' if logo else ""
+    mark = f'<td class="mark">{logo_html}</td>' if logo_html else ""
+    generated = _moment(generated_at) or ""
+    meta = f"{firm} · generated {generated}" + (f" by {generated_by}" if generated_by else "")
+    return (
+        '<article class="application-pack">'
+        '<div class="page-rule"></div>'
+        '<div class="pack-firm">'
+        f'<img class="graphene" alt="Graphene" src="{_GRAPHENE_MARK_SRC}">'
+        '<span class="graphene-name">Graphene</span></div>'
+        f'<div class="pack-ref">{_esc(kicker)} {_esc(reference)}</div>'
+        f'<div class="pack-when">{mini}<div>Generated {_esc(_date(generated_at))}</div></div>'
+        '<header class="letterhead"><table><tr><td>'
+        f'<p class="kicker">{_esc(kicker)}</p>'
+        f"<h1>{_esc(_client_name(client))}</h1>"
+        f'<p class="meta">{_esc(meta)}</p>'
+        f"</td>{mark}</tr></table></header>"
+        f"{body}</article>"
+    )
+
+
+def _details(client: Mapping[str, Any]) -> str:
+    if client["client_type"] == "company":
+        rows = _rows(
+            (
+                ("Company name", client["company_name"]),
+                ("Registration number", client["registration_number"]),
+                ("Country of incorporation", _country(client["incorporation_country"])),
+                ("Website", client["website"]),
+                ("Email", client["email"]),
+                ("Telephone", client["telephone"]),
+            )
+        )
+        heading = "Company details"
+    else:
+        rows = _rows(
+            (
+                ("First name", client["first_name"]),
+                ("Middle name", client["middle_name"]),
+                ("Last name", client["last_name"]),
+                ("Date of birth", _date(client["dob"])),
+                ("Nationality", _country(client["nationality"])),
+                ("Country of birth", _country(client["birth_country"])),
+                ("Email", client["email"]),
+                ("Mobile", client["mobile"]),
+                ("Telephone", client["telephone"]),
+                ("National identity number", client["national_identity_number"]),
+                ("Tax identification number", client["tax_identification_number"]),
+            )
+        )
+        heading = "Personal details"
+    if not rows:
+        return _h2(heading) + '<p class="note">No details are held for this client.</p>'
+    return _h2(heading) + _card(_facts(rows))
+
+
+def _addresses(addresses: Sequence[Mapping[str, Any]]) -> str:
+    if not addresses:
+        return _h2("Addresses") + '<p class="note">No address is held for this client.</p>'
+    cards = []
+    for address in addresses:
+        rows = _rows(
+            (
+                ("Type", str(address["address_type"] or "").replace("_", " ").capitalize()),
+                ("Property number", address["property_number"]),
+                ("Building name", address["building_name"]),
+                ("Line", address["line"]),
+                ("City", address["city"]),
+                ("State", address["state"]),
+                ("Postal code", address["postal_code"]),
+                ("Country", _country(address["country"])),
+                ("From", _date(address["from_date"])),
+                ("To", _date(address["to_date"])),
+            )
+        )
+        cards.append(_card(_facts(rows)))
+    return _h2("Addresses") + "".join(cards)
+
+
+def _checks_table(checks: Sequence[Mapping[str, Any]], audience: Audience) -> str:
+    if not checks:
+        return _h2("Checks") + '<p class="note">No checks have run for this client.</p>'
+    body = "".join(
+        "<tr>"
+        f"<td><strong>{_esc(_check_name(check))}</strong>"
+        f'<div class="sub">{_esc(_check_detail(check))}</div>'
+        f'<div class="sub">Ref {_esc(check["uid"])}</div></td>'
+        f"<td>{_esc(_moment(check['created_at']) or '')}</td>"
+        f"<td>{_status_pill(check, audience)}</td>"
+        "</tr>"
+        for check in checks
+    )
+    return (
+        _h2("Checks") + '<table class="people"><thead><tr>'
+        "<th>Check</th><th>Started</th><th>Outcome</th>"
+        f"</tr></thead><tbody>{body}</tbody></table>"
+    )
+
+
+def _decision(check: Mapping[str, Any]) -> str:
+    """Operations only: who decided the check, when and why."""
+    if check["decided_at"] is None:
+        return ""
+    rows = _rows(
+        (
+            ("Decided by", check["decided_by"]),
+            ("Decided on", _moment(check["decided_at"])),
+            ("Comment", check["decision_comment"]),
+        )
+    )
+    return _h2("Decision") + _card(_facts(rows))
+
+
+def _outcome_word(outcome: str) -> tuple[str, str]:
+    lowered = outcome.lower()
+    if lowered in {"clear", "passed"}:
+        return "Clear", "ok"
+    if lowered in {"attention", "refer", "consider"}:
+        return "Needs attention", "warn"
+    if lowered in {"rejected", "failed", "not_clear"}:
+        return "Failed", "bad"
+    return "Not processed", "mute"
+
+
+def _score(value: object) -> str:
+    """A score as a percentage: given as 0–100, or as a fraction of 1. A match's score is a
+    ``numeric`` column, read as a ``Decimal``."""
+    number = float(value) if isinstance(value, int | float | Decimal) else 0.0
+    percent = number * 100 if 0 < number <= 1 and not number.is_integer() else number
+    return f"{round(percent)}%"
+
+
+def _analysis(analysis: Mapping[str, Any] | None) -> str:
+    """The identity check's analysis as the compliance page lays it out
+    (``aml.identity_analysis``): each part's outcomes, then the scores and the facts. Links are
+    left out of a printed copy."""
+    groups = list((analysis or {}).get("groups") or [])
+    scores = list((analysis or {}).get("scores") or [])
+    facts = list((analysis or {}).get("facts") or [])
+    if not (groups or scores or facts):
+        return _h2("Analysis") + '<p class="note">No analysis is held for this check yet.</p>'
+    parts = []
+    for group in groups:
+        lines = "".join(
+            f"<tr><th>{_esc(item['label'])}</th><td>{_pill(*_outcome_word(str(item['outcome'])))}"
+            "</td></tr>"
+            for item in group.get("items") or []
+        )
+        if lines:
+            parts.append(
+                _band(str(group["label"])) + _card(f'<table class="facts">{lines}</table>')
+            )
+    if scores:
+        parts.append(
+            _band("Scores")
+            + _card(_facts([Row(label=str(s["label"]), value=_score(s["value"])) for s in scores]))
+        )
+    if facts:
+        parts.append(
+            _band("Details")
+            + _card(_facts([Row(label=str(f["label"]), value=str(f["value"])) for f in facts]))
+        )
+    return _h2("Analysis") + "".join(parts)
+
+
+def _lists_screened(check: Mapping[str, Any]) -> str:
+    if check["provider_type"] != "extensive_screening_check":
+        return ""
+    rows = [Row(label=group, value=", ".join(lists)) for group, lists in EXTENSIVE_SCREENING_LISTS]
+    return _h2("Lists screened") + _card(_facts(rows))
+
+
+_MONTHS = ("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+
+
+def _partial_date(value: object) -> str | None:
+    """A date ComplyCube may give only in part — ``1958-05-26``, ``1958-05`` or ``1958`` — as far
+    as it goes: "26 May 1958", "May 1958", "1958". Anything else as it came."""
+    if not value:
+        return None
+    text_value = str(value).strip()
+    parts = text_value.split("-")
+    if not parts[0].isdigit() or len(parts[0]) != 4 or len(parts) > 3:
+        return text_value
+    try:
+        month = _MONTHS[int(parts[1]) - 1] if len(parts) > 1 else None
+        day = str(int(parts[2])) if len(parts) > 2 else None
+    except (ValueError, IndexError):
+        return text_value
+    return " ".join(part for part in (day, month, parts[0]) if part)
+
+
+def _role_dates(role: Mapping[str, Any]) -> str:
+    began, ended = _partial_date(role.get("from")), _partial_date(role.get("to"))
+    if began and ended:
+        return f"{began} – {ended}"
+    if began:
+        return f"{began} – now" if role.get("current") else f"From {began}"
+    if ended:
+        return f"Until {ended}"
+    return "Current" if role.get("current") else ""
+
+
+def _match_card(item: Mapping[str, Any], audience: Audience) -> str:
+    """One match as the AML console and the compliance tab show it: a photo, who they are, how
+    strongly they matched, the lists, their roles, the notes, their associates and the articles
+    behind it. Operations also read Graphene's decision on it; a firm never does."""
+    photo = next(
+        (
+            url
+            for url in item.get("images") or []
+            if isinstance(url, str) and url.startswith("https://")
+        ),
+        None,
+    )
+    subtitle = " · ".join(
+        part
+        for part in (
+            str(item["gender"]).capitalize() if item.get("gender") else None,
+            *(_country(code) for code in item.get("countries") or []),
+        )
+        if part
+    )
+    chips = []
+    if item.get("active") is not None:
+        chips.append(
+            _pill("Currently listed", "warn")
+            if item["active"]
+            else _pill("No longer listed", "mute")
+        )
+    chips.extend(_pill(str(kind), "mute") for kind in item.get("types") or [])
+    score = _score(item["score"]) if item.get("score") is not None else ""
+    head = (
+        '<table class="match-head"><tr>'
+        + (f'<td class="match-photo"><img alt="" src="{_esc(photo)}"></td>' if photo else "")
+        + f"<td><strong>{_esc(item.get('name') or 'Unnamed')}</strong>"
+        + (f'<div class="sub">{_esc(subtitle)}</div>' if subtitle else "")
+        + (f'<div class="chips">{"".join(chips)}</div>' if chips else "")
+        + f'</td><td class="match-score">{_esc(score)}</td></tr></table>'
+    )
+
+    born = " · ".join(
+        part
+        for part in (_partial_date(item.get("dob")), "; ".join(item.get("birth_places") or []))
+        if part
+    )
+    countries: dict[str, list[str]] = {}
+    for entry in item.get("country_details") or []:
+        name = _country(entry.get("country"))
+        if name:
+            reasons = countries.setdefault(name, [])
+            if entry.get("type") and entry["type"] not in reasons:
+                reasons.append(str(entry["type"]))
+    sources = [
+        " · ".join(
+            part for part in (reference.get("source"), _partial_date(reference.get("date"))) if part
+        )
+        for reference in item.get("references") or []
+        if reference.get("source")
+    ] or list(item.get("sources") or [])
+    facts = _rows(
+        (
+            ("Born", born),
+            ("Also known as", ", ".join(item.get("aliases") or [])),
+            ("Categories", ", ".join(item.get("categories") or [])),
+            (
+                "Countries",
+                "; ".join(
+                    f"{name} ({', '.join(reasons)})" if reasons else name
+                    for name, reasons in countries.items()
+                ),
+            ),
+            ("Sources", "; ".join(sources)),
+        )
+    )
+    parts = [head, _facts(facts)]
+
+    roles = item.get("roles") or []
+    if roles:
+        lines = []
+        for role in roles:
+            kind = " · ".join(part for part in (role.get("category"), role.get("type")) if part)
+            lines.append(
+                f"<tr><td><strong>{_esc(role['title'])}</strong>"
+                + (f'<div class="sub">{_esc(kind)}</div>' if kind else "")
+                + f"</td><td>{_esc(_role_dates(role))}</td></tr>"
+            )
+        parts.append(
+            _band(f"Roles ({len(roles)})")
+            + f'<table class="people"><tbody>{"".join(lines)}</tbody></table>'
+        )
+    if item.get("notes"):
+        parts.append(_band("Notes") + f'<p class="notes">{_esc(item["notes"])}</p>')
+    associations = item.get("associations") or []
+    if associations:
+        people = "".join(
+            "<li>"
+            + _esc(
+                " · ".join(
+                    part
+                    for part in (
+                        person.get("name"),
+                        person.get("relationship"),
+                        "Current"
+                        if person.get("current") is True
+                        else "Former"
+                        if person.get("current") is False
+                        else None,
+                    )
+                    if part
+                )
+            )
+            + "</li>"
+            for person in associations
+        )
+        parts.append(
+            _band(f"Associates ({len(associations)})") + f'<ul class="plain">{people}</ul>'
+        )
+    links = [url for url in item.get("source_links") or [] if isinstance(url, str)]
+    if links:
+        parts.append(
+            _band(f"Source links ({len(links)})")
+            + '<ul class="plain links">'
+            + "".join(f"<li>{_esc(url)}</li>" for url in links)
+            + "</ul>"
+        )
+    if audience == "operations":
+        decided = _rows(
+            (
+                (
+                    "Decision",
+                    str(item.get("decision") or "undecided").replace("_", " ").capitalize(),
+                ),
+                ("Decided by", item.get("decided_by")),
+                ("Decided on", _moment(item.get("decided_at"))),
+                ("Comment", item.get("comment")),
+            )
+        )
+        parts.append(_band("Graphene's decision") + _facts(decided))
+    return f'<div class="card match">{"".join(parts)}</div>'
+
+
+def _matches(matches: Sequence[Mapping[str, Any]], audience: Audience) -> str:
+    """Each match the screen found, in full, with Graphene's decision on it, for operations. A
+    firm reads only the matches Graphene confirmed and let the journey continue past, and never a
+    decision."""
+    if audience == "firm":
+        confirmed = [match for match in matches if match.get("decision") == "confirmed"]
+        if not confirmed:
+            return ""
+        return (
+            _h2("Confirmed matches")
+            + '<p class="note">Graphene reviewed these matches, confirmed them and let the '
+            "onboarding continue.</p>"
+            + "".join(_match_card(match, audience) for match in confirmed)
+        )
+    if not matches:
+        return _h2("Matches") + '<p class="note">The screen found no matches.</p>'
+    return _h2("Matches") + "".join(_match_card(match, audience) for match in matches)
+
+
+# ---- the reports ----------------------------------------------------------------------------
+
+
+async def render(page: str) -> bytes:
+    """The page as a PDF, on the engine the application summary uses."""
+    from app.render.renderers import render_pdf
+
+    try:
+        pdf, _sha = await render_pdf(page, overlay_css=APPLICATION_PACK_CSS + REPORT_CSS)
+    except Exception as exc:
+        logger.exception("compliance report PDF failed")
+        raise ReportUnavailable from exc
+    return pdf
+
+
+async def client_report(
+    session: AsyncSession,
+    client_pk: int,
+    *,
+    audience: Audience,
+    generated_by: str | None,
+) -> bytes:
+    """The client report: a summary, the client's details and addresses, and every identity check
+    and AML screen with its outcome, newest first."""
+    client = await _client(session, client_pk)
+    addresses = [
+        dict(row)
+        for row in (await session.execute(text(_ADDRESSES), {"client": client_pk})).mappings()
+    ]
+    checks = await _checks(session, client_pk=client_pk)
+    latest_aml = next((check for check in checks if check["kind"] == "aml"), None)
+    monitoring = (
+        (
+            "On"
+            if monitoring_covers(str(latest_aml["status"]), bool(latest_aml["monitoring"]))
+            else "Off"
+        )
+        if latest_aml
+        else "No AML screen has run"
+    )
+    summary = [
+        ("Client reference", _client_ref(client)),
+        ("Type", "Company" if client["client_type"] == "company" else "Person"),
+        ("Firm", client["firm_name"]),
+        ("On record since", _date(client["created_at"])),
+        ("Ongoing AML monitoring", monitoring),
+    ]
+    if audience == "operations":
+        summary.append(("AML risk", str(client["risk"] or "").capitalize() or "Not scored"))
+    body = (
+        _h2("Summary")
+        + _card(_facts(_rows(summary)))
+        + _details(client)
+        + _addresses(addresses)
+        + _checks_table(checks, audience)
+    )
+    brand = await brand_for_illustration(session, int(client["tenant_id"]))
+    return await render(
+        _page(
+            client=client,
+            brand=brand,
+            kicker="Client report",
+            reference=_client_ref(client),
+            generated_at=datetime.now(UTC),
+            generated_by=generated_by,
+            body=body,
+        )
+    )
+
+
+async def check_report(
+    session: AsyncSession,
+    check_pk: int,
+    *,
+    audience: Audience,
+    generated_by: str | None,
+    analysis: Mapping[str, Any] | None = None,
+) -> bytes:
+    """One check's report: an identity check with its ``analysis`` (``aml.identity_analysis``),
+    or an AML screen with the lists it searched. Operations also read the screen's matches and
+    the check's decision."""
+    check = (await _checks(session, check_pk=check_pk))[0]
+    client = await _client(session, int(check["client_id"]))
+    if check["kind"] == "identity":
+        kicker = "Identity check report"
+        summary = [
+            ("Client reference", _client_ref(client)),
+            ("Date of birth", _date(client["dob"])),
+            ("Check reference", check["uid"]),
+            ("Try", check["attempt"]),
+            ("Document", _document(check)),
+            ("Issuing country", _country(check["issuing_country"])),
+            ("Photos from", _uploader(check, audience)),
+            ("Started", _moment(check["created_at"])),
+            ("Last updated", _moment(check["updated_at"])),
+        ]
+        if audience == "operations":
+            summary.append(("Upload comment", check["upload_comment"]))
+        body = _analysis(analysis)
+    else:
+        kicker = "AML screen report"
+        summary = [
+            ("Client reference", _client_ref(client)),
+            ("Date of birth", _date(client["dob"])),
+            ("Check reference", check["uid"]),
+            ("Screening", _SCREENING_TYPES.get(str(check["provider_type"]))),
+            (
+                "Ongoing monitoring",
+                "Yes"
+                if monitoring_covers(str(check["status"]), bool(check["monitoring"]))
+                else "No",
+            ),
+            ("Started", _moment(check["created_at"])),
+            ("Last updated", _moment(check["updated_at"])),
+        ]
+        body = _lists_screened(check)
+        allowed = allowed_past_match(
+            str(check["status"]), check["decided_at"] is not None, str(check["origin"])
+        )
+        if audience == "operations" or allowed:
+            # The console's own builder of a match (a lazy import: the console router imports
+            # this module).
+            from app.routers.aml import match_item
+
+            matches = [
+                match_item(row)
+                for row in (await session.execute(text(_MATCHES), {"check": check_pk})).mappings()
+            ]
+            body += _matches(matches, audience)
+    if audience == "operations":
+        body += _decision(check)
+    head = _card_head(_client_name(client), _check_name(check))
+    brand = await brand_for_illustration(session, int(client["tenant_id"]))
+    return await render(
+        _page(
+            client=client,
+            brand=brand,
+            kicker=kicker,
+            reference=str(check["uid"]),
+            generated_at=datetime.now(UTC),
+            generated_by=generated_by,
+            body=_verdict(check, audience)
+            + _h2("Summary")
+            + _card(head + _facts(_rows(summary)))
+            + body,
+        )
+    )
+
+
+def check_filename(kind: str, uid: str) -> str:
+    return f"identity-check-{uid}.pdf" if kind == "identity" else f"aml-screen-{uid}.pdf"
+
+
+def response(data: bytes, filename: str) -> Response:
+    """The report as a download, never cached."""
+    return Response(
+        content=data,
+        media_type="application/pdf",
+        headers={
+            "Content-Disposition": storage.content_disposition("attachment", filename),
+            "Cache-Control": "private, no-store",
+            "X-Content-Type-Options": "nosniff",
+        },
+    )

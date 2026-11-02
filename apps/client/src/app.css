@@ -1,0 +1,104 @@
+@import 'tailwindcss';
+@import '@graphene/ui/theme.css';
+
+/* Tailwind v4 ignores node_modules, so point it at the shared component source
+   to discover the utility classes used in @graphene/ui. Path is relative to this file. */
+@source '../../../pkgs/ui/src/**/*.{svelte,ts}';
+
+/* The overflow tripwire's marks (+layout.svelte, development only — the attribute is never set
+   in production, so this rule is inert there). Spilled content in red, clipped content in
+   amber; the outline is drawn outside the box so it is visible even where the content is not. */
+[data-overflow='spill'] {
+	outline: 2px dashed oklch(0.65 0.22 25);
+	outline-offset: 2px;
+}
+[data-overflow='clip'] {
+	outline: 2px dashed oklch(0.75 0.17 75);
+	outline-offset: 2px;
+}
+/* The touch audit does NOT outline. It did — a blue dashed ring — and that ring landed on
+   buttons whose invisible hit area was already 44px, which read as the control being broken.
+   Findings stay in the console (`[touch]`). */
+
+/* ── Touch targets: the client portal's floor ──────────────────────────────────────────────
+   This portal is read on a phone, so every control's hit area is at least 44×44 (theme.css
+   `tap-target` explains the rule and the invisible-extension mechanism). Two things are done
+   here for the whole app rather than control by control:
+
+   - Every `Button` (`data-slot="button"`) is VISIBLY 44 tall, and an icon button 44 square.
+     The shared sizes (`sm` 28px, `default` 32) are the platform's — a mouse size, read beside
+     dense text — and this portal used to keep them and extend the hit area invisibly. That was
+     the wrong half of the rule for a phone: a thumb lands on what it can see, and a 32px
+     "Continue" beside a 44px field read as the smaller control. So the box itself grows; the
+     size's text and radius stay so a `sm` Cancel still reads quieter than the primary action.
+     Horizontal padding grows with the height, or a 44px-tall button at `px-2.5` is a pill
+     squeezed at the ends. Not in the shared theme: the platform's dense tables put icon
+     buttons 4px apart on purpose.
+   - A field — `<input>`, `<select>`, `<textarea>`, and the select trigger — has no
+     pseudo-elements to extend, so it gets the real thing: `min-height: 2.75rem`. `min-height`
+     beats the field shell's `h-8`, and a field at 44 is the native height on the platforms this
+     is tapped on. Checkbox and radio are their own controls (their extension lives in the
+     component) and keep their size. The money field's box is its WRAPPER (`money-input`), which
+     holds the symbol beside the input: the wrapper takes the 44 and the input inside it does
+     not — a 44px input in a 32px box is what put the overflow audit's red ring on every amount. */
+@layer components {
+	[data-slot='button'] {
+		min-height: 2.75rem;
+	}
+	[data-slot='button']:where([data-size='default'], [data-size='lg']) {
+		padding-inline: 1.25rem;
+	}
+	[data-slot='button']:where([data-size='sm'], [data-size='xs']) {
+		padding-inline: 1rem;
+	}
+	[data-slot='button']:where([data-size^='icon']) {
+		min-width: 2.75rem;
+	}
+	/* A Yes/No on a fact find is the same control as the theme switcher, which is already `lg`
+	   (44px). The shared default is the platform's 28px segment; `min-height` beats that `h-7`,
+	   and the track grows with it or `overflow-x-auto` clips the thumb. */
+	[role='tablist'] {
+		min-height: 3rem;
+	}
+	[role='tablist'] > [role='tab'] {
+		min-height: 2.75rem;
+	}
+	input:where(:not([type='checkbox'], [type='radio'], [type='range'], [type='hidden'])),
+	select,
+	textarea,
+	[data-slot='select-trigger'],
+	[data-slot='money-input'] {
+		min-height: 2.75rem;
+	}
+	[data-slot='money-input'] > input {
+		min-height: 0;
+	}
+	/* Rows that are picked from — the ⌘K palette and filter pickers (`command-item`), the
+	   account and theme menus, select options — are 44px tall here. The shared components keep
+	   their 32px for the platform's denser lists. */
+	[data-slot='command-item'],
+	[data-slot='dropdown-menu-item'],
+	[data-slot='dropdown-menu-radio-item'],
+	[data-slot='dropdown-menu-checkbox-item'],
+	[data-slot='select-item'] {
+		min-height: 2.75rem;
+	}
+	/* The × that closes a dialog or sheet is already positioned (top-right); it gets the same
+	   invisible extension as a button. */
+	[data-slot='dialog-close']::before,
+	[data-slot='sheet-close']::before {
+		content: '';
+		position: absolute;
+		inset: min(0px, calc(50% - 22px));
+	}
+	/* The listing filter bar is the platform's dense control (20px chips, for a mouse), reused
+	   here by the notifications archive. In this portal a chip's buttons — the filter and its
+	   clear × — fill a 44px pill instead; the bar's gap grows with them. */
+	[data-slot='filter-bar'] {
+		gap: 0.5rem;
+	}
+	[data-slot='filter-tag'] button {
+		min-height: 2.75rem;
+		min-width: 2.75rem;
+	}
+}

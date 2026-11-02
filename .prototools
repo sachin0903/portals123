@@ -1,0 +1,28 @@
+# Pinned toolchain versions (managed by proto, https://moonrepo.dev/proto)
+# Every developer and CI/CD runner installs exactly these.
+#
+# Python is deliberately NOT pinned here. moon's python toolchain is disabled (see
+# .moon/toolchains.yml) and every Python task runs via `uv`, which provisions the interpreter itself
+# from `requires-python` in apps/api/pyproject.toml (>=3.13). proto's python plugin also fails to
+# install some 3.13 patch builds on CI runners (the `setup-toolchain` "Failed to install python!"),
+# so letting uv own Python end to end removes a redundant install that was the only thing failing.
+# proto pins ITSELF, which is what makes `pr.yml`'s `MOON_CONCURRENCY` workaround testable rather
+# than permanent. It is still needed on 0.61.2 — measured, see that file for the repro and the
+# numbers — so the pin's job is to keep "does it still race" a question about the code.
+#
+# Everything below is installed BY proto, so leaving proto unpinned meant the one tool this file
+# could not promise was the one doing the promising: `moonrepo/setup-toolchain@v0` is given no
+# version, so CI got whatever proto was current on the day. That is what made "does the shim race
+# still happen" a question about the calendar rather than about the code.
+#
+# 0.61.2 is well past the two upstream shim-locking fixes (v0.36.0, then v0.56.3/v0.56.4) that
+# targeted this race, and it STILL reproduces on a cold `PROTO_HOME` — so those fixes did not close
+# it. Exact rather than `~0.61`, because this is a tool whose BEHAVIOUR the build depends on and not
+# just its API, the same reason moon is exact: a patch that silently changed shim locking would
+# otherwise arrive without anyone choosing it. Bump it, run the repro in `pr.yml`, and drop the
+# workaround the day it reads 0/6.
+proto = "0.61.2"
+moon = "2.5.5"
+node = "~24"
+pnpm = "~11"
+uv = "~0.11"

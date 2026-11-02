@@ -1,0 +1,25 @@
+# Virtual workspace root for the Python side (managed by uv).
+# The root itself is not a package; apps/api is the workspace member.
+[tool.uv.workspace]
+members = [
+  "apps/api",
+  "pkgs/baton",
+  "pkgs/api-log",
+  "pkgs/book-sink",
+  "pkgs/intelliflo",
+  "pkgs/morgan-lloyd",
+  "pkgs/seccl",
+  # pkgs/sei was a workspace member in name only -- present on disk, absent here, so `uv sync`
+  # never installed it and nothing could import it without a path dependency.
+  "pkgs/sei",
+  "services/integrations/intelliflo",
+  "services/morgan-lloyd",
+  "services/seccl",
+  "services/sei",
+]
+
+# The `[tool.uv.sources] interlaced = { url = … }` pin that used to live here is GONE, which is
+# the repair its own comment asked for: it existed only because 2.0.0a3 had been unlisted from
+# PyPI, leaving the index offering 1.0.1/1.0.2 and any re-resolve failing with "only
+# interlaced[service]<=1.0.2 is available". **2.0.0 final is published**, so the three services
+# now name a version the index actually carries and `uv lock` can move off it again.

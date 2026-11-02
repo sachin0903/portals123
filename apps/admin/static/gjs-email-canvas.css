@@ -1,0 +1,208 @@
+/* The editor iframe's own stylesheet, loaded via `canvas.styles`, so it is never in `editor.getCss()`
+   and nothing here reaches a saved email. Frame width is the active device's (deviceManager). */
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+
+/* A token is not valid CSS, so `background:{{ brand.accent }}` goes transparent under `color:#fff` —
+   an invisible CTA. `background-color` first, or `[style*='color:{{']` matches it and repaints TEXT. */
+[style*='background:{{'],
+[style*='background-color:{{'] {
+	background-color: #64748b !important;
+	outline: 1px dashed #cbd5e1;
+	outline-offset: 1px;
+}
+
+/* The same the other way: a token `color` is dropped, so the text inherits and can be illegible. */
+[style*=';color:{{']:not([style*='background:{{']):not([style*='background-color:{{']),
+[style*='"color:{{']:not([style*='background:{{']):not([style*='background-color:{{']) {
+	color: #0f172a !important;
+}
+
+/* GrapesJS injects `[data-gjs-type="wrapper"]{min-height:100vh}` here, and in a frame sized TO its
+   content (create.ts::syncFrameHeight) that is a feedback loop — observed 648px climbing to 1651px. */
+[data-gjs-type='wrapper'] {
+	min-height: 0 !important;
+}
+
+/* No scrollbar in the frame: the canvas's one scroller is the outer `.gjs-cv-canvas` column (create.ts)
+   and the frame is sized to its content, so a scrollable document only added a second bar on the card. */
+html {
+	overflow: hidden;
+}
+body {
+	/* No padding: 24px inset the page cell from the card, the band `ensurePageCell` exists to remove. */
+	padding: 0;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	line-height: 1.5;
+	color: #0f172a;
+	background: #ffffff;
+	-webkit-font-smoothing: antialiased;
+}
+img {
+	max-width: 100%;
+}
+
+/* GrapesJS injects `.gjs-selected{outline:2px solid #3b97e3}` into THIS document, past create.ts's
+   brand override in the parent. Grey, because colour is spent on the `{% %}` chip alone (badge and
+   toolbar stay teal as chrome OUTSIDE the email); dotted, because a solid hairline reads as a border an
+   author might have drawn. `body ` beats GrapesJS's own !important. */
+body .gjs-selected {
+	/* 2px sets the spacing too — dot and gap are both the line's own width; at 1px they read as solid. */
+	outline: 2px dotted #475569 !important;
+	outline-offset: -2px !important;
+	border-radius: 4px !important;
+}
+body .gjs-hovered {
+	outline: 1px dashed #cbd5e1 !important;
+	outline-offset: -1px !important;
+	border-radius: 4px !important;
+}
+
+/* ── AUTHORED CONDITIONS ── NOTHING ON THE CANVAS ───────────────────────────────────
+   A condition is marked in the STYLE RAIL, beside the Visibility heading, and nowhere on the artwork.
+   Every on-element treatment tried here was eclipsed by the element itself — a button's dark fill and
+   a field chip's own grey both swallowed the ring — and a badge painted over the copy is a claim about
+   what the recipient sees. The canvas is the email; the rail is where the editor speaks. */
+[data-if]:hover,
+[data-repeat]:hover {
+	outline-color: #c2830f;
+}
+
+/* The marker is a real element in `gjs-email-jinja-hl.js`, not a pseudo-element: one cannot be clicked. */
+
+/* An image or a divider has no interior to ring — an outline inside a picture reads as a border ON it. */
+/* So those sit just outside their own box, where a couple of pixels cannot reach the sheet's edge. */
+img[data-if],
+hr[data-if],
+img[data-repeat],
+hr[data-repeat] {
+	outline-offset: 2px;
+}
+
+/* ── THE BRAND LOGO BLOCK ─────────────────────────────────────────────────────────────────────────
+   `previewBrandMasthead` (create.ts) puts `has-brand-logo` and `--brand-logo-preview` on the canvas
+   body, and these rules pick the arm from them. Colours and sizes are literals here — app variables do
+   not cross into the frame.
+
+   NO "HAS IT RESOLVED YET" CLASS, and one was tried. The reasoning was that the masthead is painted
+   before `previewBrandMasthead` runs, so the "no logo" rule below would flash over a firm that has
+   one — and it is false in both halves. `apply()` runs synchronously after `grapesjs.init` returns
+   and again inside the frame's own `onload`, both BEFORE `renderBody` appends the component tree, so
+   the body already carries its answer by the time the element exists. And the window that IS real —
+   this file is script-appended into an already-parsed document, so it is not render-blocking and the
+   frame paints once with none of it applied — cannot be dressed by a rule in this file, because in
+   that window this file is what is missing. What the masthead shows there is its own `src`, which is
+   why `create.ts` gives it a TRANSPARENT pixel rather than the generic grey rectangle. */
+/* No arm-HIDING rules, and their absence is the fix for "image should still be positioned on the page?":
+   the masthead is ONE image with a fallback now, so `display: none` deleted it for every firm without a
+   logo. With one, the real logo is painted behind an `<img>` whose contents are hidden (its `src` is a
+   token the export must keep); without, the box shows the alt text `{{ brand.name }}` over a dash. */
+body.has-brand-logo [data-brand-arm='logo'] {
+	/* Keeps its own box (height 28), so the masthead occupies what it will at send. Transparent colour +
+	   zero font size drop the glyph, where `visibility: hidden` would take the background too. */
+	color: transparent;
+	font-size: 0;
+	/* `content: ''` IS WHAT MAKES THE LOGO VISIBLE, and its absence here was the grey box a firm WITH
+	   a logo uploaded saw. The editor cannot leave a merge token in an `<img>`'s `src` and expect the
+	   canvas to show anything, so `create.ts` writes `TOKEN_IMAGE_PLACEHOLDER` — an OPAQUE 160x40
+	   `#e2e8f0` rectangle — over the src of every token image, the masthead included. A replaced
+	   element paints its own image ON TOP of its background, so the real logo was being drawn
+	   faithfully and then covered by that rectangle. Removing the replaced image is what lets the
+	   background through, which is exactly what the two sibling arms below already do (`content: ''`
+	   on the unset one, `content: var(--brand-logo-preview)` on the fallback). This arm was the only
+	   one of the three without a `content` declaration — the logo never had a chance to show.
+	   `''`, NOT `var(--brand-logo-preview)`: `content: url(…)` on a replaced element is sized by the
+	   element's own box (`min-width: 120px` x `height: 28px`) and filled, which stretches a lockup;
+	   as a BACKGROUND with `contain` the aspect ratio is kept. */
+	content: '';
+	background: var(--brand-logo-preview) no-repeat left center / contain;
+	min-width: 120px;
+}
+body:not(.has-brand-logo) [data-brand-arm='logo'] {
+	/* No image and no name to fall back to — the firm has set neither, so there is nothing of the
+	   firm's to paint. The box STAYS (deleting the masthead is the regression this prevents).
+
+	   IT READS AS A PICTURE, not as a grey box. An empty dashed rectangle says only "something is
+	   missing" and says nothing about WHAT: an author sees a blank slot the width of a logo and reads
+	   it as a fault in the editor, which is the one reading it must not have. A picture glyph is the
+	   universal "an image goes here", so the slot states its own purpose — the firm has not uploaded
+	   a logo — and the dashed outline stays to say it is a placeholder rather than artwork.
+
+	   The glyph is BASE64, not a raw `data:image/svg+xml,<svg …>`: a raw SVG carries the quotes,
+	   spaces and parentheses that end a CSS `url("…")` early. It is a LITERAL here rather than a
+	   custom property, because a variable only set by `previewBrandMasthead` would leave the slot
+	   blank in any canvas that has not run it — which is precisely this state.
+
+	   `content: ''` is what removes the BROKEN-IMAGE glyph: the `src` is a Jinja token the export
+	   must keep, so the image can never load, and `color: transparent` hides only the alt TEXT —
+	   Chrome still drew its own torn-page icon, which reads as a fault rather than as unset
+	   branding. The background is painted UNDER that removal, so both are needed. */
+	box-sizing: border-box;
+	min-width: 120px;
+	height: 28px;
+	content: '';
+	color: transparent;
+	font-size: 0;
+	background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc0MCcgaGVpZ2h0PScyOCcgZmlsbD0nbm9uZSc+PHJlY3QgeD0nNi44JyB5PSc0LjgnIHdpZHRoPScyNi40JyBoZWlnaHQ9JzE4LjQnIHJ4PScyLjQnIHN0cm9rZT0nIzk0YTNiOCcgc3Ryb2tlLXdpZHRoPScxLjYnLz48Y2lyY2xlIGN4PScxNC42JyBjeT0nMTEuMicgcj0nMi4xJyBmaWxsPScjOTRhM2I4Jy8+PHBhdGggZD0nTTkuMiAyMC44bDcuMi02LjYgNC40IDQgMy44LTMuMiA1LjYgNS44JyBzdHJva2U9JyM5NGEzYjgnIHN0cm9rZS13aWR0aD0nMS42JyBzdHJva2UtbGluZWpvaW49J3JvdW5kJy8+PC9zdmc+')
+		no-repeat left center / auto 100%;
+	outline: 1px dashed #cbd5e1;
+	outline-offset: 2px;
+}
+body.brand-logo-is-fallback [data-brand-arm='logo'] {
+	/* The firm's NAME as an SVG, an `<img>` being unable to render styled text (see
+	   `create.ts::fallbackWordmarkImage`); it is what the send produces, so no dashed hint. `auto 100%`
+	   not `contain`, whose over-estimated SVG width would shrink the text. `content` REPLACES the rendered
+	   image, removing the glyph a background only paints UNDER; the background pair stays for an engine
+	   that ignores `content` on a replaced element (Chromium/WebKit behaviour, not a spec guarantee). */
+	content: var(--brand-logo-preview);
+	background-size: auto 100%;
+	/* Background path only: an unloadable `<img>` has no intrinsic width, so the name clipped to 28px. */
+	width: var(--brand-logo-fallback-width, auto);
+	min-width: 0;
+	outline: none;
+}
+/* The block is one unit and its insides are locked (see `registerBrandLogo`). */
+[data-gjs-type='brand-logo'] {
+	display: block;
+}
+
+/* THERE IS NO BRAND ICON BLOCK, and its two `body.…has-brand-icon` rules went with it. A second
+   block placed `brand.icon_url` beside the masthead's `brand.logo_url`, which is two components for
+   one idea — and the wrong two, because `brand.logo_url` already resolves to the firm's MARK when
+   the firm's own `logo_variant` asks for it (`app/email/transport.py::_email_asset_urls`).
+
+   ONE rule survives, for the templates that were saved while it shipped. Such a template still
+   holds `<img data-brand-arm="icon" src="{{ brand.icon_url }}">`, which still SENDS correctly (the
+   token resolves and the block's own `show when set` condition hides it for a firm with no mark) —
+   so this is about the canvas alone. Without it the element falls to the generic token-image path,
+   which is fine and is now a picture glyph rather than a grey rectangle; with it the slot is sized
+   like the mark it stands for. Not scoped to `body`: nothing sets a class for it any more. */
+[data-brand-arm='icon'] {
+	box-sizing: border-box;
+	width: 40px;
+	height: 40px;
+	content: '';
+	color: transparent;
+	font-size: 0;
+	outline: 1px dashed #cbd5e1;
+	outline-offset: 2px;
+}
+
+/* ── THE PAGE IS A CELL ───────────────────────────────────────────────────────────────────────────
+   `ensurePageCell` (create.ts) wraps everything in a one-cell table so a block can be dropped anywhere
+   on the sheet, not only into a `<td>` that existed — for which the cell must FILL the sheet. */
+/* Its height is set in JS (`syncFrameHeight`), not by the `height: 100%` chain it was: the frame's
+   height derives from `body.scrollHeight`, so a child sized against it is one careless edit from the
+   loop that took the branding builder to 147,000px. `vertical-align` is stated here as well as inline
+   because a cell taller than its content centres it, and the canvas needs it after a restyle. */
+td[data-email-page] {
+	vertical-align: top;
+	/* No padding, deliberately. `padding: 32px 32px 36px !important` was justified as mirroring
+	   `email.py::shell_html`, and the premise is false: `email_preview.py` and `email_render.py` render the
+	   authored body with NO shell, so a template showed a 32px inset in the editor and flush copy in the
+	   mail. `PAGE_HTML` ships a real `PAGE_INSET` instead, editable in the Page style panel. */
+}

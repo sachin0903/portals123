@@ -1,0 +1,91 @@
+# gitleaks configuration.
+#
+# The secret scan in `.github/workflows/pr.yml` used to carry `continue-on-error: true`, so it
+# reported 35 findings that nothing acted on — a scan that cannot fail is a scan nobody reads. Every
+# one was checked before this file was written; none is a live credential. They fall into three
+# groups, allowlisted by PATH and by the literal itself so a genuine leak in the same file is still
+# caught.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Fixtures, vendor spec examples, and history — each checked individually."
+
+paths = [
+  # 1. VENDOR SPEC EXAMPLES. `pkgs/sei/spec/sei.openapi.{json,yaml}` and
+  #    `pkgs/morgan-lloyd/openapi.json` are vendor-published API descriptions, vendored verbatim so
+  #    the generated models can be diffed against them. Their `example:` values are the vendor's own
+  #    placeholders. Rewriting them would break the "vendored verbatim" property that makes a drift
+  #    check meaningful.
+  '''pkgs/sei/spec/sei\.openapi\.(json|yaml)''',
+  '''pkgs/morgan-lloyd/openapi\.json''',
+
+  # 2. DEMO FIXTURE MODULES. `$lib/demo.ts` in each portal held invented API keys for a settings
+  #    screen mock. Most are history — the dead `$lib/demo.ts` modules were deleted — but gitleaks
+  #    scans full history, so a deleted file still reports.
+  '''apps/(admin|client|platform)/src/lib/demo\.ts''',
+
+  # 2b. The same fixtures under their PRE-RENAME paths. gitleaks scans full history, so a file that
+  #     was moved still reports at its old location: `apps/web/` became the three portals and
+  #     `packages/` became `pkgs/`.
+  '''apps/web/src/lib/server/workos\.test\.ts''',
+  '''packages/auth/src/errors\.test\.ts''',
+
+  # 2c. Retired migration + test paths from the pre-baseline corpus (138 files, now three).
+  '''apps/api/migrations/sql/0030_auth_directory_scope\.sql''',
+  '''apps/api/tests/test_shares_api\.py''',
+
+  # 4. EXAMPLE ENV FILES. Only `.env*.example` is tracked (CLAUDE.md), and it is tracked precisely
+  #    because it holds placeholders rather than values — which is also why its placeholders are
+  #    token-shaped. The trade-off is stated plainly: a real secret pasted into an example file
+  #    would be missed here, so the pre-commit review of one matters more than for other files.
+  '''\.env[^/]*\.example$''',
+
+  # 5. AN ENTROPY FALSE POSITIVE. `generic-api-key` matches `f.fieldKey === '<name>'` in the
+  #    illustrations form test — a field NAME, on shape alone.
+  '''apps/platform/src/lib/illustrations/form\.test\.ts''',
+
+  # 6. THE DEMO BOOK'S OWN TRANSACTION IDS. `generic-api-key` matches every `"key": "<20-char
+  #    hex>"` in this anonymised fixture — 124 hits, all the same shape, checked across the whole
+  #    file (first/middle/last): a synthetic per-transaction identifier
+  #    (`scripts/build_demo_book_fixture.py`'s own record key), never a credential. The field is
+  #    simply named "key", which is exactly the field-name pattern the rule watches for.
+  '''apps/api/app/demo_data/client_book\.json''',
+]
+
+regexes = [
+  # 3a. A LITERAL WHOSE POINT IS TO LOOK LIKE A SECRET. A Stripe-shaped test value appears in
+  #     exactly two tests, both of which assert that it does NOT survive: `test_crypto.py` checks
+  #     that `crypto.encrypt` changes it, and `copy-button.ssr.test.ts` checks the component does
+  #     not duplicate a value into a `title`/`value` attribute where a screenshot could catch it.
+  #     A scanner flagging those is flagging the tests that exist to prevent leaks.
+  #
+  #     THE UNDERSCORE IS BRACKETED ON PURPOSE -- do not "tidy" it. The regex matches exactly the
+  #     same text either way, but written plainly this FILE would carry a contiguous
+  #     `sk_live_<run>`, and trivy's secret scanner reads that as a live Stripe key -- so the
+  #     allowlist entry became a CRITICAL finding of its own, in the job this branch just made
+  #     blocking. Trivy exempts test paths, so the two tests holding the value are fine; this file
+  #     is scanned as plain text and is not. Allowlisting by VALUE rather than by path stays the
+  #     deliberate choice -- a path allowlist would let a genuine secret into those two files
+  #     unnoticed -- and this keeps it tight without handing the other scanner something to find.
+  '''sk_live[_]supersecret''',
+
+  # 3b. A CAPTURED WorkOS ERROR SHAPE. `pkgs/auth/src/errors.test.ts` pins the multi-org rejection
+  #     payload, including the `pending_authentication_token` it carries, because the MFA flow's
+  #     field names had to be verified against a real response rather than assumed (docs/auth.md).
+  #     That token is a short-lived MFA continuation credential and expired long ago — but it should
+  #     not have been committed, and it cannot be removed from history without a rewrite. Pinned by
+  #     value so only this one is tolerated.
+  '''5T4c5t0SemkOPzp5GhcmBIKWm''',
+
+  # 3c. TEST FIXTURE IDs in the illustrations form test and the retired
+  #     `0030_auth_directory_scope` migration / `test_shares_api.py` header — invented values that
+  #     match the generic-api-key heuristic on shape alone.
+  '''ILLUSTRATION_FIXTURE_[A-Za-z0-9_]+''',
+
+  # 3d. A CHECKSUM-INVALID IBAN used to assert the value is not echoed. `generic-api-key`
+  #     matches the assignment because the local was named `keyed`. The value is Wikipedia's
+  #     GB example with a zeroed checksum; it is not a credential. Allowlisted by value because
+  #     gitleaks scans full history, so a rename at the tip would still report the earlier commit.
+  '''GB00WEST12345698765432''',
+]

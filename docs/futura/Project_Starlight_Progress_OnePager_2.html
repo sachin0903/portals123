@@ -1,0 +1,227 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Starlight – Progress One-Pager</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#1A3353;--navy-2:#193560;--teal:#0F7C7C;--teal-2:#006388;--ink:#1f2733;--muted:#5c6b7e;--line:#e4e9f0;--bg:#f5f7fa;--amber:#E8A33D;--green:#2E9E6B;--grey:#9aa7b8;--red:#d9534f;--card:#fff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--ink);background:var(--bg);line-height:1.45;-webkit-font-smoothing:antialiased}
+.page{max-width:1000px;margin:0 auto;padding:22px}
+h1,h2{font-family:'Plus Jakarta Sans',sans-serif}
+.header{background:linear-gradient(120deg,var(--navy) 0%,var(--navy-2) 55%,var(--teal-2) 130%);border-radius:16px;padding:22px 26px;color:#fff;display:flex;justify-content:space-between;align-items:flex-start;gap:20px}
+.header .brand{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;opacity:.75;font-weight:600}
+.header h1{font-size:25px;font-weight:800;margin-top:4px;letter-spacing:-.3px}
+.header .sub{font-size:13px;opacity:.82;margin-top:5px}
+.pill{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);padding:7px 13px;border-radius:999px;font-size:12px;font-weight:600;font-family:'Plus Jakarta Sans'}
+.pill .dot{width:9px;height:9px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 3px rgba(232,163,61,.25)}
+.header .right{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:9px}
+.header .ref{font-size:11px;opacity:.7;font-family:'Plus Jakarta Sans';letter-spacing:.4px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:16px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;position:relative;overflow:hidden}
+.kpi:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--teal)}
+.kpi.amber:before{background:var(--amber)}.kpi.navy:before{background:var(--navy)}.kpi.green:before{background:var(--green)}.kpi.red:before{background:var(--red)}
+.kpi .label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:600}
+.kpi .val{font-family:'Plus Jakarta Sans';font-weight:800;font-size:26px;color:var(--navy);margin-top:5px}
+.kpi .val small{font-size:12px;font-weight:600;color:var(--muted)}
+.kpi .foot{font-size:11px;color:var(--muted);margin-top:3px}
+.grid{display:grid;grid-template-columns:1.62fr 1fr;gap:14px;margin-top:14px;align-items:start}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.card h2{font-size:13px;text-transform:uppercase;letter-spacing:1.2px;color:var(--navy);font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card h2 .tag{margin-left:auto;font-size:10px;color:var(--muted);font-weight:600;text-transform:none}
+.exp{font-size:10px;font-weight:600;text-transform:none;color:var(--teal-2);cursor:pointer;font-family:'Inter'}
+.exp:hover{text-decoration:underline}
+.epblock{border-bottom:1px solid #f1f4f8}
+.epblock:last-child{border-bottom:none}
+.epblock>summary{list-style:none;cursor:pointer;outline:none}
+.epblock>summary::-webkit-details-marker{display:none}
+.caret{display:inline-block;margin-right:6px;color:var(--grey);font-size:9px;transition:transform .15s;transform:translateY(-1px)}
+.epblock[open] .caret{transform:rotate(90deg) translateX(-1px)}
+.ep{display:grid;grid-template-columns:1fr 150px 96px;gap:11px;align-items:center;padding:6px 0}
+.epl{display:flex;flex-direction:column;gap:2px;min-width:0}
+.ename{font-size:12px;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.estat{font-size:9px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;padding:1px 6px;border-radius:999px;align-self:flex-start;font-family:'Plus Jakarta Sans'}
+.s-done{background:rgba(46,158,107,.13);color:var(--green)}.s-flight{background:rgba(232,163,61,.16);color:#b9791f}.s-todo{background:#eef1f6;color:var(--grey)}
+.ebar{height:8px;border-radius:5px;background:#eef1f6;overflow:hidden;display:flex}
+.seg.done{background:var(--green)}.seg.prog{background:var(--amber);opacity:.55}
+.emeta{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.ec{font-size:11px;color:var(--muted);font-family:'Plus Jakarta Sans';font-weight:700}
+.due{font-size:9px;font-weight:700;color:var(--muted);background:#eef1f6;padding:2px 6px;border-radius:999px}
+.due.soon{color:#b9791f;background:#fdf3e3}.due.ok{color:var(--green);background:rgba(46,158,107,.13)}
+.od{font-size:9px;font-weight:700;color:var(--red);background:#fbe9e7;padding:2px 6px;border-radius:999px}
+.stories{margin:0 0 10px 5px;padding:8px 0 4px 16px;border-left:2px solid #eef1f6;display:grid;grid-template-columns:1fr 1fr;gap:6px 24px}
+.story{display:flex;align-items:center;gap:8px;font-size:11px;min-width:0}
+.sdot{width:7px;height:7px;border-radius:50%;flex:0 0 auto}
+.sdot.done{background:var(--green)}.sdot.prog{background:var(--amber)}.sdot.todo{background:var(--grey)}
+.skey{color:var(--muted);font-family:'Plus Jakarta Sans';font-weight:700;font-size:9.5px;flex:0 0 auto}
+.sname{color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.ringwrap{display:flex;flex-direction:column;align-items:center;padding:6px 0 2px}
+.ring{width:118px;height:118px;border-radius:50%;background:conic-gradient(var(--green) 0% 4.505%, var(--amber) 4.505% 24.324%, #e7eaf0 24.324% 100%);display:flex;align-items:center;justify-content:center;position:relative}
+.ring:after{content:"";position:absolute;inset:13px;border-radius:50%;background:var(--card)}
+.ring .inner{position:relative;z-index:1;text-align:center}
+.ring .pct{font-family:'Plus Jakarta Sans';font-weight:800;font-size:26px;color:var(--navy);line-height:1}
+.ring .pl{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-top:3px;font-weight:600}
+.ringkey{margin-top:14px;display:flex;flex-direction:column;gap:7px;font-size:12px}
+.ringkey .rk{display:flex;align-items:center;gap:9px}
+.ringkey i{width:10px;height:10px;border-radius:50%;flex:0 0 auto}
+.ringkey .nm{color:var(--ink)}
+.ringkey .v{margin-left:auto;font-weight:800;font-family:'Plus Jakarta Sans';color:var(--navy)}
+.ringkey .v small{color:var(--muted);font-weight:600;font-size:10px;margin-left:5px}
+.phase{margin-top:16px;border-top:1px dashed var(--line);padding-top:14px}
+.phase .pr{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:12px}
+.phase .pv{font-family:'Plus Jakarta Sans';font-weight:800;font-size:17px;color:var(--navy)}
+.phase .pv.am{color:#b9791f}.phase .pv.rd{color:var(--red)}
+.legend{display:flex;gap:14px;margin-top:12px;font-size:10px;color:var(--muted);align-items:center}
+.legend span{display:inline-flex;align-items:center;gap:5px}.legend i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.watch{margin-top:14px}.wrow{display:flex;gap:11px;padding:10px 0;border-bottom:1px solid var(--line)}.wrow:last-child{border-bottom:none;padding-bottom:0}.wrow:first-child{padding-top:0}
+.rag{flex:0 0 auto;width:7px;border-radius:4px;align-self:stretch}.rag.r{background:var(--red)}.rag.a{background:var(--amber)}.rag.g{background:var(--green)}
+.wt{font-size:13px;font-weight:600;color:var(--ink)}.wd{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.4}
+.footer{display:flex;justify-content:space-between;margin-top:16px;font-size:11px;color:var(--muted);padding:0 4px}
+@media print{body{background:#fff}.page{padding:0;max-width:100%}.kpi,.card{break-inside:avoid}.epblock{break-inside:avoid}.header{border-radius:0}.exp{display:none}}
+@media (max-width:760px){.kpis{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.ep{grid-template-columns:1fr 90px 70px}.stories{grid-template-columns:1fr}}
+</style></head><body><div class="page">
+<div class="header"><div class="left"><div class="brand">Graphene Platforms · Project Starlight</div><h1>Project Starlight — Futura Build</h1><div class="sub">Programme progress by phase · POC sign-off &amp; build epics</div></div>
+<div class="right"><div class="pill"><span class="dot"></span>POC sign-off open · build started on EPIC 1 &amp; 11</div><div class="ref">Project PS · 111 issues</div><div class="ref">As at Mon 29 Jun 2026</div></div></div>
+<div class="kpis">
+<div class="kpi green"><div class="label">Overall complete</div><div class="val">5%</div><div class="foot">5 of 111 items done</div></div>
+<div class="kpi amber"><div class="label">Current gate</div><div class="val" style="font-size:18px">EPIC 0b</div><div class="foot">POC iteration &amp; UX sign-off</div></div>
+<div class="kpi navy"><div class="label">Build phases started</div><div class="val">2 <small>/ 13</small></div><div class="foot">EPICs 1 &amp; 11 now in development</div></div>
+<div class="kpi red"><div class="label">Epics past due</div><div class="val">5</div><div class="foot">EPICs 0b, 1, 2, 3 &amp; 4 past target</div></div>
+</div>
+<div class="grid">
+<div class="card"><h2>Programme phases &amp; stories <span class="tag"><span class="exp" onclick="setAll(true)">Expand all</span> · <span class="exp" onclick="setAll(false)">Collapse all</span></span></h2>
+<details class="epblock" open>
+<summary><div class="ep">
+  <div class="epl"><span class="ename"><span class="caret">▸</span>EPIC 0: Discovery &amp; Technical Workshop</span><span class="estat s-done">Done</span></div>
+  <div class="ebar"><div class="seg done" style="width:33.3%"></div><div class="seg prog" style="width:50.0%"></div></div>
+  <div class="emeta"><span class="ec">2/6</span><span class="due ok">done</span></div>
+</div></summary>
+<div class="stories"><div class="story"><span class="sdot done"></span><span class="skey">PS-15</span><span class="sname" title="MVP Scope Confirmation &amp; Boundary Setting">MVP Scope Confirmation &amp; Boundary Setting</span></div><div class="story"><span class="sdot prog"></span><span class="skey">PS-16</span><span class="sname" title="End-to-End Workflow Mapping &amp; Compliance Alignment">End-to-End Workflow Mapping &amp; Compliance Alignment</span></div><div class="story"><span class="sdot done"></span><span class="skey">PS-17</span><span class="sname" title="Project Charter &amp; Governance Framework">Project Charter &amp; Governance Framework</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-18</span><span class="sname" title="Data Model Design &amp; Technical Architecture">Data Model Design &amp; Technical Architecture</span></div><div class="story"><span class="sdot prog"></span><span class="skey">PS-19</span><span class="sname" title="UX Design &amp; Journey Prototyping">UX Design &amp; Journey Prototyping</span></div><div class="story"><span class="sdot prog"></span><span class="skey">PS-20</span><span class="sname" title="Phase 1 Scope Sign-Off &amp; Development Readiness">Phase 1 Scope Sign-Off &amp; Development Readiness</span></div></div>
+</details><details class="epblock" open>
+<summary><div class="ep">
+  <div class="epl"><span class="ename"><span class="caret">▸</span>EPIC 0b: POC Iteration &amp; UX Sign-off</span><span class="estat s-flight">In Development</span></div>
+  <div class="ebar"><div class="seg done" style="width:20.0%"></div><div class="seg prog" style="width:80.0%"></div></div>
+  <div class="emeta"><span class="ec">2/10</span><span class="od">16 May · overdue</span></div>
+</div></summary>
+<div class="stories"><div class="story"><span class="sdot done"></span><span class="skey">PS-102</span><span class="sname" title="Futura Feedback Round 1 — Adviser Journey Review">Futura Feedback Round 1 — Adviser Journey Review</span></div><div class="story"><span class="sdot done"></span><span class="skey">PS-103</span><span class="sname" title="Futura Feedback Round 2 — Client Portal Review">Futura Feedback Round 2 — Client Portal Review</span></div><div class="story"><span class="sdot prog"></span><span class="skey">PS-104</span><span class="sname" title="Futura Feedback Round 3 — Admin &amp; Operational Views">Futura Feedback Round 3 — Admin &amp; Operational Views</span></div><div class="story"><span class="sdot prog"></span><span class="skey">PS-105</span><span class="sname" title="Module UX Sign-off: Onboarding &amp; Client Record">Module UX Sign-off: Onboarding &amp; Client Record</span></div><div class="story"><span class="sdot prog"></span><span class="skey">PS-106</span><span class="sname" title="Module UX Sign-off: Fact Find &amp; Form Builder">Module UX Sign-off: Fact Find &amp; Form Builder</span></div><div class="story"><span class="sdot prog"></span><span class="skey">PS-107</span><span class="sname" title="Module UX Sign-off: ID/AML &amp; Identity Verification">Module UX Sign-off: ID/AML &amp; Identity Verification</span></div><div class="story"><span class="sdot prog"></span><span class="skey">PS-108</span><span class="sname" title="Module UX Sign-off: Suitability Report &amp; Risk Profiling">Module UX Sign-off: Suitability Report &amp; Risk Profiling</span></div><div class="story"><span class="sdot prog"></span><span class="skey">PS-109</span><span class="sname" title="Module UX Sign-off: Document Suite, Letters &amp; E-Signature">Module UX Sign-off: Document Suite, Letters &amp; E-Signature</span></div><div class="story"><span class="sdot prog"></span><span class="skey">PS-110</span><span class="sname" title="Module UX Sign-off: Admin Dashboard &amp; Task Management">Module UX Sign-off: Admin Dashboard &amp; Task Management</span></div><div class="story"><span class="sdot prog"></span><span class="skey">PS-111</span><span class="sname" title="POC → Requirements Reconciliation (gap analysis vs. Confluence)">POC → Requirements Reconciliation (gap analysis vs. Confluence)</span></div></div>
+</details><details class="epblock" open>
+<summary><div class="ep">
+  <div class="epl"><span class="ename"><span class="caret">▸</span>EPIC 1: Core Platform &amp; Application Foundation</span><span class="estat s-flight">In Development</span></div>
+  <div class="ebar"><div class="seg done" style="width:0.0%"></div><div class="seg prog" style="width:100.0%"></div></div>
+  <div class="emeta"><span class="ec">0/7</span><span class="od">16 May · overdue</span></div>
+</div></summary>
+<div class="stories"><div class="story"><span class="sdot prog"></span><span class="skey">PS-22</span><span class="sname" title="Application Scaffolding - Front End">Application Scaffolding - Front End</span></div><div class="story"><span class="sdot prog"></span><span class="skey">PS-23</span><span class="sname" title="Application Scaffolding - Back End">Application Scaffolding - Back End</span></div><div class="story"><span class="sdot prog"></span><span class="skey">PS-24</span><span class="sname" title="Authorisation and Authentication Framework">Authorisation and Authentication Framework</span></div><div class="story"><span class="sdot prog"></span><span class="skey">PS-25</span><span class="sname" title="RBAC - T1, T2, T3">RBAC - T1, T2, T3</span></div><div class="story"><span class="sdot prog"></span><span class="skey">PS-26</span><span class="sname" title="Environment Setup">Environment Setup</span></div><div class="story"><span class="sdot prog"></span><span class="skey">PS-30</span><span class="sname" title="Logging Framework">Logging Framework</span></div><div class="story"><span class="sdot prog"></span><span class="skey">PS-31</span><span class="sname" title="Feature Flagging">Feature Flagging</span></div></div>
+</details><details class="epblock">
+<summary><div class="ep">
+  <div class="epl"><span class="ename"><span class="caret">▸</span>EPIC 2: Client Record &amp; Data Model (MVP)</span><span class="estat s-todo">Ready for Refinement</span></div>
+  <div class="ebar"><div class="seg done" style="width:0.0%"></div><div class="seg prog" style="width:0.0%"></div></div>
+  <div class="emeta"><span class="ec">0/6</span><span class="od">30 May · overdue</span></div>
+</div></summary>
+<div class="stories"><div class="story"><span class="sdot todo"></span><span class="skey">PS-32</span><span class="sname" title="Client Entity Creation">Client Entity Creation</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-33</span><span class="sname" title="Personal Details Capture">Personal Details Capture</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-34</span><span class="sname" title="Relationship Structures">Relationship Structures</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-38</span><span class="sname" title="Advisor and Firm Association ">Advisor and Firm Association </span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-39</span><span class="sname" title="Structured Advice Data Storage">Structured Advice Data Storage</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-40</span><span class="sname" title="Creation of an Immutable Audit History">Creation of an Immutable Audit History</span></div></div>
+</details><details class="epblock">
+<summary><div class="ep">
+  <div class="epl"><span class="ename"><span class="caret">▸</span>EPIC 3: Workflow Engine</span><span class="estat s-todo">Backlog</span></div>
+  <div class="ebar"><div class="seg done" style="width:0.0%"></div><div class="seg prog" style="width:0.0%"></div></div>
+  <div class="emeta"><span class="ec">0/7</span><span class="od">13 Jun · overdue</span></div>
+</div></summary>
+<div class="stories"><div class="story"><span class="sdot todo"></span><span class="skey">PS-41</span><span class="sname" title="Case Creation Post First Meeting">Case Creation Post First Meeting</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-42</span><span class="sname" title="Workflow Stage Definition &amp; Configuration">Workflow Stage Definition &amp; Configuration</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-43</span><span class="sname" title="Mandatory Checkpoints &amp; Prerequisite Enforcement">Mandatory Checkpoints &amp; Prerequisite Enforcement</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-44</span><span class="sname" title="Status Calculation &amp; Blocker Identification">Status Calculation &amp; Blocker Identification</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-45</span><span class="sname" title="Manual Override Mechanism with Audit Trail">Manual Override Mechanism with Audit Trail</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-46</span><span class="sname" title="Global Vulnerability Flag Handling &amp; Enforcement">Global Vulnerability Flag Handling &amp; Enforcement</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-47</span><span class="sname" title="Workflow Visibility &amp; Access Controls">Workflow Visibility &amp; Access Controls</span></div></div>
+</details><details class="epblock">
+<summary><div class="ep">
+  <div class="epl"><span class="ename"><span class="caret">▸</span>EPIC 4: Task Management &amp; Operational Controls</span><span class="estat s-todo">Backlog</span></div>
+  <div class="ebar"><div class="seg done" style="width:0.0%"></div><div class="seg prog" style="width:0.0%"></div></div>
+  <div class="emeta"><span class="ec">0/4</span><span class="od">27 Jun · overdue</span></div>
+</div></summary>
+<div class="stories"><div class="story"><span class="sdot todo"></span><span class="skey">PS-48</span><span class="sname" title="Automated Task Generation from Workflow Stages">Automated Task Generation from Workflow Stages</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-49</span><span class="sname" title="Task Assignment and Ownership Management">Task Assignment and Ownership Management</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-50</span><span class="sname" title="Due Date Calculation and Task Ageing">Due Date Calculation and Task Ageing</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-51</span><span class="sname" title="Escalation Rules for Stalled or Overdue Tasks">Escalation Rules for Stalled or Overdue Tasks</span></div></div>
+</details><details class="epblock">
+<summary><div class="ep">
+  <div class="epl"><span class="ename"><span class="caret">▸</span>EPIC 5: Fact Find Engine (Digital &amp; Modular)</span><span class="estat s-todo">Backlog</span></div>
+  <div class="ebar"><div class="seg done" style="width:0.0%"></div><div class="seg prog" style="width:0.0%"></div></div>
+  <div class="emeta"><span class="ec">0/5</span><span class="due soon">4 Jul</span></div>
+</div></summary>
+<div class="stories"><div class="story"><span class="sdot todo"></span><span class="skey">PS-52</span><span class="sname" title="Modular Fact Find Section Design &amp; Implementation">Modular Fact Find Section Design &amp; Implementation</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-53</span><span class="sname" title="Adviser Notes &amp; Partial Completion Handling">Adviser Notes &amp; Partial Completion Handling</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-54</span><span class="sname" title="Client Self-Completion Capability">Client Self-Completion Capability</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-55</span><span class="sname" title="Mandatory Field Enforcement Mechanism">Mandatory Field Enforcement Mechanism</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-56</span><span class="sname" title="Outstanding Section Visibility &amp; Progress Tracking">Outstanding Section Visibility &amp; Progress Tracking</span></div></div>
+</details><details class="epblock">
+<summary><div class="ep">
+  <div class="epl"><span class="ename"><span class="caret">▸</span>EPIC 6: Risk Profiling Engine</span><span class="estat s-todo">Backlog</span></div>
+  <div class="ebar"><div class="seg done" style="width:0.0%"></div><div class="seg prog" style="width:0.0%"></div></div>
+  <div class="emeta"><span class="ec">0/4</span><span class="due">11 Jul</span></div>
+</div></summary>
+<div class="stories"><div class="story"><span class="sdot todo"></span><span class="skey">PS-57</span><span class="sname" title="Risk Questionnaire Framework Design &amp; Implementation">Risk Questionnaire Framework Design &amp; Implementation</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-58</span><span class="sname" title="Risk Scoring Logic Development">Risk Scoring Logic Development</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-59</span><span class="sname" title="Client-Friendly Risk Outcome Explanation">Client-Friendly Risk Outcome Explanation</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-60</span><span class="sname" title="Structured Risk Outcome Storage &amp; Retrieval">Structured Risk Outcome Storage &amp; Retrieval</span></div></div>
+</details><details class="epblock">
+<summary><div class="ep">
+  <div class="epl"><span class="ename"><span class="caret">▸</span>EPIC 7: ID/AML Integration (SmartSearch)</span><span class="estat s-todo">Backlog</span></div>
+  <div class="ebar"><div class="seg done" style="width:0.0%"></div><div class="seg prog" style="width:0.0%"></div></div>
+  <div class="emeta"><span class="ec">0/5</span><span class="due soon">4 Jul</span></div>
+</div></summary>
+<div class="stories"><div class="story"><span class="sdot todo"></span><span class="skey">PS-61</span><span class="sname" title="SmartSearch Integration for Digital ID/AML Checks">SmartSearch Integration for Digital ID/AML Checks</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-62</span><span class="sname" title="AML Status State Machine Implementation">AML Status State Machine Implementation</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-63</span><span class="sname" title="Workflow Blocking Based on AML Status">Workflow Blocking Based on AML Status</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-64</span><span class="sname" title="Manual Review Workflow for AML Exceptions">Manual Review Workflow for AML Exceptions</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-65</span><span class="sname" title="Alerting and Notification System for AML Actions">Alerting and Notification System for AML Actions</span></div></div>
+</details><details class="epblock">
+<summary><div class="ep">
+  <div class="epl"><span class="ename"><span class="caret">▸</span>EPIC 8: Suitability Report Engine</span><span class="estat s-todo">Backlog</span></div>
+  <div class="ebar"><div class="seg done" style="width:0.0%"></div><div class="seg prog" style="width:0.0%"></div></div>
+  <div class="emeta"><span class="ec">0/6</span><span class="due">18 Jul</span></div>
+</div></summary>
+<div class="stories"><div class="story"><span class="sdot todo"></span><span class="skey">PS-66</span><span class="sname" title="Suitability Template Framework Design &amp; Implementation">Suitability Template Framework Design &amp; Implementation</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-67</span><span class="sname" title="Data Auto-Population from Fact Find and Risk Profiling">Data Auto-Population from Fact Find and Risk Profiling</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-68</span><span class="sname" title="Editable Narrative Block Functionality">Editable Narrative Block Functionality</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-69</span><span class="sname" title="Version Control for Suitability Reports">Version Control for Suitability Reports</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-70</span><span class="sname" title="PDF Generation &amp; Output Formatting">PDF Generation &amp; Output Formatting</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-71</span><span class="sname" title="Compliance Validation &amp; Output Testing">Compliance Validation &amp; Output Testing</span></div></div>
+</details><details class="epblock">
+<summary><div class="ep">
+  <div class="epl"><span class="ename"><span class="caret">▸</span>EPIC 9: Letter Suite &amp; Illustration Handling</span><span class="estat s-todo">Backlog</span></div>
+  <div class="ebar"><div class="seg done" style="width:0.0%"></div><div class="seg prog" style="width:0.0%"></div></div>
+  <div class="emeta"><span class="ec">0/6</span><span class="due">25 Jul</span></div>
+</div></summary>
+<div class="stories"><div class="story"><span class="sdot todo"></span><span class="skey">PS-72</span><span class="sname" title="Letter Template Framework Design &amp; Implementation">Letter Template Framework Design &amp; Implementation</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-73</span><span class="sname" title="Engagement Letter Template Creation">Engagement Letter Template Creation</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-74</span><span class="sname" title="Client Agreement Template Creation">Client Agreement Template Creation</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-75</span><span class="sname" title="Privacy Notice Template Creation">Privacy Notice Template Creation</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-76</span><span class="sname" title="Suitability Covering Letter Template Creation">Suitability Covering Letter Template Creation</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-77</span><span class="sname" title="Illustration Upload &amp; Linking Functionality">Illustration Upload &amp; Linking Functionality</span></div></div>
+</details><details class="epblock">
+<summary><div class="ep">
+  <div class="epl"><span class="ename"><span class="caret">▸</span>EPIC 10: E-Signature Service</span><span class="estat s-todo">Backlog</span></div>
+  <div class="ebar"><div class="seg done" style="width:0.0%"></div><div class="seg prog" style="width:0.0%"></div></div>
+  <div class="emeta"><span class="ec">0/5</span><span class="due">1 Aug</span></div>
+</div></summary>
+<div class="stories"><div class="story"><span class="sdot todo"></span><span class="skey">PS-78</span><span class="sname" title="Signature Request Issuance Workflow">Signature Request Issuance Workflow</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-79</span><span class="sname" title="Signature State Tracking &amp; Status Updates">Signature State Tracking &amp; Status Updates</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-80</span><span class="sname" title="Auto-Filing of Signed Documents">Auto-Filing of Signed Documents</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-81</span><span class="sname" title="Immutable Timestamping &amp; Audit Trail">Immutable Timestamping &amp; Audit Trail</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-82</span><span class="sname" title="Integration with Document Suite">Integration with Document Suite</span></div></div>
+</details><details class="epblock" open>
+<summary><div class="ep">
+  <div class="epl"><span class="ename"><span class="caret">▸</span>EPIC 11: Client Portal Experience</span><span class="estat s-flight">In Development</span></div>
+  <div class="ebar"><div class="seg done" style="width:0.0%"></div><div class="seg prog" style="width:16.7%"></div></div>
+  <div class="emeta"><span class="ec">0/6</span><span class="due">1 Aug</span></div>
+</div></summary>
+<div class="stories"><div class="story"><span class="sdot prog"></span><span class="skey">PS-83</span><span class="sname" title="Invite-Based Client Access Implementation">Invite-Based Client Access Implementation</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-84</span><span class="sname" title="Workflow-Driven Progress Tracker">Workflow-Driven Progress Tracker</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-85</span><span class="sname" title="Client Document Viewing &amp; E-Signature Integration">Client Document Viewing &amp; E-Signature Integration</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-86</span><span class="sname" title="Secure Client Messaging Module">Secure Client Messaging Module</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-87</span><span class="sname" title="Contact Preference Management Interface">Contact Preference Management Interface</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-88</span><span class="sname" title="End-to-End Client Onboarding Flow">End-to-End Client Onboarding Flow</span></div></div>
+</details><details class="epblock">
+<summary><div class="ep">
+  <div class="epl"><span class="ename"><span class="caret">▸</span>EPIC 12: Adviser &amp; Admin Experience</span><span class="estat s-todo">Backlog</span></div>
+  <div class="ebar"><div class="seg done" style="width:0.0%"></div><div class="seg prog" style="width:0.0%"></div></div>
+  <div class="emeta"><span class="ec">0/4</span><span class="due">1 Aug</span></div>
+</div></summary>
+<div class="stories"><div class="story"><span class="sdot todo"></span><span class="skey">PS-89</span><span class="sname" title="Adviser Case Overview Dashboard">Adviser Case Overview Dashboard</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-90</span><span class="sname" title="Admin Operational Dashboard">Admin Operational Dashboard</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-91</span><span class="sname" title="Blocker Alerting System">Blocker Alerting System</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-92</span><span class="sname" title="Task Queue Visibility for Advisers &amp; Admins">Task Queue Visibility for Advisers &amp; Admins</span></div></div>
+</details><details class="epblock">
+<summary><div class="ep">
+  <div class="epl"><span class="ename"><span class="caret">▸</span>EPIC 13: Infrastructure Readiness &amp; Go-Live</span><span class="estat s-todo">Backlog</span></div>
+  <div class="ebar"><div class="seg done" style="width:0.0%"></div><div class="seg prog" style="width:0.0%"></div></div>
+  <div class="emeta"><span class="ec">0/8</span><span class="due">29 Aug</span></div>
+</div></summary>
+<div class="stories"><div class="story"><span class="sdot todo"></span><span class="skey">PS-93</span><span class="sname" title="Comprehensive Error Handling &amp; Resilience Testing">Comprehensive Error Handling &amp; Resilience Testing</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-94</span><span class="sname" title="Performance &amp; Load Testing">Performance &amp; Load Testing</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-95</span><span class="sname" title="Security &amp; Access Control Validation">Security &amp; Access Control Validation</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-96</span><span class="sname" title="Accessibility &amp; Vulnerability Assessment">Accessibility &amp; Vulnerability Assessment</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-97</span><span class="sname" title="Standard Operating Procedures (SOPs) &amp; Training Material Development">Standard Operating Procedures (SOPs) &amp; Training Material Development</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-98</span><span class="sname" title="Support &amp; Escalation Model Implementation">Support &amp; Escalation Model Implementation</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-99</span><span class="sname" title="Pilot Execution with Real Clients">Pilot Execution with Real Clients</span></div><div class="story"><span class="sdot todo"></span><span class="skey">PS-100</span><span class="sname" title="Operational Readiness Review &amp; Sign-Off">Operational Readiness Review &amp; Sign-Off</span></div></div>
+</details>
+<div class="legend"><span><i style="background:var(--green)"></i>Done</span><span><i style="background:var(--amber)"></i>In progress</span><span><i style="background:var(--grey)"></i>To do / backlog</span></div>
+</div>
+<div class="card"><h2>Overall</h2>
+<div class="ringwrap"><div class="ring"><div class="inner"><div class="pct">5%</div><div class="pl">Done</div></div></div></div>
+<div class="ringkey">
+<div class="rk"><i style="background:var(--green)"></i><span class="nm">Done</span><span class="v">5% <small>5</small></span></div>
+<div class="rk"><i style="background:var(--amber)"></i><span class="nm">In progress</span><span class="v">20% <small>22</small></span></div>
+<div class="rk"><i style="background:#e7eaf0"></i><span class="nm">To do / backlog</span><span class="v">75% <small>84</small></span></div>
+</div>
+<div class="phase"><h2 style="margin-bottom:6px">Schedule health</h2>
+<div class="pr"><span>Discovery (EPIC 0)</span><span class="pv">Complete</span></div>
+<div class="pr"><span>POC sign-off gate (0b)</span><span class="pv am">In progress</span></div>
+<div class="pr"><span>Build epics started</span><span class="pv am">2 / 13</span></div>
+<div class="pr"><span>Epics past original date</span><span class="pv rd">5</span></div>
+<div class="pr" style="color:var(--muted);font-size:11px;border-top:1px solid var(--line);padding-top:8px">EPICs 1 and 11 are now in development ahead of the 0b sign-off gate. The remaining build epics still carry their original plan dates and need re-baselining off an actual sign-off date.</div>
+</div></div>
+</div>
+<div class="card watch"><h2>Watch list <span class="tag">programme risk</span></h2>
+<div class="wrow"><div class="rag r"></div><div><div class="wt">POC sign-off gate is still the blocker — EPIC 0b (PS-101)</div><div class="wd">At 20% (2 of 10) with a 16 May target now ~6 weeks past. The six module UX sign-offs and the POC → requirements reconciliation are all still in development. Build epics are formally gated on this completing.</div></div></div>
+<div class="wrow"><div class="rag a"></div><div><div class="wt">Build has started ahead of formal sign-off — EPIC 1 &amp; EPIC 11</div><div class="wd">EPIC 1 (Core Platform, PS-2) now has all 7 stories in development and EPIC 11 (Client Portal, PS-12) has begun, while the 0b gate is still open. Progress is welcome, but building before sign-off completes carries rework risk if the reconciliation shifts scope.</div></div></div>
+<div class="wrow"><div class="rag r"></div><div><div class="wt">Mid-build epics are past date with no work started</div><div class="wd">EPICs 2, 3 and 4 (PS-3/4/5) have passed their 30 May–27 Jun targets at 0% — EPIC 4 tipped overdue on 27 Jun. These dates need re-baselining off the actual sign-off date rather than the original plan.</div></div></div>
+<div class="wrow"><div class="rag a"></div><div><div class="wt">Go-live phase still dated 29 Aug — EPIC 13 (PS-14)</div><div class="wd">Infrastructure Readiness &amp; Go-Live retains a 29 Aug target while the build epics ahead of it sit largely at 0%. That end date is not currently credible without compression or rescoping.</div></div></div>
+</div>
+<div class="footer"><div>Generated from live PS board data · 111 issues · 5 done · 22 in progress · Graphene Platforms</div><div>Futura · Project Starlight</div></div>
+</div>
+<script>
+function setAll(o){document.querySelectorAll('.epblock').forEach(function(d){d.open=o;});}
+window.addEventListener('beforeprint',function(){setAll(true);});
+</script>
+</body></html>

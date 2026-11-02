@@ -1,0 +1,30 @@
+layer: 'library'
+language: 'python'
+
+# Python runs as plain uv command-tasks (moon's python toolchain is still
+# unstable in v2). `uv` is provided by proto via .prototools.
+tasks:
+  install:
+    command: 'uv sync'
+    toolchain: 'system'
+    inputs: []
+    options: { cache: false }
+  lint:
+    command: 'uv'
+    args: 'run ruff check .'
+  format:
+    command: 'uv'
+    args: 'run ruff format --check .'
+  typecheck:
+    command: 'uv'
+    args: 'run mypy src'
+  test:
+    command: 'uv'
+    args: 'run pytest'
+
+  # NO `integration-test` / `build-manifest` TASKS HERE, unlike morgan-lloyd/seccl/sei.
+  #
+  # Both exist there because there is a live vendor test environment (or vendor docs page) to
+  # run against. This port has neither: no live Intelliflo sandbox tenant/credentials exist for
+  # this codebase to hold, so there is nothing a `-m integration` suite or a manifest-transcribing
+  # script could safely call. Add them if that ever changes.

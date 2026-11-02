@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portals — delivery roadmap &amp; confidence</title>
+<style>
+  :root{
+    --navy:#193560; --teal:#006388; --teal-2:#0a7ea6;
+    --plat:#1863DC; --advice:#7A3FBF; --ops:#0E8F6E; --sipp:#006388; --net:#E8590C; --amber:#C58B00;
+    --ink:#1a2230; --muted:#5c6675; --line:#e4e8ee; --bg:#f6f8fb; --card:#fff;
+    --shadow:0 1px 2px rgba(20,40,80,.05),0 4px 16px rgba(20,40,80,.06); --radius:14px;
+    /* validated epic palette (adjacency-ordered: green·blue·amber·purple·teal·magenta·indigo·orange) */
+    --e-data:#0E8F6E; --e-client:#1863DC; --e-admin:#C58B00; --e-adviser:#7A3FBF;
+    --e-ml:#0A7EA6; --e-futura:#C2255C; --e-engine:#364FC7; --e-caseops:#E8590C;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+  a{color:var(--teal-2);text-decoration:none} a:hover{text-decoration:underline}
+  code{font-family:'SF Mono',ui-monospace,Menlo,Consolas,monospace;font-size:.85em;background:#eef1f6;padding:.1em .4em;border-radius:5px;color:var(--navy)}
+
+  header.hero{background:linear-gradient(135deg,var(--navy),#0f2547 60%,#0c1f3d);color:#fff;padding:50px 0 38px}
+  .brand{display:flex;align-items:center;gap:11px;font-weight:800;letter-spacing:.14em;font-size:13px;text-transform:uppercase;color:#9fc0e6}
+  .brand .dot{width:11px;height:11px;border-radius:3px;background:linear-gradient(135deg,#2ea3c7,#0a7ea6)}
+  h1{font-size:32px;line-height:1.15;margin:16px 0 10px;font-weight:800;letter-spacing:-.02em}
+  .hero .sub{font-size:16px;color:#c9d8ec;max-width:80ch;margin:0}
+  .hero .meta{display:flex;flex-wrap:wrap;gap:9px 20px;margin-top:20px;font-size:13px;color:#a9c1e0}
+  .hero .meta b{color:#e8f0fb;font-weight:600}
+  .tag{display:inline-block;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16);padding:3px 10px;border-radius:999px;font-size:12px;color:#dce8f7}
+
+  main{padding:28px 0 10px}
+  section{margin:34px 0}
+  h2{font-size:22px;font-weight:800;color:var(--navy);letter-spacing:-.01em;margin:0 0 4px;display:flex;align-items:center;gap:10px}
+  h2 .idx{font-size:13px;font-weight:700;color:#fff;background:var(--teal);width:26px;height:26px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;flex:none}
+  h2+.lede{color:var(--muted);margin:2px 0 16px;font-size:14.5px}
+  h3{font-size:16px;font-weight:700;color:var(--navy);margin:0 0 8px}
+  p{margin:0 0 12px}
+
+  .callout{border-left:4px solid var(--teal);background:#f0f7fa;padding:13px 16px;border-radius:0 10px 10px 0;margin:14px 0;font-size:14px}
+  .callout.key{border-color:var(--advice);background:#f4eefb}
+  .callout.warn{border-color:var(--net);background:#fdf2ea}
+  .callout b{color:var(--navy)}
+
+  .scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+  .tbl{width:100%;border-collapse:collapse;font-size:13px;margin:0}
+  .tbl th{text-align:left;background:var(--navy);color:#fff;padding:9px 10px;font-weight:600;font-size:12px;white-space:nowrap}
+  .tbl td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  .tbl tr:last-child td{border-bottom:none}
+  .tbl tr:nth-child(even) td{background:#fafbfd}
+  .tbl td.feat{font-weight:700;color:var(--navy);white-space:nowrap}
+  .tbl td.anchor{white-space:nowrap}
+  .tbl td.anchor .cell-note{white-space:normal}
+  .tbl td.mid{text-align:center}
+  .cell-note{font-size:11.5px;color:var(--muted);display:block;font-weight:400}
+
+  .pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;white-space:nowrap}
+  .pill.built{background:#e6f5ec;color:#1c7a3f}.pill.prog{background:#fdf3e0;color:#8a6100}.pill.new{background:#eef2f8;color:#2c4a7a}.pill.mig{background:#fdece1;color:#b8480f}
+  .pill.early{background:#e2f4ee;color:#0b6b52}.pill.late{background:#fbe9e9;color:#a02020}.pill.none{background:#f2f4f8;color:#5c6675}
+  .pill.grp-plat{background:#e7effc;color:#174ea6}.pill.grp-advice{background:#f0e6fb;color:#5b2c9e}.pill.grp-ops{background:#e2f4ee;color:#0b6b52}.pill.grp-sipp{background:#e0f0f5;color:#065a78}
+
+  .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .fcard{background:var(--card);border:1px solid var(--line);border-left-width:4px;border-radius:12px;padding:15px 17px;box-shadow:var(--shadow)}
+  .fcard.plat{border-left-color:var(--plat)} .fcard.advice{border-left-color:var(--advice)} .fcard.ops{border-left-color:var(--ops)} .fcard.sipp{border-left-color:var(--sipp)}
+  .fcard h3{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:2px}
+  .fcard h3 .ew{font-size:12px;font-weight:800;color:var(--net);white-space:nowrap}
+  .fcard .who{font-size:11.5px;color:var(--muted);margin:2px 0 8px}
+  .fcard p{font-size:13.3px;margin:0 0 8px;color:#33404f}
+  .fcard .src{font-size:11.5px;color:var(--muted);border-top:1px dashed var(--line);padding-top:7px}
+  .fcard .src b{color:var(--navy)}
+  ul.clean{margin:6px 0 10px;padding-left:19px} ul.clean li{margin:4px 0;font-size:13.6px}
+
+  /* weekly grid */
+  .wk{width:100%;border-collapse:collapse;font-size:11.6px;min-width:820px}
+  .wk th{background:var(--navy);color:#fff;padding:7px 6px;font-weight:600;font-size:11px;text-align:center;position:sticky;top:0}
+  .wk th:first-child{text-align:left}
+  .wk td{padding:5px 6px;border-bottom:1px solid var(--line);text-align:center;vertical-align:middle}
+  .wk td.w{text-align:left;font-weight:700;color:var(--navy);white-space:nowrap;background:#f4f6fa}
+  .wk td.gl{background:#fbe9e9!important;color:#a02020;font-weight:700}
+  .wk .b{display:block;border-radius:6px;padding:4px 5px;font-weight:600;color:#fff;font-size:11px;line-height:1.25}
+  .b.plat{background:var(--plat)} .b.advice{background:var(--advice)} .b.ops{background:var(--ops)} .b.sipp{background:var(--sipp)} .b.data{background:#0E8F6E} .b.arch{background:#193560} .b.free{background:#eef1f6;color:#8794a5;font-weight:500}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin:12px 0 6px;font-size:12px}
+  .legend span{display:inline-flex;align-items:center;gap:6px} .legend i{width:13px;height:13px;border-radius:4px;display:inline-block}
+
+  footer{border-top:1px solid var(--line);margin-top:40px;padding:22px 0 46px;color:var(--muted);font-size:12.5px}
+  footer b{color:var(--navy)}
+  @media (max-width:820px){.fgrid{grid-template-columns:1fr}}
+  @media print{body{background:#fff}.card,.fcard,.scroll{box-shadow:none}header.hero{-webkit-print-color-adjust:exact;print-color-adjust:exact}section{break-inside:avoid}}
+
+  /* delivery-confidence heatmap */
+  .hm{width:100%;border-collapse:separate;border-spacing:0;font-size:11px;min-width:980px}
+  .hm th{background:var(--navy);color:#fff;padding:6px 3px;font-weight:600;font-size:9.5px;text-align:center;line-height:1.18}
+  .hm th.rowh{text-align:left;padding-left:12px;min-width:150px}
+  .hm th.metah{min-width:52px}
+  .hm th.golive{background:#7a1220}
+  .hm td{padding:0;text-align:center;border-bottom:1px solid #eef1f6}
+  .hm td.rowh{text-align:left;padding:8px 12px;font-weight:700;color:var(--navy);background:#f4f6fa;white-space:nowrap;border-right:1px solid var(--line)}
+  .hm td.rowh .k{display:block;font-weight:400;font-size:10px;color:var(--muted)}
+  .hm td.meta{font-size:11px;color:var(--muted);white-space:nowrap;padding:0 9px;background:#fafbfd;border-right:1px solid var(--line);text-align:center}
+  .hm td.meta b.bad{color:#a02020} .hm td.meta b.ok{color:#1c7a3f} .hm td.meta b.mid{color:#8a6100}
+  .hm .cell{display:block;padding:8px 2px;font-weight:700;font-size:10.5px}
+  .hm td.gl .cell{box-shadow:inset 2.5px 0 0 rgba(160,32,32,.6)}
+  .hm td.jd .cell{outline:2px solid #1a2230;outline-offset:-2px}
+  .hm-legend{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin:12px 0 4px;font-size:12.5px;color:var(--muted)}
+  .hm-scale{display:inline-flex;align-items:center;border-radius:4px;overflow:hidden;border:1px solid #d7deea}
+  .hm-scale i{width:24px;height:13px;display:block}
+  @media print{.hm .cell,.hm-scale i{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+  /* Jira gantt */
+  .gt{min-width:1020px;font-size:11.5px}
+  .gt .ghead,.gt .grow{display:grid;grid-template-columns:300px 1fr;align-items:stretch}
+  .gt .ghead{position:sticky;top:0;z-index:3;background:var(--navy);color:#fff;font-size:10px;font-weight:600}
+  .gt .ghead .glab{padding:7px 12px;text-align:left;color:#fff}
+  .gt .ghead .gwks{display:grid;grid-template-columns:repeat(13,1fr)}
+  .gt .ghead .gwks span{padding:7px 2px;text-align:center;border-left:1px solid rgba(255,255,255,.14)}
+  .gt .gepic{background:#f0f3f8;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-weight:800;color:var(--navy);font-size:12px}
+  .gt .gepic .glab{padding:6px 12px;display:flex;align-items:center;gap:8px}
+  .gt .gepic .glab i{width:11px;height:11px;border-radius:3px;display:inline-block;flex:none}
+  .gt .gepic .gdue{font-weight:600;color:var(--muted);font-size:10.5px;margin-left:auto;padding-right:8px}
+  .gt .grow{border-bottom:1px solid #eef1f6;background:var(--card)}
+  .gt .grow:nth-child(even){background:#fbfcfe}
+  .gt .glab{padding:4px 12px 4px 22px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#33404f}
+  .gt .glab b{color:var(--navy);font-weight:700}
+  .gt .glab .who{color:var(--muted)}
+  .gt .gtrack{position:relative;background-image:repeating-linear-gradient(to right,transparent,transparent calc(100%/13 - 1px),#eef1f6 calc(100%/13 - 1px),#eef1f6 calc(100%/13))}
+  .gt .gbar{position:absolute;top:5px;height:13px;border-radius:4px;min-width:8px}
+  .gt .gbar.todo{opacity:.4}
+  .gt .gbar.dev{opacity:.72}
+  .gt .gbar.test{background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.55) 0 3px,transparent 3px 7px)}
+  .gt .gbar.late{outline:2px solid #a02020;outline-offset:1px}
+  .gt .gflag{position:absolute;top:2px;font-size:10px;font-weight:800;color:#a02020}
+  .gt .gms{position:absolute;top:0;bottom:0;width:0;border-left:2px dashed rgba(160,32,32,.55);z-index:2}
+  .gt .gms.today{border-left:2px solid rgba(26,34,48,.5)}
+  .gt .gms b{position:absolute;top:-1px;left:3px;font-size:9px;color:#a02020;font-weight:800;white-space:nowrap}
+  .gt .gms.today b{color:#1a2230}
+  .gt-status{display:inline-block;font-size:9.5px;font-weight:800;border-radius:4px;padding:0 5px;margin-right:6px;vertical-align:1px}
+  .st-done{background:#e6f5ec;color:#1c7a3f}.st-test{background:#e0f0f5;color:#065a78}.st-dev{background:#fdf3e0;color:#8a6100}.st-todo{background:#eef1f6;color:#5c6675}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="brand"><span class="dot"></span> Graphene · Portals</div>
+    <h1>Portals — delivery roadmap &amp; confidence</h1>
+    <p class="sub">The TECH board reconciled with the feature plan, build capacity and — as of this revision — <b>the code actually in the repository</b>: what landed in the last fortnight, delivery confidence per workstream, the Jira timeline, and the feature matrix + per-developer weekly plan.</p>
+    <div class="meta">
+      <span><b>Prepared:</b> 20 Jul 2026 · <b>updated 21 Jul</b> (board timeline) · <b>re-baselined 2 Aug</b> against git</span>
+      <span><b>Basis:</b> 218 commits 21 Jul–2 Aug (485 total) · the 30 Jul functional re-audit (210 functions) · portals-feature-breakdown.html · TECH board as at 21 Jul</span>
+      <span class="tag">Internal · for review</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+
+  <section>
+    <h2><span class="idx">1</span> The fortnight in review — 21 Jul → 2 Aug, reconciled against git</h2>
+    <p class="lede"><b>234 commits in 13 days across three repositories</b> — 218 in <code>portals</code> (Craig 100 · Gio 81 · Mark 36 · Sachin 1) and <b>16 in <code>sei_reports</code></b>, all Sachin's. Far more shipped than the 20 Jul plan anticipated — but not in the lanes the board says, and a fifth of the team's output is in a repository the board does not track. Three <b>To&nbsp;Do</b> stories are substantially in the code, four <b>Development</b> stories have no commits at all, and the single workstream that gates the 24 Aug go-live is the one that stood still. Everything below is traced to commits in this repository.</p>
+    <div class="scroll">
+    <table class="tbl">
+      <thead><tr>
+        <th>What landed</th><th>Evidence</th><th>Who</th><th>Board anchor</th><th>Board vs code</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="feat">Workflow engine <span class="cell-note">shipped as "flows v2"</span></td>
+          <td>Generic orchestration spine + schema (<code>0021</code>–<code>0025</code>): definitions → immutable versioned graph → cases → steps → transitions, three-tier planner, DB orchestrator, module step-handlers + CRM write-back, transactional outbox + dispatcher, visual Svelte-Flow builder with dagre layout, condition/repeat nodes, AND/OR visibility groups. The hard-coded onboarding flow was <b>ported onto it and deleted</b>.<span class="cell-note">23–24 Jul · ~30 commits · docs/flows.md</span></td>
+          <td>Gio</td><td class="anchor">TECH-73 · 3 Sep<span class="cell-note">To Do · Sachin</span></td>
+          <td><span class="pill early">~5 wks early</span><span class="cell-note">and a different owner than the board and §5 both assume</span></td></tr>
+        <tr><td class="feat">Standalone tasks</td>
+          <td>All four phases: <code>0027</code>/<code>0028</code>, <code>role_ids</code> claim, service + <code>/tasks</code> API, flow steps raise tasks through the outbox, platform inbox + journey/client panels + client action items, assign/near-due email notices, book-scoped RLS, activity trail.<span class="cell-note">24–25 Jul · docs/tasks.md — "all four phases built"</span></td>
+          <td>Gio</td><td class="anchor">TECH-78 · 14 Sep<span class="cell-note">To Do</span></td>
+          <td><span class="pill early">~7 wks early</span></td></tr>
+        <tr><td class="feat">AML screening</td>
+          <td>Creditsafe KYC&nbsp;Protect mirror (<code>0037</code>/<code>0038</code>), ops-owned console, the <b>tipping-off control</b> (the <code>aml.*</code> read policy omits <code>contact_scope</code>, pinned by a <code>pg_policies</code> assertion + a static client-portal guard), operator-attributable writes, ops-only adjudication, unattributed-profile linking, the <code>aml_check</code> flow trigger via the outbox, firm-side read-only view. Verified against the live sandbox.<span class="cell-note">29 Jul · docs/aml.md</span></td>
+          <td>Gio</td><td class="anchor">TECH-76 · 15 Aug<span class="cell-note">To Do</span></td>
+          <td><span class="pill early">~2 wks early</span><span class="cell-note">the <b>ID</b> half is not built — iDenfy was dropped, so <code>verify_identity</code> stays a manual gate</span></td></tr>
+        <tr><td class="feat">Client-portal composition</td>
+          <td>Firm-defined pages / blocks / variants / per-widget looks behind a cross-language block contract; studio Pages view (rail, audience copy-on-write, inspector, personas, device viewport); three theme axes (hero look · finish · density); container-query widgets that fit their grid span; provenance stamps; scale work (pagination, wrapper summarisation); the legacy listing routes absorbed into widgets.<span class="cell-note">30–31 Jul · docs/portal-customisation.md</span></td>
+          <td>Gio</td><td class="anchor">TECH-29 · 16 Aug</td>
+          <td><span class="pill none">unticketed</span><span class="cell-note">no story covers it; it is the bulk of the client epic's movement</span></td></tr>
+        <tr><td class="feat">Documents</td>
+          <td>Open-ended document-type taxonomy (registry + classify + admin API + Types page), supporting-file vocabulary, firm-admin audit log, made-for-a-client at upload with visibility gating, recipients + per-recipient delivery state, activity filters and search, live/archived switch, admin object-storage browser with rollups.<span class="cell-note">29–31 Jul · 100 commits</span></td>
+          <td>Craig</td><td class="anchor">TECH-49 · 31 Jul<br>TECH-60 · 1 Aug</td>
+          <td><span class="pill built">on plan</span></td></tr>
+        <tr><td class="feat">Functional audit + remediation</td>
+          <td>210 functions traced UI→route→API→service→SQL/RLS→worker, then three remediation waves and an independent six-pass re-verification: <b>working 65→108 · demo/mock 22→5 · broken 7→0 · zero regressions</b>; API suite <b>342→1654 tests</b>. 88 functions remain partial.<span class="cell-note">28–30 Jul · docs/audit/VERIFIED-STATUS.md</span></td>
+          <td>Gio</td><td><span class="pill none">no ticket</span></td>
+          <td><span class="cell-note">replaces the 80-function inventory this roadmap was originally calibrated on</span></td></tr>
+        <tr><td class="feat">SEI custodian</td>
+          <td>SFTP ingest, PGP decrypt (<code>pgpy13</code>), byte-exact raw archive with record-count trailer verification, a <b>typed</b> raw layer (47 generated models), the <code>platform.*</code> entity layer, DSR grants resolved as (type,&nbsp;team) pairs, live firm/subfirm/DSR enablement pickers.<span class="cell-note">27–28 Jul · docs/sei.md</span></td>
+          <td>Mark</td><td class="anchor">TECH-33 · 24 Jul<span class="cell-note">Development · Sachin<br>"in flight since 1 Jul"</span></td>
+          <td><span class="pill late">past due</span><span class="cell-note">the <b>ingest</b> half was delivered by Mark. The <b>transform</b> half is Sachin's and lives in <code>sei_reports</code> — see the row below. Its 22 SQL models are cherry-picked into <code>services/sei/transformations</code> and are <b>byte-identical to upstream</b>; what is unported is the Python merge layer (all 14 wrappers differ), which is why it is not importable or gated</span></td></tr>
+        <tr><td class="feat">Canonical platform model</td>
+          <td>One conformed provider shape (<code>external_id</code>/<code>org_key</code>/<code>org_path</code>/<code>as_of_date</code>/<code>data</code>) replacing three tenancy dialects; Seccl conformed with declared keys; <code>0041</code> canonical entities (orgs · instruments · valuations · model_platforms); <code>app/materialise.py</code> upserting lake→OLTP by provider link; <code>0043</code> links rename; Seccl staging-API→canonical-OLTP proven end to end.<span class="cell-note">29 Jul–2 Aug · docs/platform-model.md</span></td>
+          <td>Mark</td><td><span class="pill none">no ticket</span><span class="cell-note">extends TECH-27/87</span></td>
+          <td><span class="cell-note">unplanned at 20 Jul; it is the precondition for dropping the per-provider fan-out predicates — and it consumed the ML lane</span></td></tr>
+        <tr><td class="feat">Firm-configured catalogue</td>
+          <td><code>0042</code>: products made tenant-scoped with forced RLS (they were global), per-platform product references, investment models with versioned allocations + markdown commentary, fee packages, third-party/transfer provider registries, per-tenant terminology. 16 endpoints + admin pages.<span class="cell-note">31 Jul–2 Aug</span></td>
+          <td>Mark</td><td><span class="pill none">no ticket</span></td>
+          <td><span class="cell-note">closes a real RLS hole (a product was visible cross-tenant)</span></td></tr>
+        <tr><td class="feat">SEI reporting + integrations<span class="cell-note">repo: <code>sei_reports</code></span></td>
+          <td>A <b>separate, production-serving repository</b> — 313 commits on main, 391 by Sachin. It runs the live SEI reporting estate: <code>sei_daily_reports</code> (scheduled, encrypted, per-firm report generation configured for <b>ten named firms</b> — including <b>Chester Rose</b>, InvestAcc, 42 Wealth Management, Alchemy, Marlborough, Utmost, XPS, UCAP), <code>sei_oversight_reports</code>, an <b>Intelliflo integration</b> with scheduler + webhook, a CSV loader, a tenant provisioner, and <code>sei_data_models</code> — the 22-model SQL consumption layer. In this fortnight: new <code>transaction_details</code> / <code>upcomming_activities</code> / <code>client_addresses</code> models, subfirm + DSR reference work, valuations decoupled from clients/plans with per-feature error reporting, and UCAP investacc valuation + transaction reports.<span class="cell-note">20 Jul–2 Aug · 16 commits · 721 insertions</span></td>
+          <td>Sachin</td><td><span class="pill none">no ticket</span><span class="cell-note">feeds TECH-33</span></td>
+          <td><span class="cell-note"><b>invisible to the board.</b> This is where the "Backend · Sachin" lane's output actually goes — mostly production BAU for live firms, not portals feature delivery</span></td></tr>
+        <tr><td class="feat">Morgan Lloyd (SIPP)</td>
+          <td><b>Landed:</b> CTC Bespoke illustration XML v1.6 with no-credential agent identification, validated by 43 tests against the vendor spec's own examples; ML drawdown session (DCube SSO) framed on the account page; daily-valuation <b>sink as a stub</b> + run-state ledger; ML enablement picker on the conformed layer.<span class="cell-note">21 + 28 Jul + 2 Aug · 3 ML commits in 13 days</span></td>
+          <td>Mark</td><td class="anchor">TECH-41 · 31 Jul ✔<br>TECH-42 · 31 Jul ✔<br>TECH-38 · 25 Jul</td>
+          <td><span class="pill late">the exposure</span><span class="cell-note"><b>TECH-37 transfers, TECH-39 account-open saga, TECH-40 contributions/RAS and TECH-43 recon have no commits</b> — three of them sit in "Development" on the board</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="callout warn"><b>The go-live exposure is Morgan Lloyd, and it grew.</b> TAV is <b>22 days away</b>. Of the seven stories in the MVP that gates it, two are done (illustration, drawdown), one is a stub (valuations) and four have not started — including the <b>account-open saga (TECH-39)</b> the epic is built around, and the <b>three-way reconciliation (TECH-43)</b>. The architect lane spent 27 Jul–2 Aug on SEI, Seccl conformance, the canonical platform model and the catalogue — all real, all valuable, none of it ML. §6 now reads <b>~16% by TAV</b>, down from ~50% on 21 Jul — and ~16% rather than ~20% because the lane re-assignment leaves Mark on ML with no reinforcement at any point. This is a sequencing decision, not a capacity one: it reverses if help moves onto ML before 17 Aug.</div>
+
+    <div class="callout key"><b>The advice engine ran three epics ahead of itself.</b> The workflow engine, tasks and AML — 6.5 engineer-weeks of the 20 Jul estimate, dated 15 Aug&nbsp;→&nbsp;14 Sep — all landed in one fortnight, from a lane the plan had building forms. That is the largest single change to the forecast: advice engine goes 35%&nbsp;→&nbsp;95%, case ops keeps its slack, and <b>Futura's CORE-reuse dependencies (TECH-61/62/63/64) are now mostly reusable rather than pending</b> — which is what makes the newly-staffed Futura lane (Kieran, from 3 Aug) a much cheaper build than the July scoping assumed. What did <i>not</i> land is the piece that was actually due: <b>TECH-74's risk-scoring and suitability engines are still absent from the code</b> — the forms builder and API exist, the scoring does not — and that story passed its 31 Jul date.</div>
+
+    <div class="callout warn"><b>Board hygiene is now a delivery risk in its own right.</b> <b>27 of the 51 dated stories carry a status the code contradicts.</b> Most are simply closeable — <b>eleven To-Do stories are partly or fully built</b> (TECH-42/51/57/73/75/76/78 and 52/65/77/80). Three in <b>Development have no commits at all</b> (TECH-40 contributions, TECH-43 recon, TECH-50 notifications) and a fourth, TECH-38 valuations, is a stub. Reading the board alone, you would staff Sachin onto a workflow engine that exists, chase Gio for an AML build that shipped, and believe ML valuations are pushing.</div>
+
+    <div class="callout"><b>On Sachin's lane — the earlier reading was wrong, and the real issue is different.</b> He has 1 commit in <code>portals</code> this fortnight, which on the portals repo alone looks like a stalled lane. It isn't: <b>he has 16 commits in <code>sei_reports</code> over the same days, and 391 across that repository</b>. That repo is <b>live production</b> — scheduled, encrypted daily report generation for ten named firms (<b>Chester Rose among them</b>, three weeks before its own go-live), an Intelliflo integration with a scheduler and webhook, an oversight-reporting estate and the 22-model SEI consumption layer. <b>The problem is not idleness, it is that a whole workstream and its BAU load are invisible to the plan.</b> None of it has a TECH ticket, so §5's capacity view has been booking a full-time backend lane against portals epics while most of that lane is actually running production for existing clients. That is the honest explanation for why TECH-33, TECH-73 and TECH-75 all moved without him. <b>From 3 Aug that lane is messaging</b> (TECH-79) — which means the SEI work below now sits behind it, and the <code>sei_reports</code> BAU still has no ticket and no allowance in §5. <b>Two things follow.</b> First, the SEI transform port is <b>smaller than it looked</b> — the 22 SQL models are byte-identical between the two repos, so only the Python merge layer (14 wrappers) and the interlace wiring are outstanding, not the SQL. Second, there are now <b>two SEI codebases</b> — Mark's typed 47-model ingest + entity layer in <code>portals/services/sei</code>, and Sachin's production consumption layer in <code>sei_reports</code> — under one board ticket. Deciding which one is the destination is a prerequisite to dating TECH-33, not a detail.<br><br><code>graphene-platform</code>, by contrast, is <b>dormant</b> — no commits from anyone since June 2026. Sachin's 17 there (Mar–Jun: the Intelliflo integrations dashboard, storage/files, regular payments and withdrawals) are the <i>source material</i> for TECH-75's migration, not current work.</div>
+  </section>
+
+  <section>
+    <h2><span class="idx">2</span> Roadmap — the TECH board timeline (board dates 21 Jul · statuses from code, 2 Aug)</h2>
+    <p class="lede">Every open story with a due date, grouped by epic, drawn against the calendar. Bars run <b>Jira Start date → Jira due date</b> (bars clip at the 6&nbsp;Jul axis start; the handful with no start date drawn as due − estimate). Names on rows are the Jira assignees — unassigned is "—".</p>
+    <p class="lede" style="margin-top:-8px"><b>Statuses on this revision are the code's, not the board's.</b> <span class="gt-status st-done">✔</span> = traced to commits and delivered · <span class="gt-status st-test">TEST</span> = built, verifying or finishing · <span class="gt-status st-dev">DEV</span> = partially in the code · <span class="gt-status st-todo">TO&nbsp;DO</span> = no commits. Where that disagrees with the board the flag says so. Two unticketed workstreams that consumed real capacity are drawn in as <b>TECH-—</b> rows.</p>
+    <div class="scroll" style="padding-bottom:6px">
+      <div class="gt" id="gantt"></div>
+    </div>
+    <p style="font-size:12.5px;color:var(--muted);margin-top:8px">Epic due dates as adjusted 21 Jul: TECH-27 data platform <b>24 Jul</b> · TECH-28 ML MVP <b>14 Aug</b> (10-day buffer before TAV) · TECH-29 client <b>16 Aug</b> · TECH-30 adviser <b>21 Aug</b> · TECH-31 admin <b>24 Aug</b> · TECH-71 advice engine <b>3 Sep</b> · TECH-32 Futura <b>25 Sep</b> · TECH-72 case ops <b>28 Sep</b> · TECH-88 ML full automation <b>2 Oct</b>. Go-live milestones on the board: <b>TAV 24 Aug (TECH-90)</b>, <b>CR 31 Aug (TECH-91)</b>. <b>Four of these want re-dating.</b> TECH-27 is past due, and with the SEI conform now scheduled behind messaging it lands ~mid Sep, not 24 Jul. TECH-71 is nearly complete, eleven weeks early. TECH-72 is largely pre-delivered by the tasks + outbox work. And <b>TECH-32 Futura cannot hold 25 Sep against its own owner's plan</b> — that plan's last build week (advanced workflows) <i>starts</i> 28 Sep, so the epic and <b>TECH-89 go-live</b> both want moving to ~2 Oct, or the go-live scope explicitly cut to Phase-1-minus-workflows. <span style="display:block;margin-top:6px"><b>Futura bars below are the board's dates, not the owner's plan</b> — §5 draws the plan. The two disagree by roughly a week at the end and by more in the middle: the board front-loads FT-ST/FT-BR/FT-GO to 10 Aug, the plan spreads setup over week 1 and puts branding inside the client-portal week.</span></p>
+  </section>
+  <section>
+    <h2><span class="idx">3</span> Feature × portal matrix</h2>
+    <p class="lede">Where each feature surfaces, its build status, the AI-assisted remaining estimate, and its Jira anchor + due date.</p>
+    <div class="scroll">
+    <table class="tbl">
+      <thead><tr>
+        <th>Feature</th><th>Client</th><th>Adviser / Platform</th><th>Admin</th><th>Status</th><th>Source / reuse</th><th class="mid">AI ew</th><th class="mid">Jira · due</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="feat"><span class="pill grp-plat">P</span> Auth &amp; access (WorkOS)</td>
+          <td>Invite · MFA · security<span class="cell-note">magic-link, joint logins</span></td><td>Role-based access</td><td>Tenant / user / role admin<span class="cell-note">break-glass</span></td>
+          <td><span class="pill built">built</span></td><td>project-per-tenant WorkOS · invites · ops RBAC · permission registry (done 3 Jul); login rate-limiter + observability wired 28 Jul</td><td class="mid">✔</td><td class="mid">TECH-24<span class="cell-note">testing</span></td></tr>
+        <tr><td class="feat"><span class="pill grp-plat">P</span> SEI / Seccl data</td>
+          <td>Own accounts · performance</td><td>Book-wide accounts / valuations / assets</td><td>Oversight</td>
+          <td><span class="pill built">built</span><span class="cell-note">conform outstanding</span></td><td>Seccl proven <b>staging API → canonical OLTP</b> 2 Aug; SEI SFTP ingest + PGP + typed 47-model raw layer 28 Jul; one conformed cross-provider shape + <code>materialise.py</code></td><td class="mid">1</td><td class="mid">TECH-27<span class="cell-note"><b style="color:#a02020">24 Jul — past due</b></span></td></tr>
+        <tr><td class="feat"><span class="pill grp-plat">P</span> Contacts &amp; CRM</td>
+          <td>Own profile</td><td>Book of clients · case-record hub</td><td>Cross-tenant</td>
+          <td><span class="pill built">built</span></td><td>book surfaces rebuilt on the shared <code>DataTable</code>; <code>/accounts</code> + account detail added 28 Jul; the re-audit removed the fabricated performance/holdings maths and put a source + as-at on every figure</td><td class="mid">0.5</td><td class="mid">TECH-54<span class="cell-note">31 Jul ✔</span></td></tr>
+        <tr><td class="feat"><span class="pill grp-plat">P</span> Documents</td>
+          <td>Review &amp; sign · upload</td><td>Issue · review · chase</td><td>Templates · classify · admin</td>
+          <td><span class="pill built">built</span></td><td>open-ended type taxonomy + registry + classify, firm-admin audit log, recipients + delivery state, made-for-a-client, admin storage browser (29–31 Jul)</td><td class="mid">0.25<span class="cell-note">hard-delete</span></td><td class="mid">TECH-49/81 ✔<span class="cell-note">TECH-60 · 1 Aug</span></td></tr>
+        <tr><td class="feat"><span class="pill grp-plat">P</span> Portal composition <span class="cell-note">no-code client portal</span></td>
+          <td>The whole portal is composed</td><td>—</td><td>Studio · pages · blocks · looks</td>
+          <td><span class="pill built">built</span><span class="cell-note">unticketed</span></td><td>firm-defined pages/blocks/variants + per-widget looks behind a cross-language block contract; studio Pages view; hero/finish/density theme axes; container-query widgets; pagination + wrapper summarisation (30–31 Jul)</td><td class="mid">0.25<span class="cell-note">legacy route deletion + QA</span></td><td class="mid"><span class="pill none">no ticket</span></td></tr>
+        <tr><td class="feat"><span class="pill grp-plat">P</span> Platform catalogue <span class="cell-note">products · models · fees</span></td>
+          <td>—</td><td>Reads the shelf</td><td>Firm-configured catalogue</td>
+          <td><span class="pill built">built</span><span class="cell-note">unticketed</span></td><td><code>0042</code> — tenant-scoped products (they were global) + per-platform refs, versioned model allocations + commentary, fee packages, provider registries, per-tenant terminology; 16 endpoints + admin pages (31 Jul–2 Aug)</td><td class="mid">✔</td><td class="mid"><span class="pill none">no ticket</span></td></tr>
+        <tr><td class="feat"><span class="pill grp-advice">A</span> Workflow engine <span class="cell-note">modular · per-tenant</span></td>
+          <td>Completes steps</td><td>Drives the case chain</td><td>Configures steps &amp; rules</td>
+          <td><span class="pill built">built</span> <span class="pill early">5 wks early</span></td><td>shipped 23–24 Jul as <b>flows v2</b> (Gio, not Sachin): versioned graph → cases → steps → transitions, planner + orchestrator, outbox, Svelte-Flow builder; the hard-coded onboarding flow ported onto it and deleted</td><td class="mid">0.5</td><td class="mid">TECH-73<span class="cell-note">3 Sep · re-date</span></td></tr>
+        <tr><td class="feat"><span class="pill grp-advice">A</span> Forms <span class="cell-note">fact-find · risk · suitability · terms</span></td>
+          <td>"Your Details" · risk · sign terms</td><td>Review · rationale · override</td><td>Template &amp; field config</td>
+          <td><span class="pill prog">in&nbsp;progress</span></td><td>builder + persistence + API + client fill live; flow-configured intake added 24 Jul. <b>Risk scoring, bands and the suitability rules engine are still absent from the code.</b></td><td class="mid">1</td><td class="mid">TECH-74<span class="cell-note"><b style="color:#a02020">31 Jul — past due</b></span></td></tr>
+        <tr><td class="feat"><span class="pill grp-advice">A</span> Applications</td>
+          <td>Own onboarding tasks</td><td>Pipeline · declaration · account open</td><td>Execute account opening</td>
+          <td><span class="pill built">built</span><span class="cell-note">custody gate remains</span></td><td>migrated onto the v2 engine 24 Jul: participants + account specs, planner, start/action/retry/cancel, step forms, terms acknowledgement, Journeys board, Applications UI</td><td class="mid">0.5<span class="cell-note">account-open → custody</span></td><td class="mid">TECH-75<span class="cell-note">15 Aug</span></td></tr>
+        <tr><td class="feat"><span class="pill grp-advice">A</span> ID / AML</td>
+          <td>Capture (ID + selfie + PoA)</td><td>Review · manual override</td><td>AML queue · monitoring · gaps</td>
+          <td><span class="pill built">AML built</span> <span class="pill prog">IDV manual</span></td><td>Creditsafe mirror + ops console + tipping-off control + attributable writes + flow trigger, 29 Jul, sandbox-verified. <b>No IDV provider</b> (iDenfy dropped), no monitoring-alert ingestion, no per-tenant entitlement cap</td><td class="mid">0.5</td><td class="mid">TECH-76<span class="cell-note">15 Aug · early</span></td></tr>
+        <tr><td class="feat"><span class="pill grp-ops">O</span> Cases</td>
+          <td>—</td><td>Pipeline · case record · LOA</td><td>Create · all cases · close</td>
+          <td><span class="pill prog">in&nbsp;progress</span></td><td><code>flows.cases</code> + the Journeys pipeline board landed 24 Jul; the first-class case object — LOA, notes taxonomy, vulnerability, close-with-reason — remains</td><td class="mid">1.5</td><td class="mid">TECH-77<span class="cell-note">7 Sep</span></td></tr>
+        <tr><td class="feat"><span class="pill grp-ops">O</span> Tasks</td>
+          <td>To-dos</td><td>"Your tasks"</td><td>Task queue = work surface</td>
+          <td><span class="pill built">built</span> <span class="pill early">7 wks early</span></td><td>all four phases 24–25 Jul: schema + API, outbox-raised from flow steps, platform inbox + panels + client action items, email notices, book-scoped RLS, activity trail</td><td class="mid">0.25<span class="cell-note">bulk actions</span></td><td class="mid">TECH-78<span class="cell-note">14 Sep · re-date</span></td></tr>
+        <tr><td class="feat"><span class="pill grp-ops">O</span> Messages</td>
+          <td>Secure inbox</td><td>Client messaging</td><td>Oversight · SAR export</td>
+          <td><span class="pill new">new</span></td><td>Starlight spec — no commits; the outbox + Resend deliverer it will sit on are built</td><td class="mid">1.5</td><td class="mid">TECH-79<span class="cell-note">28 Sep</span></td></tr>
+        <tr><td class="feat"><span class="pill grp-ops">O</span> Notifications</td>
+          <td>Bell · email · prefs</td><td>Alerts</td><td>Channel matrix · throttling</td>
+          <td><span class="pill prog">in&nbsp;progress</span></td><td>transactional outbox + dispatcher + worker-side scanner + Resend email notices are live (flows/tasks). Bell, preferences and the admin channel matrix are not</td><td class="mid">1</td><td class="mid">TECH-80<span class="cell-note">28 Sep</span></td></tr>
+        <tr><td class="feat"><span class="pill grp-sipp">S</span> Morgan Lloyd (SIPP)</td>
+          <td>Own SIPP view</td><td>Transfers / contributions / illustration / drawdown UI</td><td>Ops · recon</td>
+          <td><span class="pill prog">in&nbsp;progress</span> <span class="pill late">at risk</span></td><td>illustration (CTC v1.6, 43 tests) + drawdown session landed 28 Jul; valuation sink is a <b>stub</b>. Transfers write-path, contributions/RAS, recon and the account-open saga have <b>no commits</b></td><td class="mid">4.5</td><td class="mid">TECH-28 · 14 Aug<span class="cell-note">TECH-88 · 2 Oct</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p style="font-size:12.5px;color:var(--muted);margin-top:8px"><span class="pill grp-plat">P</span> Platform &amp; data · <span class="pill grp-advice">A</span> Advice engine · <span class="pill grp-ops">O</span> Case ops &amp; collaboration · <span class="pill grp-sipp">S</span> SIPP. Estimates are remaining AI-assisted engineer-weeks, re-cut against the code on 2 Aug. <b>Total remaining: ~13 ew, down from ~25.5 on 20 Jul</b> — but <b>4.5 of the 13 are Morgan Lloyd</b>, on one 0.8-FTE lane, three weeks before the go-live it gates. Two rows are new: portal composition and the platform catalogue both consumed real capacity and neither has a board ticket.</p>
+  </section>
+
+  <section>
+    <h2><span class="idx">4</span> Feature descriptions</h2>
+    <p class="lede">Clean descriptions grounded in the Starlight specs and the code being migrated. <b>Delivered/remaining re-checked against the repository on 2 Aug</b> — where a card says something is not built, that is a direct check of the code, not an inference from the board.</p>
+
+    <h3 style="margin:18px 0 10px;color:var(--plat)">Platform &amp; data</h3>
+    <div class="fgrid">
+      <div class="fcard plat"><h3>Auth &amp; access (WorkOS) <span class="ew">✔ done 3 Jul</span></h3><div class="who">All portals · <span class="pill built">built</span></div>
+        <p>Comprehensive WorkOS: multi-tenant <b>organisations</b>, <b>TOTP MFA</b>, roles + permissions (RBAC + relationship scope, enforced as <b>RLS claims</b>), sealed sessions, JWT-verified API. Client access is <b>admin-provisioned invite + magic-link</b> (no self-signup); joint clients get separate linked logins. <b>No enterprise SSO/SAML</b> — WorkOS-managed auth only.</p>
+        <div class="src"><b>Delivered 1 Jun–16 Jul:</b> auth end-to-end, project-per-tenant WorkOS + environments, self-hosted invites (Resend), per-portal access, granular ops RBAC, unified permission registry, white-label branding + studio. <b>Since:</b> the login rate limiter wired up and API observability exposed (28 Jul); RLS tightened materially by migrations <code>0030</code>–<code>0035</code> — <b>proven against the testcontainer chain but not yet applied to any live database</b>.</div></div>
+      <div class="fcard plat"><h3>SEI / Seccl data <span class="ew">1 ew</span></h3><div class="who">All portals · <span class="pill built">built — conform outstanding</span></div>
+        <p>Per-tenant <b>DuckLake warehouse</b> + in-process lake reads ingesting clients, accounts, valuations, performance, assets and transactions from the <b>Seccl API</b> and <b>SEI SFTP</b> via provider adapters. Client sees own holdings/performance; adviser sees the book; admin oversees. Analytics / NL→SQL / Atlas stay <b>out of scope</b> for this build.</p>
+        <div class="src"><b>Delivered 19–20 Jul:</b> bucket-per-tenant object storage + per-user S3 credentials (TECH-86), per-tenant DuckLake, Seccl sync + webhooks + marts (TECH-87), ML Dynamics book sync, provider enablement + lake fan-out, admin /platforms cockpit. <b>Delivered 27 Jul–2 Aug:</b> the <b>SEI custodian</b> (SFTP + PGP + byte-exact archive + trailer verification + a typed 47-model raw layer + the entity layer), marts renamed to one <code>platform.*</code> consumption schema, <b>one conformed cross-provider shape</b> (<code>org_key</code>/<code>org_path</code> replacing three tenancy dialects), canonical entities <code>0041</code> + <code>app/materialise.py</code>, and Seccl proven staging-API → canonical OLTP. <b>Remaining:</b> conform SEI + ML to the same shape, port Sachin's mart SQL (cherry-picked, not importable, outside the gates), go-live hardening.</div></div>
+      <div class="fcard plat"><h3>Contacts &amp; CRM <span class="ew">0.5 ew</span></h3><div class="who">All portals · <span class="pill built">built</span></div>
+        <p>Contacts, relationships, notes and <b>vulnerability</b> records; the <b>case record</b> is the client hub. Joint clients are linked with a shared-visibility toggle; campaign/referral source captured at case creation; advisers see their book, admins see all.</p>
+        <div class="src"><b>Delivered 10–15 Jul:</b> clients list + create, client record, client documents view, firm dashboard. <b>Since:</b> the book surfaces moved onto the shared <code>DataTable</code>, <code>/accounts</code> + account detail added (holdings moved off the client page to the account that holds them), per-client activity search, dashboard-first UX. The 30 Jul re-audit deleted the rescaled performance series and rescaled holdings units rather than papering over them — <b>every figure now carries a source and an as-at</b>. <b>Remaining:</b> vulnerability + campaign polish; nothing settles an instruction; the case-record hub lands with Cases (TECH-77).</div></div>
+      <div class="fcard plat"><h3>Documents <span class="ew">0.25 ew</span></h3><div class="who">All portals · <span class="pill built">built</span></div>
+        <p>Storage (S3 / RustFS), taxonomy, versioning, RLS visibility. <b>Adviser-issued docs + e-sign</b> with a status lifecycle; <b>client uploads — the firm classifies, never the client</b>; template library per trading-style + product; auto/manual chase; SAR PDF export.</p>
+        <div class="src"><b>Delivered 13–15 Jul:</b> schema + endpoints, upload/send/request/archive, viewer + same-origin proxy, client fulfil flow, template editor + versioned schemas, datasets catalogue, <b>async render worker (generation, TECH-81)</b>. <b>Delivered 20 Jul–1 Aug</b> (100 commits, Craig): datasets format/liveness + a versioned render pipeline, data-filled template preview with an unknown-variable lint, charts + CSV import, the <b>open-ended type taxonomy</b> (registry, auto-classify, admin API, Types page), the firm-admin audit log, recipients + per-recipient delivery state, made-for-a-client uploads gated on contact visibility, and the admin object-storage browser. <b>Remaining:</b> hard-delete, share links.</div></div>
+    </div>
+
+    <h3 style="margin:22px 0 10px;color:var(--advice)">Advice engine</h3>
+    <div class="fgrid">
+      <div class="fcard advice"><h3>Workflow engine <span class="ew">0.5 ew</span></h3><div class="who">Adviser drives · admin configures · client completes · <span class="pill built">built 24 Jul</span></div>
+        <p>The generic, per-tenant engine: <code>definitions → immutable versioned graph → instances → steps → transitions → triggers</code>. Each step points at its module's table via a generic pointer, so any capability plugs in. Replaces the hard-coded onboarding flow; drives the case chain. <b>The "flexible per client" backbone</b> — and the gate for Futura (TECH-63).</p>
+        <div class="src"><b>Delivered 23–24 Jul as flows v2</b> (<code>0021</code>–<code>0025</code>, ~30 commits, <b>Gio</b>): the versioned graph, planner + DB orchestrator, module step-handlers with CRM write-back, the transactional outbox + dispatcher, and a Svelte-Flow visual builder with condition/repeat nodes and AND/OR visibility groups. The legacy onboarding flow was ported onto it and the v1 flat-case engine deleted. <b>Remaining:</b> admin config UI polish. <b>Jira:</b> TECH-73 still reads To&nbsp;Do / Sachin / 3 Sep — <b>five weeks and one owner out of date</b>; §6 no longer treats it as a risk.</div></div>
+      <div class="fcard advice"><h3>Forms — fact-find · risk · suitability · terms <span class="ew">1 ew</span></h3><div class="who">PD1 (engine + UI) · all portals · <span class="pill prog">in progress — <b style="color:#a02020">past due</b></span></div>
+        <p>One data-driven, versioned questionnaire engine (template → version → instance → submission), ~25 field types, conditional logic, repeating sections, <b>risk scoring → bands</b> and a <b>suitability rules engine</b>, over a per-tenant <b>fields registry</b>. Renders "Your Details", the in-house risk profiler, and terms acceptance; original client answers preserved forever.</p>
+        <div class="src"><b>Built:</b> the builder, persistence (<code>0011_forms</code>), the <code>/forms</code> API, client fill, and flow-configured intake authored on the Start node (24 Jul). <b>Not built — checked directly:</b> there is no scoring config, no risk band and no suitability rules engine anywhere in the forms code. <b>Jira:</b> TECH-74 passed its 31 Jul date; it is the only advice-engine story that slipped, and <b>Futura's TECH-61/62 depend on it</b>.</div></div>
+      <div class="fcard advice"><h3>Applications <span class="ew">0.5 ew</span></h3><div class="who">Adviser / admin · <span class="pill built">migrated 24 Jul</span></div>
+        <p>The application object — applicants (individual/corporate/trust/child), accounts (product + model + risk), roles — with product types GIA/ISA/JISA/<b>SIPP</b>/bonds/third-party pension. Adviser pipeline, declaration, and the final <b>account-opening</b> gate that hands off to custody sync.</p>
+        <div class="src"><b>Delivered 24 Jul</b> (Gio, on the v2 engine): <code>/applications</code> with participants + account specs + a planner, start / action / retry / cancel, per-step forms with validation, terms acknowledgement, <code>GET /applications/me</code> for the client's own tasks, the Journeys pipeline board and the Applications UI. <b>Remaining:</b> the final account-opening gate and its hand-off to custody sync. <b>Jira:</b> TECH-75 reads To&nbsp;Do / Sachin / 15 Aug.</div></div>
+      <div class="fcard advice"><h3>ID / AML <span class="ew">0.5 ew</span></h3><div class="who">PD1 (all) · <span class="pill built">AML built 29 Jul</span> · <span class="pill prog">IDV manual</span></div>
+        <p>A unified, tenant-scoped case joining <b>identity verification</b> (photo ID + selfie + conditional PoA) with <b>AML screening</b> and <b>ongoing monitoring</b>. Providers <b>swappable per tenant</b> — SmartSearch (Futura), CreditSafe, iDenfy — with a normalised decision vocabulary. PEP/EDD is phase 2. Kept to ~2 ew because the existing app's algorithms, data model and state machines port almost directly.</p>
+        <div class="src"><b>Delivered 29 Jul</b> (<code>0037</code>/<code>0038</code>): the Creditsafe mirror, the ops-owned console, <b>the tipping-off control</b> (POCA 2002 s.333A — the read policy omits <code>contact_scope</code>, guarded behaviourally, by a <code>pg_policies</code> assertion and by a static client-portal test), operator-attributable writes with no service-account fallback, ops-only adjudication that is structural rather than a check, unattributed-profile linking, and the <code>aml_check</code> flow trigger. Verified against the live sandbox. <b>Not built:</b> any IDV provider — iDenfy was dropped, so <code>verify_identity</code> is a manual gate; no monitoring-alert ingestion; no per-tenant entitlement or spend cap.</div></div>
+    </div>
+
+    <h3 style="margin:22px 0 10px;color:var(--ops)">Case ops &amp; collaboration</h3>
+    <div class="fgrid">
+      <div class="fcard ops"><h3>Cases <span class="ew">1.5 ew</span></h3><div class="who">Adviser / admin · <span class="pill prog">in progress</span> · <b>Gio, from 17 Aug</b> · TECH-77</div>
+        <p>A first-class case object created by admin (auto-invites the client, seeds the first task). The case record aggregates the workflow chain, <b>Letters of Authority</b>, tasks, notes taxonomy, vulnerability, a unified history feed. Advisers see their pipeline; admins see every case. Close-case with a reason.</p>
+        <div class="src"><b>Already built:</b> <code>flows.cases</code> is a running instance of a published flow with polymorphic resource pointers, and the <b>Journeys board</b> (24 Jul) is the pipeline view over cases + applications. <b>Remaining:</b> the first-class case object on top — Letters of Authority, the notes taxonomy, vulnerability, the unified history feed and close-with-reason. <b>Source:</b> Starlight adviser + admin specs.</div></div>
+      <div class="fcard ops"><h3>Tasks <span class="ew">0.25 ew</span></h3><div class="who">Admin / adviser / pools · <span class="pill built">built 25 Jul</span> <span class="pill early">7 wks early</span> · TECH-78</div>
+        <p>The operating primitive that <b>advances the workflow</b> — closing a stage's tasks auto-creates the next stage's. Team-owned, pool or personal, with filter / group / bulk, default tasks per stage, due-date / ageing / escalation. The admin task queue is the central work surface.</p>
+        <div class="src"><b>Delivered 24–25 Jul, all four phases</b> (<code>0027</code>/<code>0028</code>, Gio): the <code>role_ids</code> claim + service + <code>/tasks</code> API, flow steps raising tasks through the outbox with a per-node ⚡ badge in the editor, the platform inbox + journey/client panels + client action items on the portal home, assign-time and near-due email notices, book-scoped RLS mirroring the document scope, and the activity trail. <b>Remaining:</b> bulk actions, recurring tasks. <b>Source:</b> Starlight — "tasks drive case movement"; design record in <code>docs/tasks.md</code>.</div></div>
+      <div class="fcard ops"><h3>Messages <span class="ew">1.5 ew</span></h3><div class="who">All portals · <span class="pill new">new</span> · <b>Sachin, from 3 Aug</b> · TECH-79</div>
+        <p>Two-way secure client↔adviser messaging with inline attachments, unread badges and a dashboard widget. <b>Email alerts carry the subject only — the body stays in the portal.</b> Internal vs client-visible tagging; threads export to the SAR pack.</p>
+        <div class="src"><b>Source:</b> Starlight client + adviser specs; the client-portal messaging slice was split out of TECH-52 and lands here. <b>No commits</b> — but the transactional outbox, the worker-side dispatcher and the Resend deliverer it needs are all in place, so this is now surface work over an existing spine. <b>Now owned:</b> Sachin picks it up 3 Aug, six weeks ahead of the story's own start date — but on top of unchanged <code>sei_reports</code> production support for ten live firms, which is the risk to the date rather than the build.</div></div>
+      <div class="fcard ops"><h3>Notifications <span class="ew">1 ew</span></h3><div class="who">All portals · <span class="pill prog">in progress</span> · <b>Craig, from 3 Aug</b> · TECH-80</div>
+        <p>In-portal bell + email across case-state changes, messages, signature requests, ID outcomes, vulnerability changes and document chases. Clients control preferences; admins configure a <b>channel matrix</b>, throttling and no-chase windows.</p>
+        <div class="src"><b>Already built:</b> the transactional notification outbox + deliverer (<code>0021</code>–<code>0025</code>) and the worker-side scanner that sends assign-time and near-due notices through Resend. <b>Remaining:</b> the in-portal bell, client preferences, and the admin channel matrix / throttling / no-chase windows. Overlaps TECH-50, which has no commits — and with Craig owning notifications and Gio the client profile, <b>those two tickets now split across two people and should be re-cut along that line</b>. <b>Source:</b> Starlight; wires to the <code>events</code> stream.</div></div>
+    </div>
+
+    <h3 style="margin:22px 0 10px;color:var(--sipp)">SIPP</h3>
+    <div class="fgrid">
+      <div class="fcard sipp"><h3>Morgan Lloyd (SIPP) <span class="ew">4.5 ew</span></h3><div class="who">Adviser UI · client view · admin ops · <span class="pill prog">in progress</span> <span class="pill late">the go-live risk</span></div>
+        <p>The SIPP integration — transfers, daily valuations, the account-open saga, contributions + HMRC relief-at-source, drawdown, illustration (CTC XML v1.6), three-way reconciliation — surfaced as the <code>ml_saga</code> workflow step plus adviser UI, client view and admin ops. Now split on the board: <b>TECH-28 = the MVP that gates TAV (due 14 Aug — 10-day buffer before the 24 Aug go-live)</b>; <b>TECH-88 "Full Automation" = the tail</b> (recon hardening, fees, death/beneficiary — 2 Oct). Portals-specific (Tavistock/CR); not part of Starlight Phase 1.</p>
+        <div class="src"><b>Delivered:</b> Dynamics book sync (19 Jul), the daily-valuation sink as a <b>stub</b> + run-state ledger (21 Jul), <b>CTC Bespoke illustration XML v1.6</b> — no credentials, agent-name identified, 43 tests against the vendor spec's own examples, which caught <code>Decimal.normalize()</code> rendering 60 as <code>6E+1</code> — and the <b>drawdown session</b> (ML returns the DCube <code>ssoUrl</code> with its token embedded), both 28 Jul. <b>Not started, no commits:</b> transfers write-path (TECH-37), contributions + HMRC RAS (TECH-40), three-way reconciliation (TECH-43) and the <b>account-open saga (TECH-39) that gates TAV</b>. Two open items on what did land: the first live CTC call must settle whether <code>document_location</code> is a URL, and <code>morgan-lloyd</code> is still not a declared apps/api dependency. <b>Watch (unchanged from 20 Jul, now larger):</b> four "Development" stories have no commits in this repo — if that work lives in interlace, fine; otherwise the board overstates progress. Only the ML owner can confirm.</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="idx">5</span> Weekly plan by developer (capacity view)</h2>
+    <p class="lede">Indicative, AI-assisted; <b>re-cut 2 Aug against what shipped, then re-assigned to the lanes as set today</b>. This is the <b>capacity</b> view the §6 curves are computed from. <b>Architect · Mark</b> (0.8 FTE) — Morgan Lloyd, nothing else · <b>Backend · Sachin</b> — messaging · <b>PD1 · Gio</b> — the remaining portals work (client, forms, cases, adviser) · <b>PD2 · Craig</b> — events + notifications · <b>PD3 · Kieran</b> — Futura / Project Starlight. <b>PD3 is staffed.</b> Every prior revision of this plan named the missing fifth builder as the single biggest lever on the tail; Kieran takes the Futura lane whole, which is the largest structural improvement to the forecast since the advice engine emptied out.</p>
+    <div class="legend">
+      <span><i style="background:#193560"></i> Morgan Lloyd · architecture (Mark)</span>
+      <span><i style="background:#0E8F6E"></i> messaging (Sachin)</span>
+      <span><i style="background:var(--plat)"></i> client · forms · cases · adviser (Gio)</span>
+      <span><i style="background:var(--ops)"></i> events · notifications (Craig)</span>
+      <span><i style="background:var(--sipp)"></i> Futura / Starlight (Kieran)</span>
+      <span><i style="background:#eef1f6;border:1px solid #d7deea"></i> support</span>
+    </div>
+    <div class="scroll">
+    <table class="wk">
+      <thead><tr><th>Week (w/c)</th><th>Architect · Mark<span style="font-weight:400;opacity:.75"> — ML</span></th><th>Backend · Sachin<span style="font-weight:400;opacity:.75"> — messaging</span></th><th>PD1 · Gio<span style="font-weight:400;opacity:.75"> — portals</span></th><th>PD2 · Craig<span style="font-weight:400;opacity:.75"> — events/notifs</span></th><th>PD3 · Kieran<span style="font-weight:400;opacity:.75"> — Futura</span></th></tr></thead>
+      <tbody>
+        <tr><td class="w">6–19 Jul ✔</td><td colspan="5" style="text-align:left;font-size:11.5px;color:var(--muted)"><b style="color:var(--ops)">Delivered:</b> storage foundation · per-tenant DuckLake · Seccl sync + admin /platforms cockpit · ML Dynamics book sync · documents + forms + <b>generation engine</b> · CRM dashboards + client record on real lake data.</td></tr>
+        <tr><td class="w">20 Jul–1 Aug ✔</td><td colspan="5" style="text-align:left;font-size:11.5px;color:var(--muted)"><b style="color:var(--ops)">Delivered (218 commits):</b> <b>Mark</b> — SEI custodian end to end · marts → one <code>platform.*</code> schema · Seccl typed payload models + cross-provider conformance · canonical entities + materialiser · firm-configured catalogue · CTC illustration + ML drawdown · DataTable book surfaces. <b>Gio</b> — the <b>v2 flows/workflow engine</b> + applications + Journeys · <b>standalone tasks, all four phases</b> · <b>AML/Creditsafe</b> · the functional audit + three remediation waves · client-portal composition + studio + widget overhaul. <b>Craig</b> — datasets/template render pipeline · document type taxonomy + audit log + recipients · admin storage browser. <b>Sachin</b> — 1 commit in portals, but <b>16 in <code>sei_reports</code></b>: new transaction-detail / upcoming-activity / client-address models, subfirm + DSR reference work, valuations decoupled from clients/plans, and UCAP investacc reports — plus production BAU for ten live report firms.<br><b style="color:#a02020">Not delivered:</b> ML transfers / contributions / recon / account-open saga · TECH-50 notifications · TECH-74 risk + suitability scoring.</td></tr>
+        <tr><td class="w">3 Aug</td><td><span class="b arch">ML all-in — real valuation push (38) + contributions/RAS (40)</span></td><td><span class="b data">Messages — schema + API on the outbox spine (79)</span></td><td><span class="b plat">Client wrap: profile · legacy listing routes · QA</span></td><td><span class="b ops">Notifications — bell + in-portal feed (80)</span></td><td><span class="b sipp">Project setup · duplication from portals (66/70)</span></td></tr>
+        <tr><td class="w">10 Aug</td><td><span class="b arch">Account-open saga (39) — the TAV gate</span></td><td><span class="b data">Messages — threads · attachments · unread</span></td><td><span class="b plat">Forms — risk scoring + suitability (74)</span></td><td><span class="b ops">Notifications — prefs · channel matrix · throttling</span></td><td><span class="b sipp">Client portal — onboarding · accounts · holdings · transactions · documents <b>+ live Seccl</b></span></td></tr>
+        <tr><td class="w">17 Aug</td><td><span class="b arch">Three-way recon (43) + TAV prep</span></td><td><span class="b data">Messages — internal/client tagging · SAR export</span></td><td><span class="b plat">Cases — object + record (77)</span></td><td><span class="b ops">Events stream — case-state · doc chase · signature</span></td><td><span class="b sipp">Adviser portal — clients · accounts · documents</span></td></tr>
+        <tr><td class="w">24 Aug <span style="font-weight:800;color:#a02020">· TAV</span></td><td><span class="b arch">TAV go-live support · recon sign-off</span></td><td><span class="b data">Messages wrap + UAT</span></td><td><span class="b plat">Cases — LOA · close · pipeline</span></td><td><span class="b ops">Notification matrix wrap · TAV support</span></td><td><span class="b sipp">Client + adviser — messaging · notifications (68)</span></td></tr>
+        <tr><td class="w">31 Aug <span style="font-weight:800;color:#a02020">· CR</span></td><td><span class="b arch">CR go-live · ML buffer</span></td><td><span class="b data">SEI transform port — merge layer + interlace wiring</span></td><td><span class="b plat">Adviser wrap — illustration builder UI (56)</span></td><td><span class="b ops">Events/notifications hardening · CR support</span></td><td><span class="b sipp">Adviser + admin — ID/AML · onboarding</span></td></tr>
+        <tr><td class="w">7 Sep</td><td><span class="b arch">ML fees</span></td><td><span class="b data">SEI conform to the platform shape (33)</span></td><td><span class="b plat">IDV — provider decision + capture flow</span></td><td><span class="b ops">Cases history feed · SAR export</span></td><td><span class="b sipp">Adviser + admin — forms: fact-find · suitability (61/62)</span></td></tr>
+        <tr><td class="w">14 Sep</td><td><span class="b arch">ML fees</span></td><td><span class="b free">support / hardening</span></td><td><span class="b plat">Client + adviser polish · UAT</span></td><td><span class="b ops">Notification channel matrix — admin config</span></td><td><span class="b sipp">Adviser + admin — templates · users · roles · permissions (69)</span></td></tr>
+        <tr><td class="w">21 Sep</td><td><span class="b arch">ML death / beneficiary</span></td><td><span class="b free">support / hardening</span></td><td><span class="b plat">TAV/CR aftercare · the audit's open partials</span></td><td><span class="b ops">Events — audit / activity consolidation</span></td><td><span class="b free">No update — ad-hoc if required</span></td></tr>
+        <tr><td class="w">28 Sep</td><td><span class="b arch">ML death / beneficiary</span></td><td><span class="b free">support / hardening</span></td><td><span class="b plat">Payments — settlement + approval on cash-out (52)</span></td><td><span class="b ops">Doc admin hard-delete (60) + share links</span></td><td><span class="b sipp">Adviser + admin — advanced workflows / builder (63)</span></td></tr>
+        <tr><td class="w">5 Oct</td><td><span class="b free">support / hardening</span></td><td><span class="b free">support / hardening</span></td><td><span class="b plat">Hardening · UAT</span></td><td><span class="b free">support / hardening</span></td><td><span class="b sipp">Base go-live + sign-off (89) <b>— inferred, not in the plan</b></span></td></tr>
+        <tr><td class="w gl">12 Oct</td><td><span class="b free">support / hardening</span></td><td><span class="b free">support / hardening</span></td><td><span class="b plat">Hardening · UAT</span></td><td><span class="b free">support / hardening</span></td><td><span class="b sipp">Hardening · Phase 1.5</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p style="font-size:12.5px;color:var(--muted);margin-top:8px"><b>TAV</b> = Tavistock go-live (24 Aug) · <b>CR</b> = Chester Rose (31 Aug/1 Sep). <b>What the new lane assignment buys, and what it costs.</b><br><br>
+      <b>The gain is Futura, and the lane now runs to its owner's own week-by-week plan</b> (received 2 Aug and reproduced verbatim in the PD3 column). Kieran inherits a much cheaper build than July scoped: the workflow engine, tasks, v2 applications, AML and the multi-tenant branding studio are all delivered, so weeks 2, 3 and 9 are largely reuse rather than construction. The week-2 ambition — "highlighting actual Seccl platform integration, above and beyond requirements" — <b>became genuinely available on 2 Aug</b>, when Seccl was proven staging-API → canonical OLTP; as a single-tenant instance Futura gets the conformed layer for free. <b>But the plan finishes after the date it is measured against</b> (see below), so Futura reads ≈30% at 25 Sep and ≈59% at 2 Oct.<br><br>
+      <b>Aligning the two surfaced four things.</b> <b>(1) The plan ends after the go-live.</b> Its last build week starts <b>28 Sep</b>; TECH-89 (base go-live + sign-off) and the TECH-32 epic are both dated <b>25 Sep</b>. Advanced workflows therefore land three days <i>after</i> sign-off. Either the go-live is explicitly Phase-1-minus-workflows, or both dates move to ~2 Oct. Nothing else on the board resolves this. <b>(2) Two FT-* stories are not in the plan at all</b> — TECH-67 (FT-CASE, the advice case object, ~1 ew net-new) and TECH-89 (go-live + sign-off). Core cases land with Gio 17–31 Aug so reuse is available in time, but the net-new Futura case object is unscheduled; I have drawn go-live into w/c 5 Oct as an inference, flagged as such. <b>(3) Week 4 consumes messaging the same week core finishes it</b> — Sachin wraps TECH-79 and Craig wraps TECH-80 on 24 Aug, which is exactly when Futura wants both. Zero buffer. <b>Cheapest fix: swap Futura weeks 4 and 5</b> — ID/AML + onboarding on 24 Aug, messaging on 31 Aug — which costs nothing and buys a week. <b>(4) Week 5's "ID/AML" is only half available.</b> AML is built and reusable; <b>there is no IDV provider anywhere in the product</b> — iDenfy was dropped, so <code>verify_identity</code> is a manual gate in core too. If Futura accepts the same manual gate, nothing blocks and no core work is needed. If Futura requires automated IDV, that is net-new for <i>both</i> products and is currently scheduled nowhere; Gio's "IDV — provider decision" sits w/c 7 Sep, a week after Futura wants it.<br><br>
+      <b>One dependency that does clear cleanly:</b> week 6's fact-find and suitability need Gio's scoring engine (TECH-74), which lands w/c 10 Aug — about four weeks of buffer. That was the longest chain on the board a revision ago; it is no longer a risk.<br><br>
+      <b>A scope question the alignment exposes.</b> The July plan had Gio and Craig contributing roughly <b>six person-weeks into Starlight during Sep–Oct</b> — doc-gen letters, compliance views, SAR export, MI/reporting and PEP/EDD. With the lanes as set (Gio on portals, Craig on events/notifications) those weeks are now portals work, and the owner's nine-week plan does not include any of that scope. <b>Kieran alone cannot absorb it.</b> So either MI/reporting, compliance views, SAR export and PEP/EDD are out of Futura Phase 1 — legitimately, they read as Phase 1.5 — or they need an owner naming. The tail of §5 assumes the former; if that is wrong, Futura's ≈30%/≈59% is optimistic rather than pessimistic.<br><br>
+      <b>The cost of the wider assignment is that Morgan Lloyd is now Mark alone, with no reinforcement at any point.</b> The previous cut put a second pair of hands on ML from w/c 17 Aug; with Sachin on messaging that is gone, and TAV confidence falls from ≈20% to <b>≈16%</b>. Four MVP stories still have no commits. This is the decision to look at hardest: <b>either ML gets help before 17 Aug, or TAV ships on a partial integration, or it moves.</b><br><br>
+      <b>Three second-order consequences worth naming.</b> (1) <b>SEI has no owner until 31 Aug</b> — the transform port and conform now sit behind messaging, so <code>app/materialise.py</code> stays Seccl-only through <i>both</i> go-lives; if TAV or CR needs SEI data in the portal, this ordering is wrong and should be swapped now, not in September. (2) <b>Nobody touches the adviser portal until 31 Aug</b> — TECH-56 is last in Gio's queue behind client wrap, forms and cases, so the 21 Aug epic date reads ≈14%. (3) <b>Admin drops to ≈33%</b>, not from neglect but from dependency: TECH-58's ops console is saga/recon queues, and the recon it displays does not exist yet.<br><br>
+      <b>Two things to settle in Jira.</b> <b>Sachin's <code>sei_reports</code> production load is unchanged and still unticketed</b> — messaging is ~1.5 ew landing on top of daily reporting for ten live firms, Chester Rose among them, three weeks before CR; the messaging dates assume that BAU is either ticketed and the lane discounted, or handed off. And with Craig owning notifications, <b>TECH-50 and TECH-80 now split across two people</b> — the notification half is Craig's, the profile half Gio's; the tickets should be re-cut along that line rather than both sitting open against the same outbox backend. <b>Gio remains the widest lane</b>: client wrap, forms scoring, cases, adviser and IDV are four distinct workstreams on one person.</p>
+  </section>
+
+  <section>
+    <h2><span class="idx">6</span> Delivery confidence — probability of completion by week</h2>
+    <p class="lede">Per-workstream likelihood that the committed scope is done by each Friday, computed from the <b>capacity-based weekly plan</b> (§5) — independently of the board, and re-anchored on <b>w/c 3 Aug</b> with the remaining scope re-measured against the code. The <b>◆ outlined cell</b> is the week of the <b>Jira due date</b>, and <b>P(hit)</b> is the probability of meeting it; <b>past due</b> means the date has already gone.</p>
+    <div class="hm-legend">
+      <span>Lower confidence</span>
+      <span class="hm-scale" id="hmScale" aria-hidden="true"></span>
+      <span>Higher confidence</span>
+      <span>· <b style="color:#a02020">▸TAV</b> 24&nbsp;Aug &amp; <b style="color:#a02020">▸CR</b> 31&nbsp;Aug go-live · ◆ = Jira due week</span>
+    </div>
+    <div class="scroll">
+      <table class="hm" id="hmTable"></table>
+    </div>
+    <p style="font-size:12.5px;color:var(--muted);margin-top:10px">
+      <b>Reading it.</b> Green&nbsp;≥&nbsp;75%, amber&nbsp;~40–75%, red&nbsp;&lt;&nbsp;40%. Re-computed against the lanes as assigned today (§5). <b>Staffing PD3 is the biggest structural change since the advice engine emptied out</b> — Futura has a dedicated builder and its CORE-reuse dependencies are already delivered. It is now modelled on <b>its owner's own nine-week plan</b> rather than my estimate, which is both more credible and a week longer: <b>≈30% at the 25 Sep board date, ≈59% at 2 Oct</b>. The plan's last build week starts 28 Sep, so <b>the date is the problem, not the lane</b> — re-date TECH-32/89 to ~2 Oct and this reads amber-to-green. <b>Case ops reaches ~100%</b> now that messaging, notifications and cases run on three people in parallel rather than queueing behind one. <b>Client portal rises to ≈67%</b> — Craig taking notifications lifts half of TECH-50 off Gio. <b>Advice engine holds at ≈95%.</b><br><br>
+      <b>But the concentration moved rather than disappeared, and three rows got worse.</b> <b>Morgan Lloyd MVP is ≈2% at its 14&nbsp;Aug date and ≈16% by TAV</b>, down from ≈20%: the previous cut assumed a second pair of hands on ML from w/c 17&nbsp;Aug and there is no longer anyone to be it. <b>Adviser portal falls to ≈14%</b> — not because work was lost but because TECH-56 is now last in Gio's queue and nobody reaches it before 31&nbsp;Aug. <b>Admin falls to ≈33%</b> on a dependency, not neglect: TECH-58 is a saga/recon console and the recon does not exist. And <b>data platform, already past due, now projects to mid&nbsp;Sep</b> because the SEI transform port sits behind messaging — which means the canonical materialiser stays Seccl-only through both go-lives.<br><br>
+      <b>The one decision this chart is asking for is unchanged and now sharper.</b> Every other workstream is green or has slack; ML is red and alone. Three weeks before Tavistock, with four MVP stories at zero commits, the realistic options are to move help onto ML before 17&nbsp;Aug, ship TAV on a partial integration, or move the date — and the first is cheapest while there is still a fortnight in which to spend it.</p>
+  </section>
+
+  <footer>
+    <p><b>Sources.</b> <b>Git history to 2 Aug 2026 across three repositories.</b> <code>portals</code> — 485 commits since 1 Jun, 218 of them 21 Jul–2 Aug (Craig 100 · Gio 81 · Mark 36 · Sachin 1) — read together with the design records those commits landed (<code>docs/flows.md</code>, <code>docs/tasks.md</code>, <code>docs/aml.md</code>, <code>docs/sei.md</code>, <code>docs/platform-model.md</code>, <code>docs/portal-customisation.md</code>) and with direct checks of the code where a doc and a status disagreed. <b>The 30 Jul functional re-audit</b> (<code>docs/audit/VERIFIED-STATUS.md</code> — 210 functions re-verified by six independent passes: 108 working, 88 partial, 5 demo, 9 missing, 0 broken) replaces the 80-function inventory the July baseline used. <code>sei_reports</code> — 313 commits on main (391 by Sachin across all branches), 16 in this fortnight; the live SEI reporting + Intelliflo estate and the 22-model consumption layer, pulled 2 Aug. <code>graphene-platform</code> — 772 commits, <b>dormant since June 2026</b>; the migration source for TECH-75. <b>TECH board</b> (83 issues incl. TECH-86…91; dates as adjusted by Mark) — <b>not re-fetched for this revision</b>, so every "board says" claim here is against the 21 Jul snapshot and the board may since have moved. <code>docs/portals-feature-breakdown.html</code> (basis, re-baselined 20 Jul). Starlight (Futura) specs, graphene-platform, aml-idv-internal as per the basis doc.</p>
+    <p style="margin-bottom:0"><b>Graphene Platforms · Technology</b> — internal delivery roadmap, for review. Confidence figures are AI-assisted planning signals, not commitments.</p>
+  </footer>
+
+</main>
+
+<script>
+(function(){
+  /* ---------- shared ---------- */
+  function cdf(z){var t=1/(1+0.2316419*Math.abs(z));var d=0.3989422804014327*Math.exp(-z*z/2);var p=d*t*(0.31938153+t*(-0.356563782+t*(1.781477937+t*(-1.821255978+t*1.330274429))));return z>0?1-p:p;}
+  function color(p){var h=p*140;var L=76-p*34;var bg='hsl('+h+',68%,'+L+'%)';var txt=L<58?'#fff':'#7a4b00';if(p<0.15)txt='#8a1220';if(p>0.85)txt='#fff';return{bg:bg,txt:txt};}
+
+  /* ---------- 1 · confidence heatmap ---------- */
+  var WEEKS=['3 Aug','10 Aug','17 Aug','24 Aug','31 Aug','7 Sep','14 Sep','21 Sep','28 Sep','5 Oct','12 Oct','19 Oct'];
+  var GOLIVE={3:'TAV',4:'CR'};
+  /* mu/sigma re-cut 2 Aug from the §5 capacity plan against delivered code;
+     jw = Jira due in fractional weeks from w/c 3 Aug (Fri-anchored) — negative means the date has passed */
+  var STREAMS=[
+    {name:'Data platform',         key:'TECH-27', jira:'24 Jul', jw:-2.0, ew:'~1',     proj:'mid Sep',    mu:5.2,  sigma:1.4},
+    {name:'Client portal',         key:'TECH-29', jira:'16 Aug', jw:1.9,  ew:'~1',     proj:'~mid Aug',   mu:1.5,  sigma:0.9},
+    {name:'Adviser portal',        key:'TECH-30', jira:'21 Aug', jw:2.9,  ew:'~1.5',   proj:'early Sep',  mu:4.4,  sigma:1.4},
+    {name:'Admin + settings',      key:'TECH-31', jira:'24 Aug', jw:3.0,  ew:'~1.5',   proj:'early Sep',  mu:3.6,  sigma:1.4},
+    {name:'Morgan Lloyd — MVP',    key:'TECH-28', jira:'14 Aug', jw:1.0,  ew:'~4',     proj:'early Sep',  mu:4.8,  sigma:1.8},
+    {name:'Advice engine',         key:'TECH-71', jira:'3 Sep',  jw:4.4,  ew:'~2',     proj:'late Aug',   mu:2.6,  sigma:1.1},
+    {name:'Case ops & collab',     key:'TECH-72', jira:'28 Sep', jw:8.0,  ew:'~4',     proj:'early Sep',  mu:4.4,  sigma:1.2},
+    {name:'Futura (Starlight)',    key:'TECH-32', jira:'25 Sep', jw:7.6,  ew:'9 wks',  proj:'~2 Oct',     mu:8.3,  sigma:1.3},
+    {name:'ML — full automation',  key:'TECH-88', jira:'2 Oct',  jw:8.6,  ew:'~3',     proj:'mid Oct',    mu:9.8,  sigma:1.8}
+
+  ];
+  var sc=document.getElementById('hmScale');
+  for(var s=0;s<=12;s++){var c=color(s/12);var i=document.createElement('i');i.style.background=c.bg;sc.appendChild(i);}
+  var head='<thead><tr><th class="rowh">Workstream</th><th class="metah">Est left</th><th class="metah">Jira due</th><th class="metah">P(hit)</th><th class="metah">capacity ~50%</th>';
+  for(var w=0;w<WEEKS.length;w++){var gl=GOLIVE[w];head+='<th class="'+(gl?'golive':'')+'">'+WEEKS[w].replace(' ','<br>')+(gl?'<br>▸'+gl:'')+'</th>';}
+  head+='</tr></thead>';
+  var body='<tbody>';
+  STREAMS.forEach(function(st){
+    var ph=Math.round(100*Math.max(0,Math.min(1,cdf((st.jw-st.mu)/st.sigma))));
+    var cls=ph>=75?'ok':(ph>=40?'mid':'bad');
+    var phTxt=st.jw<0?'<b class="bad">past&nbsp;due</b>':'<b class="'+cls+'">'+ph+'%</b>';
+    body+='<tr><td class="rowh">'+st.name+'<span class="k">'+st.key+'</span></td><td class="meta">'+st.ew+'</td><td class="meta">'+st.jira+'</td><td class="meta">'+phTxt+'</td><td class="meta">'+st.proj+'</td>';
+    for(var w=0;w<WEEKS.length;w++){
+      var p=Math.max(0,Math.min(1,cdf((w-st.mu)/st.sigma)));
+      var c=color(p);var cl=(GOLIVE[w]?'gl ':'')+(Math.floor(st.jw)===w?'jd':'');
+      var pct=p<0.005?'·':(''+Math.round(p*100));
+      body+='<td class="'+cl.trim()+'"><span class="cell" style="background:'+c.bg+';color:'+c.txt+'">'+pct+'</span></td>';
+    }
+    body+='</tr>';
+  });
+  body+='</tbody>';
+  document.getElementById('hmTable').innerHTML=head+body;
+
+  /* ---------- 2 · Jira gantt ---------- */
+  var T0=new Date('2026-07-06'), T1=new Date('2026-10-04');           /* 13 weeks */
+  var SPAN=T1-T0;
+  function pct(d){return Math.max(0,Math.min(100,100*(new Date(d)-T0)/SPAN));}
+  var EPICS=[ /* display order = validated palette order (unique colours adjacent); Jira start → due */
+    {id:'data',    key:'TECH-27', name:'Data platform', due:'1 Jul → 24 Jul', col:'var(--e-data)'},
+    {id:'client',  key:'TECH-29', name:'Client portal', due:'1 Jun → 16 Aug', col:'var(--e-client)'},
+    {id:'admin',   key:'TECH-31', name:'Admin + settings', due:'6 Jul → 24 Aug', col:'var(--e-admin)'},
+    {id:'adviser', key:'TECH-30', name:'Adviser portal', due:'1 Jul → 21 Aug', col:'var(--e-adviser)'},
+    {id:'ml',      key:'TECH-28', name:'ML — MVP (TAV)', due:'27 Jun → 14 Aug', col:'var(--e-ml)'},
+    {id:'ml88',    key:'TECH-88', name:'ML — full automation', due:'4 Sep → 2 Oct', col:'var(--e-ml)'},
+    {id:'futura',  key:'TECH-32', name:'Futura (Starlight)', due:'27 Jul → 25 Sep', col:'var(--e-futura)'},
+    {id:'engine',  key:'TECH-71', name:'Advice engine', due:'16 Jul → 3 Sep', col:'var(--e-engine)'},
+    {id:'caseops', key:'TECH-72', name:'Case ops & collab', due:'24 Aug → 28 Sep', col:'var(--e-caseops)'}
+  ];
+  /* s: dev|test|todo · st/d: bar start / Jira due · a: assignee · fl: flag text */
+  var ROWS=[
+    {e:'data',k:'86',t:'Object storage — tenant buckets + S3 creds',s:'done',a:'—',st:'2026-07-06',d:'2026-07-20',fl:'delivered — board still Testing'},
+    {e:'data',k:'34',t:'Per-tenant DuckLake warehouse + data service',s:'done',a:'Sachin',st:'2026-07-06',d:'2026-07-24'},
+    {e:'data',k:'87',t:'Seccl — sync · webhooks · marts · fan-out',s:'done',a:'Sachin',st:'2026-07-13',d:'2026-07-24',fl:'and conformed + materialised to OLTP, 2 Aug'},
+    {e:'data',k:'33',t:'SEI ingestion + transforms',s:'dev',a:'Sachin',st:'2026-07-01',d:'2026-07-24',fl:'ingest landed 28 Jul (Mark) — transforms unported + ungated'},
+    {e:'data',k:'—',t:'Canonical platform model + materialiser (0041/0043)',s:'done',a:'Mark',st:'2026-07-28',d:'2026-08-02',fl:'unticketed'},
+    {e:'client',k:'47',t:'Dashboard + accounts / performance',s:'done',a:'Gio',st:'2026-06-01',d:'2026-07-25'},
+    {e:'client',k:'48',t:'Transactions list',s:'done',a:'Gio',st:'2026-07-12',d:'2026-07-25',fl:'absorbed into the activity widget'},
+    {e:'client',k:'49',t:'Documents — backend + list / view',s:'done',a:'Craig',st:'2026-06-01',d:'2026-07-31'},
+    {e:'client',k:'81',t:'Document generation — Jinja2 / WeasyPrint',s:'done',a:'—',st:'2026-06-09',d:'2026-08-10'},
+    {e:'client',k:'51',t:'Onboarding (initial build)',s:'done',a:'—',st:'2026-07-10',d:'2026-08-15',fl:'delivered on the v2 flows engine, 24 Jul'},
+    {e:'client',k:'52',t:'Payments / withdrawals · drawdown',s:'dev',a:'—',st:'2026-07-27',d:'2026-08-10',fl:'deposit/withdraw + ML drawdown in — nothing settles an instruction'},
+    {e:'client',k:'50',t:'Notifications · comms inbox · profile',s:'todo',a:'Gio',st:'2026-08-01',d:'2026-08-07',fl:'due Friday · outbox exists, no bell / inbox / profile UI'},
+    {e:'client',k:'—',t:'Portal composition — pages · blocks · looks · studio',s:'done',a:'Gio',st:'2026-07-29',d:'2026-07-31',fl:'unticketed'},
+    {e:'admin',k:'59',t:'Settings — tenants · branding · users + fields/terms',s:'done',a:'—',st:'2026-07-07',d:'2026-07-26'},
+    {e:'admin',k:'60',t:'Document admin — taxonomy / hard-delete / audit',s:'test',a:'Craig',st:'2026-07-14',d:'2026-08-01',fl:'taxonomy + audit log in; hard-delete outstanding'},
+    {e:'admin',k:'58',t:'Ops console — saga / recon / queues',s:'dev',a:'Mark',st:'2026-07-27',d:'2026-08-10',fl:'platforms cockpit · storage browser · AML console in; saga/recon absent'},
+    {e:'admin',k:'—',t:'Firm-configured catalogue (0042) + admin pages',s:'done',a:'Mark',st:'2026-07-31',d:'2026-08-02',fl:'unticketed'},
+    {e:'adviser',k:'53',t:'Dashboard — AUM / clients / accounts',s:'done',a:'Gio',st:'2026-07-14',d:'2026-07-27'},
+    {e:'adviser',k:'54',t:'Clients + accounts (search / list)',s:'done',a:'Gio',st:'2026-07-01',d:'2026-07-27',fl:'+ account detail, on the new DataTable'},
+    {e:'adviser',k:'55',t:'Contributions (ML) + transfers (ML) UI',s:'done',a:'Mark',st:'2026-07-21',d:'2026-07-27',fl:'scope changed — contributions retired to the action-required queue'},
+    {e:'adviser',k:'56',t:'Illustration builder UI + transactions',s:'dev',a:'Craig',st:'2026-07-28',d:'2026-08-11',fl:'CTC API in; builder UI absent, transactions still fixtures'},
+    {e:'adviser',k:'57',t:'Workflows / applications',s:'done',a:'Craig',st:'2026-07-28',d:'2026-08-11',fl:'Applications UI + Journeys board, 24 Jul (Gio)'},
+    {e:'ml',k:'41',t:'Illustration / CTC — XML v1.6',s:'done',a:'Mark',st:'2026-07-13',d:'2026-07-31',fl:'43 tests vs the vendor spec; document_location open till the first live call'},
+    {e:'ml',k:'42',t:'Drawdown / benefits + SFTP ingest',s:'done',a:'Mark',st:'2026-07-13',d:'2026-07-31'},
+    {e:'ml',k:'37',t:'Transfers (D) + OData / Azure-AD client',s:'dev',a:'Mark',st:'2026-06-27',d:'2026-07-25',fl:'AAD/OData client live; transfer write-path has no commits'},
+    {e:'ml',k:'38',t:'Daily valuations push',s:'dev',a:'Mark',st:'2026-07-11',d:'2026-07-25',fl:'sink landed 21 Jul as a stub'},
+    {e:'ml',k:'40',t:'Contributions + HMRC Relief-at-Source',s:'todo',a:'Mark',st:'2026-06-27',d:'2026-07-25',fl:'no commits — board says Development'},
+    {e:'ml',k:'43',t:'Reconciliation control (three-way)',s:'todo',a:'Mark',st:'2026-07-26',d:'2026-08-09',fl:'no commits — board says Development'},
+    {e:'ml',k:'39',t:'Account-open saga (SEI + ML)',s:'todo',a:'Mark',st:'2026-07-26',d:'2026-08-14',fl:'no commits · gates TAV · 22 days'},
+    {e:'ml88',k:'44',t:'Recon hardening — sign-off · alerting',s:'todo',a:'—',st:'2026-09-04',d:'2026-09-17'},
+    {e:'ml88',k:'45',t:'Fees — calculate / collect / pay + recon',s:'todo',a:'—',st:'2026-09-10',d:'2026-09-24'},
+    {e:'ml88',k:'46',t:'Death / beneficiary process',s:'todo',a:'—',st:'2026-09-18',d:'2026-10-02'},
+    {e:'futura',k:'66',t:'Copy + strip to single-tenant (FT-ST)',s:'todo',a:'Kieran',st:'2026-07-27',d:'2026-08-10',fl:'past start — Kieran picks it up 3 Aug'},
+    {e:'futura',k:'65',t:'Branding — studio config (FT-BR)',s:'dev',a:'Kieran',st:'2026-07-27',d:'2026-08-10',fl:'multi-tenant studio landed 31 Jul — Futura config remains'},
+    {e:'futura',k:'70',t:'Deploy + migration + pilot env (FT-GO)',s:'todo',a:'Kieran',st:'2026-07-27',d:'2026-08-10',fl:'go-live split → FT-GO2'},
+    {e:'futura',k:'61',t:'Fact-find engine — CORE reuse',s:'todo',a:'—',st:'2026-08-11',d:'2026-08-25',fl:'gated on TECH-74 scoring, which is not built'},
+    {e:'futura',k:'62',t:'Risk-profiler engine — CORE reuse',s:'todo',a:'—',st:'2026-08-11',d:'2026-08-25',fl:'gated on TECH-74 scoring, which is not built'},
+    {e:'futura',k:'69',t:'Doc-gen — Futura letter / suitability (FT-DOC)',s:'todo',a:'—',st:'2026-08-11',d:'2026-08-25',fl:'CORE doc-gen engine already live'},
+    {e:'futura',k:'63',t:'Workflow + task engine — CORE reuse',s:'todo',a:'—',st:'2026-08-26',d:'2026-09-09',fl:'CORE engine + tasks delivered — reuse'},
+    {e:'futura',k:'64',t:'Onboarding / applications — CORE reuse',s:'todo',a:'—',st:'2026-08-26',d:'2026-09-09',fl:'CORE v2 applications delivered 24 Jul'},
+    {e:'futura',k:'67',t:'Cases — advice case object (FT-CASE)',s:'todo',a:'—',st:'2026-09-11',d:'2026-09-25'},
+    {e:'futura',k:'68',t:'Messaging + notifications (FT-MSG)',s:'todo',a:'—',st:'2026-09-11',d:'2026-09-25'},
+    {e:'futura',k:'89',t:'Go-live + sign-off (FT-GO2, split from FT-GO)',s:'todo',a:'—',st:'2026-09-18',d:'2026-09-25'},
+    {e:'engine',k:'73',t:'Workflow engine — modular, per-tenant',s:'done',a:'Sachin',st:'2026-08-01',d:'2026-09-03',fl:'delivered 24 Jul as flows v2 (Gio) — 5 wks early'},
+    {e:'engine',k:'76',t:'ID/AML — provider-abstracted, unified case',s:'test',a:'Gio',st:'2026-08-01',d:'2026-08-15',fl:'AML delivered 29 Jul; IDV has no provider — manual gate'},
+    {e:'engine',k:'75',t:'Applications — migrate from graphene-platform',s:'test',a:'Sachin',st:'2026-08-01',d:'2026-08-15',fl:'v2 applications delivered 24 Jul (Gio); custody hand-off remains'},
+    {e:'engine',k:'74',t:'Forms engine — fact-find · risk · suitability',s:'dev',a:'Gio',st:'2026-07-17',d:'2026-07-31',fl:'past due — builder + API in, no scoring or suitability engine'},
+    {e:'caseops',k:'78',t:'Tasks — engine · queue · bulk',s:'done',a:'—',st:'2026-08-31',d:'2026-09-14',fl:'all four phases 25 Jul — 7 wks early'},
+    {e:'caseops',k:'77',t:'Cases — object · record · LOA',s:'dev',a:'Gio',st:'2026-08-17',d:'2026-09-07',fl:'Journeys board in; LOA + close absent'},
+    {e:'caseops',k:'80',t:'Notifications — bell · email · channel matrix',s:'dev',a:'Craig',st:'2026-08-03',d:'2026-09-28',fl:'starts 3 Aug'},
+    {e:'caseops',k:'79',t:'Messages — secure client↔adviser',s:'todo',a:'Sachin',st:'2026-08-03',d:'2026-09-28',fl:'starts 3 Aug'}
+  ];
+  var GW=['6 Jul','13 Jul','20 Jul','27 Jul','3 Aug','10 Aug','17 Aug','24 Aug','31 Aug','7 Sep','14 Sep','21 Sep','28 Sep'];
+  var MS=[{d:'2026-08-02',n:'today',cls:'today'},{d:'2026-08-24',n:'TAV'},{d:'2026-08-31',n:'CR'},{d:'2026-09-25',n:'FUT'}];
+  var STL={dev:['st-dev','DEV'],test:['st-test','TEST'],todo:['st-todo','TO DO'],done:['st-done','✔']};
+  var g='<div class="ghead"><div class="glab">Story (epic-grouped · Jira due)</div><div class="gwks">';
+  GW.forEach(function(wk){g+='<span>'+wk+'</span>';});
+  g+='</div></div>';
+  function msHtml(withLabel){
+    return MS.map(function(m){return '<i class="gms '+(m.cls||'')+'" style="left:'+pct(m.d)+'%">'+(withLabel?'<b>'+m.n+'</b>':'')+'</i>';}).join('');
+  }
+  EPICS.forEach(function(ep){
+    g+='<div class="grow gepic"><div class="glab"><i style="background:'+ep.col+'"></i>'+ep.key+' — '+ep.name+'<span class="gdue">'+ep.due+'</span></div><div class="gtrack">'+msHtml(true)+'</div></div>';
+    ROWS.filter(function(r){return r.e===ep.id;}).forEach(function(r){
+      var x0=pct(r.st), x1=pct(r.d), sst=STL[r.s];
+      g+='<div class="grow"><div class="glab"><span class="gt-status '+sst[0]+'">'+sst[1]+'</span><b>TECH-'+r.k+'</b> '+r.t+' <span class="who">· '+r.a+'</span></div>'
+       +'<div class="gtrack">'+msHtml(false)
+       +'<span class="gbar '+r.s+(r.late?' late':'')+'" style="left:'+x0+'%;width:'+Math.max(1,(x1-x0))+'%;background:'+ep.col+'"></span>'
+       +(r.fl?'<span class="gflag" style="left:'+(x1+1)+'%">⚠ '+r.fl+'</span>':'')
+       +'</div></div>';
+    });
+  });
+  document.getElementById('gantt').innerHTML=g;
+})();
+</script>
+</body>
+</html>

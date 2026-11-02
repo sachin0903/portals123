@@ -1,0 +1,70 @@
+[project]
+name = "intelliflo-sync"
+version = "0.0.0"
+description = "Intelliflo Office integration engine — scheduled SEI-to-Intelliflo sync, tenant sync, webhook receiver"
+requires-python = ">=3.12"
+dependencies = [
+  "psycopg2-binary>=2.9.9",
+  "apscheduler>=3.10.0",
+  "requests>=2.31.0",          # outgoing Intelliflo API calls + Slack webhook notifications
+  "resend>=2.0.0",              # email notifications
+  "pydantic>=2.9",
+  "pydantic-settings>=2.5",
+  "duckdb==1.5.4",              # read-only attach to the shared SEI core catalogue (shared/lake.py)
+  "PyYAML>=6.0.0",               # migrations/seed.py's local.yaml
+  "nanoid>=2.0.0",
+  "fastapi>=0.135.3",
+  "uvicorn>=0.44.0",
+]
+
+[project.scripts]
+intelliflo-engine = "intelliflo_sync.scheduler:run"
+intelliflo-engine-run = "intelliflo_sync.main:run"
+intelliflo-engine-webhook = "intelliflo_sync.webhook.server:start"
+intelliflo-tenant-sync = "intelliflo_sync.tenant_scheduler:run"
+intelliflo-tenant-sync-run = "intelliflo_sync.tenant_scheduler:run_once"
+intelliflo-seed = "intelliflo_sync.migrations.seed:run"
+
+[dependency-groups]
+dev = [
+  "ruff>=0.6",
+  "mypy>=1.11",
+  "pytest>=8.3",
+  "types-psycopg2>=2.9",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/intelliflo_sync"]
+
+[tool.ruff]
+# 120, not the 100 services/sei and services/seccl use: this package carries inline SQL (db.py,
+# migrate.py) ported verbatim from sei_reports, and reflowing working SQL text for 15-20 extra
+# characters is cosmetic risk for no readability gain. 120 clears nearly all of it; the handful
+# of genuine long lines left (log messages, docstrings) are wrapped by hand.
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "C4"]
+
+[tool.ruff.lint.per-file-ignores]
+# E402: these tests deliberately group a section's imports next to the tests that use them,
+# not all at the top of the file. (No "S" ruleset here — bandit checks like S101 aren't selected
+# below — so there's nothing to ignore for assert/test-secret literals.)
+"tests/*" = ["E402"]
+
+[tool.mypy]
+python_version = "3.12"
+plugins = ["pydantic.mypy"]
+
+# duckdb, apscheduler, resend and nanoid ship no type stubs.
+[[tool.mypy.overrides]]
+module = ["duckdb", "apscheduler.*", "resend", "nanoid"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

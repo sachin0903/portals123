@@ -1,0 +1,40 @@
+# https://moonrepo.dev/docs/config/workspace
+# Required file. Declares which folders are moon projects.
+projects:
+  - 'apps/*'
+  - 'pkgs/*'
+  - 'services/*'
+  # services/integrations/ is a bare namespace folder (more providers than Intelliflo are
+  # expected), not a project itself — hence a second glob rather than widening 'services/*'.
+  - 'services/integrations/*'
+
+vcs:
+  client: 'git'
+  defaultBranch: 'main'
+
+  # Git hooks, moon's own (they replaced lefthook). `moon sync vcs-hooks` writes them to
+  # `.moon/hooks/` and points `core.hooksPath` there, so `.git/hooks` is no longer used at all.
+  # `sync: true` regenerates them whenever a moon command runs, so editing this block is enough —
+  # there is no separate install step to forget. A fresh clone gets them from `pnpm install`
+  # (the root `prepare` script) before any moon command has run.
+  sync: true
+  # bash, EXPLICITLY. The generated script's shebang decides which shell parses it, and the old
+  # lefthook setup needed a `.lefthookrc` shim precisely because it generated `sh` — under dash the
+  # hooks aborted every commit. Naming bash here is what makes that class of problem not exist.
+  hookFormat: 'bash'
+  hooks:
+    pre-commit:
+      # proto's shims on PATH FIRST, and it has to be first: the entries below become lines in one
+      # bash script, so this export carries to all of them. A commit from a GUI or IDE does not
+      # source the interactive shell profile, so without it `uv`, `pnpm` and `moon` are
+      # "command not found" — which reads as a broken repo rather than a missing PATH.
+      - 'export PATH="${PROTO_HOME:-$HOME/.proto}/shims:${PROTO_HOME:-$HOME/.proto}/bin:$PATH"'
+      - './scripts/hooks/format-staged.sh'
+    commit-msg:
+      - 'export PATH="${PROTO_HOME:-$HOME/.proto}/shims:${PROTO_HOME:-$HOME/.proto}/bin:$PATH"'
+      - './scripts/hooks/conventional-commit.sh "$1"'
+    pre-push:
+      - 'export PATH="${PROTO_HOME:-$HOME/.proto}/shims:${PROTO_HOME:-$HOME/.proto}/bin:$PATH"'
+      # The gates CI runs, scoped to what the branch changed (`moon ci --base`). The script says
+      # what runs, in what order, and why.
+      - './scripts/hooks/pre-push.sh'

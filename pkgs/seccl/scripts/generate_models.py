@@ -1,0 +1,181 @@
+"""Generate the pydantic models from the merged schemas.
+
+Thin wrapper around datamodel-code-generator: `build_schemas.py` has already done the
+thinking, so this only fixes the flags the models depend on and keeps every module
+generated the same way.
+
+Why these flags:
+
+* `--snake-case-field` with `--allow-population-by-field-name`: Seccl speaks camelCase, the
+  rest of this codebase snake_case. Aliases carry the wire names, `populate_by_name` means
+  a caller can build a model either way, and `model_dump(by_alias=True)` gives Seccl what
+  it expects.
+* `--use-annotated`: constraints and aliases land in `Annotated[...]` rather than mutating
+  the default, so a field with an alias can still be required.
+* `--reuse-model` + `--collapse-reuse-models`: the merged schemas repeat structurally
+  identical sub-objects across shapes (a create body's `bankDetails` is the read shape's);
+  reuse points them at one class instead of emitting empty subclasses.
+* `--use-field-description`: puts the "observed values" notes from the schemas into the
+  field docstrings, which is where someone deciding what to send will look.
+* `--formatters builtin` and then ruff by hand, with `--config` pointed at this package:
+  ruff resolves its configuration from the *file being formatted*, so letting
+  datamodel-codegen invoke it means output written anywhere but src/ silently gets ruff's
+  88-column defaults instead of this package's 100 and no import sorting. Formatting has to
+  be identical wherever the generator runs, or the staleness gate compares two conventions
+  and always fails.
+* `--target-python-version 3.13` + `--use-union-operator`: `str | None`, matching the rest
+  of the tree.
+
+Run via `moon run seccl:generate-models`; `seccl:test` fails if the checked-in modules
+drift from the schemas.
+"""
+
+from __future__ import annotations
+
+import json
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+from typing import Any
+
+ROOT = Path(__file__).resolve().parent.parent
+SCHEMA_DIR = ROOT / "src" / "seccl" / "schemas"
+MODEL_DIR = ROOT / "src" / "seccl" / "models"
+
+FLAGS = (
+    "--input-file-type",
+    "jsonschema",
+    "--output-model-type",
+    "pydantic_v2.BaseModel",
+    "--target-python-version",
+    "3.13",
+    "--snake-case-field",
+    "--allow-population-by-field-name",
+    "--use-annotated",
+    "--use-union-operator",
+    "--use-standard-collections",
+    "--use-field-description",
+    "--reuse-model",
+    "--collapse-reuse-models",
+    "--formatters",
+    "builtin",
+)
+
+CONFIG = ROOT / "pyproject.toml"
+
+HEADER = '''"""{title} models, generated from the vendored Postman collection.
+
+Do not edit by hand: `moon run seccl:build-schemas && moon run seccl:generate-models`.
+The types are inferred from {count} example payload(s), not from a published schema --
+see pkgs/seccl/README.md for what that does and does not buy you.
+"""
+'''
+
+
+def generate(schema: Path, target: Path | None = None) -> str:
+    """Generate one module and return its resource name.
+
+    `target` exists so the staleness gate can generate elsewhere and compare, running this
+    exact pipeline rather than a second copy of it that drifts.
+    """
+    if target is None:
+        MODEL_DIR.mkdir(parents=True, exist_ok=True)
+        target = MODEL_DIR / f"{schema.stem}.py"
+    _run(_tool("datamodel-codegen"), "--input", str(schema), "--output", str(target), *FLAGS)
+    _prepend_header(schema, target)
+    format_module(target)
+    return schema.stem
+
+
+def format_module(path: Path) -> None:
+    """Sort imports and format, with this package's config regardless of where `path` is."""
+    ruff = _tool("ruff")
+    _run(ruff, "check", "--quiet", "--fix-only", "--config", str(CONFIG), str(path))
+    _run(ruff, "format", "--quiet", "--config", str(CONFIG), str(path))
+
+
+def _tool(name: str) -> str:
+    """Resolve a dev-dependency binary to a full path, so the failure when it is absent
+    says which tool to install rather than surfacing as a bare FileNotFoundError."""
+    found = shutil.which(name)
+    if found is None:
+        sys.exit(f"{name} not found: run `uv sync` in pkgs/seccl (it is a dev dependency)")
+    return found
+
+
+def _run(*argv: str) -> None:
+    subprocess.run(argv, check=True, cwd=ROOT)  # noqa: S603 - fixed argv, resolved binary
+
+
+def _prepend_header(schema: Path, module: Path) -> None:
+    """Replace the generator's own banner (which carries a timestamp, so every run would
+    show as a diff) with a docstring that says how to regenerate."""
+    doc = json.loads(schema.read_text())
+    count = sum(
+        int(d.get("description", "").rsplit("inferred from ", 1)[-1].split(" ", 1)[0])
+        for d in doc["$defs"].values()
+        if "inferred from " in d.get("description", "")
+    )
+    lines = module.read_text().split("\n")
+    body = [
+        ln
+        for ln in lines
+        if not ln.startswith("#   ") and ln != "# generated by datamodel-codegen:"
+    ]
+    module.write_text(HEADER.format(title=doc["title"], count=count) + "\n".join(body).lstrip("\n"))
+
+
+def main() -> None:
+    schemas = sorted(SCHEMA_DIR.glob("*.json"))
+    if not schemas:
+        sys.exit("no schemas: run scripts/build_schemas.py first")
+    written = [generate(schema) for schema in schemas]
+    _write_package_init(written)
+    print(f"generated {len(written)} model modules in {MODEL_DIR.relative_to(ROOT)}")
+
+
+def _write_package_init(resources: list[str]) -> None:
+    """Re-export the three *shapes* of each resource, so a caller writes
+    `from seccl.models import Account` rather than tracking the collection's lowercase path
+    spelling.
+
+    Only the shapes: the nested concepts (`BankDetails`, `AuditDetails`, `Client` as an
+    account's embedded client...) stay module-local. Two resources can and do give the same
+    name to different nested objects, so re-exporting everything would resolve `Client` to
+    whichever module imported last -- a silent wrong type. Import those from their module.
+    """
+    exports: list[tuple[str, list[str]]] = []
+    for resource in resources:
+        doc = json.loads((SCHEMA_DIR / f"{resource}.json").read_text())
+        stem = str(doc["title"])
+        shapes = [name for name in (stem, f"{stem}Create", f"{stem}Update") if _emitted(doc, name)]
+        exports.append((resource, shapes))
+    lines = [
+        '"""Generated Seccl payload models -- see models/<resource>.py.',
+        "",
+        "Regenerate with `moon run seccl:build-schemas && moon run seccl:generate-models`.",
+        "Nested types (BankDetails, AuditDetails, ...) live in their resource's module: the",
+        "same name means different things across resources, so they are not re-exported.",
+        '"""',
+        "",
+        "from __future__ import annotations",
+        "",
+    ]
+    for resource, names in exports:
+        joined = ", ".join(names)
+        lines.append(f"from seccl.models.{resource} import {joined}")
+    lines += ["", "__all__ = ["]
+    lines += [f'    "{name}",' for _, names in exports for name in names]
+    lines += ["]", ""]
+    (MODEL_DIR / "__init__.py").write_text("\n".join(lines))
+    format_module(MODEL_DIR / "__init__.py")
+
+
+def _emitted(doc: dict[str, Any], name: str) -> bool:
+    """Whether the document defines this shape -- as its root, or under `$defs`."""
+    return doc.get("title") == name or name in doc.get("$defs", {})
+
+
+if __name__ == "__main__":
+    main()

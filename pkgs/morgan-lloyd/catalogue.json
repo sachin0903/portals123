@@ -1,0 +1,2776 @@
+{
+  "cam_1399001GetNextWorkingDay": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "InputDate",
+        "type": "DateTimeOffset"
+      },
+      {
+        "collection": false,
+        "name": "InputDays",
+        "type": "Int32"
+      }
+    ],
+    "returns": "cam_1399001GetNextWorkingDayResponse"
+  },
+  "cam_7200MSBookingsmissingcontactemail": {
+    "bound": true,
+    "params": [
+      {
+        "collection": false,
+        "name": "entity",
+        "type": "cam_annualreview"
+      },
+      {
+        "collection": false,
+        "name": "ContactName",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "Advisor",
+        "type": "systemuser"
+      }
+    ],
+    "returns": null
+  },
+  "cam_CreateFinancialAdviserContact": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "accountId",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "title",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "firstName",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "lastName",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "emailAddress",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_CreateFinancialAdviserContactResponse"
+  },
+  "cam_Createfactfind": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "ClientId",
+        "type": "String"
+      }
+    ],
+    "returns": null
+  },
+  "cam_GetContactSharePointFolder": {
+    "bound": true,
+    "params": [
+      {
+        "collection": false,
+        "name": "entity",
+        "type": "contact"
+      },
+      {
+        "collection": false,
+        "name": "CheckApplicationFolder",
+        "type": "Boolean"
+      }
+    ],
+    "returns": "cam_GetContactSharePointFolderResponse"
+  },
+  "cam_GetDeferredDate": {
+    "bound": true,
+    "params": [
+      {
+        "collection": false,
+        "name": "entity",
+        "type": "as_schemememberevent"
+      }
+    ],
+    "returns": "cam_GetDeferredDateResponse"
+  },
+  "cam_GetNextTaxFreeCashProcessDates": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "InputDate",
+        "type": "DateTimeOffset"
+      },
+      {
+        "collection": false,
+        "name": "Months",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "Direction6",
+        "type": "Int32"
+      }
+    ],
+    "returns": "cam_GetNextTaxFreeCashProcessDatesResponse"
+  },
+  "cam_GetPaymentNotificationHtml": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "ProcessDate",
+        "type": "DateTimeOffset"
+      }
+    ],
+    "returns": "cam_GetPaymentNotificationHtmlResponse"
+  },
+  "cam_GetTaskOwner": {
+    "bound": true,
+    "params": [
+      {
+        "collection": false,
+        "name": "entity",
+        "type": "contact"
+      }
+    ],
+    "returns": "cam_GetTaskOwnerResponse"
+  },
+  "cam_GetTaxFreeCashPaymentDate": {
+    "bound": true,
+    "params": [
+      {
+        "collection": false,
+        "name": "entity",
+        "type": "as_schemememberevent"
+      }
+    ],
+    "returns": "cam_GetTaxFreeCashPaymentDateResponse"
+  },
+  "cam_HubwiseTransfer": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "ReRun",
+        "type": "Boolean"
+      },
+      {
+        "collection": false,
+        "name": "RunDate",
+        "type": "DateTimeOffset"
+      }
+    ],
+    "returns": null
+  },
+  "cam_MergeSharePointDocumentLocation": {
+    "bound": true,
+    "params": [
+      {
+        "collection": false,
+        "name": "entity",
+        "type": "sharepointdocumentlocation"
+      },
+      {
+        "collection": false,
+        "name": "Source",
+        "type": "sharepointdocumentlocation"
+      }
+    ],
+    "returns": null
+  },
+  "cam_PSD002ExceltoXML": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "xlsxInput",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_PSD002ExceltoXMLResponse"
+  },
+  "cam_ProcessBankInterestBatch": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "BatchPayloadJson",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_ProcessBankInterestBatchResponse"
+  },
+  "cam_ReturnFrequencyMonths": {
+    "bound": true,
+    "params": [
+      {
+        "collection": false,
+        "name": "entity",
+        "type": "as_schemememberevent"
+      }
+    ],
+    "returns": "cam_ReturnFrequencyMonthsResponse"
+  },
+  "cam_amenddrawdown": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "schemeMemberEventId",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "drawdownOption",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "regularIncomeAmount",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "taxFreeIncomeAmount",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "incomeFrequency",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "paymentDay",
+        "type": "Int32"
+      }
+    ],
+    "returns": "crmbaseentity"
+  },
+  "cam_batchprocessincomepayments": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "CheckDate",
+        "type": "DateTimeOffset"
+      }
+    ],
+    "returns": "cam_batchprocessincomepaymentsResponse"
+  },
+  "cam_bulkupdatemoneyinfoids": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "contactUpdates",
+        "type": "String"
+      }
+    ],
+    "returns": "crmbaseentity"
+  },
+  "cam_bulkupdatepolicies": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "policyUpdates",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_bulkupdatepoliciesResponse"
+  },
+  "cam_bulkupdateschemes": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "schemeUpdates",
+        "type": "String"
+      }
+    ],
+    "returns": "crmbaseentity"
+  },
+  "cam_canceldrawdown": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "schemeMemberEventId",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "policyNumber",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "withdrawalType",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "withdrawalId",
+        "type": "Int32"
+      }
+    ],
+    "returns": "crmbaseentity"
+  },
+  "cam_createapiaudit": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "endpointName",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "note",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "isDocument",
+        "type": "Boolean"
+      }
+    ],
+    "returns": null
+  },
+  "cam_createbankstatement": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "bankInterface",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "filename",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "bankStatement",
+        "type": "String"
+      }
+    ],
+    "returns": "crmbaseentity"
+  },
+  "cam_createbeneficiaries": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "schemeReference",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_nameofbeneficiary",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_percentageoffund",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_nominationdate",
+        "type": "DateTimeOffset"
+      },
+      {
+        "collection": false,
+        "name": "cam_relationship",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_address_line1",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_address_line2",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_address_line3",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_city",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_county",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_postcode",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_country",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_createbeneficiariesResponse"
+  },
+  "cam_createclientfactfind": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "cam_factfindid",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_client",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_meetingdate",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_attendeesclient",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_attendeesadviser",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_placeofbirth",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_employmentstatus",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_occupation",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_employername",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_dateofjoiningscheme",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_grosssalaryincome",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_bonusovertimefeescommissionetc",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_valueofbenefitsinkind",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_bankbuildingsocietydeposits",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_investmentssavings",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_dividendsfromshares",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_rentinvestmentproperty",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_statebenefits",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_trustincome",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_annuity",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_statepension",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_occupationalpensions",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_privatepensions",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_essentialhouseholdexpenses",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_discretionaryhouseholdexpenses",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_mortgage",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_rent",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_othermortgagessecuredloan",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_loanrepayments",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_creditcardrepayments",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_counciltax",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_buildingscontentsinsurance",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_lifehealthinsurances",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_otherinsurances",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_savingsinvestment",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_utilities",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_foodhousekeeping",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_transport",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_telephone",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_tvcosts",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_clothinghouseholdmaintenance",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_schooleducationfees",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_travelholidays",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_hobbiessocialising",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_discretionaryspending",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_otherspending",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_mywillisdated",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_doyouhaveawill",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_isituptodatealignwithyourcurrentwishes",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_doyouhavealastingpowerofattorney",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_areyouthebeneficiaryofatrusttrustincome",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_smoker",
+        "type": "Boolean"
+      },
+      {
+        "collection": false,
+        "name": "cam_stateofhealthmedicalconditions",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_needsobjectives1",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_needsobjectives2",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_needsobjectives3",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_needsobjectives4",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_needsobjectives5",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_needsobjectives6",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_needsobjectives7",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_needsobjectives8",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_needsobjectivesnotes",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_priority1",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_priority2",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_priority3",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_priority4",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_priority5",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_priority6",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_priority7",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_priority8",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_risklevel",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_atrcomments",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_agreedcapacityforloss",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_capacityforlosscomments",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_suitabilityconfirmation",
+        "type": "Int32"
+      }
+    ],
+    "returns": "cam_createclientfactfindResponse"
+  },
+  "cam_createcontact": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "cam_title",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "as_contactstatus",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "firstname",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "middlename",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "lastname",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "telephone1",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "telephone2",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "mobilephone",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "emailaddress1",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_nationality",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "gendercode",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "familystatuscode",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_ninumber",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "address1_line1",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "address1_line2",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "address1_line3",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "address1_city",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "address1_county",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "address1_postalcode",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_birthdate",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_retirementageint",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_employmentstatus",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_annualearnings",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_sourceofwealth",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_sourceofwealthstring",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_previouslytakenflexiaccessbenefits",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_FinancialAdviserContact",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_financialadviser_Account",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_taxrelief",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_externalclientid",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_potentiallyvulnerable",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_contactvulnerability",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_vulnerabilityaddedby",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_additionalvulnerabilitynotes",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_relevantbusinessunit",
+        "type": "Int32"
+      }
+    ],
+    "returns": "cam_createcontactResponse"
+  },
+  "cam_createcontribution": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "cam_investorref",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "schemeReference",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_contributiontype",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_contributor",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_frequency",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_amount",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_prefundedrasamount",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_startdate",
+        "type": "DateTimeOffset"
+      },
+      {
+        "collection": false,
+        "name": "cam_status",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_employerothername",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_addressline1",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_addressline2",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_addressline3",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_city",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_county",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_postcode",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_phone",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_email",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_createcontributionResponse"
+  },
+  "cam_createmessage": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "cam_documentref",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_attachmentflag",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_threadref",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_messagetype",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_text",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_flag",
+        "type": "Int32"
+      }
+    ],
+    "returns": "cam_createmessageResponse"
+  },
+  "cam_createnote": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "objectid",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "entityType",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "subject",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "notetext",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_createnoteResponse"
+  },
+  "cam_createpolicyeventsfrommovements": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "accountMovements",
+        "type": "String"
+      }
+    ],
+    "returns": null
+  },
+  "cam_createpolicyvaluation": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "policyValuation",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "provider",
+        "type": "String"
+      }
+    ],
+    "returns": "crmbaseentity"
+  },
+  "cam_createpolicyvaluationsfromcsv": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "valuationDate",
+        "type": "DateTimeOffset"
+      },
+      {
+        "collection": false,
+        "name": "csvFile",
+        "type": "String"
+      }
+    ],
+    "returns": "crmbaseentity"
+  },
+  "cam_createscheme": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "beneficiaryFund",
+        "type": "Boolean"
+      },
+      {
+        "collection": false,
+        "name": "benefitApplicationId",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "schemeType",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "sippType",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "contactId",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "ongoingAdviserFeePercentage",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "platformFeePercentage",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "investmentCostsPercentage",
+        "type": "Decimal"
+      }
+    ],
+    "returns": "cam_createschemeResponse"
+  },
+  "cam_createtask": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "regardingobjectid",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "entityType",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "ownerid",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "ownerEntityType",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "subject",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "description",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "scheduledend",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_createtaskResponse"
+  },
+  "cam_createthread": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "cam_threadref",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_subject",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_contactref",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_createthreadResponse"
+  },
+  "cam_createtransfer": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "cam_policyno",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "schemeReference",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_policyholder",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_providername",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_provideraddressline1",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_provideraddressline2",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_provideraddressline3",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_providercity",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_providercounty",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_providerpostcode",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_assettype",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_status",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_uncrystalllisedtransfervalue",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_crystallisedtransfervalue",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_nonprtv",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_typeoftransfer",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_transfertype",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_earmarking",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_sharing",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_splitting",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_crystallised",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_drawdowntype",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_pensiontype",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "transferNotes",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_createtransferResponse"
+  },
+  "cam_createupdateaccount": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "accountid",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "name",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "contactid",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_createupdateaccountResponse"
+  },
+  "cam_createupdateliability": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "cam_contact",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_liabilityid",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_liabilitytype",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_balance",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_interestrate",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_enddate",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_mortgagetype",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_lendernamestring",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_strategytorepay",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "jointLiabilities",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_createupdateliabilityResponse"
+  },
+  "cam_createupdatepersonalasset": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "cam_policyholderid",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_personalpolicyid",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_status",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_assettype",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_nonprcv",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_dateofvaluation",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_approxcostofacquisition",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_ownersince",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_investmenttype",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_providername",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_wrapperapplication",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_pensiontype",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_protectiontype",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_protectioninitialsumassured",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_protectionpremium",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_protectionpremiumbasis",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_protectionfrequency",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_deferralperiod",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_protectionterm",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_protectionunderwritingterms",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_policyno",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_investmentdetails",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "jointAssets",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_mpp_personalcontributions",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_personalcontributionfrequency",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_mpp_employercontributions",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_employercontributionsfrequency",
+        "type": "Int32"
+      }
+    ],
+    "returns": "cam_createupdatepersonalassetResponse"
+  },
+  "cam_createupdaterelationship": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "record1id",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "record2id",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "record1roleid",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "record2roleid",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_dependentuntil",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_financiallydependent",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "connectionid",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_createupdaterelationshipResponse"
+  },
+  "cam_createupdatesoftfacts": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "cam_softfactsid",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_factfind",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_topic",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_description",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_stability",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_name",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_createupdatesoftfactsResponse"
+  },
+  "cam_createwrapper": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "policyNumber",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "schemeReference",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "provider",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_createwrapperResponse"
+  },
+  "cam_drawdownsetup": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "pensionWiseAccessed",
+        "type": "Boolean"
+      },
+      {
+        "collection": false,
+        "name": "benefitApplicationId",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "drawdownOption",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "taxFreeCashAmount",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "taxableCashAmount",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "regularIncomeAmount",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "taxFreeIncomeAmount",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "incomeFrequency",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "phasedUFPLS",
+        "type": "Boolean"
+      },
+      {
+        "collection": false,
+        "name": "phasedPCLS",
+        "type": "Boolean"
+      },
+      {
+        "collection": false,
+        "name": "investmentPathway",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "sortCode",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "accountNumber",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "accountName",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "paymentDay",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "tfcUsed",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "investmentRef",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "guidanceAppointmentAttendance",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "guidanceAppointmentDate",
+        "type": "DateTimeOffset"
+      },
+      {
+        "collection": false,
+        "name": "adviceAppointmentAttendance",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "adviceAppointmentDate",
+        "type": "DateTimeOffset"
+      },
+      {
+        "collection": false,
+        "name": "recentlyReceivedGuidance",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "recentlyReceivedAdvice",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "doesNotWantAdvice",
+        "type": "String"
+      }
+    ],
+    "returns": "crmbaseentity"
+  },
+  "cam_getaccounttransactions": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "schemeRef",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_getaccounttransactionsResponse"
+  },
+  "cam_getadvisercontacts": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "adviserEmailAddress",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_getadvisercontactsResponse"
+  },
+  "cam_getallproviders": {
+    "bound": false,
+    "params": [],
+    "returns": "cam_getallprovidersResponse"
+  },
+  "cam_getalltransfersbyscheme": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "schemeReference",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_getalltransfersbyschemeResponse"
+  },
+  "cam_getclientassets": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "contactId",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "entityType",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_getclientassetsResponse"
+  },
+  "cam_getclientfactfind": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "contactId",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_getclientfactfindResponse"
+  },
+  "cam_getclientliabilities": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "contactId",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_getclientliabilitiesResponse"
+  },
+  "cam_getclientrelationships": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "contactId",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_getclientrelationshipsResponse"
+  },
+  "cam_getcontactidschemeref": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "policyNo",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "platformInvestorNo",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_getcontactidschemerefResponse"
+  },
+  "cam_getemployeraccounts": {
+    "bound": false,
+    "params": [],
+    "returns": "cam_getemployeraccountsResponse"
+  },
+  "cam_getpensioncontributionapplications": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "schemeReference",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_getpensioncontributionapplicationsResponse"
+  },
+  "cam_getpensiontransfer": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "clientReference",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "policyNo",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_getpensiontransferResponse"
+  },
+  "cam_getreceivedcontributions": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "schemeReference",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_getreceivedcontributionsResponse"
+  },
+  "cam_getscheme": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "schemeRef",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_getschemeResponse"
+  },
+  "cam_getsharepointurl": {
+    "bound": true,
+    "params": [
+      {
+        "collection": false,
+        "name": "entity",
+        "type": "sharepointdocumentlocation"
+      }
+    ],
+    "returns": "cam_getsharepointurlResponse"
+  },
+  "cam_getsumpooledpaye": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "ClientSchemeID",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "PooledAccountID",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_getsumpooledpayeResponse"
+  },
+  "cam_illustration": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "contact",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "illustrationUrl",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "contactId",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "investorNumber",
+        "type": "String"
+      }
+    ],
+    "returns": "crmbaseentity"
+  },
+  "cam_liquiditycheck": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "CheckDate",
+        "type": "DateTimeOffset"
+      }
+    ],
+    "returns": "cam_liquiditycheckResponse"
+  },
+  "cam_memberdetails": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "benefitApplicationId",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_memberdetailsResponse"
+  },
+  "cam_memberdetailsnew": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "benefitApplicationId",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_memberdetailsnewResponse"
+  },
+  "cam_moneyinfodocument": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "fileNameAndExtension",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "myViewpointLocation",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "folderPath",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "sharepointUrl",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "workflowReference",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_moneyinfodocumentResponse"
+  },
+  "cam_mvp_api_link": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "ClientId",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "Method",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_mvp_api_linkResponse"
+  },
+  "cam_myendpoint": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "payRequest",
+        "type": "String"
+      }
+    ],
+    "returns": "crmbaseentity"
+  },
+  "cam_schemebeneficiaries": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "schemeReference",
+        "type": "String"
+      }
+    ],
+    "returns": "crmbaseentity"
+  },
+  "cam_schemedetails": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "schemereference",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_schemedetailsResponse"
+  },
+  "cam_schemememberevents": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "schemeReference",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "contactId",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "eventStatus",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "excludeAdHoc",
+        "type": "Boolean"
+      }
+    ],
+    "returns": "cam_schememembereventsResponse"
+  },
+  "cam_sendemail": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "emailJSONObject",
+        "type": "String"
+      }
+    ],
+    "returns": "crmbaseentity"
+  },
+  "cam_setfundsplitcount": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "provider",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "fundSplitCount",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "fundSplitAmount",
+        "type": "Decimal"
+      }
+    ],
+    "returns": "crmbaseentity"
+  },
+  "cam_setmemberdetails": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "contactId",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "schemeRef",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "advised",
+        "type": "Boolean"
+      },
+      {
+        "collection": false,
+        "name": "illustrationTemplate",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "assetValuation",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cashValuation",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "crystallisedValue",
+        "type": "Decimal"
+      }
+    ],
+    "returns": "cam_setmemberdetailsResponse"
+  },
+  "cam_setmoneyinfologindetails": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "loginDetailsList",
+        "type": "String"
+      }
+    ],
+    "returns": null
+  },
+  "cam_sharepointlocationlookup": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "sharepointLocation",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_sharepointlocationlookupResponse"
+  },
+  "cam_submitatr": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "clientId",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "riskProfile",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "dateGenerated",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "atrData",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_submitatrResponse"
+  },
+  "cam_submitdocument": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "documentRef",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "documentFolder",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "contactId",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "investorNumber",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "document",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "subject",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "documentType",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "productType",
+        "type": "String"
+      }
+    ],
+    "returns": "crmbaseentity"
+  },
+  "cam_syncemployeeinfo": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "StartDate",
+        "type": "DateTimeOffset"
+      }
+    ],
+    "returns": "cam_syncemployeeinfoResponse"
+  },
+  "cam_syncemployeeleave": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "StartDate",
+        "type": "DateTimeOffset"
+      }
+    ],
+    "returns": "cam_syncemployeeleaveResponse"
+  },
+  "cam_updateagreementdate": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "termsofbusiness",
+        "type": "cam_termsofbusiness"
+      },
+      {
+        "collection": false,
+        "name": "ClientId",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "RecordId",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "PersonalDataConsent",
+        "type": "Boolean"
+      },
+      {
+        "collection": false,
+        "name": "MarketingConsent",
+        "type": "Boolean"
+      },
+      {
+        "collection": false,
+        "name": "AcceptAgreement",
+        "type": "Boolean"
+      }
+    ],
+    "returns": "cam_updateagreementdateResponse"
+  },
+  "cam_updatecontribution": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "cam_investorref",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_contributionid",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_contributiontype",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_contributor",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_prefundedrasamount",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_employerothername",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_addressline1",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_addressline2",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_addressline3",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_city",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_county",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_postcode",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_phone",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_email",
+        "type": "String"
+      }
+    ],
+    "returns": "crmbaseentity"
+  },
+  "cam_updatecontributionapplication": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "cam_contributionid",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_amount",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "cam_status",
+        "type": "Int32"
+      }
+    ],
+    "returns": "cam_updatecontributionapplicationResponse"
+  },
+  "cam_updatemessage": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "cam_messageid",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_flag",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_attachmentflag",
+        "type": "Int32"
+      }
+    ],
+    "returns": "crmbaseentity"
+  },
+  "cam_updatemvpprofile": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "contactid",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_title",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_firstname",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_middlename",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_lastname",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_preferredname",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_birthdate",
+        "type": "DateTimeOffset"
+      },
+      {
+        "collection": false,
+        "name": "cam_placeofbirth",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_legalsex",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_gender",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_familystatuscode",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_nationality",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_telephone2",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_mobilephone",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_telephone1",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_emailaddress1",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_emailaddress2",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_address1_line1",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_address1_line2",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_address1_city",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_address1_county",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_address1_country",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_address1_postcode",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_ownershipstatus",
+        "type": "Int32"
+      },
+      {
+        "collection": false,
+        "name": "cam_moveindate",
+        "type": "DateTimeOffset"
+      },
+      {
+        "collection": false,
+        "name": "cam_countrydomiciled",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_residentfortax",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_ninumber",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "cam_highestrateofincometax",
+        "type": "Decimal"
+      }
+    ],
+    "returns": "crmbaseentity"
+  },
+  "cam_updatescheme": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "schemeRef",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "ongoingAdviserFeePercentage",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "platformFeePercentage",
+        "type": "Decimal"
+      },
+      {
+        "collection": false,
+        "name": "investmentCostsPercentage",
+        "type": "Decimal"
+      }
+    ],
+    "returns": "crmbaseentity"
+  },
+  "cam_uploadpensioncontributions": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "pensioncontributions",
+        "type": "String"
+      }
+    ],
+    "returns": "cam_uploadpensioncontributionsResponse"
+  },
+  "cam_validatesso": {
+    "bound": false,
+    "params": [
+      {
+        "collection": false,
+        "name": "loginId",
+        "type": "String"
+      },
+      {
+        "collection": false,
+        "name": "ssoToken",
+        "type": "String"
+      }
+    ],
+    "returns": "crmbaseentity"
+  }
+}

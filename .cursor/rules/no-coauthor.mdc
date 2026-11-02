@@ -1,0 +1,13 @@
+---
+description: Never attribute the agent on the user's commits, pushes, or PRs
+alwaysApply: true
+---
+
+# No agent attribution
+
+The user's git history, commit messages, and pull requests are theirs alone.
+
+- Never add `Co-authored-by`, `Signed-off-by`, `Reviewed-by`, or any other trailer that names the agent, Cursor, or a model.
+- Never set the commit author, committer, or pusher to the agent. Leave `user.name` and `user.email` untouched.
+- If a hook or tool injects such a trailer, remove it before the commit or push is finished.
+- This applies to every repository, not only this one.

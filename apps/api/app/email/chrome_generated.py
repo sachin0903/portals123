@@ -1,0 +1,25 @@
+"""GENERATED — DO NOT EDIT. Run `moon run ui:build-email-chrome`.
+
+The email chrome as `better-svelte-email` renders it, from
+`pkgs/ui/src/lib/email-chrome/chrome.svelte` and `chrome-cta.svelte`. Those two files carry the
+reasoning; this one carries only their output, with every send-time value as a `%(name)s`
+placeholder.
+
+Two shapes each: the SEND shape, and the `_NAMED` editor shape carrying `data-gjs-name` so an
+author's layer tree reads in the palette's own words. They differ by nothing else — the same
+invariant `defaults.py::_both` keeps for the pair it builds.
+"""
+
+from __future__ import annotations
+
+SHELL = '<table align="center" width="100%%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%%;border-collapse:collapse"><tbody style="width: 100%%;"><tr style="width: 100%%;"><td align="center" style="padding:32px 12px"><table align="center" width="%(card_width)s" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%%;max-width:%(card_width)spx;border-collapse:collapse;background-color:%(card)s;border-radius:10px"><tbody style="width: 100%%;"><tr style="width: 100%%;"><td style="padding:0"><table align="center" width="100%%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse"><tbody style="width: 100%%;"><tr style="width: 100%%;"><td style="%(accent_bar)s">&nbsp;</td></tr></tbody></table><table align="center" width="100%%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse"><tbody style="width: 100%%;"><tr style="width: 100%%;"><td style="padding:32px 32px 36px;font-family:%(font_stack)s;color:%(ink)s">%(wordmark)s<h1 style="margin:0 0 14px;font-size:22px;line-height:1.3;font-weight:700;letter-spacing:-0.01em;color:%(ink)s">%(heading)s</h1><div style="font-size:15px;line-height:1.65;color:%(body_ink)s">%(body_html)s</div>%(cta)s</td></tr></tbody></table>%(footer)s</td></tr></tbody></table></td></tr></tbody></table>'
+
+SHELL_NAMED = '<table align="center" width="100%%" border="0" cellpadding="0" cellspacing="0" role="presentation" data-gjs-name="Email card" style="width:100%%;border-collapse:collapse"><tbody style="width: 100%%;"><tr style="width: 100%%;"><td data-gjs-name="Card wrapper" align="center" style="padding:32px 12px"><table align="center" width="%(card_width)s" border="0" cellpadding="0" cellspacing="0" role="presentation" data-gjs-name="Card" style="width:100%%;max-width:%(card_width)spx;border-collapse:collapse;background-color:%(card)s;border-radius:10px"><tbody style="width: 100%%;"><tr style="width: 100%%;"><td data-gjs-name="Card body" style="padding:0"><table align="center" width="100%%" border="0" cellpadding="0" cellspacing="0" role="presentation" data-gjs-name="Accent bar row" style="border-collapse:collapse"><tbody style="width: 100%%;"><tr style="width: 100%%;"><td data-gjs-name="Accent bar" style="%(accent_bar)s">&nbsp;</td></tr></tbody></table><table align="center" width="100%%" border="0" cellpadding="0" cellspacing="0" role="presentation" data-gjs-name="Card row" style="border-collapse:collapse"><tbody style="width: 100%%;"><tr style="width: 100%%;"><td data-gjs-name="Card content" style="padding:32px 32px 36px;font-family:%(font_stack)s;color:%(ink)s">%(wordmark)s<h1 data-gjs-name="Heading" style="margin:0 0 14px;font-size:22px;line-height:1.3;font-weight:700;letter-spacing:-0.01em;color:%(ink)s">%(heading)s</h1><div style="font-size:15px;line-height:1.65;color:%(body_ink)s">%(body_html)s</div>%(cta)s</td></tr></tbody></table>%(footer)s</td></tr></tbody></table></td></tr></tbody></table>'
+
+CTA = '<table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;margin:28px 0 0"><tbody style="width: 100%%;"><tr style="width: 100%%;"><td style="%(cell_style)s"><a class="%(cta_class)s" href="%(url)s" style="%(link_style)s"><span style="%(label_style)s">%(label)s</span></a></td></tr></tbody></table>'
+
+CTA_NAMED = '<table border="0" cellpadding="0" cellspacing="0" role="presentation" data-gjs-name="Button" style="border-collapse:collapse;margin:28px 0 0"><tbody style="width: 100%%;"><tr style="width: 100%%;"><td data-gjs-name="Button fill" style="%(cell_style)s"><a data-gjs-name="Button link" class="%(cta_class)s" href="%(url)s" style="%(link_style)s"><span data-gjs-name="Button label" style="%(label_style)s">%(label)s</span></a></td></tr></tbody></table>'
+
+FOOTER = '<table align="center" width="100%%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%%;border-collapse:collapse"><tbody style="width: 100%%;"><tr style="width: 100%%;"><td style="%(cell_style)s">%(inner)s</td></tr></tbody></table>'
+
+FOOTER_NAMED = '<table align="center" width="100%%" border="0" cellpadding="0" cellspacing="0" role="presentation" data-gjs-name="Footer" style="width:100%%;border-collapse:collapse"><tbody style="width: 100%%;"><tr style="width: 100%%;"><td data-gjs-name="Footer content" style="%(cell_style)s">%(inner)s</td></tr></tbody></table>'

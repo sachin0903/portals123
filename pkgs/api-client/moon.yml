@@ -1,0 +1,14 @@
+layer: 'library'
+language: 'typescript'
+
+tasks:
+  generate:
+    command: 'openapi-ts'
+    # The schema comes from `api:dump-openapi`, never from a running server: see that task for why
+    # the input's ORIGIN used to end up inside the committed client.
+    deps:
+      - 'api:dump-openapi'
+    env:
+      OPENAPI_URL: 'apps/api/openapi.json'
+    options:
+      cache: false

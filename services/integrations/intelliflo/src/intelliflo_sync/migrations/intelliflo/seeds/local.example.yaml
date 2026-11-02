@@ -1,0 +1,16 @@
+# Copy to local.yaml (git-ignored) and fill in with real values from your Intelliflo dev tenant.
+tenant_id: "12551"                          # Intelliflo tenant id
+tenant_name: "Intelliflo Ltd (iO Store)"    # used only when the platform row is created
+firm_id: "3"                                # internal tenant id; its platform.tenant_platforms row gives the SEI firm id and DSR codes
+provider_id: "5261"                         # Intelliflo product provider id
+provider_name: "Graphene"                   # Intelliflo product provider name
+app_id: "89c73fd"                           # Intelliflo app id (from the AppInstalled webhook)
+group_id: null                              # null = leave as is; the IncomeStatements feature looks it up when empty
+graphene_tenant_id: 3                       # auth.tenants.id that owns the accounts/links
+
+# Accounts present in the lake for DATA_DATE, mapped to existing Intelliflo plans.
+accounts:
+  - account_number: "REPLACE-WITH-SEI-ACCOUNT-NUMBER"
+    policy_number: "REPLACE-WITH-IO-POLICY-NUMBER"
+    plan_id: "REPLACE-WITH-IO-PLAN-ID"
+
